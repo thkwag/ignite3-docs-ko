@@ -26,15 +26,15 @@
  * upstream commit history.
  */
 
-import {existsSync, readFileSync, writeFileSync, readdirSync, statSync} from 'node:fs';
+import {existsSync, readdirSync, statSync} from 'node:fs';
 import {join, relative, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {latestUpstreamCommitForPath, UPSTREAM_REPO, UPSTREAM_DOCS_PATH} from './github-api.mjs';
+import {MANIFEST_PATH, readManifest, updateManifest} from './manifest-io.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(__dirname, '..');
 const DOCS_DIR = join(REPO_ROOT, 'docs');
-const MANIFEST_PATH = join(REPO_ROOT, 'sync-manifest.json');
 const BASELINE_COMMIT = process.env.BASELINE_COMMIT;
 
 function findMarkdownFiles(dir, fileList = []) {
@@ -55,21 +55,36 @@ async function main() {
     throw new Error('BASELINE_COMMIT env var is required to bootstrap a new manifest.');
   }
 
-  const manifest = isBootstrap
-    ? {upstreamRepo: UPSTREAM_REPO, upstreamDocsPath: UPSTREAM_DOCS_PATH, files: {}}
-    : JSON.parse(readFileSync(MANIFEST_PATH, 'utf8'));
-
   const trackedFiles = findMarkdownFiles(DOCS_DIR).sort();
-  let added = 0;
 
+  // Resolve each newly tracked file's baseline commit once, up front: this
+  // is a GitHub API call per file, so it must not be repeated on every
+  // optimistic-concurrency retry inside updateManifest().
+  const existingFiles = isBootstrap ? {} : readManifest().files;
+  const newEntries = [];
   for (const file of trackedFiles) {
-    if (manifest.files[file]) continue;
+    if (existingFiles[file]) continue;
     const upstreamCommit = isBootstrap ? BASELINE_COMMIT : await latestUpstreamCommitForPath(file);
-    manifest.files[file] = {status: 'pending', upstreamCommit};
-    added++;
+    newEntries.push([file, upstreamCommit]);
   }
 
-  writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2) + '\n');
+  const added = await updateManifest(
+    (manifest) => {
+      let count = 0;
+      for (const [file, upstreamCommit] of newEntries) {
+        if (manifest.files[file]) continue; // another process already added it
+        manifest.files[file] = {status: 'pending', upstreamCommit};
+        count++;
+      }
+      return count;
+    },
+    {
+      initial: isBootstrap
+        ? {upstreamRepo: UPSTREAM_REPO, upstreamDocsPath: UPSTREAM_DOCS_PATH, files: {}}
+        : undefined,
+    }
+  );
+
   console.log(`${added} file(s) added to sync-manifest.json (${trackedFiles.length} tracked total).`);
 }
 

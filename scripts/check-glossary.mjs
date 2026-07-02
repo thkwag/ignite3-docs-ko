@@ -203,7 +203,7 @@ function blank(match) {
 function stripLines(content) {
   const lines = content.split('\n');
   let inFence = false;
-  let inRailroad = false;
+  let inJsxTemplate = false;
   let inJsxComment = false;
   return lines.map((line) => {
     if (/^\s*(```|~~~)/.test(line)) {
@@ -211,14 +211,16 @@ function stripLines(content) {
       return '';
     }
     if (inFence) return '';
-    // <RailroadDiagram>{`...`}</RailroadDiagram> wraps a BNF grammar template
-    // literal, not a markdown fence, so it needs its own start/end match.
-    if (/^\s*<RailroadDiagram>\{`\s*$/.test(line)) {
-      inRailroad = true;
+    // JSX components that wrap a template literal, e.g.
+    // <RailroadDiagram>{`...`}</RailroadDiagram> or <Mermaid chart={`...`}/>,
+    // hold diagram/grammar source rather than markdown, so they need their
+    // own start/end match (not a ``` fence).
+    if (/^\s*<[A-Za-z][A-Za-z0-9]*[^{]*\{`\s*$/.test(line)) {
+      inJsxTemplate = true;
       return '';
     }
-    if (inRailroad) {
-      if (/^\s*`\}<\/RailroadDiagram>\s*$/.test(line)) inRailroad = false;
+    if (inJsxTemplate) {
+      if (/^\s*`\}\s*(\/>|<\/[A-Za-z][A-Za-z0-9]*>)\s*$/.test(line)) inJsxTemplate = false;
       return '';
     }
     // {/* ... */} JSX comments (license headers) stay in English on purpose.
@@ -285,6 +287,10 @@ function auditFile(filePath, rules) {
     if (t.length < 20) return;
     if (/^(\||:::|---|<|!\[|#{1,6}\s*$)/.test(t)) return;
     if (/[가-힣]/.test(t)) return;
+    // A list item whose "sentence" is really one bare identifier
+    // (java.sql.Connection#clearWarnings, some.config.key) isn't prose to
+    // translate — it's an API/config reference the source also left bare.
+    if (/^[-*]\s+\S+$/.test(t)) return;
     // Headings dominated by ALL-CAPS tokens are SQL syntax (### ALTER TABLE ...
     // ADD COLUMN) or acronym-only titles (### REST API SSL), not prose to translate.
     if (/^#{1,6}\s/.test(t)) {

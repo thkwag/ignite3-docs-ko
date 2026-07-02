@@ -65,7 +65,9 @@ function chapterCounts(manifest) {
   return counts;
 }
 
-/** Latest translatedAt among translated files, formatted "YYYY-MM-DD HH:mm UTC" (null if none yet). */
+const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
+
+/** Latest translatedAt among translated files, formatted "YYYY-MM-DD HH:mm KST" (null if none yet). */
 function lastUpdatedLabel(manifest) {
   let latest = null;
   for (const meta of Object.values(manifest.files)) {
@@ -73,7 +75,14 @@ function lastUpdatedLabel(manifest) {
     if (!latest || meta.translatedAt > latest) latest = meta.translatedAt;
   }
   if (!latest) return '(아직 번역된 문서 없음)';
-  return `${latest.slice(0, 16).replace('T', ' ')} UTC`;
+  const kst = new Date(new Date(latest).getTime() + KST_OFFSET_MS);
+  const pad = (n) => String(n).padStart(2, '0');
+  const y = kst.getUTCFullYear();
+  const mo = pad(kst.getUTCMonth() + 1);
+  const d = pad(kst.getUTCDate());
+  const h = pad(kst.getUTCHours());
+  const mi = pad(kst.getUTCMinutes());
+  return `${y}-${mo}-${d} ${h}:${mi} KST`;
 }
 
 function buildTable(counts) {

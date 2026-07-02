@@ -25,15 +25,15 @@
  * Example: node scripts/mark-translated.mjs getting-started/intro.md
  */
 
-import {existsSync, readFileSync, writeFileSync} from 'node:fs';
+import {existsSync} from 'node:fs';
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {latestUpstreamCommitForPath} from './github-api.mjs';
+import {updateManifest} from './manifest-io.mjs';
 import {updateReadmeProgress} from './update-progress.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(__dirname, '..');
-const MANIFEST_PATH = join(REPO_ROOT, 'sync-manifest.json');
 const DOCS_FILE_PATH = process.argv[2];
 
 async function main() {
@@ -45,16 +45,13 @@ async function main() {
     throw new Error(`docs/${DOCS_FILE_PATH} does not exist.`);
   }
 
-  const manifest = JSON.parse(readFileSync(MANIFEST_PATH, 'utf8'));
   const upstreamCommit = await latestUpstreamCommitForPath(DOCS_FILE_PATH);
+  const translatedAt = new Date().toISOString();
 
-  manifest.files[DOCS_FILE_PATH] = {
-    status: 'translated',
-    upstreamCommit,
-    translatedAt: new Date().toISOString(),
-  };
+  await updateManifest((manifest) => {
+    manifest.files[DOCS_FILE_PATH] = {status: 'translated', upstreamCommit, translatedAt};
+  });
 
-  writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2) + '\n');
   console.log(`Marked ${DOCS_FILE_PATH} as translated (upstream commit ${upstreamCommit}).`);
 
   const readmeChanged = updateReadmeProgress();
