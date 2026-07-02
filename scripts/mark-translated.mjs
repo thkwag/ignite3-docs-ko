@@ -29,6 +29,7 @@ import {existsSync, readFileSync, writeFileSync} from 'node:fs';
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {latestUpstreamCommitForPath} from './github-api.mjs';
+import {updateReadmeProgress} from './update-progress.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(__dirname, '..');
@@ -55,6 +56,9 @@ async function main() {
 
   writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2) + '\n');
   console.log(`Marked ${DOCS_FILE_PATH} as translated (upstream commit ${upstreamCommit}).`);
+
+  const readmeChanged = updateReadmeProgress();
+  if (readmeChanged) console.log('Updated README.md translation progress table.');
 }
 
 main().catch((err) => {
