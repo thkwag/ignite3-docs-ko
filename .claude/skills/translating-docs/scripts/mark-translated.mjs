@@ -21,27 +21,26 @@
  * commit its translation is based on so check-upstream-sync.mjs can later
  * detect when the source has drifted.
  *
- * Usage: node scripts/mark-translated.mjs <path relative to docs/>
- * Example: node scripts/mark-translated.mjs getting-started/intro.md
+ * Usage: node .claude/skills/translating-docs/scripts/mark-translated.mjs <path relative to docs/>
+ * Example: node .claude/skills/translating-docs/scripts/mark-translated.mjs getting-started/intro.md
  */
 
 import {existsSync} from 'node:fs';
-import {join, dirname} from 'node:path';
-import {fileURLToPath} from 'node:url';
-import {latestUpstreamCommitForPath} from './github-api.mjs';
-import {updateManifest} from './manifest-io.mjs';
+import {join} from 'node:path';
+import {latestUpstreamCommitForPath} from '../../../../scripts/github-api.mjs';
+import {updateManifest} from '../../../../scripts/manifest-io.mjs';
 import {updateReadmeProgress} from './update-progress.mjs';
+import {findProjectRoot} from './find-project-root.mjs';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = join(__dirname, '..');
+const PROJECT_ROOT = findProjectRoot('GLOSSARY.md');
 const DOCS_FILE_PATH = process.argv[2];
 
 async function main() {
   if (!DOCS_FILE_PATH) {
-    console.error('Usage: node scripts/mark-translated.mjs <path relative to docs/>');
+    console.error('Usage: node .claude/skills/translating-docs/scripts/mark-translated.mjs <path relative to docs/>');
     process.exit(1);
   }
-  if (!existsSync(join(REPO_ROOT, 'docs', DOCS_FILE_PATH))) {
+  if (!existsSync(join(PROJECT_ROOT, 'docs', DOCS_FILE_PATH))) {
     throw new Error(`docs/${DOCS_FILE_PATH} does not exist.`);
   }
 

@@ -19,7 +19,7 @@
 /**
  * Concurrency-safe read/write for sync-manifest.json.
  *
- * Multiple translation sessions run scripts/mark-translated.mjs in parallel.
+ * Multiple translation sessions run mark-translated.mjs in parallel.
  * A plain read-JSON / mutate / write-JSON cycle loses updates under
  * concurrency: whichever process writes last wins, silently discarding any
  * entry another process added in between.

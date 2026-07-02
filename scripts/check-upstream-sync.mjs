@@ -75,7 +75,7 @@ function buildIssueBody(staleFiles) {
     '',
     ...staleFiles.map((f) => `- [ ] \`docs/${f}\``),
     '',
-    '재번역 후 `node scripts/mark-translated.mjs <경로>`로 매니페스트를 갱신하면 이 항목에서 제외됩니다.',
+    '재번역 후 `node .claude/skills/translating-docs/scripts/mark-translated.mjs <경로>`로 매니페스트를 갱신하면 이 항목에서 제외됩니다.',
   ].join('\n');
 }
 

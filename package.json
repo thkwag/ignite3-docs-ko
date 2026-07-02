@@ -17,12 +17,12 @@
     "typecheck": "tsc",
     "check:links": "node scripts/check-links.js",
     "check:images": "node scripts/check-images.js",
-    "check:glossary": "node scripts/check-glossary.mjs",
+    "check:glossary": "node .claude/skills/translating-docs/scripts/check-glossary.mjs",
     "check:build": "npm run build:prod && node scripts/check-build.js",
     "validate": "npm run check:glossary && npm run check:links && npm run check:images && npm run check:build",
     "validate:quick": "npm run typecheck && npm run check:glossary && npm run check:links && npm run check:images",
     "check:upstream-sync": "node scripts/check-upstream-sync.mjs",
-    "update:progress": "node scripts/update-progress.mjs"
+    "update:progress": "node .claude/skills/translating-docs/scripts/update-progress.mjs"
   },
   "dependencies": {
     "@docusaurus/core": "^3.9.2",

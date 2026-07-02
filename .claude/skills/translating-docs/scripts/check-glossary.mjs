@@ -31,9 +31,9 @@
  * matching so code samples never trigger false positives.
  *
  * Usage:
- *   node scripts/check-glossary.mjs               # files marked "translated" in sync-manifest.json
- *   node scripts/check-glossary.mjs --all         # every file under docs/
- *   node scripts/check-glossary.mjs <path...>     # specific files (repo-root- or docs-relative)
+ *   node .claude/skills/translating-docs/scripts/check-glossary.mjs               # files marked "translated" in sync-manifest.json
+ *   node .claude/skills/translating-docs/scripts/check-glossary.mjs --all         # every file under docs/
+ *   node .claude/skills/translating-docs/scripts/check-glossary.mjs <path...>     # specific files (project-root- or docs-relative)
  *   --strict                                      # warnings also fail (exit 1)
  *   --list-rules                                  # print parsed rules and exit
  *
@@ -41,14 +41,13 @@
  */
 
 import {readFileSync, readdirSync, existsSync, statSync} from 'node:fs';
-import {join, dirname, relative, resolve} from 'node:path';
-import {fileURLToPath} from 'node:url';
+import {join, relative, resolve} from 'node:path';
+import {findProjectRoot} from './find-project-root.mjs';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = join(__dirname, '..');
-const DOCS_ROOT = join(REPO_ROOT, 'docs');
-const GLOSSARY_PATH = join(REPO_ROOT, 'GLOSSARY.md');
-const MANIFEST_PATH = join(REPO_ROOT, 'sync-manifest.json');
+const PROJECT_ROOT = findProjectRoot('GLOSSARY.md');
+const DOCS_ROOT = join(PROJECT_ROOT, 'docs');
+const GLOSSARY_PATH = join(PROJECT_ROOT, 'GLOSSARY.md');
+const MANIFEST_PATH = join(PROJECT_ROOT, 'sync-manifest.json');
 
 // ---------------------------------------------------------------------------
 // GLOSSARY.md parsing
@@ -182,7 +181,7 @@ function resolveTargets(args) {
   if (args.all) return walkDocs(DOCS_ROOT);
   if (args.paths.length > 0) {
     return args.paths.map((p) => {
-      for (const candidate of [resolve(p), join(REPO_ROOT, p), join(DOCS_ROOT, p)]) {
+      for (const candidate of [resolve(p), join(PROJECT_ROOT, p), join(DOCS_ROOT, p)]) {
         if (existsSync(candidate) && statSync(candidate).isFile()) return candidate;
       }
       throw new Error(`file not found: ${p}`);
@@ -355,7 +354,7 @@ function main() {
   let errorCount = 0;
   let warningCount = 0;
   for (const file of targets) {
-    const rel = relative(REPO_ROOT, file);
+    const rel = relative(PROJECT_ROOT, file);
     const relPath = rel.startsWith('..') ? file : rel;
     const {errors, warnings} = auditFile(file, rules);
     errorCount += errors.length;
