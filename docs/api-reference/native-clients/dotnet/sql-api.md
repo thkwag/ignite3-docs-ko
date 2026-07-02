@@ -6,27 +6,27 @@ sidebar_position: 4
 
 # SQL API
 
-The SQL API executes SQL queries and scripts against Ignite tables. It supports parameterized queries, typed result mapping, metadata access, and both result set and data reader patterns for consuming query results.
+SQL API는 Ignite 테이블에 대해 SQL 쿼리와 스크립트를 실행합니다. 매개변수화된 쿼리, 타입 지정 결과 매핑, 메타데이터 접근을 지원하며, 쿼리 결과를 사용하기 위한 결과 집합과 데이터 리더 패턴을 모두 지원합니다.
 
-## Key Concepts
+## 핵심 개념 {#key-concepts}
 
-SQL queries in Ignite 3 execute against distributed tables using a Calcite-based SQL engine. Queries can span multiple tables and leverage distributed execution across cluster nodes.
+Ignite 3의 SQL 쿼리는 Calcite 기반 SQL 엔진을 사용해 분산 테이블에 대해 실행됩니다. 쿼리는 여러 테이블에 걸칠 수 있고 클러스터 노드 전반의 분산 실행을 활용합니다.
 
-### Result Handling
+### 결과 처리 {#result-handling}
 
-Query results are available through two interfaces. IResultSet provides async enumeration with full metadata access and is suitable for LINQ operations. IgniteDbDataReader provides forward-only access compatible with ADO.NET patterns.
+쿼리 결과는 두 가지 인터페이스로 제공됩니다. IResultSet은 전체 메타데이터 접근을 갖춘 비동기 열거를 제공하며 LINQ 작업에 적합합니다. IgniteDbDataReader는 ADO.NET 패턴과 호환되는 순방향 전용 접근을 제공합니다.
 
-### Transaction Integration
+### 트랜잭션 통합 {#transaction-integration}
 
-All SQL operations accept an optional transaction parameter. Pass null for auto-commit mode or pass an ITransaction to execute queries within a transaction scope. This ensures consistency across SQL and key-value operations.
+모든 SQL 작업은 선택적 트랜잭션 매개변수를 받습니다. 자동 커밋 모드에는 null을 전달하고, 트랜잭션 범위 안에서 쿼리를 실행하려면 ITransaction을 전달합니다. 이렇게 하면 SQL 작업과 키-값 작업 전반의 일관성이 보장됩니다.
 
-### Lazy Loading
+### 지연 로딩 {#lazy-loading}
 
-Result sets use lazy loading. Rows are fetched from the cluster only as you enumerate them. This reduces memory usage for large result sets but means result sets can only be enumerated once.
+결과 집합은 지연 로딩을 사용합니다. 행은 열거할 때만 클러스터에서 가져옵니다. 이는 큰 결과 집합의 메모리 사용량을 줄여 주지만, 결과 집합을 한 번만 열거할 수 있음을 의미합니다.
 
-## Usage Examples
+## 사용 예시 {#usage-examples}
 
-### Basic Query Execution
+### 기본 쿼리 실행 {#basic-query-execution}
 
 ```csharp
 var sql = client.Sql;
@@ -41,7 +41,7 @@ await foreach (var row in resultSet)
 }
 ```
 
-### Typed Query Results
+### 타입 지정 쿼리 결과 {#typed-query-results}
 
 ```csharp
 public class CustomerDto
@@ -60,7 +60,7 @@ await foreach (var customer in resultSet)
 }
 ```
 
-### Parameterized Queries
+### 매개변수화된 쿼리 {#parameterized-queries}
 
 ```csharp
 // Positional parameters
@@ -75,7 +75,7 @@ await foreach (var order in results)
 }
 ```
 
-### DML Operations
+### DML 작업 {#dml-operations}
 
 ```csharp
 // Insert
@@ -101,7 +101,7 @@ var deleteResult = await sql.ExecuteAsync(null, deleteStmt, 100L);
 Console.WriteLine($"Deleted {deleteResult.AffectedRows} rows");
 ```
 
-### DDL Operations
+### DDL 작업 {#ddl-operations}
 
 ```csharp
 // Create table
@@ -120,7 +120,7 @@ var dropStmt = new SqlStatement("DROP TABLE IF EXISTS products");
 await sql.ExecuteAsync(null, dropStmt);
 ```
 
-### Using Data Reader
+### 데이터 리더 사용 {#using-data-reader}
 
 ```csharp
 var statement = new SqlStatement("SELECT * FROM orders WHERE amount > ?");
@@ -134,7 +134,7 @@ while (await reader.ReadAsync())
 }
 ```
 
-### Batch Execution
+### 일괄 실행 {#batch-execution}
 
 ```csharp
 var statement = new SqlStatement(
@@ -155,7 +155,7 @@ for (int i = 0; i < affectedRows.Length; i++)
 }
 ```
 
-### Script Execution
+### 스크립트 실행 {#script-execution}
 
 ```csharp
 var script = new SqlStatement(@"
@@ -168,7 +168,7 @@ await sql.ExecuteScriptAsync(script);
 Console.WriteLine("Script executed successfully");
 ```
 
-### Query with Metadata
+### 메타데이터가 있는 쿼리 {#query-with-metadata}
 
 ```csharp
 var statement = new SqlStatement("SELECT id, name, email, created_at FROM customers");
@@ -190,7 +190,7 @@ await foreach (var row in resultSet)
 }
 ```
 
-### Transactional Queries
+### 트랜잭션 쿼리 {#transactional-queries}
 
 ```csharp
 var tx = await client.Transactions.BeginAsync();
@@ -218,7 +218,7 @@ catch
 }
 ```
 
-### Cancellation Support
+### 취소 지원 {#cancellation-support}
 
 ```csharp
 using var cts = new CancellationTokenSource();
@@ -240,7 +240,7 @@ catch (OperationCanceledException)
 }
 ```
 
-### Collecting Results
+### 결과 수집 {#collecting-results}
 
 ```csharp
 var statement = new SqlStatement("SELECT id, name FROM customers");
@@ -260,94 +260,94 @@ var customResult = await resultSet.CollectAsync(
     accumulator: (list, customer) => list.Add(customer));
 ```
 
-## Reference
+## 참조 {#reference}
 
-### ISql Interface
+### ISql 인터페이스 {#isql-interface}
 
-Query execution methods:
+쿼리 실행 메서드:
 
-- **ExecuteAsync(ITransaction?, SqlStatement, params object?[]?)** - Execute query returning IResultSet&lt;IIgniteTuple&gt;
-- **ExecuteAsync(ITransaction?, SqlStatement, CancellationToken, params object?[]?)** - With cancellation token
-- **ExecuteAsync&lt;T&gt;(ITransaction?, SqlStatement, params object?[]?)** - Execute query returning IResultSet&lt;T&gt;
-- **ExecuteAsync&lt;T&gt;(ITransaction?, SqlStatement, CancellationToken, params object?[]?)** - With cancellation token
+- **ExecuteAsync(ITransaction?, SqlStatement, params object?[]?)** - IResultSet&lt;IIgniteTuple&gt;을 반환하는 쿼리를 실행합니다
+- **ExecuteAsync(ITransaction?, SqlStatement, CancellationToken, params object?[]?)** - 취소 토큰 포함
+- **ExecuteAsync&lt;T&gt;(ITransaction?, SqlStatement, params object?[]?)** - IResultSet&lt;T&gt;를 반환하는 쿼리를 실행합니다
+- **ExecuteAsync&lt;T&gt;(ITransaction?, SqlStatement, CancellationToken, params object?[]?)** - 취소 토큰 포함
 
-Data reader methods:
+데이터 리더 메서드:
 
-- **ExecuteReaderAsync(ITransaction?, SqlStatement, params object?[]?)** - Return forward-only data reader
-- **ExecuteReaderAsync(ITransaction?, SqlStatement, CancellationToken, params object?[]?)** - With cancellation token
+- **ExecuteReaderAsync(ITransaction?, SqlStatement, params object?[]?)** - 순방향 전용 데이터 리더를 반환합니다
+- **ExecuteReaderAsync(ITransaction?, SqlStatement, CancellationToken, params object?[]?)** - 취소 토큰 포함
 
-Batch and script methods:
+일괄 처리 및 스크립트 메서드:
 
-- **ExecuteScriptAsync(SqlStatement, params object?[]?)** - Execute multi-statement script
-- **ExecuteScriptAsync(SqlStatement, CancellationToken, params object?[]?)** - With cancellation token
-- **ExecuteBatchAsync(ITransaction?, SqlStatement, IEnumerable&lt;IEnumerable&lt;object?&gt;&gt;, CancellationToken)** - Execute statement with multiple argument sets (DML only)
+- **ExecuteScriptAsync(SqlStatement, params object?[]?)** - 여러 문으로 이루어진 스크립트를 실행합니다
+- **ExecuteScriptAsync(SqlStatement, CancellationToken, params object?[]?)** - 취소 토큰 포함
+- **ExecuteBatchAsync(ITransaction?, SqlStatement, IEnumerable&lt;IEnumerable&lt;object?&gt;&gt;, CancellationToken)** - 여러 인수 집합으로 문을 실행합니다(DML 전용)
 
-### IResultSet&lt;T&gt; Interface
+### IResultSet&lt;T&gt; 인터페이스 {#iresultsett-interface}
 
-Properties:
+속성:
 
-- **Metadata** - Result set metadata (null for DML/DDL statements)
-- **HasRowSet** - True if result contains rows (SELECT queries)
-- **AffectedRows** - Number of rows affected by DML operation (0 for DDL, -1 if not applicable)
-- **WasApplied** - True if conditional DDL statement (CREATE IF NOT EXISTS) was applied
+- **Metadata** - 결과 집합 메타데이터(DML/DDL 문의 경우 null)
+- **HasRowSet** - 결과에 행이 포함되면 true(SELECT 쿼리)
+- **AffectedRows** - DML 작업으로 영향받은 행 수(DDL은 0, 해당 없으면 -1)
+- **WasApplied** - 조건부 DDL 문(CREATE IF NOT EXISTS)이 적용되었으면 true
 
-Enumeration:
+열거:
 
-- Implements **IAsyncEnumerable&lt;T&gt;** for async iteration
-- Can only be enumerated once
+- 비동기 반복을 위해 **IAsyncEnumerable&lt;T&gt;**를 구현합니다
+- 한 번만 열거할 수 있습니다
 
-Collection methods:
+수집 메서드:
 
-- **ToListAsync()** - Collect all rows into a list
-- **ToDictionaryAsync&lt;TK, TV&gt;(Func&lt;T, TK&gt; keySelector, Func&lt;T, TV&gt; valSelector, IEqualityComparer&lt;TK&gt;?)** - Collect into dictionary
-- **CollectAsync&lt;TResult&gt;(Func&lt;int, TResult&gt; constructor, Action&lt;TResult, T&gt; accumulator)** - Custom collection logic
+- **ToListAsync()** - 모든 행을 리스트로 수집합니다
+- **ToDictionaryAsync&lt;TK, TV&gt;(Func&lt;T, TK&gt; keySelector, Func&lt;T, TV&gt; valSelector, IEqualityComparer&lt;TK&gt;?)** - 딕셔너리로 수집합니다
+- **CollectAsync&lt;TResult&gt;(Func&lt;int, TResult&gt; constructor, Action&lt;TResult, T&gt; accumulator)** - 커스텀 수집 로직
 
-Resource management:
+리소스 관리:
 
-- Implements **IAsyncDisposable** and **IDisposable**
-- Automatically disposed after enumeration completes
+- **IAsyncDisposable**과 **IDisposable**을 구현합니다
+- 열거가 완료되면 자동으로 해제됩니다
 
-### IResultSetMetadata Interface
+### IResultSetMetadata 인터페이스 {#iresultsetmetadata-interface}
 
-Properties:
+속성:
 
-- **Columns** - Read-only list of column metadata in result order
+- **Columns** - 결과 순서대로 정렬된 읽기 전용 컬럼 메타데이터 목록
 
-Methods:
+메서드:
 
-- **IndexOf(string columnName)** - Get column index by name (returns -1 if not found)
+- **IndexOf(string columnName)** - 이름으로 컬럼 인덱스를 가져옵니다(찾을 수 없으면 -1 반환)
 
-### IColumnMetadata Interface
+### IColumnMetadata 인터페이스 {#icolumnmetadata-interface}
 
-Properties:
+속성:
 
-- **Name** - Column name
-- **Type** - Column data type (ColumnType enum)
-- **Precision** - Column precision (-1 if not applicable)
-- **Scale** - Column scale for numeric types
-- **Nullable** - Whether column allows null values
-- **Origin** - Original column information for aliased columns
+- **Name** - 컬럼 이름
+- **Type** - 컬럼 데이터 타입(ColumnType 열거형)
+- **Precision** - 컬럼 정밀도(해당 없으면 -1)
+- **Scale** - 숫자 타입의 컬럼 스케일
+- **Nullable** - 컬럼이 null 값을 허용하는지 여부
+- **Origin** - 별칭이 붙은 컬럼의 원본 컬럼 정보
 
-The precision meaning varies by type. For numeric types it represents decimal digits, for string types it represents maximum length.
+정밀도의 의미는 타입에 따라 다릅니다. 숫자 타입에서는 십진 자릿수를, 문자열 타입에서는 최대 길이를 나타냅니다.
 
-### IgniteDbDataReader Class
+### IgniteDbDataReader 클래스 {#ignitedbdatareader-class}
 
-Forward-only data reader implementing ADO.NET patterns:
+ADO.NET 패턴을 구현하는 순방향 전용 데이터 리더:
 
-- Extends **DbDataReader** for ADO.NET compatibility
-- Supports **ReadAsync()** for row-by-row access
-- Provides typed **Get*** methods (GetInt64, GetString, GetDecimal, etc.)
-- Supports **IsDBNull()** for null checking
-- Implements **IAsyncDisposable** for resource cleanup
+- ADO.NET 호환성을 위해 **DbDataReader**를 확장합니다
+- 행 단위 접근을 위해 **ReadAsync()**를 지원합니다
+- 타입 지정 **Get*** 메서드(GetInt64, GetString, GetDecimal 등)를 제공합니다
+- null 확인을 위해 **IsDBNull()**을 지원합니다
+- 리소스 정리를 위해 **IAsyncDisposable**을 구현합니다
 
-Use this when you need forward-only access or compatibility with ADO.NET-based tools.
+순방향 전용 접근이 필요하거나 ADO.NET 기반 도구와의 호환성이 필요할 때 사용합니다.
 
-### SqlStatement Record
+### SqlStatement 레코드 {#sqlstatement-record}
 
-Represents a SQL statement with parameters:
+매개변수가 있는 SQL 문을 나타냅니다:
 
-- **SqlStatement(string query)** - Create statement with query text
-- Supports positional parameters using ? placeholders
-- Parameters passed separately to execute methods
+- **SqlStatement(string query)** - 쿼리 텍스트로 문을 생성합니다
+- ? 자리표시자로 위치 매개변수를 지원합니다
+- 매개변수는 실행 메서드에 별도로 전달됩니다
 
-Query text should use ? for parameter placeholders. Parameters are bound in order.
+쿼리 텍스트는 매개변수 자리표시자로 ?를 사용해야 합니다. 매개변수는 순서대로 바인딩됩니다.

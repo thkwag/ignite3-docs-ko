@@ -1,33 +1,33 @@
 ---
 id: dotnet-client
-title: .NET Client
+title: .NET 클라이언트
 sidebar_position: 2
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Ignite 3 clients connect to the cluster via a standard socket connection. Unlike Ignite 2.x, there are no separate Thin and Thick clients in Ignite 3. All clients are 'thin'.
+Ignite 3 클라이언트는 표준 소켓 연결로 클러스터에 연결합니다. Ignite 2.x와 달리 Ignite 3에는 씬 클라이언트(thin client)와 씩 클라이언트(thick client)의 구분이 없으며, 모든 클라이언트가 씬 클라이언트입니다.
 
-Clients do not become a part of the cluster topology, never hold any data, and are not used as a destination for compute calculations.
+클라이언트는 클러스터 토폴로지에 합류하지 않고, 데이터를 전혀 보유하지 않으며, 컴퓨트 연산의 대상으로도 사용되지 않습니다.
 
-## Getting Started
+## 시작하기 {#getting-started}
 
-### Prerequisites
+### 사전 요구 사항 {#prerequisites}
 
-To use C# thin client, .NET 8.0 or newer is required.
+C# 씬 클라이언트를 사용하려면 .NET 8.0 이상이 필요합니다.
 
-### Installation
+### 설치 {#installation}
 
-C# client is available via NuGet. To add it, use the `add package` command:
+C# 클라이언트는 NuGet으로 제공됩니다. 추가하려면 `add package` 명령어를 사용하세요:
 
 ```bash
 dotnet add package Apache.Ignite --version 3.0.0
 ```
 
-## Connecting to Cluster
+## 클러스터에 연결 {#connecting-to-cluster}
 
-To initialize a client, use the `IgniteClient` class, and provide it with the configuration:
+클라이언트를 초기화하려면 `IgniteClient` 클래스를 사용하고 구성 정보를 전달합니다:
 
 <Tabs groupId="languages">
 <TabItem value="dotnet" label=".NET">
@@ -43,9 +43,9 @@ using var client = await IgniteClient.StartAsync(clientCfg);
 </TabItem>
 </Tabs>
 
-## Authentication
+## 인증 {#authentication}
 
-To pass authentication information, pass it to `IgniteClient` builder:
+인증 정보를 전달하려면 `IgniteClient` 빌더에 전달합니다:
 
 <Tabs groupId="languages">
 <TabItem value="dotnet" label=".NET">
@@ -65,17 +65,17 @@ IIgniteClient client = await IgniteClient.StartAsync(cfg);
 </TabItem>
 </Tabs>
 
-### Limitations
+### 제한 사항 {#limitations}
 
-There are limitations to user types that can be used for such a mapping. Some limitations are common, and others are platform-specific due to the programming language used.
+이러한 매핑에 사용할 수 있는 사용자 타입에는 제한이 있습니다. 일부 제한은 공통이고, 일부는 사용하는 프로그래밍 언어에 따라 달라지는 플랫폼별 제한입니다.
 
-- Only flat field structure is supported, meaning no nesting user objects. This is because Ignite tables, and therefore tuples have flat structure themselves.
-- Fields should be mapped to Ignite types.
-- All fields in user type should either be mapped to Table column or explicitly excluded.
-- All columns from Table should be mapped to some field in the user type.
-- *.NET only*: Any type (class, struct, record) is supported as long as all fields can be mapped to Ignite types.
+- 평면 필드 구조만 지원합니다. 즉, 사용자 객체를 중첩할 수 없습니다. Ignite 테이블, 그리고 그에 따른 튜플 자체가 평면 구조이기 때문입니다.
+- 필드는 Ignite 타입에 매핑해야 합니다.
+- 사용자 타입의 모든 필드는 테이블 컬럼에 매핑하거나 명시적으로 제외해야 합니다.
+- 테이블의 모든 컬럼은 사용자 타입의 어떤 필드에 매핑해야 합니다.
+- *.NET 전용*: 모든 필드를 Ignite 타입에 매핑할 수 있는 한 어떤 타입(class, struct, record)이든 지원합니다.
 
-### Usage Examples
+### 사용 예시 {#usage-examples}
 
 <Tabs groupId="languages">
 <TabItem value="dotnet" label=".NET">
@@ -94,13 +94,13 @@ public class Account
 </TabItem>
 </Tabs>
 
-## Using Dependency Injection
+## 의존성 주입 사용 {#using-dependency-injection}
 
-Ignite client provides support for using [Dependency Injection](https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection) when initializing a client instance.
+Ignite 클라이언트는 클라이언트 인스턴스를 초기화할 때 [의존성 주입](https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection)을 지원합니다.
 
-This approach can be used to simplify initializing the client in DI containers:
+이 방식으로 DI 컨테이너에서 클라이언트를 더 간단하게 초기화할 수 있습니다:
 
-- Register the `IgniteClientGroup` in your DI container:
+- DI 컨테이너에 `IgniteClientGroup`을 등록합니다:
 
 ```cpp
 builder.Services.AddSingleton<IgniteClientGroup>(_ => new IgniteClientGroup(
@@ -111,7 +111,7 @@ builder.Services.AddSingleton<IgniteClientGroup>(_ => new IgniteClientGroup(
     }));
 ```
 
-- Use an instance of the group you created in your methods:
+- 메서드에서 생성한 그룹의 인스턴스를 사용합니다:
 
 ```cpp
 public async Task<IActionResult> Index([FromServices] IgniteClientGroup igniteGroup)
@@ -122,9 +122,9 @@ public async Task<IActionResult> Index([FromServices] IgniteClientGroup igniteGr
 }
 ```
 
-## SQL API
+## SQL API {#sql-api}
 
-Ignite 3 is focused on SQL, and SQL API is the primary way to work with the data. You can read more about supported SQL statements in the [SQL Reference](/sql/reference/language-definition/ddl) section. Here is how you can send SQL requests:
+Ignite 3는 SQL 중심으로 설계되었으며, SQL API가 데이터를 다루는 기본 방법입니다. 지원하는 SQL 문에 대한 자세한 내용은 [SQL 참조](/sql/reference/language-definition/ddl) 섹션에서 확인할 수 있습니다. SQL 요청은 다음과 같이 보낼 수 있습니다:
 
 <Tabs groupId="languages">
 <TabItem value="dotnet" label=".NET">
@@ -139,15 +139,15 @@ Debug.Assert(row["name"] as string == "John Doe");
 </TabItem>
 </Tabs>
 
-### Batch SQL Execution
+### 일괄 SQL 실행 {#batch-sql-execution}
 
-You can execute the specified DML statement once for each set of arguments and return the number of affected rows for each execution.
+지정한 DML 문을 인수 집합마다 한 번씩 실행하고, 실행할 때마다 영향받은 행 수를 반환할 수 있습니다.
 
 :::note
-Only `INSERT`, `UPDATE`, `DELETE` statements are supported.
+`INSERT`, `UPDATE`, `DELETE` 문만 지원합니다.
 :::
 
-To run a batch execution, you need to implement `ExecuteBatchAsync()` method with the following parameters:
+일괄 실행을 수행하려면 다음 매개변수로 `ExecuteBatchAsync()` 메서드를 구현해야 합니다:
 
 ```csharp
 Task<long[]> ExecuteBatchAsync(
@@ -158,16 +158,16 @@ Task<long[]> ExecuteBatchAsync(
 );
 ```
 
-#### Parameters
+#### 매개변수 {#parameters}
 
-- `transaction` - The optional transaction in which to execute the batch.
-- `statement` - The SQL statement to execute for each entry in `args`.
-- `args` - A collection of argument lists. The statement will be executed once per inner collection. Must not be empty or contain empty rows.
-- `cancellationToken` - Token for cancelling the operation.
+- `transaction` - 일괄 처리를 실행할 선택적 트랜잭션.
+- `statement` - `args`의 각 항목에 대해 실행할 SQL 문.
+- `args` - 인수 목록의 컬렉션. 문은 내부 컬렉션마다 한 번씩 실행됩니다. 비어 있거나 빈 행을 포함해서는 안 됩니다.
+- `cancellationToken` - 작업을 취소하는 토큰.
 
-#### Example
+#### 예시 {#example}
 
-In this example we return an array of update counts. Each element corresponds to the number of rows affected by the statement execution for the matching entry in `args`. The length of the returned array equals the number of argument sets.
+이 예시는 업데이트 횟수 배열을 반환합니다. 각 요소는 `args`의 해당 항목에 대해 문을 실행하여 영향받은 행 수에 대응합니다. 반환된 배열의 길이는 인수 집합의 개수와 같습니다.
 
 ```csharp
 long[] res = await sql.ExecuteBatchAsync(
@@ -183,9 +183,9 @@ long[] res = await sql.ExecuteBatchAsync(
 // res => [1, 1, 1]
 ```
 
-### SQL Scripts
+### SQL 스크립트 {#sql-scripts}
 
-The default API executes SQL statements one at a time. If you want to execute large SQL statements, pass them to the `executeScript()` method. These statements will be executed in order.
+기본 API는 SQL 문을 한 번에 하나씩 실행합니다. 큰 SQL 문을 실행하려면 `executeScript()` 메서드에 전달하세요. 이렇게 전달한 문은 순서대로 실행됩니다.
 
 <Tabs groupId="languages">
 <TabItem value="dotnet" label=".NET">
@@ -202,14 +202,14 @@ await Client.Sql.ExecuteScriptAsync(script);
 </Tabs>
 
 :::note
-Execution of each statement is considered complete when the first page is ready to be returned. As a result, when working with large data sets, SELECT statement may be affected by later statements in the same script.
+각 문의 실행은 첫 페이지를 반환할 준비가 되면 완료된 것으로 간주합니다. 따라서 큰 데이터 집합을 다룰 때는 같은 스크립트 내 뒤쪽 문이 SELECT 문에 영향을 줄 수 있습니다.
 :::
 
-## Transactions
+## 트랜잭션 {#transactions}
 
-All table operations in Ignite 3 are transactional. You can provide an explicit transaction as a first argument of any Table and SQL API call. If you do not provide an explicit transaction, an implicit one will be created for every call.
+Ignite 3의 모든 테이블 작업은 트랜잭션으로 처리됩니다. 모든 Table API와 SQL API 호출의 첫 번째 인수로 명시적 트랜잭션을 전달할 수 있습니다. 명시적 트랜잭션을 전달하지 않으면 호출마다 암시적 트랜잭션이 생성됩니다.
 
-Here is how you can provide a transaction explicitly:
+트랜잭션은 다음과 같이 명시적으로 전달할 수 있습니다:
 
 <Tabs groupId="languages">
 <TabItem value="dotnet" label=".NET">
@@ -237,15 +237,15 @@ public record Account(decimal Balance);
 </TabItem>
 </Tabs>
 
-## Table API
+## Table API {#table-api}
 
-To execute table operations on a specific table, you need to get a specific view of the table and use one of its methods. You can only create new tables by using SQL API.
+특정 테이블에서 테이블 작업을 실행하려면 해당 테이블의 특정 뷰를 가져와 그 메서드 중 하나를 사용합니다. 새 테이블은 SQL API로만 만들 수 있습니다.
 
-When working with tables, you can use built-in Tuple type, which is a set of key-value pairs underneath, or map the data to your own types for a strongly-typed access. Here is how you can work with tables:
+테이블을 다룰 때는 내부적으로 키-값 쌍의 집합인 내장 Tuple 타입을 사용하거나, 타입 지정 접근을 위해 데이터를 직접 정의한 타입에 매핑할 수 있습니다. 테이블은 다음과 같이 다룹니다:
 
-### Getting a Table Instance
+### 테이블 인스턴스 가져오기 {#getting-a-table-instance}
 
-To obtain an instance of a table, use the `ITables.GetTableAsync(string name)` You can also use `ITables.GetTablesAsync` method to list all existing tables.
+테이블 인스턴스를 얻으려면 `ITables.GetTableAsync(string name)`을 사용합니다. `ITables.GetTablesAsync` 메서드로 기존 테이블을 모두 나열할 수도 있습니다.
 
 <Tabs groupId="languages">
 <TabItem value="dotnet" label=".NET">
@@ -260,13 +260,13 @@ var myTable = await Client.Tables.GetTableAsync("MY_TABLE");
 </TabItem>
 </Tabs>
 
-### Basic Table Operations
+### 기본 테이블 작업 {#basic-table-operations}
 
-Once you've got a table you need to get a specific view to choose how you want to operate table records.
+테이블을 가져왔으면 테이블 레코드를 어떻게 다룰지 선택할 수 있도록 특정 뷰를 가져와야 합니다.
 
-#### Tuple Record View
+#### 튜플 레코드 뷰 {#tuple-record-view}
 
-A tuple record view. It can be used to operate table tuples directly.
+튜플 레코드 뷰입니다. 테이블 튜플을 직접 다루는 데 사용합니다.
 
 <Tabs groupId="languages">
 <TabItem value="dotnet" label=".NET">
@@ -294,9 +294,9 @@ Debug.Assert(value["name"] as string == "John Doe");
 </TabItem>
 </Tabs>
 
-#### Record View
+#### 레코드 뷰 {#record-view}
 
-A record view mapped to a user type. It can be used to operate table using user objects which are mapped to table tuples.
+사용자 타입에 매핑된 레코드 뷰입니다. 테이블 튜플에 매핑된 사용자 객체로 테이블을 다루는 데 사용합니다.
 
 <Tabs groupId="languages">
 <TabItem value="dotnet" label=".NET">
@@ -316,9 +316,9 @@ public record Poco(long Id, string? Name = null);
 </TabItem>
 </Tabs>
 
-#### Key-Value Tuple View
+#### 키-값 튜플 뷰 {#key-value-tuple-view}
 
-A tuple key-value view. It can be used to operate table using key and value tuples separately.
+튜플 키-값 뷰입니다. 키 튜플과 값 튜플을 분리해 테이블을 다루는 데 사용합니다.
 
 <Tabs groupId="languages">
 <TabItem value="dotnet" label=".NET">
@@ -340,9 +340,9 @@ Debug.Assert(value["name"] as string == "John Doe");
 </TabItem>
 </Tabs>
 
-#### Key-Value View
+#### 키-값 뷰 {#key-value-view}
 
-A key-value view with user objects. It can be used to operate table using key and value user objects mapped to table tuples.
+사용자 객체를 사용하는 키-값 뷰입니다. 테이블 튜플에 매핑된 키 사용자 객체와 값 사용자 객체로 테이블을 다루는 데 사용합니다.
 
 <Tabs groupId="languages">
 <TabItem value="dotnet" label=".NET">
@@ -362,15 +362,15 @@ public record Poco(long Id, string? Name = null);
 </TabItem>
 </Tabs>
 
-## Streaming Data
+## 데이터 스트리밍 {#streaming-data}
 
-To stream a large amount of data, use the data streamer. Data streaming provides a quicker and more efficient way to load, organize and optimally distribute your data. Data streamer accepts a stream of data and distributes data entries across the cluster, where the processing takes place. Data streaming is available in all table views.
+대량의 데이터를 스트리밍하려면 데이터 스트리머를 사용하세요. 데이터 스트리밍은 데이터를 더 빠르고 효율적으로 적재하고, 정리하고, 최적으로 분산하는 방법을 제공합니다. 데이터 스트리머는 데이터 스트림을 받아 데이터 항목을 클러스터 전체에 분산하고, 처리는 그곳에서 이루어집니다. 데이터 스트리밍은 모든 테이블 뷰에서 사용할 수 있습니다.
 
 ![Data Streaming](/img/data_streaming.png)
 
-Data streaming provides at-least-once delivery guarantee.
+데이터 스트리밍은 최소 한 번(at-least-once) 전달을 보장합니다.
 
-### Using Data Streamer API
+### Data Streamer API 사용 {#using-data-streamer-api}
 
 <Tabs groupId="languages">
 <TabItem value="dotnet" label=".NET">
@@ -385,15 +385,15 @@ await TupleView.StreamDataAsync(data.ToAsyncEnumerable(), options);
 </TabItem>
 </Tabs>
 
-## Client Metrics
+## 클라이언트 메트릭 {#client-metrics}
 
-Metrics are exposed by the .NET client through the `System.Diagnostics.Metrics` API with the `Apache.Ignite` meter name. For example, here is how you can access Ignite metrics by using the [dotnet-counters](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-counters) tool:
+.NET 클라이언트는 `Apache.Ignite` 미터 이름으로 `System.Diagnostics.Metrics` API를 통해 메트릭을 노출합니다. 예를 들어, [dotnet-counters](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-counters) 도구로 Ignite 메트릭에 접근하는 방법은 다음과 같습니다:
 
 ```bash
 dotnet-counters monitor --counters Apache.Ignite,System.Runtime --process-id PID
 ```
 
-You can also get metrics in your code by creating a listener:
+리스너를 만들어 코드에서 메트릭을 가져올 수도 있습니다:
 
 ```csharp
 var listener = new MeterListener();
@@ -410,35 +410,35 @@ listener.SetMeasurementEventCallback<int>(
 listener.Start();
 ```
 
-### Available .NET Metrics
+### 사용 가능한 .NET 메트릭 {#available-net-metrics}
 
-| Metric name | Description |
+| 메트릭 이름 | 설명 |
 |-------------|-------------|
-| connections-active | The number of currently active connections. |
-| connections-established | The number of established connections. |
-| connections-lost | The number of connections lost. |
-| connections-lost-timeout | The number of connections lost due to a timeout. |
-| handshakes-failed | The number of failed handshakes. |
-| handshakes-failed-timeout | The number of handshakes that failed due to a timeout. |
-| requests-active | The number of currently active requests. |
-| requests-sent | The number of requests sent. |
-| requests-completed | The number of completed requests. Requests are completed once a response is received. |
-| requests-retried | The number of request retries. |
-| requests-failed | The number of failed requests. |
-| bytes-sent | The amount of bytes sent. |
-| bytes-received | The amount of bytes received. |
-| streamer-batches-sent | The number of data streamer batches sent. |
-| streamer-items-sent | The number of data streamer items sent. |
-| streamer-batches-active | The number of existing data streamer batches. |
-| streamer-items-queued | The number of queued data streamer items. |
+| connections-active | 현재 활성 연결 수. |
+| connections-established | 수립된 연결 수. |
+| connections-lost | 끊어진 연결 수. |
+| connections-lost-timeout | 타임아웃으로 끊어진 연결 수. |
+| handshakes-failed | 실패한 핸드셰이크 수. |
+| handshakes-failed-timeout | 타임아웃으로 실패한 핸드셰이크 수. |
+| requests-active | 현재 활성 요청 수. |
+| requests-sent | 전송된 요청 수. |
+| requests-completed | 완료된 요청 수. 요청은 응답을 받으면 완료됩니다. |
+| requests-retried | 요청 재시도 수. |
+| requests-failed | 실패한 요청 수. |
+| bytes-sent | 전송된 바이트 수. |
+| bytes-received | 수신된 바이트 수. |
+| streamer-batches-sent | 전송된 데이터 스트리머 묶음 수. |
+| streamer-items-sent | 전송된 데이터 스트리머 항목 수. |
+| streamer-batches-active | 전송 중인 데이터 스트리머 묶음 수. |
+| streamer-items-queued | 대기 중인 데이터 스트리머 항목 수. |
 
-## Logging
+## 로깅 {#logging}
 
-To enable logging, set the `IgniteClientConfiguration.LoggerFactory` property to an instance of the `Microsoft.Extensions.Logging.ILoggerFactory` standard API. See [Standard logging in .NET](https://docs.microsoft.com/en-us/dotnet/core/extensions/logging) to learn more.
+로깅을 활성화하려면 `IgniteClientConfiguration.LoggerFactory` 속성을 `Microsoft.Extensions.Logging.ILoggerFactory` 표준 API의 인스턴스로 설정하세요. 자세한 내용은 [.NET의 표준 로깅](https://docs.microsoft.com/en-us/dotnet/core/extensions/logging)을 참고하세요.
 
-### Examples
+### 예시 {#examples}
 
-The example below shows how you can configure logging to console with the `Microsoft.Extensions.Logging.Console` package:
+아래 예시는 `Microsoft.Extensions.Logging.Console` 패키지로 콘솔 로깅을 구성하는 방법을 보여줍니다:
 
 <Tabs groupId="languages">
 <TabItem value="dotnet" label=".NET">
@@ -453,7 +453,7 @@ var cfg = new IgniteClientConfiguration
 </TabItem>
 </Tabs>
 
-Alternatively, here is how to configure logging with [Serilog](https://serilog.net/) by using `Serilog.Extensions.Logging` and `Serilog.Sinks.Console` packages:
+또는 `Serilog.Extensions.Logging`과 `Serilog.Sinks.Console` 패키지로 [Serilog](https://serilog.net/)를 사용해 로깅을 구성하는 방법은 다음과 같습니다:
 
 <Tabs groupId="languages">
 <TabItem value="dotnet" label=".NET">

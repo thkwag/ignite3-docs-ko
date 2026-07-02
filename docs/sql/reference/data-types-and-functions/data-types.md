@@ -1,34 +1,34 @@
 ---
 id: data-types
-title: SQL Data Types
-sidebar_label: Data Types
+title: SQL 데이터 타입
+sidebar_label: 데이터 타입
 ---
 
-# Data Types
+# 데이터 타입 {#data-types}
 
-The page contains a list of SQL data types available in Apache Ignite such as string, numeric, and date/time types.
+이 페이지는 Apache Ignite에서 사용할 수 있는 문자열, 숫자, 날짜·시간 등 SQL 데이터 타입 목록을 다룹니다.
 
-Every SQL type is mapped to a programming language or driver specific type that is supported by Apache Ignite natively.
+모든 SQL 타입은 Apache Ignite가 기본으로 지원하는 프로그래밍 언어별 또는 드라이버별 타입에 매핑됩니다.
 
-## Boolean Types
+## 불리언 타입 {#boolean-types}
 
 ### BOOLEAN
 
-Possible values: `TRUE` and `FALSE`.
+가능한 값: `TRUE`와 `FALSE`.
 
-#### Type Mapping
+#### 타입 매핑 {#type-mapping}
 
 | ColumnType | SQL | Java | .NET | C++ |
 |------------|-----|------|------|-----|
 | BOOLEAN | BOOLEAN | Boolean | bool | bool |
 
-## Numeric Types
+## 숫자 타입 {#numeric-types}
 
 ### TINYINT
 
-Possible values: `[-128, 127]`.
+가능한 값: `[-128, 127]`.
 
-#### Type Mapping
+#### 타입 매핑 {#type-mapping-1}
 
 | ColumnType | SQL | Java | .NET | C++ |
 |------------|-----|------|------|-----|
@@ -36,9 +36,9 @@ Possible values: `[-128, 127]`.
 
 ### SMALLINT
 
-Possible values: [`-32768`, `32767`].
+가능한 값: [`-32768`, `32767`].
 
-#### Type Mapping
+#### 타입 매핑 {#type-mapping-2}
 
 | ColumnType | SQL | Java | .NET | C++ |
 |------------|-----|------|------|-----|
@@ -46,11 +46,11 @@ Possible values: [`-32768`, `32767`].
 
 ### INT
 
-Possible values: [`-2147483648`, `2147483647`].
+가능한 값: [`-2147483648`, `2147483647`].
 
-Alias: `INTEGER`
+별칭: `INTEGER`
 
-#### Type Mapping
+#### 타입 매핑 {#type-mapping-3}
 
 | ColumnType | SQL | Java | .NET | C++ |
 |------------|-----|------|------|-----|
@@ -58,9 +58,9 @@ Alias: `INTEGER`
 
 ### BIGINT
 
-Possible values: [`-9223372036854775808`, `9223372036854775807`].
+가능한 값: [`-9223372036854775808`, `9223372036854775807`].
 
-#### Type Mapping
+#### 타입 매핑 {#type-mapping-4}
 
 | ColumnType | SQL | Java | .NET | C++ |
 |------------|-----|------|------|-----|
@@ -68,33 +68,33 @@ Possible values: [`-9223372036854775808`, `9223372036854775807`].
 
 ### DECIMAL
 
-Possible values: Exact number of selectable precision.
+가능한 값: 정밀도를 지정할 수 있는 정확한 수치.
 
-Default precision: `32767`
+기본 정밀도: `32767`
 
-Maximum precision: `32767`
+최대 정밀도: `32767`
 
-Default scale: `0`
+기본 스케일: `0`
 
-Maximum scale: `16383`
+최대 스케일: `16383`
 
-#### Decimal Precision and Scale in Apache Ignite
+#### Apache Ignite의 Decimal 정밀도와 스케일 {#decimal-precision-and-scale-in-apache-ignite}
 
-Apache Ignite has the following specifics when handling decimal values:
+Apache Ignite는 decimal 값을 처리할 때 다음과 같은 특성이 있습니다:
 
-- You can specify scale that is larger than precision. In this case, the column will only hold fractional values, and the number of 0 digits to the right of the decimal point must be the same as scale minus precision. For example if you use the following declaration:
+- 정밀도보다 큰 스케일을 지정할 수 있습니다. 이 경우 컬럼은 소수 값만 저장하며, 소수점 오른쪽의 0 자릿수는 스케일에서 정밀도를 뺀 값과 같아야 합니다. 예를 들어 다음과 같이 선언하면:
 
 ```sql
 DECIMAL(3, 6)
 ```
 
-You can store values between -0.000999 and 0.000999, inclusive.
+-0.000999부터 0.000999까지(양 끝 포함) 값을 저장할 수 있습니다.
 
-- `BigDecimal` data type is derived as `DECIMAL(28, 6)`. If there are more than 6 digits after the decimal point, they will be dropped. If a value larger than the precision is passed, an out of range exception will occur.
+- `BigDecimal` 데이터 타입은 `DECIMAL(28, 6)`으로 파생됩니다. 소수점 이하 자릿수가 6자리를 넘으면 초과분은 버려집니다. 정밀도보다 큰 값을 전달하면 범위 초과 예외가 발생합니다.
 
-To store larger decimal values, cast them with custom precision, for example `CAST(? as DECIMAL(100, 50))`.
+더 큰 decimal 값을 저장하려면 사용자 지정 정밀도로 캐스팅하세요. 예를 들어 `CAST(? as DECIMAL(100, 50))`처럼 씁니다.
 
-#### Type Mapping
+#### 타입 매핑 {#type-mapping-5}
 
 | ColumnType | SQL | Java | .NET | C++ |
 |------------|-----|------|------|-----|
@@ -102,11 +102,11 @@ To store larger decimal values, cast them with custom precision, for example `CA
 
 ### REAL
 
-Possible values: A single precision (32-bit) IEEE 754 floating-point number.
+가능한 값: 단정밀도(32비트) IEEE 754 부동소수점 수.
 
-Special values: `NaN`, `-Infinity`, `+Infinity`
+특수 값: `NaN`, `-Infinity`, `+Infinity`
 
-#### Type Mapping
+#### 타입 매핑 {#type-mapping-6}
 
 | ColumnType | SQL | Java | .NET | C++ |
 |------------|-----|------|------|-----|
@@ -114,92 +114,92 @@ Special values: `NaN`, `-Infinity`, `+Infinity`
 
 ### DOUBLE
 
-Possible values: A double precision (64-bit) IEEE 754 floating-point number.
+가능한 값: 배정밀도(64비트) IEEE 754 부동소수점 수.
 
-Alias: `DOUBLE PRECISION`
+별칭: `DOUBLE PRECISION`
 
-Special values: `NaN`, `-Infinity`, `+Infinity`
+특수 값: `NaN`, `-Infinity`, `+Infinity`
 
-#### Type Mapping
+#### 타입 매핑 {#type-mapping-7}
 
 | ColumnType | SQL | Java | .NET | C++ |
 |------------|-----|------|------|-----|
 | DOUBLE | DOUBLE | Double | double | double |
 
-## Character String Types
+## 문자열 타입 {#character-string-types}
 
 ### VARCHAR
 
-Possible values: A Unicode string.
+가능한 값: 유니코드 문자열.
 
-Alias: `CHARACTER VARYING`
+별칭: `CHARACTER VARYING`
 
-Default length: `65536`
+기본 길이: `65536`
 
-Maximum length: `2147483648`
+최대 길이: `2147483648`
 
-#### Type Mapping
+#### 타입 매핑 {#type-mapping-8}
 
 | ColumnType | SQL | Java | .NET | C++ |
 |------------|-----|------|------|-----|
 | STRING | VARCHAR | String | string | std::string |
 
-### CHAR (Limited Support)
+### CHAR (제한적 지원) {#char-limited-support}
 
 :::warning
-This type can only be used in expressions (such as CAST('a' AS CHAR(3)), and it cannot be used in DDL statements such as `CREATE TABLE`, `ALTER TABLE`, `ADD COLUMN`, etc. Use [VARCHAR](#varchar) instead.
+이 타입은 표현식에서만 사용할 수 있으며(예: CAST('a' AS CHAR(3))), `CREATE TABLE`, `ALTER TABLE`, `ADD COLUMN` 같은 DDL 문에서는 사용할 수 없습니다. 대신 [VARCHAR](#varchar)를 사용하세요.
 :::
 
-Fixed length Unicode string padded with spaces.
+공백으로 채워지는 고정 길이 유니코드 문자열입니다.
 
-Default length: `1`
+기본 길이: `1`
 
-Maximum length: `65536`
+최대 길이: `65536`
 
-#### Type Mapping
+#### 타입 매핑 {#type-mapping-9}
 
 | ColumnType | SQL | Java | .NET | C++ |
 |------------|-----|------|------|-----|
 | STRING | CHAR | String | string | std::string |
 
-## Binary String Types
+## 바이너리 문자열 타입 {#binary-string-types}
 
 ### VARBINARY
 
-Possible values: binary data ("byte array").
+가능한 값: 바이너리 데이터("바이트 배열").
 
-Aliases: `BINARY`, `BINARY VARYING`
+별칭: `BINARY`, `BINARY VARYING`
 
-Default length: `65536`
+기본 길이: `65536`
 
-Maximum length: `2147483648`
+최대 길이: `2147483648`
 
-#### Type Mapping
+#### 타입 매핑 {#type-mapping-10}
 
 | ColumnType | SQL | Java | .NET | C++ |
 |------------|-----|------|------|-----|
 | BYTE_ARRAY | VARBINARY | byte[] | byte[] | std::vector\<std::byte\> |
 
-## Date and Time Types
+## 날짜·시간 타입 {#date-and-time-types}
 
 ### TIME
 
 :::note
-The following Java types are not supported and cannot be used from [table API](/develop/work-with-data/table-api):
+다음 Java 타입은 지원되지 않으며 [table API](/develop/work-with-data/table-api)에서 사용할 수 없습니다:
 
 - `java.sql.Time`
 - `java.util.Date`
 :::
 
-Possible values: The time data type. The format is `hh:mm:ss`.
+가능한 값: 시간 데이터 타입. 형식은 `hh:mm:ss`입니다.
 
-Default precision: `0`
+기본 정밀도: `0`
 
-Maximum precision: `3`
+최대 정밀도: `3`
 
-Mapped to: `LocalTime`
+매핑 대상: `LocalTime`
 
-#### Type Mapping
+#### 타입 매핑 {#type-mapping-11}
 
 | ColumnType | SQL | Java | .NET | C++ |
 |------------|-----|------|------|-----|
@@ -208,19 +208,19 @@ Mapped to: `LocalTime`
 ### DATE
 
 :::note
-The following Java types are not supported and cannot be used from [table API](/develop/work-with-data/table-api):
+다음 Java 타입은 지원되지 않으며 [table API](/develop/work-with-data/table-api)에서 사용할 수 없습니다:
 
 - `java.sql.Time`
 - `java.util.Date`
 :::
 
-Possible values: The date data type.
+가능한 값: 날짜 데이터 타입.
 
-The format is `yyyy-MM-dd`.
+형식은 `yyyy-MM-dd`입니다.
 
-Mapped to: `LocalDate`
+매핑 대상: `LocalDate`
 
-#### Type Mapping
+#### 타입 매핑 {#type-mapping-12}
 
 | ColumnType | SQL | Java | .NET | C++ |
 |------------|-----|------|------|-----|
@@ -229,28 +229,28 @@ Mapped to: `LocalDate`
 ### TIMESTAMP
 
 :::warning
-The timestamp data type only supports precision up to milliseconds (3 symbols). Any values past the 3rd symbol will be ignored.
+timestamp 데이터 타입은 밀리초(3자리)까지의 정밀도만 지원합니다. 3자리를 넘는 값은 무시됩니다.
 :::
 
 :::note
-The following Java types are not supported and cannot be used from [table API](/develop/work-with-data/table-api):
+다음 Java 타입은 지원되지 않으며 [table API](/develop/work-with-data/table-api)에서 사용할 수 없습니다:
 
 - `java.sql.Time`
 - `java.util.Date`
 :::
 
-Possible values: The timestamp data type. The format is `yyyy-MM-dd hh:mm:ss[.mmm]`.
+가능한 값: timestamp 데이터 타입. 형식은 `yyyy-MM-dd hh:mm:ss[.mmm]`입니다.
 
-Default precision: `6`
+기본 정밀도: `6`
 
-Maximum precision: `9`
+최대 정밀도: `9`
 
-Mapped to:
+매핑 대상:
 
-- `LocalDateTime` when used without time zone.
-- `Instant` when used with time zone.
+- 시간대 없이 사용할 때는 `LocalDateTime`.
+- 시간대와 함께 사용할 때는 `Instant`.
 
-#### Type Mapping
+#### 타입 매핑 {#type-mapping-13}
 
 | ColumnType | SQL | Java | .NET | C++ |
 |------------|-----|------|------|-----|
@@ -259,42 +259,42 @@ Mapped to:
 ### TIMESTAMP WITH LOCAL TIMEZONE
 
 :::warning
-The timestamp with local time zone data type only supports precision up to milliseconds (3 symbols). Any values past the 3rd symbol will be ignored.
+로컬 시간대 기준 timestamp 데이터 타입은 밀리초(3자리)까지의 정밀도만 지원합니다. 3자리를 넘는 값은 무시됩니다.
 :::
 
 :::note
-The following Java types are not supported and cannot be used from [table API](/develop/work-with-data/table-api):
+다음 Java 타입은 지원되지 않으며 [table API](/develop/work-with-data/table-api)에서 사용할 수 없습니다:
 
 - `java.sql.Time`
 - `java.util.Date`
 :::
 
-Possible values: The timestamp data type that accounts for the user's local time zone offset. The time zone offset is not stored as part of column data. When retrieved, the value is automatically converted to the time zone of the session. The format is `yyyy-MM-dd hh:mm:ss[.mmm]`.
+가능한 값: 사용자의 로컬 시간대 오프셋을 반영하는 timestamp 데이터 타입. 시간대 오프셋은 컬럼 데이터에 저장되지 않습니다. 값을 조회하면 세션의 시간대로 자동 변환됩니다. 형식은 `yyyy-MM-dd hh:mm:ss[.mmm]`입니다.
 
-Default precision: `6`
+기본 정밀도: `6`
 
-Maximum precision: `9`
+최대 정밀도: `9`
 
-Mapped to:
+매핑 대상:
 
-- `LocalDateTime` when used without time zone.
-- `Instant` when used with time zone.
+- 시간대 없이 사용할 때는 `LocalDateTime`.
+- 시간대와 함께 사용할 때는 `Instant`.
 
-#### Type Mapping
+#### 타입 매핑 {#type-mapping-14}
 
 | ColumnType | SQL | Java | .NET | C++ |
 |------------|-----|------|------|-----|
 | DATETIME | TIMESTAMP | LocalDateTime | LocalDateTime | ignite_date_time |
 
-## Other Types
+## 기타 타입 {#other-types}
 
 ### UUID
 
-Possible values: Universally unique identifier. This is a 128 bit value.
+가능한 값: 범용 고유 식별자입니다. 128비트 값입니다.
 
-Example UUID: `7d24b70e-25d5-45ed-a5fa-39d8e1d966b9`
+UUID 예시: `7d24b70e-25d5-45ed-a5fa-39d8e1d966b9`
 
-#### Type Mapping
+#### 타입 매핑 {#type-mapping-15}
 
 | ColumnType | SQL | Java | .NET | C++ |
 |------------|-----|------|------|-----|
@@ -302,25 +302,25 @@ Example UUID: `7d24b70e-25d5-45ed-a5fa-39d8e1d966b9`
 
 ### NULL
 
-A field containing the null value.
+null 값을 담는 필드입니다.
 
-#### Type Mapping
+#### 타입 매핑 {#type-mapping-16}
 
 | ColumnType | SQL | Java | .NET | C++ |
 |------------|-----|------|------|-----|
 | NULL | NULL | Void | Null | nullptr |
 
-## Implicit Type Conversion
+## 암묵적 타입 변환 {#implicit-type-conversion}
 
-In Apache Ignite 3, implicit type conversion is limited to types within the same type family. The table below covers the possible implicit conversions:
+Apache Ignite 3에서 암묵적 타입 변환은 같은 타입 계열 내의 타입으로 제한됩니다. 아래 표는 가능한 암묵적 변환을 정리한 것입니다:
 
-| Type Family | Available Types |
+| 타입 계열 | 사용 가능한 타입 |
 |-------------|-----------------|
-| Boolean | `BOOLEAN` |
-| Numeric | `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `DECIMAL`, `FLOAT`, `DOUBLE` |
-| Character String | `VARCHAR`, `CHAR` |
-| Binary String | `VARBINARY` `BINARY` |
-| Date | `DATE` |
-| Time | `TIME` |
-| Datetime | `TIMESTAMP`, `TIMESTAMP WITH LOCAL TIME ZONE` |
+| 불리언 | `BOOLEAN` |
+| 숫자 | `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `DECIMAL`, `FLOAT`, `DOUBLE` |
+| 문자열 | `VARCHAR`, `CHAR` |
+| 바이너리 문자열 | `VARBINARY` `BINARY` |
+| 날짜 | `DATE` |
+| 시간 | `TIME` |
+| 날짜·시간 | `TIMESTAMP`, `TIMESTAMP WITH LOCAL TIME ZONE` |
 | UUID | `UUID` |

@@ -7,7 +7,7 @@ sidebar_position: 3
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Ignite .NET client provides LINQ support that is integrated with Ignite SQL APIs. You can avoid working with SQL syntax directly and write queries in C# with LINQ. C# LINQ expressions are then translated into Ignite-specific SQL. For example, the following two snippets achieve the same result:
+Ignite .NET 클라이언트는 Ignite SQL API와 통합된 LINQ 지원을 제공합니다. SQL 문법을 직접 다루지 않고 C#에서 LINQ로 쿼리를 작성할 수 있습니다. 그러면 C# LINQ 표현식이 Ignite 전용 SQL로 변환됩니다. 예를 들어 다음 두 스니펫은 같은 결과를 냅니다:
 
 <Tabs>
 <TabItem value="linq" label="LINQ">
@@ -37,50 +37,50 @@ await foreach (IIgniteTuple row in resultSet)
 </TabItem>
 </Tabs>
 
-LINQ has the following advantages over SQL:
+LINQ는 SQL보다 다음과 같은 장점이 있습니다:
 
-* Queries are strongly typed and checked at compilation;
-* It is easier to write and maintain with IDE support (auto-completion, navigation, find usages);
-* LINQ is refactoring-friendly: rename a column and all queries are updated at once;
-* Ignite-specific SQL knowledge is not required, and most C# developers are already familiar with LINQ;
-* LINQ is safe against SQL injections;
-* Results are mapped to types naturally.
+* 쿼리가 강타입이고 컴파일 시점에 검사됩니다.
+* IDE 지원(자동 완성, 탐색, 사용처 찾기)으로 작성하고 유지보수하기가 더 쉽습니다.
+* LINQ는 리팩터링에 유리합니다. 컬럼 이름을 바꾸면 모든 쿼리가 한 번에 갱신됩니다.
+* Ignite 전용 SQL 지식이 필요 없고, 대부분의 C# 개발자는 이미 LINQ에 익숙합니다.
+* LINQ는 SQL 인젝션에 안전합니다.
+* 결과가 타입에 자연스럽게 매핑됩니다.
 
-In real-world scenarios the performance of Ignite LINQ queries is on par with equivalent SQL queries.
-However, a small overhead still exists (due to query translation), and your mileage may vary depending on the query complexity, so it is recommended to measure the performance of your queries.
+실제 시나리오에서 Ignite LINQ 쿼리의 성능은 동등한 SQL 쿼리와 비슷합니다.
+다만 (쿼리 변환으로 인한) 약간의 오버헤드는 여전히 존재하고 쿼리 복잡도에 따라 결과가 달라질 수 있으므로, 쿼리 성능을 측정하는 것이 좋습니다.
 
-## Getting Started With LINQ
+## LINQ 시작하기 {#getting-started-with-linq}
 
-Here is how you can create a simple table in Ignite:
+Ignite에서 간단한 테이블을 만드는 방법은 다음과 같습니다:
 
-1. Create a table:
+1. 테이블을 생성합니다:
 
    ```csharp
    await Client.Sql.ExecuteAsync(
        null, @"CREATE TABLE PUBLIC.PERSON (NAME VARCHAR PRIMARY KEY, AGE INT)");
    ```
 
-2. Define the classes (or records) that represent tables:
-   * Member names should match column names (case-insensitive).
-   * If a column name is not a valid C# identifier, use `[Column("name")]` attribute to specify the name.
+2. 테이블을 나타내는 클래스(또는 레코드)를 정의합니다:
+   * 멤버 이름은 컬럼 이름과 일치해야 합니다(대소문자 구분 없음).
+   * 컬럼 이름이 유효한 C# 식별자가 아니면 `[Column("name")]` 특성으로 이름을 지정합니다.
 
    ```csharp
    public record Person(string Name, int Age, string Address, string Status);
    ```
 
-3. Obtain a table reference:
+3. 테이블 참조를 가져옵니다:
 
    ```csharp
    ITable table = await Client.Tables.GetTableAsync("PERSON");
    ```
 
-4. Use the `GetRecordView<T>()` method to get a typed view of the table:
+4. `GetRecordView<T>()` 메서드로 테이블의 타입 지정 뷰를 가져옵니다:
 
    ```csharp
    IRecordView<Person> view = table.GetRecordView<Person>();
    ```
 
-5. Use `AsQueryable()` to perform LINQ queries on `IRecordView<T>`.
+5. `AsQueryable()`로 `IRecordView<T>`에 LINQ 쿼리를 수행합니다.
 
    ```csharp
    List<string> names = await view.AsQueryable()
@@ -89,13 +89,13 @@ Here is how you can create a simple table in Ignite:
        .ToListAsync();
    ```
 
-## Using LINQ
+## LINQ 사용하기 {#using-linq}
 
-### Inspecting Generated SQL
+### 생성된 SQL 살펴보기 {#inspecting-generated-sql}
 
-Viewing generated SQL is useful for debugging and performance tuning. There are two ways to do it:
+생성된 SQL을 확인하면 디버깅과 성능 튜닝에 유용합니다. 두 가지 방법이 있습니다:
 
-* `IgniteQueryableExtensions.ToQueryString()` extension method:
+* `IgniteQueryableExtensions.ToQueryString()` 확장 메서드:
 
   ```csharp
   IQueryable<Person> query = table.GetRecordView<Person>()
@@ -104,7 +104,7 @@ Viewing generated SQL is useful for debugging and performance tuning. There are 
   string sql = query.ToQueryString();
   ```
 
-* Debug logging:
+* 디버그 로깅:
 
   ```csharp
   var cfg = new IgniteClientConfiguration
@@ -116,11 +116,11 @@ Viewing generated SQL is useful for debugging and performance tuning. There are 
   ...
   ```
 
-All generated SQL will be logged with `Debug` level to the specified logger.
+생성된 모든 SQL이 지정한 로거에 `Debug` 수준으로 기록됩니다.
 
-### Transactions
+### 트랜잭션 {#transactions}
 
-Transaction can be passed to the LINQ provider by using the `AsQueryable` parameter:
+`AsQueryable` 매개변수로 LINQ 공급자에 트랜잭션을 전달합니다:
 
 ```csharp
 await using var tx = await client.Transactions.BeginAsync();
@@ -128,9 +128,9 @@ var view = (await client.Tables.GetTableAsync("person"))!.GetRecordView<Person>(
 pocoView.AsQueryable(tx)...;
 ```
 
-### Custom Query Options
+### 커스텀 쿼리 옵션 {#custom-query-options}
 
-Custom query options (timeout, page size) can be specified by using the second `AsQueryable` parameter with `QueryableOptions`:
+두 번째 `AsQueryable` 매개변수에 `QueryableOptions`를 사용해 커스텀 쿼리 옵션(타임아웃, 페이지 크기)을 지정합니다:
 
 ```csharp
 var options = new QueryableOptions
@@ -141,12 +141,12 @@ var options = new QueryableOptions
 table.GetRecordView<Person>().AsQueryable(options: options)...;
 ```
 
-### Result Materialization
+### 결과 구체화 {#result-materialization}
 
-Materialization is the process of converting query results (`IQueryable<T>`) into an object or a collection of objects.
+구체화는 쿼리 결과(`IQueryable<T>`)를 객체 또는 객체 컬렉션으로 변환하는 과정입니다.
 
-LINQ is lazy. Nothing happens (no network calls, no SQL translation) until the query is materialized.
-For example, the following code only constructs an expression, but does not execute anything:
+LINQ는 지연 실행됩니다. 쿼리가 구체화되기 전까지는 아무 일도(네트워크 호출도, SQL 변환도) 일어나지 않습니다.
+예를 들어 다음 코드는 표현식을 구성하기만 할 뿐 아무것도 실행하지 않습니다:
 
 ```csharp
 IQueryable<Person> query = table!.GetRecordView<Person>().AsQueryable()
@@ -154,23 +154,23 @@ IQueryable<Person> query = table!.GetRecordView<Person>().AsQueryable()
     .OrderBy(x => x.Key);
 ```
 
-Query execution and materialization can be triggered in multiple ways:
+쿼리 실행과 구체화는 여러 방식으로 트리거될 수 있습니다:
 
-#### Iteration
+#### 반복 {#iteration}
 
-You can iterate through query results by using `foreach` statement, or asynchronously by using the  `AsAsyncEnumerable` method:
+`foreach` 문으로 쿼리 결과를 반복하거나, `AsAsyncEnumerable` 메서드로 비동기로 반복할 수 있습니다:
 
 ```csharp
 foreach (var person in query) { ... }
 await foreach (var person in query.AsAsyncEnumerable()) { ... }
 ```
 
-#### Converting to Collections
+#### 컬렉션으로 변환 {#converting-to-collections}
 
-You can convert queries to collections by using the `ToList` and `ToDictionary` methods, or `ToListAsync` and `ToDictionaryAsync` methods to do it asynchronously:
+`ToList`와 `ToDictionary` 메서드로 쿼리를 컬렉션으로 변환하거나, 비동기로 하려면 `ToListAsync`와 `ToDictionaryAsync` 메서드를 사용합니다:
 
 <Tabs>
-<TabItem value="sync" label="Synchronous">
+<TabItem value="sync" label="동기">
 
 ```csharp
 List<Person> list = query.ToList();
@@ -178,7 +178,7 @@ Dictionary<string, int> dict = query.ToDictionary(x => x.Name, x => x.Age);
 ```
 
 </TabItem>
-<TabItem value="async" label="Asynchronous">
+<TabItem value="async" label="비동기">
 
 ```csharp
 List<Person> list = await query.ToListAsync();
@@ -189,9 +189,9 @@ Dictionary<string, int> dict = await query.
 </TabItem>
 </Tabs>
 
-#### Ignite-specific IResultSet
+#### Ignite 전용 IResultSet {#ignite-specific-iresultset}
 
-Underlying `IResultSet` can be obtained by using the `IgniteQueryableExtensions.ToResultSetAsync()` extension method:
+기반이 되는 `IResultSet`은 `IgniteQueryableExtensions.ToResultSetAsync()` 확장 메서드로 가져옵니다:
 
 ```csharp
 await using IResultSet<Person> resultSet = await query.ToResultSetAsync();
@@ -199,24 +199,24 @@ Console.WriteLine(resultSet.Metadata);
 var rows = resultSet.CollectAsync(...);
 ```
 
-Obtaining `IResultSet` can be useful for access to metadata and `CollectAsync` method, which provides more control over result materialization.
+`IResultSet`을 가져오면 메타데이터와 `CollectAsync` 메서드에 접근할 수 있어 유용하며, 이 메서드는 결과 구체화를 더 세밀하게 제어합니다.
 
-## Supported LINQ Features
+## 지원되는 LINQ 기능 {#supported-linq-features}
 
-### Projection
+### 프로젝션 {#projection}
 
-Projection is the process of converting query results into a different type.
-Among other things, projections are used to select a subset of columns.
+프로젝션은 쿼리 결과를 다른 타입으로 변환하는 과정입니다.
+무엇보다도 프로젝션은 컬럼의 일부만 선택하는 데 사용됩니다.
 
-For example, `Person` table may have many columns, but we only need `Name` and `Age`.
+예를 들어 `Person` 테이블에는 컬럼이 많을 수 있지만 `Name`과 `Age`만 필요합니다.
 
-* First, create a projection class:
+* 먼저 프로젝션 클래스를 만듭니다:
 
   ```csharp
   public record PersonInfo(string Name, int Age);
   ```
 
-* Then, use `Select` to project query results:
+* 그런 다음 `Select`로 쿼리 결과를 프로젝션합니다:
 
   ```csharp
   List<PersonInfo> result = query
@@ -224,18 +224,18 @@ For example, `Person` table may have many columns, but we only need `Name` and `
       .ToList();
   ```
 
-Resulting SQL will select only those two columns, avoiding overfetching
-(a common issue that happens when ORM-generated query includes all table columns, but only a few of them are needed by the business logic).
+결과 SQL은 그 두 컬럼만 선택해 과도한 조회(overfetching)를 피합니다.
+과도한 조회는 ORM이 생성한 쿼리가 테이블의 모든 컬럼을 포함하지만 비즈니스 로직에는 그중 일부만 필요할 때 흔히 발생하는 문제입니다.
 
-Ignite also supports anonymous type projections:
+Ignite는 익명 타입 프로젝션도 지원합니다:
 
 ```csharp
 var result = query.Select(x => new { x.Name, x.Age }).ToList();
 ```
 
-### Inner Joins
+### 내부 조인 {#inner-joins}
 
-Use the standard `Join` method to perform joins on other tables:
+표준 `Join` 메서드로 다른 테이블에 조인을 수행합니다:
 
 ```csharp
 var customerQuery = customerTable.GetRecordView<Customer>().AsQueryable();
@@ -248,10 +248,10 @@ var ordersByCustomer = customerQuery
     .ToList();
 ```
 
-### Outer Joins
+### 외부 조인 {#outer-joins}
 
-Outer joins are supported through the `DefaultIfEmpty` method.
-For example, not every book in a library is borrowed by a student, so a left outer join is used to retrieve all books and their current borrowers (if any):
+외부 조인은 `DefaultIfEmpty` 메서드로 지원됩니다.
+예를 들어 도서관의 모든 책이 학생에게 대출되는 것은 아니므로, 왼쪽 외부 조인으로 모든 책과 (있다면) 현재 대출자를 조회합니다:
 
 ```csharp
 var bookQuery = bookTable.GetRecordView<Book>().AsQueryable();
@@ -264,12 +264,12 @@ var booksWithStudents = bookQuery
     .ToList();
 ```
 
-### Grouping
+### 그룹화 {#grouping}
 
-Grouping is supported through `GroupBy` method. This is equivalent to SQL GROUP BY operator. You can get both single and multiple columns in your queries. When working with multiple columns, use anonymous type:
+그룹화는 `GroupBy` 메서드로 지원됩니다. 이는 SQL의 GROUP BY 연산자에 해당합니다. 쿼리에서 단일 컬럼과 다중 컬럼을 모두 가져올 수 있습니다. 다중 컬럼을 다룰 때는 익명 타입을 사용합니다:
 
 <Tabs>
-<TabItem value="single" label="Single Column">
+<TabItem value="single" label="단일 컬럼">
 
 ```csharp
 var bookCountByAuthor = bookTable.GetRecordView<Book>().AsQueryable()
@@ -279,7 +279,7 @@ var bookCountByAuthor = bookTable.GetRecordView<Book>().AsQueryable()
 ```
 
 </TabItem>
-<TabItem value="multiple" label="Multiple Columns">
+<TabItem value="multiple" label="다중 컬럼">
 
 ```csharp
 var bookCountByAuthorAndYear = bookTable.GetRecordView<Book>().AsQueryable()
@@ -293,11 +293,11 @@ var bookCountByAuthorAndYear = bookTable.GetRecordView<Book>().AsQueryable()
 </TabItem>
 </Tabs>
 
-Aggregate functions `Count`, `Sum`, `Min`, `Max`, `Average` can be used with groupings.
+집계 함수 `Count`, `Sum`, `Min`, `Max`, `Average`를 그룹화와 함께 사용할 수 있습니다.
 
-### Ordering
+### 정렬 {#ordering}
 
-`OrderBy`, `OrderByDescending`, `ThenBy`, `ThenByDescending` are supported. You can combine them to order by multiple columns:
+`OrderBy`, `OrderByDescending`, `ThenBy`, `ThenByDescending`을 지원합니다. 이들을 조합해 여러 컬럼으로 정렬할 수 있습니다:
 
 ```csharp
 var booksOrderedByAuthorAndYear = bookTable.GetRecordView<Book>().AsQueryable()
@@ -306,9 +306,9 @@ var booksOrderedByAuthorAndYear = bookTable.GetRecordView<Book>().AsQueryable()
     .ToList();
 ```
 
-### Union, Intersect, Except
+### Union, Intersect, Except {#union-intersect-except}
 
-Multiple result sets can be combined by using the `Union`, `Intersect`, `Except` methods. For example:
+`Union`, `Intersect`, `Except` 메서드로 여러 결과 집합을 결합합니다. 예를 들면:
 
 ```csharp
 IQueryable<string> employeeEmails = employeeTable
@@ -327,11 +327,11 @@ List<string> employeesThatAreCustomers = employeeEmails
     .Intersect(customerEmails).ToList();
 ```
 
-### Aggregate Functions
+### 집계 함수 {#aggregate-functions}
 
-Below is a list of .NET aggregate functions and their SQL equivalents that are supported in Ignite:
+다음은 Ignite에서 지원되는 .NET 집계 함수와 그에 대응하는 SQL 함수 목록입니다:
 
-| LINQ synchronous method | LINQ asynchronous method | SQL Operator |
+| LINQ 동기 메서드 | LINQ 비동기 메서드 | SQL 연산자 |
 |-------------------------|--------------------------|--------------|
 | First | FirstAsync | FIRST |
 | FirstOrDefault | FirstOrDefaultAsync | FIRST ... LIMIT 1 |
@@ -346,10 +346,10 @@ Below is a list of .NET aggregate functions and their SQL equivalents that are s
 | Any | AnyAsync | ANY |
 | All | AllAsync | ALL |
 
-Here are examples of how you can use these methods:
+다음은 이 메서드들을 사용하는 예시입니다:
 
 <Tabs>
-<TabItem value="sync" label="Synchronous">
+<TabItem value="sync" label="동기">
 
 ```csharp
 Person first = query.First();
@@ -367,7 +367,7 @@ bool all = query.All(x => x.Age > 30);
 ```
 
 </TabItem>
-<TabItem value="async" label="Asynchronous">
+<TabItem value="async" label="비동기">
 
 ```csharp
 Person first = await query.FirstAsync();
@@ -387,16 +387,16 @@ bool all = await query.AllAsync(x => x.Age > 30);
 </TabItem>
 </Tabs>
 
-### Math Functions
+### 수학 함수 {#math-functions}
 
-The following `Math` functions are supported (will be translated to SQL equivalents):
+다음 `Math` 함수를 지원합니다(대응하는 SQL 함수로 변환됩니다):
 `Abs`, `Cos`, `Cosh`, `Acos`, `Sin`, `Sinh`, `Asin`, `Tan`, `Tanh`, `Atan`, `Ceiling`, `Floor`,
 `Exp`, `Log`, `Log10`, `Pow`, `Round`, `Sign`, `Sqrt`, `Truncate`.
 
-The following `Math` functions are NOT supported (no equivalent in Ignite SQL engine):
+다음 `Math` 함수는 지원되지 않습니다(Ignite SQL 엔진에 대응하는 함수가 없음):
 `Acosh`, `Asinh`, `Atanh`, `Atan2`, `Log2`, `Log(x, y)`.
 
-Here is the example of how you can use math functions:
+다음은 수학 함수를 사용하는 예시입니다:
 
 ```csharp
 var triangles = table.GetRecordView<Triangle>().AsQueryable()
@@ -408,14 +408,14 @@ var triangles = table.GetRecordView<Triangle>().AsQueryable()
     .ToList();
 ```
 
-### String Functions
+### 문자열 함수 {#string-functions}
 
-The following string functions are supported: `string.Compare(string)`, `string.Compare(string, bool ignoreCase)`, concatenation `s1 + s2 + s3`, `ToUpper`, `ToLower`,
+다음 문자열 함수를 지원합니다: `string.Compare(string)`, `string.Compare(string, bool ignoreCase)`, 연결 `s1 + s2 + s3`, `ToUpper`, `ToLower`,
 `Substring(start)`, `Substring(start, len)`,
 `Trim`, `Trim(char)`, `TrimStart`, `TrimStart(char)`, `TrimEnd`, `TrimEnd(char)`,
 `Contains`, `StartsWith`, `EndsWith`, `IndexOf`, `Length`, `Replace`.
 
-Here is the example of how you can use string functions:
+다음은 문자열 함수를 사용하는 예시입니다:
 
 ```csharp
 List<string> fullNames = table.GetRecordView<Person>().AsQueryable()
@@ -427,9 +427,9 @@ List<string> fullNames = table.GetRecordView<Person>().AsQueryable()
     .ToList();
 ```
 
-### Regular Expressions
+### 정규 표현식 {#regular-expressions}
 
-`Regex.Replace` is translated to `regexp_replace` function. Here is how you can use regular expressions in your code:
+`Regex.Replace`는 `regexp_replace` 함수로 변환됩니다. 코드에서 정규 표현식을 사용하는 방법은 다음과 같습니다:
 
 ```csharp
 List<string> addresses = table.GetRecordView<Person>().AsQueryable()
@@ -438,19 +438,19 @@ List<string> addresses = table.GetRecordView<Person>().AsQueryable()
 ```
 
 :::note
-Regular expression engine within SQL may behave differently from .NET engine.
+SQL 내부의 정규 표현식 엔진은 .NET 엔진과 다르게 동작할 수 있습니다.
 :::
 
-### DML (Bulk Update and Delete)
+### DML(대량 업데이트 및 삭제) {#dml-bulk-update-and-delete}
 
-Bulk update and delete with optional conditions are supported through `ExecuteUpdateAsync` and `ExecuteDeleteAsync` extensions methods on `IQueryable<T>`:
+선택적 조건을 포함한 대량 업데이트와 삭제는 `IQueryable<T>`의 `ExecuteUpdateAsync`와 `ExecuteDeleteAsync` 확장 메서드로 지원됩니다:
 
 ```csharp
 var orders = orderTable.GetRecordView<Order>().AsQueryable();
 await orders.Where(x => x.Amount == 0).ExecuteDeleteAsync();
 ```
 
-Update statement can set properties to constant values or to an expression based on other properties of the same row:
+업데이트 문은 속성을 상수 값으로 설정하거나 같은 행의 다른 속성에 기반한 표현식으로 설정합니다:
 
 ```csharp
 var orders = orderTable.GetRecordView<Order>().AsQueryable();
@@ -463,7 +463,7 @@ await orders
                             x.CustomerName));
 ```
 
-Resulting SQL:
+결과 SQL:
 
 ```sql
 update PUBLIC.tbl1 as _T0
@@ -471,10 +471,10 @@ set NOTE = concat(concat(_T0.NOTE, ?), _T0.CUSTOMERNAME), DISCOUNT = ?
 where (_T0.CUSTOMERID IS NOT DISTINCT FROM ?)
 ```
 
-### Composing Queries
+### 쿼리 조합 {#composing-queries}
 
-`IQueryable<T>` expressions can be composed dynamically. A common use case is to compose a query based on user input.
-For example, optional filters on different columns can be applied to a query:
+`IQueryable<T>` 표현식은 동적으로 조합할 수 있습니다. 흔한 사용 사례는 사용자 입력에 따라 쿼리를 조합하는 것입니다.
+예를 들어 서로 다른 컬럼에 대한 선택적 필터를 쿼리에 적용할 수 있습니다:
 
 ```csharp
 public List<Book> GetBooks(string? author, int? year)
@@ -489,10 +489,9 @@ public List<Book> GetBooks(string? author, int? year)
 }
 ```
 
-### Column Name Mapping
+### 컬럼 이름 매핑 {#column-name-mapping}
 
-Unless custom mapping is provided with `[Column]`, LINQ provider will use property or field names as column names,
-using unquoted identifiers, which are case-insensitive.
+`[Column]`으로 커스텀 매핑을 지정하지 않으면, LINQ 공급자는 속성 또는 필드 이름을 컬럼 이름으로 사용하며, 대소문자를 구분하지 않는 따옴표 없는 식별자를 씁니다.
 
 <Tabs>
 <TabItem value="csharp" label="C#">
@@ -502,7 +501,7 @@ bookTable.GetRecordView<Book>().AsQueryable().Select(x => x.Author).ToList();
 ```
 
 </TabItem>
-<TabItem value="sql" label="Resulting SQL">
+<TabItem value="sql" label="결과 SQL">
 
 ```sql
 select _T0.AUTHOR from PUBLIC.books as _T0
@@ -511,7 +510,7 @@ select _T0.AUTHOR from PUBLIC.books as _T0
 </TabItem>
 </Tabs>
 
-To use quoted identifiers, or to map column names to different property names, use `[Column]` attribute:
+따옴표가 있는 식별자를 사용하거나 컬럼 이름을 다른 속성 이름에 매핑하려면 `[Column]` 특성을 사용합니다:
 
 <Tabs>
 <TabItem value="csharp" label="C#">
@@ -527,7 +526,7 @@ public record Book([property: Column("book_author")] string Author);
 ```
 
 </TabItem>
-<TabItem value="sql" label="Resulting SQL">
+<TabItem value="sql" label="결과 SQL">
 
 ```sql
 SELECT _T0."book_author" FROM PUBLIC.books AS _T0
@@ -538,7 +537,7 @@ SELECT _T0."book_author" FROM PUBLIC.books AS _T0
 
 ### KeyValueView
 
-All examples above use `IRecordView<T>` to perform queries; LINQ provider supports `IKeyValueView<TK, TV>` equally well:
+위의 모든 예시는 `IRecordView<T>`로 쿼리를 수행하지만, LINQ 공급자는 `IKeyValueView<TK, TV>`도 똑같이 잘 지원합니다:
 
 ```csharp
 IQueryable<KeyValuePair<int, Book>> query =

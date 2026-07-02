@@ -6,32 +6,32 @@ sidebar_position: 6
 
 # Network API
 
-The Network API provides access to cluster topology information. It exposes cluster node metadata used for compute job targeting and cluster monitoring.
+Network API는 클러스터 토폴로지 정보에 접근할 수 있게 합니다. 컴퓨트 작업 대상 지정과 클러스터 모니터링에 사용하는 클러스터 노드 메타데이터를 노출합니다.
 
-## Key Concepts
+## 핵심 개념 {#key-concepts}
 
-### Cluster Nodes
+### 클러스터 노드 {#cluster-nodes}
 
-Cluster nodes represent individual server instances in the Ignite cluster. Each node has a unique identifier, a stable name, and network address information.
+클러스터 노드는 Ignite 클러스터의 개별 서버 인스턴스를 나타냅니다. 각 노드에는 고유 식별자, 안정적인 이름, 네트워크 주소 정보가 있습니다.
 
-### Node Identity
+### 노드 식별 {#node-identity}
 
-Nodes have two forms of identification:
+노드에는 두 가지 식별 방식이 있습니다:
 
-- **Node ID** - A UUID that changes when the node restarts
-- **Node Name** - A stable string name that persists across restarts
+- **노드 ID** - 노드가 재시작하면 바뀌는 UUID
+- **노드 이름** - 재시작해도 유지되는 안정적인 문자열 이름
 
-Use node names for stable references. Use node IDs for runtime identification.
+안정적인 참조에는 노드 이름을 사용하세요. 런타임 식별에는 노드 ID를 사용하세요.
 
-### Network Addresses
+### 네트워크 주소 {#network-addresses}
 
-Each node exposes a network endpoint containing host and port information. Clients use these addresses to establish connections for operations.
+각 노드는 호스트와 포트 정보를 담은 네트워크 엔드포인트를 노출합니다. 클라이언트는 이 주소로 작업에 필요한 연결을 수립합니다.
 
-## Cluster Node
+## 클러스터 노드 {#cluster-node}
 
-### Node Properties
+### 노드 속성 {#node-properties}
 
-Cluster nodes provide three key properties:
+클러스터 노드는 세 가지 주요 속성을 제공합니다:
 
 ```cpp
 using namespace ignite;
@@ -49,23 +49,23 @@ for (const auto& node : nodes) {
 }
 ```
 
-### Accessing Node Information
+### 노드 정보 접근 {#accessing-node-information}
 
-Get the node ID:
+노드 ID를 가져옵니다:
 
 ```cpp
 uuid node_id = node.get_id();
 std::cout << "Node ID: " << node_id << std::endl;
 ```
 
-Get the node name:
+노드 이름을 가져옵니다:
 
 ```cpp
 std::string node_name = node.get_name();
 std::cout << "Node: " << node_name << std::endl;
 ```
 
-Get the network address:
+네트워크 주소를 가져옵니다:
 
 ```cpp
 end_point addr = node.get_address();
@@ -73,9 +73,9 @@ std::cout << "Host: " << addr.host << std::endl;
 std::cout << "Port: " << addr.port << std::endl;
 ```
 
-### Node Comparison
+### 노드 비교 {#node-comparison}
 
-Cluster nodes support full comparison:
+클러스터 노드는 완전한 비교를 지원합니다:
 
 ```cpp
 cluster_node node1 = nodes[0];
@@ -90,7 +90,7 @@ if (node1 < node2) {
 }
 ```
 
-Comparison enables sorting and set operations:
+비교를 사용하면 정렬과 집합 연산을 수행할 수 있습니다:
 
 ```cpp
 // Sort nodes by name
@@ -103,11 +103,11 @@ std::sort(nodes.begin(), nodes.end(),
 std::set<cluster_node> node_set(nodes.begin(), nodes.end());
 ```
 
-## Retrieving Cluster Nodes
+## 클러스터 노드 조회 {#retrieving-cluster-nodes}
 
-### Synchronous Retrieval
+### 동기 조회 {#synchronous-retrieval}
 
-Get all cluster nodes:
+모든 클러스터 노드를 가져옵니다:
 
 ```cpp
 auto nodes = client.get_cluster_nodes();
@@ -121,9 +121,9 @@ for (const auto& node : nodes) {
 }
 ```
 
-### Asynchronous Retrieval
+### 비동기 조회 {#asynchronous-retrieval}
 
-Get nodes without blocking:
+블로킹 없이 노드를 가져옵니다:
 
 ```cpp
 client.get_cluster_nodes_async([](ignite_result<std::vector<cluster_node>> result) {
@@ -136,11 +136,11 @@ client.get_cluster_nodes_async([](ignite_result<std::vector<cluster_node>> resul
 });
 ```
 
-## Use Cases
+## 사용 사례 {#use-cases}
 
-### Node Selection for Compute
+### 컴퓨트를 위한 노드 선택 {#node-selection-for-compute}
 
-Select specific nodes for job execution:
+작업 실행에 사용할 특정 노드를 선택합니다:
 
 ```cpp
 auto nodes = client.get_cluster_nodes();
@@ -156,9 +156,9 @@ auto target = job_target::any_node(nodes);
 auto execution = client.get_compute().submit(target, descriptor, arg);
 ```
 
-### Finding Specific Nodes
+### 특정 노드 찾기 {#finding-specific-nodes}
 
-Locate nodes by name:
+이름으로 노드를 찾습니다:
 
 ```cpp
 auto nodes = client.get_cluster_nodes();
@@ -174,9 +174,9 @@ if (it != nodes.end()) {
 }
 ```
 
-### Cluster Monitoring
+### 클러스터 모니터링 {#cluster-monitoring}
 
-Monitor cluster size:
+클러스터 크기를 모니터링합니다:
 
 ```cpp
 auto nodes = client.get_cluster_nodes();
@@ -187,7 +187,7 @@ if (cluster_size < 3) {
 }
 ```
 
-Track node addresses:
+노드 주소를 추적합니다:
 
 ```cpp
 std::map<std::string, end_point> node_map;
@@ -202,9 +202,9 @@ if (node_map.find("my-node-01") != node_map.end()) {
 }
 ```
 
-### Broadcasting to All Nodes
+### 모든 노드에 브로드캐스트 {#broadcasting-to-all-nodes}
 
-Execute jobs on all cluster nodes:
+모든 클러스터 노드에서 작업을 실행합니다:
 
 ```cpp
 auto nodes = client.get_cluster_nodes();
@@ -217,9 +217,9 @@ auto executions = broadcast.get_job_executions();
 std::cout << "Broadcast to " << executions.size() << " nodes" << std::endl;
 ```
 
-### Node Filtering
+### 노드 필터링 {#node-filtering}
 
-Filter nodes by criteria:
+기준에 따라 노드를 필터링합니다:
 
 ```cpp
 auto nodes = client.get_cluster_nodes();
@@ -239,9 +239,9 @@ std::copy_if(nodes.begin(), nodes.end(), std::back_inserter(dev_nodes),
     });
 ```
 
-### Round-Robin Selection
+### 라운드 로빈 선택 {#round-robin-selection}
 
-Distribute work across nodes:
+노드 전반에 작업을 분산합니다:
 
 ```cpp
 auto nodes = client.get_cluster_nodes();
@@ -255,21 +255,21 @@ for (const auto& task : tasks) {
 }
 ```
 
-## Node Lifecycle
+## 노드 라이프사이클 {#node-lifecycle}
 
-### Node Restart Impact
+### 노드 재시작의 영향 {#node-restart-impact}
 
-When a node restarts:
+노드가 재시작하면:
 
-- Node ID changes to a new UUID
-- Node name remains the same
-- Network address typically remains the same
+- 노드 ID가 새 UUID로 바뀝니다
+- 노드 이름은 그대로 유지됩니다
+- 네트워크 주소는 대개 그대로 유지됩니다
 
-Use node names for stable node references across restarts.
+재시작 전후로 안정적으로 노드를 참조하려면 노드 이름을 사용하세요.
 
-### Topology Changes
+### 토폴로지 변경 {#topology-changes}
 
-The cluster topology may change between calls:
+클러스터 토폴로지는 호출 사이에 바뀔 수 있습니다:
 
 ```cpp
 // Initial topology
@@ -289,13 +289,13 @@ if (size2 != size1) {
 }
 ```
 
-Always retrieve fresh topology information before node-specific operations.
+노드별 작업을 수행하기 전에 항상 최신 토폴로지 정보를 조회하세요.
 
-## Error Handling
+## 오류 처리 {#error-handling}
 
-### Network Errors
+### 네트워크 오류 {#network-errors}
 
-Handle connection failures:
+연결 실패를 처리합니다:
 
 ```cpp
 try {
@@ -305,7 +305,7 @@ try {
 }
 ```
 
-With async operations:
+비동기 작업의 경우:
 
 ```cpp
 client.get_cluster_nodes_async([](ignite_result<std::vector<cluster_node>> result) {
@@ -318,9 +318,9 @@ client.get_cluster_nodes_async([](ignite_result<std::vector<cluster_node>> resul
 });
 ```
 
-### Empty Topology
+### 빈 토폴로지 {#empty-topology}
 
-Check for empty clusters:
+빈 클러스터인지 확인합니다:
 
 ```cpp
 auto nodes = client.get_cluster_nodes();
@@ -332,11 +332,11 @@ if (nodes.empty()) {
 }
 ```
 
-## Integration with Compute API
+## Compute API 연동 {#integration-with-compute-api}
 
-### Job Targeting
+### 작업 대상 지정 {#job-targeting}
 
-Use topology information for compute targeting:
+컴퓨트 대상 지정에 토폴로지 정보를 사용합니다:
 
 ```cpp
 auto nodes = client.get_cluster_nodes();
@@ -352,9 +352,9 @@ std::set<cluster_node> node_set(nodes.begin(), nodes.end());
 auto broadcast_target = broadcast_job_target::nodes(node_set);
 ```
 
-### Node Affinity
+### 노드 어피니티 {#node-affinity}
 
-Select nodes based on affinity:
+어피니티에 따라 노드를 선택합니다:
 
 ```cpp
 auto nodes = client.get_cluster_nodes();
@@ -373,11 +373,11 @@ if (!preferred_nodes.empty()) {
 }
 ```
 
-## Best Practices
+## 모범 사례 {#best-practices}
 
-### Cache Topology Information
+### 토폴로지 정보 캐싱 {#cache-topology-information}
 
-Cache node information for short-lived operations:
+수명이 짧은 작업에는 노드 정보를 캐싱합니다:
 
 ```cpp
 class compute_scheduler {
@@ -400,9 +400,9 @@ public:
 };
 ```
 
-### Use Stable References
+### 안정적인 참조 사용 {#use-stable-references}
 
-Prefer node names over IDs for persistent references:
+영구적인 참조에는 노드 ID보다 노드 이름을 사용하세요:
 
 ```cpp
 // Good: Use node name
@@ -415,9 +415,9 @@ auto it = std::find_if(nodes.begin(), nodes.end(),
 uuid target_node_id = saved_id;  // May be stale after restart
 ```
 
-### Handle Dynamic Topology
+### 동적 토폴로지 처리 {#handle-dynamic-topology}
 
-Account for nodes joining and leaving:
+노드의 합류와 이탈을 고려합니다:
 
 ```cpp
 void execute_with_fallback(ignite_client& client,
@@ -441,8 +441,8 @@ void execute_with_fallback(ignite_client& client,
 }
 ```
 
-## Reference
+## 참조 {#reference}
 
-- [C++ API Documentation](https://ignite.apache.org/releases/ignite3/cppdoc/)
+- [C++ API 문서](https://ignite.apache.org/releases/ignite3/cppdoc/)
 - [Compute API](./compute-api)
 - [Client API](./client-api)

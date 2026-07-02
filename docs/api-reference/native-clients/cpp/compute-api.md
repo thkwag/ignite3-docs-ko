@@ -6,40 +6,40 @@ sidebar_position: 5
 
 # Compute API
 
-The Compute API executes distributed compute jobs across cluster nodes. It supports single-node execution, multi-node execution, colocated execution, and broadcast patterns.
+Compute API는 클러스터 노드 전반에서 분산 컴퓨트 작업을 실행합니다. 단일 노드 실행, 다중 노드 실행, 콜로케이션 실행, 브로드캐스트 패턴을 지원합니다.
 
-## Key Concepts
+## 핵심 개념 {#key-concepts}
 
-### Job Execution Model
+### 작업 실행 모델 {#job-execution-model}
 
-Jobs are Java classes deployed on cluster nodes. The C++ client submits job execution requests with binary arguments. The server executes the job and returns results as binary objects.
+작업은 클러스터 노드에 배포된 Java 클래스입니다. C++ 클라이언트는 바이너리 인수와 함께 작업 실행 요청을 제출합니다. 서버는 작업을 실행하고 결과를 바이너리 객체(binary object)로 반환합니다.
 
-### Job Targeting
+### 작업 대상 지정 {#job-targeting}
 
-Jobs execute on specific nodes based on targeting strategies:
+작업은 대상 지정 전략에 따라 특정 노드에서 실행됩니다:
 
-- **Single Node** - Execute on one specific node
-- **Any Node** - Execute on any node from a set
-- **Colocated** - Execute on the node containing table partition data
-- **Broadcast** - Execute on all nodes in a set
+- **단일 노드** - 특정 노드 하나에서 실행
+- **임의 노드** - 집합에 속한 아무 노드에서 실행
+- **콜로케이션** - 테이블 파티션 데이터가 있는 노드에서 실행
+- **브로드캐스트** - 집합에 속한 모든 노드에서 실행
 
-### Job Descriptors
+### 작업 디스크립터 {#job-descriptors}
 
-Job descriptors specify the job class name, deployment units, and execution options. Deployment units identify code locations on the cluster. Execution options configure priority and other runtime parameters.
+작업 디스크립터(job descriptor)는 작업 클래스 이름, 배포 단위, 실행 옵션을 지정합니다. 배포 단위는 클러스터에서 코드가 있는 위치를 나타냅니다. 실행 옵션은 우선순위와 그 밖의 런타임 매개변수를 구성합니다.
 
-### Execution Handles
+### 실행 핸들 {#execution-handles}
 
-Submit operations return execution handles. Handles provide job monitoring, result retrieval, priority changes, and cancellation. Results become available after job completion.
+작업을 제출하면 실행 핸들이 반환됩니다. 핸들은 작업 모니터링, 결과 조회, 우선순위 변경, 취소 기능을 제공합니다. 결과는 작업이 완료된 뒤에 사용할 수 있습니다.
 
-### Broadcast Execution
+### 브로드캐스트 실행 {#broadcast-execution}
 
-Broadcast submits a single job to multiple nodes. It returns a broadcast execution handle containing individual execution handles for each node.
+브로드캐스트는 하나의 작업을 여러 노드에 제출합니다. 각 노드의 개별 실행 핸들을 담은 브로드캐스트 실행 핸들을 반환합니다.
 
-## Basic Usage
+## 기본 사용법 {#basic-usage}
 
-### Getting Cluster Nodes
+### 클러스터 노드 가져오기 {#getting-cluster-nodes}
 
-Retrieve cluster topology:
+클러스터 토폴로지를 조회합니다:
 
 ```cpp
 using namespace ignite;
@@ -54,9 +54,9 @@ for (const auto& node : nodes) {
 }
 ```
 
-### Submitting Jobs
+### 작업 제출 {#submitting-jobs}
 
-Submit a job to any node:
+임의 노드에 작업을 제출합니다:
 
 ```cpp
 auto compute = client.get_compute();
@@ -74,9 +74,9 @@ if (result.has_value()) {
 }
 ```
 
-### Async Submission
+### 비동기 제출 {#async-submission}
 
-Submit without blocking:
+블로킹 없이 제출합니다:
 
 ```cpp
 compute.submit_async(target, descriptor, arg,
@@ -88,11 +88,11 @@ compute.submit_async(target, descriptor, arg,
     });
 ```
 
-## Job Targets
+## 작업 대상 {#job-targets}
 
-### Single Node Target
+### 단일 노드 대상 {#single-node-target}
 
-Execute on a specific node:
+특정 노드에서 실행합니다:
 
 ```cpp
 auto nodes = client.get_cluster_nodes();
@@ -102,9 +102,9 @@ auto target = job_target::node(target_node);
 auto execution = compute.submit(target, descriptor, arg);
 ```
 
-### Any Node Target
+### 임의 노드 대상 {#any-node-target}
 
-Execute on any node from a set:
+집합에 속한 아무 노드에서 실행합니다:
 
 ```cpp
 auto nodes = client.get_cluster_nodes();
@@ -113,23 +113,23 @@ auto target = job_target::any_node(nodes);
 auto execution = compute.submit(target, descriptor, arg);
 ```
 
-Create from vector:
+벡터로 생성합니다:
 
 ```cpp
 std::vector<cluster_node> node_list = {node1, node2, node3};
 auto target = job_target::any_node(node_list);
 ```
 
-Create from set:
+집합으로 생성합니다:
 
 ```cpp
 std::set<cluster_node> node_set = {node1, node2, node3};
 auto target = job_target::any_node(node_set);
 ```
 
-### Colocated Target
+### 콜로케이션 대상 {#colocated-target}
 
-Execute on the node containing table data:
+테이블 데이터가 있는 노드에서 실행합니다:
 
 ```cpp
 ignite_tuple key{{"id", 42}};
@@ -138,26 +138,26 @@ auto target = job_target::colocated("accounts", key);
 auto execution = compute.submit(target, descriptor, arg);
 ```
 
-Use qualified table names:
+정규화된 테이블 이름을 사용합니다:
 
 ```cpp
 qualified_name table_name = qualified_name::parse("my_schema.accounts");
 auto target = job_target::colocated(table_name, key);
 ```
 
-Colocated execution minimizes network overhead by running compute jobs where data resides.
+콜로케이션 실행은 데이터가 있는 위치에서 컴퓨트 작업을 실행해 네트워크 부하를 최소화합니다.
 
-## Job Descriptors
+## 작업 디스크립터 {#job-descriptors-1}
 
-### Building Descriptors
+### 디스크립터 만들기 {#building-descriptors}
 
-Create a basic descriptor:
+기본 디스크립터를 생성합니다:
 
 ```cpp
 auto descriptor = job_descriptor::builder("com.example.MyJob").build();
 ```
 
-Add deployment units:
+배포 단위를 추가합니다:
 
 ```cpp
 std::vector<deployment_unit> units{
@@ -170,7 +170,7 @@ auto descriptor = job_descriptor::builder("com.example.MyJob")
     .build();
 ```
 
-Add execution options:
+실행 옵션을 추가합니다:
 
 ```cpp
 job_execution_options opts;
@@ -181,19 +181,19 @@ auto descriptor = job_descriptor::builder("com.example.MyJob")
     .build();
 ```
 
-### Descriptor Components
+### 디스크립터 구성 요소 {#descriptor-components}
 
-**Job Class Name** - Fully qualified Java class name implementing the compute job interface
+**작업 클래스 이름** - 컴퓨트 작업 인터페이스를 구현하는 정규화된 Java 클래스 이름
 
-**Deployment Units** - List of units containing job code and dependencies
+**배포 단위** - 작업 코드와 의존성을 담은 배포 단위 목록
 
-**Execution Options** - Priority and other runtime configuration
+**실행 옵션** - 우선순위와 그 밖의 런타임 구성
 
-## Job Execution
+## 작업 실행 {#job-execution}
 
-### Monitoring Execution
+### 실행 모니터링 {#monitoring-execution}
 
-Check job state:
+작업 상태를 확인합니다:
 
 ```cpp
 auto execution = compute.submit(target, descriptor, arg);
@@ -204,7 +204,7 @@ if (state.has_value()) {
 }
 ```
 
-Get state asynchronously:
+상태를 비동기로 가져옵니다:
 
 ```cpp
 execution.get_state_async([](ignite_result<std::optional<job_state>> result) {
@@ -217,11 +217,11 @@ execution.get_state_async([](ignite_result<std::optional<job_state>> result) {
 });
 ```
 
-State may be unavailable if the job has expired from the execution history.
+작업이 실행 이력에서 만료되었으면 상태를 사용하지 못할 수 있습니다.
 
-### Retrieving Results
+### 결과 조회 {#retrieving-results}
 
-Get result (blocks until completion):
+결과를 가져옵니다(완료될 때까지 블로킹):
 
 ```cpp
 auto result = execution.get_result();
@@ -232,7 +232,7 @@ if (result.has_value()) {
 }
 ```
 
-Get result asynchronously:
+결과를 비동기로 가져옵니다:
 
 ```cpp
 execution.get_result_async([](ignite_result<std::optional<binary_object>> result) {
@@ -245,9 +245,9 @@ execution.get_result_async([](ignite_result<std::optional<binary_object>> result
 });
 ```
 
-### Execution Information
+### 실행 정보 {#execution-information}
 
-Access execution metadata:
+실행 메타데이터에 접근합니다:
 
 ```cpp
 auto job_id = execution.get_id();
@@ -257,11 +257,11 @@ std::cout << "Job ID: " << job_id << std::endl;
 std::cout << "Executing on: " << node.get_name() << std::endl;
 ```
 
-## Job Control
+## 작업 제어 {#job-control}
 
-### Cancelling Jobs
+### 작업 취소 {#cancelling-jobs}
 
-Cancel a running job:
+실행 중인 작업을 취소합니다:
 
 ```cpp
 auto execution = compute.submit(target, descriptor, arg);
@@ -281,7 +281,7 @@ switch (result) {
 }
 ```
 
-Cancel asynchronously:
+비동기로 취소합니다:
 
 ```cpp
 execution.cancel_async([](ignite_result<job_execution::operation_result> result) {
@@ -292,9 +292,9 @@ execution.cancel_async([](ignite_result<job_execution::operation_result> result)
 });
 ```
 
-### Changing Priority
+### 우선순위 변경 {#changing-priority}
 
-Modify job execution priority:
+작업 실행 우선순위를 변경합니다:
 
 ```cpp
 auto execution = compute.submit(target, descriptor, arg);
@@ -306,7 +306,7 @@ if (result == job_execution::operation_result::SUCCESS) {
 }
 ```
 
-Change priority asynchronously:
+우선순위를 비동기로 변경합니다:
 
 ```cpp
 execution.change_priority_async(5,
@@ -315,13 +315,13 @@ execution.change_priority_async(5,
     });
 ```
 
-Higher priority values execute before lower priority jobs in the queue.
+우선순위 값이 높은 작업이 큐에서 우선순위가 낮은 작업보다 먼저 실행됩니다.
 
-## Broadcast Execution
+## 브로드캐스트 실행 {#broadcast-execution-1}
 
-### Broadcasting to Multiple Nodes
+### 여러 노드에 브로드캐스트 {#broadcasting-to-multiple-nodes}
 
-Execute on all nodes in a set:
+집합에 속한 모든 노드에서 실행합니다:
 
 ```cpp
 auto nodes = client.get_cluster_nodes();
@@ -331,16 +331,16 @@ auto target = broadcast_job_target::nodes(node_set);
 auto broadcast = compute.submit_broadcast(target, descriptor, arg);
 ```
 
-Broadcast to a single node:
+단일 노드에 브로드캐스트합니다:
 
 ```cpp
 auto target = broadcast_job_target::node(specific_node);
 auto broadcast = compute.submit_broadcast(target, descriptor, arg);
 ```
 
-### Async Broadcast
+### 비동기 브로드캐스트 {#async-broadcast}
 
-Submit broadcast without blocking:
+블로킹 없이 브로드캐스트를 제출합니다:
 
 ```cpp
 compute.submit_broadcast_async(target, descriptor, arg,
@@ -352,9 +352,9 @@ compute.submit_broadcast_async(target, descriptor, arg,
     });
 ```
 
-### Processing Broadcast Results
+### 브로드캐스트 결과 처리 {#processing-broadcast-results}
 
-Access individual executions:
+개별 실행에 접근합니다:
 
 ```cpp
 auto broadcast = compute.submit_broadcast(target, descriptor, arg);
@@ -373,22 +373,22 @@ for (auto& exec_result : executions) {
 }
 ```
 
-Each execution in the broadcast operates independently. Retrieve results individually from each execution handle.
+브로드캐스트의 각 실행은 독립적으로 동작합니다. 각 실행 핸들에서 결과를 개별적으로 조회하세요.
 
-## Binary Arguments
+## 바이너리 인수 {#binary-arguments}
 
-### Passing Primitive Arguments
+### 기본 타입 인수 전달 {#passing-primitive-arguments}
 
-Jobs accept binary_object arguments. Wrap primitive values:
+작업은 binary_object 인수를 받습니다. 기본 타입 값을 감쌉니다:
 
 ```cpp
 binary_object arg(42);  // Integer argument
 auto execution = compute.submit(target, descriptor, arg);
 ```
 
-### Passing Complex Arguments
+### 복합 인수 전달 {#passing-complex-arguments}
 
-Create binary objects from serialized data:
+직렬화된 데이터로 바이너리 객체를 생성합니다:
 
 ```cpp
 // Serialize your data structure to bytes
@@ -398,20 +398,20 @@ binary_object arg(data);
 auto execution = compute.submit(target, descriptor, arg);
 ```
 
-### No Argument Jobs
+### 인수 없는 작업 {#no-argument-jobs}
 
-Pass empty binary object for jobs without arguments:
+인수가 없는 작업에는 빈 바이너리 객체를 전달합니다:
 
 ```cpp
 binary_object empty_arg;
 auto execution = compute.submit(target, descriptor, empty_arg);
 ```
 
-## Error Handling
+## 오류 처리 {#error-handling}
 
-### Handling Job Errors
+### 작업 오류 처리 {#handling-job-errors}
 
-Job execution errors propagate to the client:
+작업 실행 오류는 클라이언트로 전파됩니다:
 
 ```cpp
 try {
@@ -422,7 +422,7 @@ try {
 }
 ```
 
-With async operations:
+비동기 작업의 경우:
 
 ```cpp
 execution.get_result_async([](ignite_result<std::optional<binary_object>> result) {
@@ -434,9 +434,9 @@ execution.get_result_async([](ignite_result<std::optional<binary_object>> result
 });
 ```
 
-### Handling Submission Errors
+### 제출 오류 처리 {#handling-submission-errors}
 
-Handle submission failures:
+제출 실패를 처리합니다:
 
 ```cpp
 try {
@@ -446,13 +446,13 @@ try {
 }
 ```
 
-Common errors include missing deployment units, invalid job class names, and network failures.
+흔한 오류로는 배포 단위 누락, 잘못된 작업 클래스 이름, 네트워크 장애가 있습니다.
 
-## Use Cases
+## 사용 사례 {#use-cases}
 
-### Map-Reduce Pattern
+### 맵리듀스 패턴 {#map-reduce-pattern}
 
-Submit jobs to multiple nodes and aggregate results:
+여러 노드에 작업을 제출하고 결과를 집계합니다:
 
 ```cpp
 auto nodes = client.get_cluster_nodes();
@@ -476,9 +476,9 @@ for (auto& execution : executions) {
 auto final_result = reduce(results);
 ```
 
-### Colocated Processing
+### 콜로케이션 처리 {#colocated-processing}
 
-Process data where it resides:
+데이터가 있는 위치에서 데이터를 처리합니다:
 
 ```cpp
 // Execute compute job on the node containing this key
@@ -491,9 +491,9 @@ auto execution = compute.submit(target, descriptor, arg);
 auto result = execution.get_result();
 ```
 
-### Batch Job Submission
+### 일괄 작업 제출 {#batch-job-submission}
 
-Submit multiple jobs in parallel:
+여러 작업을 병렬로 제출합니다:
 
 ```cpp
 std::vector<job_execution> executions;
@@ -509,9 +509,9 @@ for (auto& execution : executions) {
 }
 ```
 
-## Reference
+## 참조 {#reference}
 
-- [C++ API Documentation](https://ignite.apache.org/releases/ignite3/cppdoc/)
-- [Compute Concept](../../../develop/work-with-data/compute)
+- [C++ API 문서](https://ignite.apache.org/releases/ignite3/cppdoc/)
+- [컴퓨트 개념](../../../develop/work-with-data/compute)
 - [Client API](./client-api)
 - [Network API](./network-api)

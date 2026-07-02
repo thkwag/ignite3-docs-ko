@@ -113,9 +113,9 @@ IgniteClient client = IgniteClient.builder()
 | RequestsFailed | 실패한 요청 수. |
 | BytesSent | 전송된 바이트 수. |
 | BytesReceived | 수신된 바이트 수. |
-| StreamerBatchesSent | 전송된 데이터 스트리머 배치 수. |
+| StreamerBatchesSent | 전송된 데이터 스트리머 묶음 수. |
 | StreamerItemsSent | 전송된 데이터 스트리머 항목 수. |
-| StreamerBatchesActive | 전송 중인 데이터 스트리머 배치 수. |
+| StreamerBatchesActive | 전송 중인 데이터 스트리머 묶음 수. |
 | StreamerItemsQueued | 대기 중인 데이터 스트리머 항목 수. |
 
 ## 클라이언트 연결 구성 {#client-connection-configuration}

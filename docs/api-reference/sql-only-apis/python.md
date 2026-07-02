@@ -6,58 +6,58 @@ sidebar_position: 3
 
 # Python DB-API
 
-The Apache Ignite 3 Python driver implements PEP 249 (Python Database API Specification 2.0) for Python applications. It provides SQL access through a standard Python interface backed by a native C++ extension for performance.
+Apache Ignite 3 Python 드라이버는 Python 애플리케이션을 위해 PEP 249(Python Database API Specification 2.0)를 구현합니다. 성능을 위해 네이티브 C++ 확장으로 뒷받침되는 표준 Python 인터페이스로 SQL 접근을 제공합니다.
 
-## Installation
+## 설치 {#installation}
 
 ```bash
 pip install pyignite_dbapi
 ```
 
-## Connection Function
+## 연결 함수 {#connection-function}
 
 ```python
 connect(address, **kwargs)
 ```
 
-### Parameters
+### 매개변수 {#parameters}
 
-- `address` - List of node addresses in format `['host:port', 'host:port']`
+- `address` - `['host:port', 'host:port']` 형식의 노드 주소 목록
 
-### Keyword Arguments
+### 키워드 인수 {#keyword-arguments}
 
-**Connection Options**:
-- `identity` - Username for authentication
-- `secret` - Password for authentication
-- `schema` - Default schema name (default: `'PUBLIC'`)
-- `page_size` - Rows fetched per request (default: `1024`)
-- `timeout` - Network timeout in seconds (default: `30`)
-- `autocommit` - Enable autocommit mode (default: `True`)
+**연결 옵션**:
+- `identity` - 인증에 사용할 사용자 이름
+- `secret` - 인증에 사용할 비밀번호
+- `schema` - 기본 스키마 이름(기본값: `'PUBLIC'`)
+- `page_size` - 요청당 가져오는 행 수(기본값: `1024`)
+- `timeout` - 네트워크 타임아웃(초 단위, 기본값: `30`)
+- `autocommit` - 자동 커밋 모드 활성화(기본값: `True`)
 
-**SSL Options**:
-- `use_ssl` - Enable SSL connection (boolean)
-- `ssl_keyfile` - Path to PEM-encoded private key file
-- `ssl_certfile` - Path to PEM-encoded certificate file
-- `ssl_ca_certfile` - Path to PEM-encoded CA certificate file
+**SSL 옵션**:
+- `use_ssl` - SSL 연결 활성화(불리언)
+- `ssl_keyfile` - PEM으로 인코딩된 개인 키 파일 경로
+- `ssl_certfile` - PEM으로 인코딩된 인증서 파일 경로
+- `ssl_ca_certfile` - PEM으로 인코딩된 CA 인증서 파일 경로
 
-### Returns
+### 반환값 {#returns}
 
-`Connection` object.
+`Connection` 객체.
 
-## Connection Object
+## Connection 객체 {#connection-object}
 
-### Attributes
+### 속성 {#attributes}
 
-- `autocommit` - Get or set autocommit mode (property)
+- `autocommit` - 자동 커밋 모드 조회 또는 설정(속성)
 
-### Methods
+### 메서드 {#methods}
 
-- `close()` - Close connection and all associated cursors
-- `commit()` - Commit pending transaction
-- `rollback()` - Roll back pending transaction
-- `cursor()` - Create and return new cursor object
+- `close()` - 연결과 관련된 모든 커서를 닫습니다
+- `commit()` - 대기 중인 트랜잭션을 커밋합니다
+- `rollback()` - 대기 중인 트랜잭션을 롤백합니다
+- `cursor()` - 새 커서 객체를 생성해 반환합니다
 
-### Context Manager Support
+### 컨텍스트 관리자 지원 {#context-manager-support}
 
 ```python
 with pyignite_dbapi.connect(address=['localhost:10800']) as conn:
@@ -66,28 +66,28 @@ with pyignite_dbapi.connect(address=['localhost:10800']) as conn:
 # Connection automatically closes
 ```
 
-## Cursor Object
+## Cursor 객체 {#cursor-object}
 
-### Attributes
+### 속성 {#attributes-1}
 
-- `arraysize` - Number of rows returned by `fetchmany()` (default: `1`)
-- `description` - Read-only sequence of 7-tuples describing result columns
-- `rowcount` - Number of rows affected or returned (read-only)
-- `rownumber` - Current row index (read-only, 0-based)
-- `connection` - Parent connection object (read-only)
-- `lastrowid` - Always `None` (not supported by Ignite)
+- `arraysize` - `fetchmany()`가 반환하는 행 수(기본값: `1`)
+- `description` - 결과 컬럼을 설명하는 7-튜플의 읽기 전용 시퀀스
+- `rowcount` - 영향받거나 반환된 행 수(읽기 전용)
+- `rownumber` - 현재 행 인덱스(읽기 전용, 0 기반)
+- `connection` - 부모 연결 객체(읽기 전용)
+- `lastrowid` - 항상 `None`(Ignite에서 미지원)
 
-### Methods
+### 메서드 {#methods-1}
 
-- `execute(query, params=None)` - Execute SQL query with optional parameters
-- `executemany(query, params_list)` - Execute SQL query multiple times with parameter sequences
-- `fetchone()` - Fetch next row as tuple or `None`
-- `fetchmany(size=None)` - Fetch next `size` rows as list of tuples (uses `arraysize` if `size` is `None`)
-- `fetchall()` - Fetch all remaining rows as list of tuples
-- `close()` - Close cursor
-- `next()` / `__next__()` - Fetch next row (iterator protocol)
+- `execute(query, params=None)` - 선택적 매개변수와 함께 SQL 쿼리를 실행합니다
+- `executemany(query, params_list)` - 매개변수 시퀀스로 SQL 쿼리를 여러 번 실행합니다
+- `fetchone()` - 다음 행을 튜플로 가져오거나 `None`을 반환합니다
+- `fetchmany(size=None)` - 다음 `size`개 행을 튜플 목록으로 가져옵니다(`size`가 `None`이면 `arraysize`를 사용)
+- `fetchall()` - 남은 모든 행을 튜플 목록으로 가져옵니다
+- `close()` - 커서를 닫습니다
+- `next()` / `__next__()` - 다음 행을 가져옵니다(이터레이터 프로토콜)
 
-### Context Manager Support
+### 컨텍스트 관리자 지원 {#context-manager-support-1}
 
 ```python
 with conn.cursor() as cursor:
@@ -97,50 +97,50 @@ with conn.cursor() as cursor:
 # Cursor automatically closes
 ```
 
-## Column Description
+## 컬럼 설명 {#column-description}
 
-The `cursor.description` attribute returns a sequence of 7-tuples for each result column:
+`cursor.description` 속성은 각 결과 컬럼마다 7-튜플의 시퀀스를 반환합니다.
 
-1. `name` - Column name (string)
-2. `type_code` - Python type constant
-3. `display_size` - Display width (integer or `None`)
-4. `internal_size` - Internal storage size (integer or `None`)
-5. `precision` - Numeric precision (integer or `None`)
-6. `scale` - Numeric scale (integer or `None`)
-7. `null_ok` - Whether column allows NULL (boolean or `None`)
+1. `name` - 컬럼 이름(문자열)
+2. `type_code` - Python 타입 상수
+3. `display_size` - 표시 너비(정수 또는 `None`)
+4. `internal_size` - 내부 저장 크기(정수 또는 `None`)
+5. `precision` - 숫자 정밀도(정수 또는 `None`)
+6. `scale` - 숫자 스케일(정수 또는 `None`)
+7. `null_ok` - 컬럼의 NULL 허용 여부(불리언 또는 `None`)
 
-## Type Constants
+## 타입 상수 {#type-constants}
 
-The module exposes type constants for column descriptions:
+모듈은 컬럼 설명을 위한 타입 상수를 제공합니다.
 
-- `NULL` - None type
-- `BOOLEAN` - Boolean type (bool)
-- `INT` - Integer type (int)
-- `FLOAT` - Floating point type (float)
-- `NUMBER` - Decimal type (decimal.Decimal)
-- `DATE` - Date type (datetime.date)
-- `TIME` - Time type (datetime.time)
-- `DATETIME` - Datetime type (datetime.datetime)
-- `DURATION` - Duration type (datetime.timedelta)
-- `STRING` - String type (str)
-- `BINARY` - Binary type (bytes)
-- `UUID` - UUID type (uuid.UUID)
-- `TIMESTAMP` - Timestamp type (float subclass)
+- `NULL` - None 타입
+- `BOOLEAN` - 불리언 타입(bool)
+- `INT` - 정수 타입(int)
+- `FLOAT` - 부동소수점 타입(float)
+- `NUMBER` - 십진 타입(decimal.Decimal)
+- `DATE` - 날짜 타입(datetime.date)
+- `TIME` - 시간 타입(datetime.time)
+- `DATETIME` - datetime 타입(datetime.datetime)
+- `DURATION` - 기간 타입(datetime.timedelta)
+- `STRING` - 문자열 타입(str)
+- `BINARY` - 바이너리 타입(bytes)
+- `UUID` - UUID 타입(uuid.UUID)
+- `TIMESTAMP` - 타임스탬프 타입(float 하위 클래스)
 
-## Parameter Style
+## 매개변수 스타일 {#parameter-style}
 
-The driver uses question mark (`?`) parameter style:
+드라이버는 물음표(`?`) 매개변수 스타일을 사용합니다.
 
 ```python
 cursor.execute('SELECT * FROM users WHERE id = ?', [101])
 cursor.execute('INSERT INTO users (id, name) VALUES (?, ?)', [101, 'John'])
 ```
 
-Parameters bind positionally to question marks in the query.
+매개변수는 쿼리의 물음표에 위치 기준으로 바인딩됩니다.
 
-## Usage Examples
+## 사용 예시 {#usage-examples}
 
-### Basic Connection
+### 기본 연결 {#basic-connection}
 
 ```python
 import pyignite_dbapi
@@ -159,7 +159,7 @@ finally:
     conn.close()
 ```
 
-### Connection with Context Manager
+### 컨텍스트 관리자를 사용한 연결 {#connection-with-context-manager}
 
 ```python
 import pyignite_dbapi
@@ -172,7 +172,7 @@ with pyignite_dbapi.connect(address=['127.0.0.1:10800']) as conn:
             print(f"{row[0]}: {row[1]}")
 ```
 
-### Connection with Authentication
+### 인증을 사용한 연결 {#connection-with-authentication}
 
 ```python
 conn = pyignite_dbapi.connect(
@@ -182,7 +182,7 @@ conn = pyignite_dbapi.connect(
 )
 ```
 
-### Connection with SSL
+### SSL을 사용한 연결 {#connection-with-ssl}
 
 ```python
 conn = pyignite_dbapi.connect(
@@ -194,7 +194,7 @@ conn = pyignite_dbapi.connect(
 )
 ```
 
-### Multiple Node Addresses
+### 여러 노드 주소 {#multiple-node-addresses}
 
 ```python
 conn = pyignite_dbapi.connect(
@@ -202,9 +202,9 @@ conn = pyignite_dbapi.connect(
 )
 ```
 
-The driver attempts connections to addresses in order until one succeeds.
+드라이버는 하나가 성공할 때까지 주소를 순서대로 연결 시도합니다.
 
-### Parameterized Queries
+### 매개변수화된 쿼리 {#parameterized-queries}
 
 ```python
 cursor.execute(
@@ -215,7 +215,7 @@ cursor.execute(
 rows = cursor.fetchall()
 ```
 
-### Insert with Parameters
+### 매개변수를 사용한 삽입 {#insert-with-parameters}
 
 ```python
 cursor.execute(
@@ -226,7 +226,7 @@ cursor.execute(
 print(f"Rows affected: {cursor.rowcount}")
 ```
 
-### Batch Insert
+### 일괄 삽입 {#batch-insert}
 
 ```python
 users = [
@@ -243,7 +243,7 @@ cursor.executemany(
 print(f"Rows affected: {cursor.rowcount}")
 ```
 
-### Transaction Control
+### 트랜잭션 제어 {#transaction-control}
 
 ```python
 conn = pyignite_dbapi.connect(
@@ -264,7 +264,7 @@ finally:
     conn.close()
 ```
 
-### Fetch Strategies
+### 페치 전략 {#fetch-strategies}
 
 ```python
 cursor.execute('SELECT * FROM large_table')
@@ -282,7 +282,7 @@ rows = cursor.fetchmany(100)  # Fetch 100 rows
 all_rows = cursor.fetchall()
 ```
 
-### Iterator Protocol
+### 이터레이터 프로토콜 {#iterator-protocol}
 
 ```python
 cursor.execute('SELECT * FROM users')
@@ -291,7 +291,7 @@ for row in cursor:
     print(row)
 ```
 
-### Column Metadata
+### 컬럼 메타데이터 {#column-metadata}
 
 ```python
 cursor.execute('SELECT id, name, created_at FROM users')
@@ -302,7 +302,7 @@ for col in cursor.description:
     print(f"  Nullable: {col.null_ok}")
 ```
 
-### Type Handling
+### 타입 처리 {#type-handling}
 
 ```python
 import datetime
@@ -331,7 +331,7 @@ product_price = row[1]  # Decimal
 product_created = row[2]  # datetime.datetime
 ```
 
-### Error Handling
+### 오류 처리 {#error-handling}
 
 ```python
 import pyignite_dbapi
@@ -349,9 +349,9 @@ finally:
         conn.close()
 ```
 
-## Exception Hierarchy
+## 예외 계층 {#exception-hierarchy}
 
-All exceptions inherit from `Error`:
+모든 예외는 `Error`를 상속합니다.
 
 ```
 Error (base exception)
@@ -366,7 +366,7 @@ Error (base exception)
     └── NotSupportedError
 ```
 
-Access exceptions through the connection object or module:
+연결 객체나 모듈에서 예외에 접근하세요.
 
 ```python
 try:
@@ -381,13 +381,13 @@ except pyignite_dbapi.DatabaseError as e:
     pass
 ```
 
-## Ignite-Specific Behavior
+## Ignite 고유 동작 {#ignite-specific-behavior}
 
-### Type Mapping
+### 타입 매핑 {#type-mapping}
 
-Python types map to SQL types:
+Python 타입은 SQL 타입으로 매핑됩니다.
 
-| Python Type | SQL Type |
+| Python 타입 | SQL 타입 |
 |-------------|----------|
 | None | NULL |
 | bool | BOOLEAN |
@@ -402,9 +402,9 @@ Python types map to SQL types:
 | timedelta | INTERVAL |
 | UUID | UUID |
 
-### Autocommit Default
+### 자동 커밋 기본값 {#autocommit-default}
 
-Autocommit defaults to `True`. Disable for explicit transaction control:
+자동 커밋의 기본값은 `True`입니다. 명시적인 트랜잭션 제어를 하려면 비활성화하세요.
 
 ```python
 conn = pyignite_dbapi.connect(
@@ -413,15 +413,15 @@ conn = pyignite_dbapi.connect(
 )
 ```
 
-Or change after connection:
+또는 연결 후에 변경하세요.
 
 ```python
 conn.autocommit = False
 ```
 
-### Page Size
+### 페이지 크기 {#page-size}
 
-The driver fetches results in pages (default: 1024 rows). Increase page size for large result sets to reduce network overhead:
+드라이버는 결과를 페이지 단위로 가져옵니다(기본값: 1024행). 큰 결과 집합에서는 페이지 크기를 늘려 네트워크 오버헤드를 줄이세요.
 
 ```python
 conn = pyignite_dbapi.connect(
@@ -430,9 +430,9 @@ conn = pyignite_dbapi.connect(
 )
 ```
 
-### Network Timeout
+### 네트워크 타임아웃 {#network-timeout}
 
-Configure network timeout for socket operations:
+소켓 작업에 대한 네트워크 타임아웃을 구성합니다.
 
 ```python
 conn = pyignite_dbapi.connect(
@@ -441,15 +441,15 @@ conn = pyignite_dbapi.connect(
 )
 ```
 
-### Thread Safety
+### 스레드 안전성 {#thread-safety}
 
-The module provides thread safety level 1 (module level). Each thread requires its own connection. Do not share connections across threads.
+모듈은 스레드 안전성 레벨 1(모듈 수준)을 제공합니다. 각 스레드에는 자체 연결이 필요합니다. 스레드 간에 연결을 공유하지 마세요.
 
-### lastrowid Limitation
+### lastrowid 제한 사항 {#lastrowid-limitation}
 
-The `cursor.lastrowid` attribute always returns `None`. Ignite does not track auto-generated keys through the DB-API interface.
+`cursor.lastrowid` 속성은 항상 `None`을 반환합니다. Ignite는 DB-API 인터페이스로 자동 생성 키를 추적하지 않습니다.
 
-## Connection Examples
+## 연결 예시 {#connection-examples}
 
 ```python
 # Basic
@@ -493,25 +493,25 @@ conn = pyignite_dbapi.connect(
 )
 ```
 
-## Reference
+## 참조 {#reference}
 
-### Module Attributes
+### 모듈 속성 {#module-attributes}
 
-- `apilevel` - `'2.0'` (PEP 249 API level)
-- `threadsafety` - `1` (module-level thread safety)
-- `paramstyle` - `'qmark'` (question mark parameter style)
+- `apilevel` - `'2.0'`(PEP 249 API 레벨)
+- `threadsafety` - `1`(모듈 수준 스레드 안전성)
+- `paramstyle` - `'qmark'`(물음표 매개변수 스타일)
 
-### DB-API Compliance
+### DB-API 준수 {#db-api-compliance}
 
-- PEP 249 Database API Specification 2.0 compliant
-- Implements Connection, Cursor objects
-- Supports context managers (with statements)
-- Implements iterator protocol for cursors
-- Provides standard exception hierarchy
+- PEP 249 Database API Specification 2.0 준수
+- Connection, Cursor 객체 구현
+- 컨텍스트 관리자(with 문) 지원
+- 커서에 대한 이터레이터 프로토콜 구현
+- 표준 예외 계층 제공
 
-### Limitations
+### 제한 사항 {#limitations}
 
-- Thread safety level 1 (connections not thread-safe)
-- `lastrowid` not supported (always returns `None`)
-- Binary data must use `bytes` type (no special Binary constructor)
-- Date/time values use standard library types (no special constructors)
+- 스레드 안전성 레벨 1(연결은 스레드 안전하지 않음)
+- `lastrowid` 미지원(항상 `None` 반환)
+- 바이너리 데이터는 `bytes` 타입을 사용해야 함(특수 Binary 생성자 없음)
+- 날짜/시간 값은 표준 라이브러리 타입을 사용함(특수 생성자 없음)

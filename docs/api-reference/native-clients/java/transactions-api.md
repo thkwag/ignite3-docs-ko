@@ -6,19 +6,19 @@ sidebar_position: 6
 
 # Transactions API
 
-The Transactions API provides ACID guarantees for operations spanning multiple tables or operations. Applications use transactions to ensure data consistency when executing related updates that must succeed or fail as a unit.
+Transactions API는 여러 테이블이나 여러 작업에 걸친 연산에 ACID 보장을 제공합니다. 애플리케이션은 반드시 함께 성공하거나 함께 실패해야 하는 관련 업데이트를 실행할 때 트랜잭션으로 데이터 일관성을 확보합니다.
 
-## Key Concepts
+## 핵심 개념 {#key-concepts}
 
-Read-write transactions execute with SERIALIZABLE isolation. Operations within a transaction see a consistent view of data as it existed when the transaction started. Changes remain invisible to other transactions until commit.
+읽기-쓰기 트랜잭션은 직렬화 가능 격리(SERIALIZABLE isolation)로 실행됩니다. 트랜잭션 안의 작업은 트랜잭션이 시작된 시점의 데이터를 일관된 뷰로 참조합니다. 변경 내용은 커밋 전까지 다른 트랜잭션에 보이지 않습니다.
 
-The API supports explicit transaction management and closure-based implicit transactions. Closure-based transactions automatically commit on normal completion and rollback on exceptions, reducing boilerplate code.
+이 API는 명시적 트랜잭션 관리와 클로저 기반 암묵적 트랜잭션을 지원합니다. 클로저 기반 트랜잭션은 정상 완료 시 자동으로 커밋하고 예외 발생 시 롤백하므로, 상용구 코드를 줄입니다.
 
-Transactions have configurable timeouts. Read-write transactions default to 30 seconds. Read-only transactions optimize for read operations by eliminating write overhead.
+트랜잭션은 타임아웃을 구성할 수 있습니다. 읽기-쓰기 트랜잭션의 기본값은 30초입니다. 읽기 전용 트랜잭션은 쓰기 오버헤드를 없애 읽기 작업에 최적화합니다.
 
-## Implicit Transactions
+## 암묵적 트랜잭션 {#implicit-transactions}
 
-Use runInTransaction for automatic lifecycle management:
+runInTransaction으로 라이프사이클을 자동으로 관리합니다:
 
 ```java
 ignite.transactions().runInTransaction(tx -> {
@@ -34,11 +34,11 @@ ignite.transactions().runInTransaction(tx -> {
 });
 ```
 
-The transaction commits automatically when the closure completes normally. Exceptions trigger automatic rollback.
+클로저가 정상적으로 완료되면 트랜잭션이 자동으로 커밋됩니다. 예외가 발생하면 자동 롤백됩니다.
 
-## Return Values from Transactions
+## 트랜잭션의 반환 값 {#return-values-from-transactions}
 
-Return values from transaction closures:
+트랜잭션 클로저에서 값을 반환합니다:
 
 ```java
 int newBalance = ignite.transactions().runInTransaction(tx -> {
@@ -57,9 +57,9 @@ int newBalance = ignite.transactions().runInTransaction(tx -> {
 System.out.println("New balance: " + newBalance);
 ```
 
-## Explicit Transactions
+## 명시적 트랜잭션 {#explicit-transactions}
 
-Manage transaction lifecycle explicitly:
+트랜잭션 라이프사이클을 명시적으로 관리합니다:
 
 ```java
 Transaction tx = ignite.transactions().begin();
@@ -79,11 +79,11 @@ try {
 }
 ```
 
-Explicit management provides control over commit timing and error handling.
+명시적 관리는 커밋 시점과 오류 처리를 직접 제어할 수 있게 합니다.
 
-## Read-Only Transactions
+## 읽기 전용 트랜잭션 {#read-only-transactions}
 
-Optimize read operations with read-only transactions:
+읽기 전용 트랜잭션으로 읽기 작업을 최적화합니다:
 
 ```java
 TransactionOptions options = new TransactionOptions().readOnly(true);
@@ -98,11 +98,11 @@ ignite.transactions().runInTransaction(options, tx -> {
 });
 ```
 
-Read-only transactions eliminate write coordination overhead, improving performance for read operations.
+읽기 전용 트랜잭션은 쓰기 조율 오버헤드를 없애 읽기 작업의 성능을 높입니다.
 
-## Transaction Timeouts
+## 트랜잭션 타임아웃 {#transaction-timeouts}
 
-Configure transaction timeouts:
+트랜잭션 타임아웃을 구성합니다:
 
 ```java
 TransactionOptions options = new TransactionOptions().timeoutMillis(60000);
@@ -110,11 +110,11 @@ TransactionOptions options = new TransactionOptions().timeoutMillis(60000);
 Transaction tx = ignite.transactions().begin(options);
 ```
 
-Transactions that exceed the timeout automatically rollback. This prevents long-running transactions from blocking other operations.
+타임아웃을 초과한 트랜잭션은 자동으로 롤백됩니다. 이렇게 하면 오래 실행되는 트랜잭션이 다른 작업을 차단하는 것을 막습니다.
 
-## Multi-Table Transactions
+## 다중 테이블 트랜잭션 {#multi-table-transactions}
 
-Execute operations across multiple tables:
+여러 테이블에 걸쳐 작업을 실행합니다:
 
 ```java
 ignite.transactions().runInTransaction(tx -> {
@@ -136,11 +136,11 @@ ignite.transactions().runInTransaction(tx -> {
 });
 ```
 
-Both operations commit or rollback together.
+두 작업은 함께 커밋되거나 함께 롤백됩니다.
 
-## Asynchronous Transactions
+## 비동기 트랜잭션 {#asynchronous-transactions}
 
-Create transactions asynchronously:
+트랜잭션을 비동기로 생성합니다:
 
 ```java
 ignite.transactions().beginAsync().thenCompose(tx ->
@@ -160,11 +160,11 @@ ignite.transactions().beginAsync().thenCompose(tx ->
 });
 ```
 
-Asynchronous transactions enable non-blocking transaction processing.
+비동기 트랜잭션을 사용하면 논블로킹으로 트랜잭션을 처리할 수 있습니다.
 
-## Async Transaction Closures
+## 비동기 트랜잭션 클로저 {#async-transaction-closures}
 
-Use async closures for non-blocking transaction execution:
+논블로킹 트랜잭션 실행에는 비동기 클로저를 사용합니다:
 
 ```java
 CompletableFuture<Integer> resultFuture =
@@ -187,9 +187,9 @@ resultFuture.thenAccept(balance ->
 );
 ```
 
-## SQL and Transactions
+## SQL과 트랜잭션 {#sql-and-transactions}
 
-Execute SQL within transactions:
+트랜잭션 안에서 SQL을 실행합니다:
 
 ```java
 ignite.transactions().runInTransaction(tx -> {
@@ -211,11 +211,11 @@ ignite.transactions().runInTransaction(tx -> {
 });
 ```
 
-SQL statements and table operations within the same transaction see consistent data.
+같은 트랜잭션 안의 SQL 문과 테이블 작업은 일관된 데이터를 참조합니다.
 
-## Transaction Status
+## 트랜잭션 상태 {#transaction-status}
 
-Check transaction properties:
+트랜잭션 속성을 확인합니다:
 
 ```java
 Transaction tx = ignite.transactions().begin();
@@ -227,9 +227,9 @@ System.out.println("Read-only: " + readOnly);
 tx.commit();
 ```
 
-## Idempotent Operations
+## 멱등 작업 {#idempotent-operations}
 
-Commit and rollback operations are idempotent:
+커밋과 롤백 작업은 멱등합니다:
 
 ```java
 Transaction tx = ignite.transactions().begin();
@@ -241,11 +241,11 @@ try {
 }
 ```
 
-Calling commit or rollback on completed transactions has no effect.
+이미 완료된 트랜잭션에 커밋이나 롤백을 호출해도 아무 효과가 없습니다.
 
-## Error Handling
+## 오류 처리 {#error-handling}
 
-Handle transaction-specific exceptions:
+트랜잭션 관련 예외를 처리합니다:
 
 ```java
 try {
@@ -261,11 +261,11 @@ try {
 }
 ```
 
-RetriableTransactionException indicates conflicts that may succeed on retry. Other TransactionException subtypes indicate non-retriable errors.
+RetriableTransactionException은 재시도하면 성공할 수 있는 충돌을 나타냅니다. 그 밖의 TransactionException 하위 타입은 재시도할 수 없는 오류를 나타냅니다.
 
-## Exception Types
+## 예외 타입 {#exception-types}
 
-Common transaction exceptions:
+일반적인 트랜잭션 예외:
 
 ```java
 try {
@@ -281,49 +281,49 @@ try {
 }
 ```
 
-IncompatibleSchemaException occurs when table schemas change during transaction execution. MismatchingTransactionOutcomeException indicates inconsistent transaction outcomes.
+IncompatibleSchemaException은 트랜잭션 실행 중에 테이블 스키마가 바뀌면 발생합니다. MismatchingTransactionOutcomeException은 트랜잭션 결과가 일관되지 않음을 나타냅니다.
 
-## Reference
+## 참조 {#reference}
 
-- Transaction manager: `org.apache.ignite.tx.IgniteTransactions`
-- Transaction handle: `org.apache.ignite.tx.Transaction`
-- Configuration: `org.apache.ignite.tx.TransactionOptions`
-- Exceptions: `org.apache.ignite.tx.TransactionException`, `org.apache.ignite.tx.RetriableTransactionException`, `org.apache.ignite.tx.IncompatibleSchemaException`, `org.apache.ignite.tx.MismatchingTransactionOutcomeException`
+- 트랜잭션 관리자: `org.apache.ignite.tx.IgniteTransactions`
+- 트랜잭션 핸들: `org.apache.ignite.tx.Transaction`
+- 구성: `org.apache.ignite.tx.TransactionOptions`
+- 예외: `org.apache.ignite.tx.TransactionException`, `org.apache.ignite.tx.RetriableTransactionException`, `org.apache.ignite.tx.IncompatibleSchemaException`, `org.apache.ignite.tx.MismatchingTransactionOutcomeException`
 
-### IgniteTransactions Methods
+### IgniteTransactions 메서드 {#ignitetransactions-methods}
 
-- `Transaction begin()` - Start transaction with defaults
-- `Transaction begin(TransactionOptions)` - Start with configuration
-- `CompletableFuture<Transaction> beginAsync()` - Async start
-- `CompletableFuture<Transaction> beginAsync(TransactionOptions)` - Async start with configuration
-- `void runInTransaction(Consumer<Transaction>)` - Execute in transaction
-- `<T> T runInTransaction(Function<Transaction, T>)` - Execute with return value
-- `void runInTransaction(TransactionOptions, Consumer<Transaction>)` - Execute with options
-- `<T> T runInTransaction(TransactionOptions, Function<Transaction, T>)` - Execute with options and return
-- `<T> CompletableFuture<T> runInTransactionAsync(Function<Transaction, CompletableFuture<T>>)` - Async execution
+- `Transaction begin()` - 기본값으로 트랜잭션 시작
+- `Transaction begin(TransactionOptions)` - 구성과 함께 시작
+- `CompletableFuture<Transaction> beginAsync()` - 비동기 시작
+- `CompletableFuture<Transaction> beginAsync(TransactionOptions)` - 구성과 함께 비동기 시작
+- `void runInTransaction(Consumer<Transaction>)` - 트랜잭션 안에서 실행
+- `<T> T runInTransaction(Function<Transaction, T>)` - 반환 값과 함께 실행
+- `void runInTransaction(TransactionOptions, Consumer<Transaction>)` - 옵션과 함께 실행
+- `<T> T runInTransaction(TransactionOptions, Function<Transaction, T>)` - 옵션과 반환 값과 함께 실행
+- `<T> CompletableFuture<T> runInTransactionAsync(Function<Transaction, CompletableFuture<T>>)` - 비동기 실행
 
-### Transaction Methods
+### Transaction 메서드 {#transaction-methods}
 
-- `void commit()` - Commit transaction
-- `CompletableFuture<Void> commitAsync()` - Async commit
-- `void rollback()` - Rollback transaction
-- `CompletableFuture<Void> rollbackAsync()` - Async rollback
-- `boolean isReadOnly()` - Check read-only status
+- `void commit()` - 트랜잭션 커밋
+- `CompletableFuture<Void> commitAsync()` - 비동기 커밋
+- `void rollback()` - 트랜잭션 롤백
+- `CompletableFuture<Void> rollbackAsync()` - 비동기 롤백
+- `boolean isReadOnly()` - 읽기 전용 상태 확인
 
-### TransactionOptions Configuration
+### TransactionOptions 구성 {#transactionoptions-configuration}
 
-- `readOnly(boolean)` - Set read-only mode
-- `timeoutMillis(long)` - Set transaction timeout in milliseconds
+- `readOnly(boolean)` - 읽기 전용 모드 설정
+- `timeoutMillis(long)` - 트랜잭션 타임아웃(밀리초) 설정
 
-### Transaction Isolation
+### 트랜잭션 격리 {#transaction-isolation}
 
-Read-write transactions use SERIALIZABLE isolation. Each transaction acquires locks during the first read or write access and holds the lock until the transaction is committed or rolled back. Changes remain invisible to concurrent transactions until commit. Read-only transactions provide a snapshot view of data without acquiring locks.
+읽기-쓰기 트랜잭션은 직렬화 가능 격리를 사용합니다. 각 트랜잭션은 첫 읽기나 쓰기 접근에서 락을 획득하고, 트랜잭션이 커밋되거나 롤백될 때까지 락을 유지합니다. 변경 내용은 커밋 전까지 동시 트랜잭션에 보이지 않습니다. 읽기 전용 트랜잭션은 락을 획득하지 않고 데이터의 스냅샷 뷰를 제공합니다.
 
-### Transaction Best Practices
+### 트랜잭션 모범 사례 {#transaction-best-practices}
 
-- Use implicit transactions (runInTransaction) for automatic lifecycle management
-- Configure appropriate timeouts to prevent blocking operations
-- Use read-only transactions for operations that only read data
-- Handle RetriableTransactionException by retrying operations
-- Keep transactions short to minimize lock contention
-- Avoid user interaction or slow operations within transactions
+- 라이프사이클 자동 관리에는 암묵적 트랜잭션(runInTransaction)을 사용하세요
+- 작업 차단을 막으려면 적절한 타임아웃을 구성하세요
+- 데이터를 읽기만 하는 작업에는 읽기 전용 트랜잭션을 사용하세요
+- RetriableTransactionException은 작업을 재시도해 처리하세요
+- 락 경합을 최소화하려면 트랜잭션을 짧게 유지하세요
+- 트랜잭션 안에서 사용자 상호작용이나 느린 작업을 피하세요

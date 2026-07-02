@@ -1,16 +1,16 @@
 ---
 id: keywords
-title: SQL Keywords
-sidebar_label: Keywords
+title: SQL 키워드
+sidebar_label: 키워드
 ---
 
-# Keywords
+# 키워드
 
-This topic covers keywords in Apache Ignite 3.
+이 문서에서는 Apache Ignite 3의 키워드를 설명합니다.
 
-Non-reserved keywords can be used as identifiers (names for tables, columns, etc.) without requiring quotation marks or special escaping. These keywords have meaning in SQL contexts but do not conflict with basic SQL grammar.
+예약되지 않은 키워드는 따옴표나 특별한 이스케이프 없이 식별자(테이블, 컬럼 등의 이름)로 사용할 수 있습니다. 이런 키워드는 SQL 문맥에서 의미가 있지만 기본 SQL 문법과 충돌하지 않습니다.
 
-Reserved keywords must be wrapped in double quotes to be used as identifiers, for example, table names or column names. If a reserved word is used as an identifier without being quoted, a syntax error will happen.
+예약된 키워드를 식별자(예: 테이블 이름이나 컬럼 이름)로 사용하려면 큰따옴표로 감싸야 합니다. 예약어를 따옴표 없이 식별자로 사용하면 구문 오류가 발생합니다.
 
 ```sql
 -- Valid keyword usage.
@@ -20,13 +20,13 @@ SELECT 1 AS "ABS";
 -- SELECT 1 AS ABS;
 ```
 
-The following list shows the keywords in Apache Ignite 3.
+다음은 Apache Ignite 3의 키워드 목록입니다.
 
-| Keyword | Apache Ignite 3 | SQL 2016 |
+| 키워드 | Apache Ignite 3 | SQL 2016 |
 |---------|-----------------|----------|
 | A | | |
-| ABS | Reserved | Reserved |
-| ABSENT | | Reserved |
+| ABS | 예약됨 | 예약됨 |
+| ABSENT | | 예약됨 |
 | ABSOLUTE | | |
 | ACTION | | |
 | ADA | | |
@@ -34,436 +34,436 @@ The following list shows the keywords in Apache Ignite 3.
 | ADMIN | | |
 | AFTER | | |
 | ALGORITHM | | |
-| ALL | Reserved | Reserved |
-| ALLOCATE | | Reserved |
+| ALL | 예약됨 | 예약됨 |
+| ALLOCATE | | 예약됨 |
 | ALLOW | | |
-| ALTER | Reserved | Reserved |
+| ALTER | 예약됨 | 예약됨 |
 | ALWAYS | | |
-| AND | Reserved | Reserved |
-| ANY | Reserved | Reserved |
+| AND | 예약됨 | 예약됨 |
+| ANY | 예약됨 | 예약됨 |
 | APPLY | | |
-| ARE | | Reserved |
-| ARRAY | Reserved | Reserved |
-| ARRAY_AGG | | Reserved |
+| ARE | | 예약됨 |
+| ARRAY | 예약됨 | 예약됨 |
+| ARRAY_AGG | | 예약됨 |
 | ARRAY_CONCAT_AGG | | |
-| ARRAY_MAX_CARDINALITY | Reserved | Reserved |
-| AS | Reserved | Reserved |
-| ASC | | Reserved |
-| ASENSITIVE | | Reserved |
-| ASOF | Reserved | |
+| ARRAY_MAX_CARDINALITY | 예약됨 | 예약됨 |
+| AS | 예약됨 | 예약됨 |
+| ASC | | 예약됨 |
+| ASENSITIVE | | 예약됨 |
+| ASOF | 예약됨 | |
 | ASSERTION | | |
 | ASSIGNMENT | | |
-| ASYMMETRIC | Reserved | Reserved |
-| AT | | Reserved |
-| ATOMIC | | Reserved |
+| ASYMMETRIC | 예약됨 | 예약됨 |
+| AT | | 예약됨 |
+| ATOMIC | | 예약됨 |
 | ATTRIBUTE | | |
 | ATTRIBUTES | | |
-| AUTHORIZATION | | Reserved |
+| AUTHORIZATION | | 예약됨 |
 | AUTO | | |
-| AVG | Reserved | Reserved |
+| AVG | 예약됨 | 예약됨 |
 | BEFORE | | |
-| BEGIN | | Reserved |
-| BEGIN_FRAME | | Reserved |
-| BEGIN_PARTITION | | Reserved |
+| BEGIN | | 예약됨 |
+| BEGIN_FRAME | | 예약됨 |
+| BEGIN_PARTITION | | 예약됨 |
 | BERNOULLI | | |
-| BETWEEN | Reserved | Reserved |
-| BIGINT | | Reserved |
-| BINARY | | Reserved |
+| BETWEEN | 예약됨 | 예약됨 |
+| BIGINT | | 예약됨 |
+| BINARY | | 예약됨 |
 | BIT | | |
-| BLOB | | Reserved |
-| BOOLEAN | | Reserved |
-| BOTH | Reserved | Reserved |
+| BLOB | | 예약됨 |
+| BOOLEAN | | 예약됨 |
+| BOTH | 예약됨 | 예약됨 |
 | BREADTH | | |
-| BY | Reserved | Reserved |
+| BY | 예약됨 | 예약됨 |
 | C | | |
-| CACHE | Reserved | |
-| CALL | Reserved | Reserved |
-| CALLED | | Reserved |
-| CARDINALITY | Reserved | Reserved |
-| CASCADE | | Reserved |
-| CASCADED | | Reserved |
-| CASE | Reserved | Reserved |
-| CAST | Reserved | Reserved |
+| CACHE | 예약됨 | |
+| CALL | 예약됨 | 예약됨 |
+| CALLED | | 예약됨 |
+| CARDINALITY | 예약됨 | 예약됨 |
+| CASCADE | | 예약됨 |
+| CASCADED | | 예약됨 |
+| CASE | 예약됨 | 예약됨 |
+| CAST | 예약됨 | 예약됨 |
 | CATALOG | | |
 | CATALOG_NAME | | |
 | CEIL | | |
-| CEILING | Reserved | Reserved |
+| CEILING | 예약됨 | 예약됨 |
 | CENTURY | | |
 | CHAIN | | |
-| CHAR | Reserved | Reserved |
-| CHARACTER | Reserved | Reserved |
+| CHAR | 예약됨 | 예약됨 |
+| CHARACTER | 예약됨 | 예약됨 |
 | CHARACTERISTICS | | |
 | CHARACTERS | | |
-| CHARACTER_LENGTH | Reserved | Reserved |
+| CHARACTER_LENGTH | 예약됨 | 예약됨 |
 | CHARACTER_SET_CATALOG | | |
 | CHARACTER_SET_NAME | | |
 | CHARACTER_SET_SCHEMA | | |
-| CHAR_LENGTH | Reserved | Reserved |
-| CHECK | | Reserved |
-| CLASSIFIER | | Reserved |
+| CHAR_LENGTH | 예약됨 | 예약됨 |
+| CHECK | | 예약됨 |
+| CLASSIFIER | | 예약됨 |
 | CLASS_ORIGIN | | |
-| CLOB | | Reserved |
-| CLOSE | | Reserved |
-| COALESCE | Reserved | Reserved |
+| CLOB | | 예약됨 |
+| CLOSE | | 예약됨 |
+| COALESCE | 예약됨 | 예약됨 |
 | COBOL | | |
-| COLLATE | | Reserved |
+| COLLATE | | 예약됨 |
 | COLLATION | | |
 | COLLATION_CATALOG | | |
 | COLLATION_NAME | | |
 | COLLATION_SCHEMA | | |
-| COLLECT | Reserved | Reserved |
+| COLLECT | 예약됨 | 예약됨 |
 | COLOCATE | | |
-| COLUMN | Reserved | Reserved |
+| COLUMN | 예약됨 | 예약됨 |
 | COLUMN_NAME | | |
 | COMMAND_FUNCTION | | |
 | COMMAND_FUNCTION_CODE | | |
-| COMMIT | | Reserved |
+| COMMIT | | 예약됨 |
 | COMMITTED | | |
 | COMPUTE | | |
-| CONDITION | | Reserved |
-| CONDITIONAL | | Reserved |
+| CONDITION | | 예약됨 |
+| CONDITIONAL | | 예약됨 |
 | CONDITION_NUMBER | | |
-| CONNECT | | Reserved |
+| CONNECT | | 예약됨 |
 | CONNECTION | | |
 | CONNECTION_NAME | | |
 | CONSISTENCY | | |
-| CONSTRAINT | Reserved | Reserved |
+| CONSTRAINT | 예약됨 | 예약됨 |
 | CONSTRAINTS | | |
 | CONSTRAINT_CATALOG | | |
 | CONSTRAINT_NAME | | |
 | CONSTRAINT_SCHEMA | | |
 | CONSTRUCTOR | | |
-| CONTAINS | | Reserved |
+| CONTAINS | | 예약됨 |
 | CONTAINS_SUBSTR | | |
 | CONTINUE | | |
-| CONVERT | Reserved | Reserved |
-| CORR | | Reserved |
-| CORRESPONDING | | Reserved |
-| COUNT | Reserved | Reserved |
-| COVAR_POP | Reserved | Reserved |
-| COVAR_SAMP | Reserved | Reserved |
-| CREATE | Reserved | Reserved |
-| CROSS | Reserved | Reserved |
-| CUBE | Reserved | Reserved |
-| CUME_DIST | Reserved | Reserved |
-| CURRENT | Reserved | Reserved |
-| CURRENT_CATALOG | Reserved | Reserved |
-| CURRENT_DATE | Reserved | Reserved |
-| CURRENT_DEFAULT_TRANSFORM_GROUP | Reserved | Reserved |
-| CURRENT_PATH | Reserved | Reserved |
-| CURRENT_ROLE | Reserved | Reserved |
-| CURRENT_ROW | Reserved | Reserved |
-| CURRENT_SCHEMA | Reserved | Reserved |
-| CURRENT_TIME | Reserved | Reserved |
-| CURRENT_TIMESTAMP | Reserved | Reserved |
-| CURRENT_TRANSFORM_GROUP_FOR_TYPE | Reserved | Reserved |
-| CURRENT_USER | Reserved | Reserved |
-| CURSOR | | Reserved |
+| CONVERT | 예약됨 | 예약됨 |
+| CORR | | 예약됨 |
+| CORRESPONDING | | 예약됨 |
+| COUNT | 예약됨 | 예약됨 |
+| COVAR_POP | 예약됨 | 예약됨 |
+| COVAR_SAMP | 예약됨 | 예약됨 |
+| CREATE | 예약됨 | 예약됨 |
+| CROSS | 예약됨 | 예약됨 |
+| CUBE | 예약됨 | 예약됨 |
+| CUME_DIST | 예약됨 | 예약됨 |
+| CURRENT | 예약됨 | 예약됨 |
+| CURRENT_CATALOG | 예약됨 | 예약됨 |
+| CURRENT_DATE | 예약됨 | 예약됨 |
+| CURRENT_DEFAULT_TRANSFORM_GROUP | 예약됨 | 예약됨 |
+| CURRENT_PATH | 예약됨 | 예약됨 |
+| CURRENT_ROLE | 예약됨 | 예약됨 |
+| CURRENT_ROW | 예약됨 | 예약됨 |
+| CURRENT_SCHEMA | 예약됨 | 예약됨 |
+| CURRENT_TIME | 예약됨 | 예약됨 |
+| CURRENT_TIMESTAMP | 예약됨 | 예약됨 |
+| CURRENT_TRANSFORM_GROUP_FOR_TYPE | 예약됨 | 예약됨 |
+| CURRENT_USER | 예약됨 | 예약됨 |
+| CURSOR | | 예약됨 |
 | CURSOR_NAME | | |
-| CYCLE | | Reserved |
+| CYCLE | | 예약됨 |
 | DATA | | |
 | DATABASE | | |
-| DATALINK | | Reserved |
-| DATE | Reserved | Reserved |
-| DATETIME | Reserved | |
+| DATALINK | | 예약됨 |
+| DATE | 예약됨 | 예약됨 |
+| DATETIME | 예약됨 | |
 | DATETIME_DIFF | | |
 | DATETIME_INTERVAL_CODE | | |
 | DATETIME_INTERVAL_PRECISION | | |
 | DATETIME_TRUNC | | |
 | DATE_DIFF | | |
 | DATE_TRUNC | | |
-| DAY | | Reserved |
+| DAY | | 예약됨 |
 | DAYOFWEEK | | |
 | DAYOFYEAR | | |
 | DAYS | | |
-| DEALLOCATE | | Reserved |
-| DEC | | Reserved |
+| DEALLOCATE | | 예약됨 |
+| DEC | | 예약됨 |
 | DECADE | | |
-| DECFLOAT | | Reserved |
-| DECIMAL | Reserved | Reserved |
-| DECLARE | | Reserved |
-| DEFAULT | Reserved | Reserved |
+| DECFLOAT | | 예약됨 |
+| DECIMAL | 예약됨 | 예약됨 |
+| DECLARE | | 예약됨 |
+| DEFAULT | 예약됨 | 예약됨 |
 | DEFAULTS | | |
 | DEFERRABLE | | |
 | DEFERRED | | |
-| DEFINE | | Reserved |
+| DEFINE | | 예약됨 |
 | DEFINED | | |
 | DEFINER | | |
 | DEGREE | | |
-| DELETE | Reserved | Reserved |
-| DENSE_RANK | Reserved | Reserved |
+| DELETE | 예약됨 | 예약됨 |
+| DENSE_RANK | 예약됨 | 예약됨 |
 | DEPTH | | |
-| DEREF | | Reserved |
+| DEREF | | 예약됨 |
 | DERIVED | | |
 | DESC | | |
-| DESCRIBE | Reserved | Reserved |
+| DESCRIBE | 예약됨 | 예약됨 |
 | DESCRIPTION | | |
 | DESCRIPTOR | | |
 | DETERMINISTIC | | |
 | DIAGNOSTICS | | |
 | DISALLOW | | |
-| DISCONNECT | | Reserved |
+| DISCONNECT | | 예약됨 |
 | DISPATCH | | |
-| DISTINCT | Reserved | Reserved |
+| DISTINCT | 예약됨 | 예약됨 |
 | DISTRIBUTION | | |
-| DLNEWCOPY | | Reserved |
-| DLPREVIOUSCOPY | | Reserved |
-| DLURLCOMPLETE | | Reserved |
-| DLURLCOMPLETEONLY | | Reserved |
-| DLURLCOMPLETEWRITE | | Reserved |
-| DLURLPATH | | Reserved |
-| DLURLPATHONLY | | Reserved |
-| DLURLPATHWRITE | | Reserved |
-| DLURLSCHEME | | Reserved |
-| DLURLSERVER | | Reserved |
-| DLVALUE | | Reserved |
+| DLNEWCOPY | | 예약됨 |
+| DLPREVIOUSCOPY | | 예약됨 |
+| DLURLCOMPLETE | | 예약됨 |
+| DLURLCOMPLETEONLY | | 예약됨 |
+| DLURLCOMPLETEWRITE | | 예약됨 |
+| DLURLPATH | | 예약됨 |
+| DLURLPATHONLY | | 예약됨 |
+| DLURLPATHWRITE | | 예약됨 |
+| DLURLSCHEME | | 예약됨 |
+| DLURLSERVER | | 예약됨 |
+| DLVALUE | | 예약됨 |
 | DOMAIN | | |
 | DOT | | |
-| DOUBLE | | Reserved |
+| DOUBLE | | 예약됨 |
 | DOW | | |
 | DOWN | | |
 | DOY | | |
-| DROP | Reserved | Reserved |
-| DYNAMIC | | Reserved |
+| DROP | 예약됨 | 예약됨 |
+| DYNAMIC | | 예약됨 |
 | DYNAMIC_FUNCTION | | |
 | DYNAMIC_FUNCTION_CODE | | |
-| EACH | | Reserved |
-| ELEMENT | Reserved | Reserved |
-| ELSE | Reserved | Reserved |
-| EMPTY | | Reserved |
+| EACH | | 예약됨 |
+| ELEMENT | 예약됨 | 예약됨 |
+| ELSE | 예약됨 | 예약됨 |
+| EMPTY | | 예약됨 |
 | ENCODING | | |
-| END | | Reserved |
-| END-EXEC | | Reserved |
-| END_FRAME | | Reserved |
-| END_PARTITION | | Reserved |
+| END | | 예약됨 |
+| END-EXEC | | 예약됨 |
+| END_FRAME | | 예약됨 |
+| END_PARTITION | | 예약됨 |
 | ENGINE | | |
 | EPOCH | | |
-| EQUALS | | Reserved |
+| EQUALS | | 예약됨 |
 | ERROR | | |
-| ESCAPE | | Reserved |
-| EVERY | Reserved | Reserved |
-| EXCEPT | Reserved | Reserved |
+| ESCAPE | | 예약됨 |
+| EVERY | 예약됨 | 예약됨 |
+| EXCEPT | 예약됨 | 예약됨 |
 | EXCEPTION | | |
 | EXCLUDE | | |
 | EXCLUDING | | |
-| EXEC | | Reserved |
-| EXECUTE | | Reserved |
-| EXISTS | Reserved | Reserved |
-| EXP | Reserved | Reserved |
-| EXPLAIN | Reserved | |
-| EXTEND | Reserved | |
-| EXTERNAL | | Reserved |
-| EXTRACT | Reserved | Reserved |
-| FALSE | Reserved | Reserved |
-| FETCH | Reserved | Reserved |
-| FILTER | Reserved | Reserved |
+| EXEC | | 예약됨 |
+| EXECUTE | | 예약됨 |
+| EXISTS | 예약됨 | 예약됨 |
+| EXP | 예약됨 | 예약됨 |
+| EXPLAIN | 예약됨 | |
+| EXTEND | 예약됨 | |
+| EXTERNAL | | 예약됨 |
+| EXTRACT | 예약됨 | 예약됨 |
+| FALSE | 예약됨 | 예약됨 |
+| FETCH | 예약됨 | 예약됨 |
+| FILTER | 예약됨 | 예약됨 |
 | FINAL | | |
 | FIRST | | |
-| FIRST_VALUE | Reserved | Reserved |
-| FLOAT | | Reserved |
-| FLOOR | Reserved | Reserved |
+| FIRST_VALUE | 예약됨 | 예약됨 |
+| FLOAT | | 예약됨 |
+| FLOOR | 예약됨 | 예약됨 |
 | FOLLOWING | | |
-| FOR | Reserved | Reserved |
-| FOREIGN | | Reserved |
+| FOR | 예약됨 | 예약됨 |
+| FOREIGN | | 예약됨 |
 | FORMAT | | |
 | FORTRAN | | |
 | FOUND | | |
 | FRAC_SECOND | | |
-| FRAME_ROW | | Reserved |
-| FREE | | Reserved |
-| FRIDAY | Reserved | |
-| FROM | Reserved | Reserved |
-| FULL | Reserved | Reserved |
-| FUNCTION | | Reserved |
-| FUSION | Reserved | Reserved |
+| FRAME_ROW | | 예약됨 |
+| FREE | | 예약됨 |
+| FRIDAY | 예약됨 | |
+| FROM | 예약됨 | 예약됨 |
+| FULL | 예약됨 | 예약됨 |
+| FUNCTION | | 예약됨 |
+| FUSION | 예약됨 | 예약됨 |
 | G | | |
 | GENERAL | | |
 | GENERATED | | |
 | GEOMETRY | | |
-| GET | | Reserved |
-| GLOBAL | | Reserved |
+| GET | | 예약됨 |
+| GLOBAL | | 예약됨 |
 | GO | | |
 | GOTO | | |
-| GRANT | | Reserved |
+| GRANT | | 예약됨 |
 | GRANTED | | |
-| GROUP | Reserved | Reserved |
-| GROUPING | Reserved | Reserved |
-| GROUPS | | Reserved |
+| GROUP | 예약됨 | 예약됨 |
+| GROUPING | 예약됨 | 예약됨 |
+| GROUPS | | 예약됨 |
 | GROUP_CONCAT | | |
 | HASH | | |
-| HAVING | Reserved | Reserved |
+| HAVING | 예약됨 | 예약됨 |
 | HIERARCHY | | |
-| HOLD | | Reserved |
+| HOLD | | 예약됨 |
 | HOP | | |
-| HOUR | Reserved | Reserved |
+| HOUR | 예약됨 | 예약됨 |
 | HOURS | | |
-| IDENTIFIED | Reserved | |
-| IDENTITY | | Reserved |
-| IF | Reserved | |
+| IDENTIFIED | 예약됨 | |
+| IDENTITY | | 예약됨 |
+| IF | 예약됨 | |
 | IGNORE | | |
 | ILIKE | | |
 | IMMEDIATE | | |
 | IMMEDIATELY | | |
 | IMPLEMENTATION | | |
-| IMPORT | | Reserved |
-| IN | Reserved | Reserved |
+| IMPORT | | 예약됨 |
+| IN | 예약됨 | 예약됨 |
 | INCLUDE | | |
 | INCLUDING | | |
 | INCREMENT | | |
-| INDEX | Reserved | |
-| INDICATOR | | Reserved |
-| INITIAL | | Reserved |
-| INITIALLY | | Reserved |
-| INNER | Reserved | Reserved |
-| INOUT | | Reserved |
+| INDEX | 예약됨 | |
+| INDICATOR | | 예약됨 |
+| INITIAL | | 예약됨 |
+| INITIALLY | | 예약됨 |
+| INNER | 예약됨 | 예약됨 |
+| INOUT | | 예약됨 |
 | INPUT | | |
-| INSENSITIVE | | Reserved |
-| INSERT | Reserved | Reserved |
+| INSENSITIVE | | 예약됨 |
+| INSERT | 예약됨 | 예약됨 |
 | INSTANCE | | |
 | INSTANTIABLE | | |
-| INT | | Reserved |
-| INTEGER | | Reserved |
-| INTERSECT | Reserved | Reserved |
-| INTERSECTION | Reserved | Reserved |
-| INTERVAL | Reserved | Reserved |
-| INTO | Reserved | Reserved |
+| INT | | 예약됨 |
+| INTEGER | | 예약됨 |
+| INTERSECT | 예약됨 | 예약됨 |
+| INTERSECTION | 예약됨 | 예약됨 |
+| INTERVAL | 예약됨 | 예약됨 |
+| INTO | 예약됨 | 예약됨 |
 | INVOKER | | |
-| IS | Reserved | Reserved |
+| IS | 예약됨 | 예약됨 |
 | ISODOW | | |
 | ISOLATION | | |
 | ISOYEAR | | |
 | JAVA | | |
-| JOIN | Reserved | Reserved |
-| JSON | | Reserved |
-| JSON_ARRAY | | Reserved |
-| JSON_ARRAYAGG | | Reserved |
-| JSON_EXISTS | | Reserved |
-| JSON_OBJECT | | Reserved |
-| JSON_OBJECTAGG | | Reserved |
-| JSON_QUERY | | Reserved |
-| JSON_SCOPE | Reserved | |
-| JSON_TABLE | | Reserved |
-| JSON_TABLE_PRIMITIVE | | Reserved |
-| JSON_VALUE | | Reserved |
+| JOIN | 예약됨 | 예약됨 |
+| JSON | | 예약됨 |
+| JSON_ARRAY | | 예약됨 |
+| JSON_ARRAYAGG | | 예약됨 |
+| JSON_EXISTS | | 예약됨 |
+| JSON_OBJECT | | 예약됨 |
+| JSON_OBJECTAGG | | 예약됨 |
+| JSON_QUERY | | 예약됨 |
+| JSON_SCOPE | 예약됨 | |
+| JSON_TABLE | | 예약됨 |
+| JSON_TABLE_PRIMITIVE | | 예약됨 |
+| JSON_VALUE | | 예약됨 |
 | K | | |
 | KEY | | |
 | KEY_MEMBER | | |
 | KEY_TYPE | | |
 | KILL | | |
 | LABEL | | |
-| LAG | Reserved | Reserved |
-| LANGUAGE | | Reserved |
-| LARGE | | Reserved |
+| LAG | 예약됨 | 예약됨 |
+| LANGUAGE | | 예약됨 |
+| LARGE | | 예약됨 |
 | LAST | | |
-| LAST_VALUE | Reserved | Reserved |
-| LATERAL | | Reserved |
-| LEAD | Reserved | Reserved |
-| LEADING | Reserved | Reserved |
-| LEFT | Reserved | Reserved |
+| LAST_VALUE | 예약됨 | 예약됨 |
+| LATERAL | | 예약됨 |
+| LEAD | 예약됨 | 예약됨 |
+| LEADING | 예약됨 | 예약됨 |
+| LEFT | 예약됨 | 예약됨 |
 | LENGTH | | |
 | LEVEL | | |
 | LIBRARY | | |
-| LIKE | Reserved | Reserved |
-| LIKE_REGEX | | Reserved |
-| LIMIT | Reserved | |
-| LISTAGG | | Reserved |
-| LN | Reserved | Reserved |
-| LOCAL | | Reserved |
-| LOCALTIME | Reserved | Reserved |
-| LOCALTIMESTAMP | Reserved | Reserved |
+| LIKE | 예약됨 | 예약됨 |
+| LIKE_REGEX | | 예약됨 |
+| LIMIT | 예약됨 | |
+| LISTAGG | | 예약됨 |
+| LN | 예약됨 | 예약됨 |
+| LOCAL | | 예약됨 |
+| LOCALTIME | 예약됨 | 예약됨 |
+| LOCALTIMESTAMP | 예약됨 | 예약됨 |
 | LOCATOR | | |
-| LOWER | Reserved | Reserved |
+| LOWER | 예약됨 | 예약됨 |
 | M | | |
 | MAP | | |
 | MAPPING | | |
-| MATCH | | Reserved |
+| MATCH | | 예약됨 |
 | MATCHED | | |
-| MATCHES | | Reserved |
-| MATCH_CONDITION | Reserved | |
-| MATCH_NUMBER | | Reserved |
-| MATCH_RECOGNIZE | Reserved | Reserved |
-| MAX | Reserved | Reserved |
+| MATCHES | | 예약됨 |
+| MATCH_CONDITION | 예약됨 | |
+| MATCH_NUMBER | | 예약됨 |
+| MATCH_RECOGNIZE | 예약됨 | 예약됨 |
+| MAX | 예약됨 | 예약됨 |
 | MAXVALUE | | |
-| MEASURE | Reserved | |
+| MEASURE | 예약됨 | |
 | MEASURES | | |
-| MEMBER | | Reserved |
-| MERGE | Reserved | Reserved |
+| MEMBER | | 예약됨 |
+| MERGE | 예약됨 | 예약됨 |
 | MESSAGE_LENGTH | | |
 | MESSAGE_OCTET_LENGTH | | |
 | MESSAGE_TEXT | | |
-| METHOD | | Reserved |
+| METHOD | | 예약됨 |
 | MICROSECOND | | |
 | MILLENNIUM | | |
 | MILLISECOND | | |
-| MIN | Reserved | Reserved |
-| MINUS | Reserved | |
-| MINUTE | Reserved | Reserved |
+| MIN | 예약됨 | 예약됨 |
+| MINUS | 예약됨 | |
+| MINUTE | 예약됨 | 예약됨 |
 | MINUTES | | |
 | MINVALUE | | |
-| MOD | Reserved | Reserved |
+| MOD | 예약됨 | 예약됨 |
 | MODE | | |
-| MODIFIES | | Reserved |
-| MODULE | | Reserved |
-| MONDAY | Reserved | |
-| MONTH | Reserved | Reserved |
+| MODIFIES | | 예약됨 |
+| MODULE | | 예약됨 |
+| MONDAY | 예약됨 | |
+| MONTH | 예약됨 | 예약됨 |
 | MONTHS | | |
 | MORE | | |
-| MULTISET | Reserved | Reserved |
+| MULTISET | 예약됨 | 예약됨 |
 | MUMPS | | |
 | NAME | | |
 | NAMES | | |
 | NANOSECOND | | |
-| NATIONAL | | Reserved |
-| NATURAL | Reserved | Reserved |
-| NCHAR | | Reserved |
-| NCLOB | | Reserved |
+| NATIONAL | | 예약됨 |
+| NATURAL | 예약됨 | 예약됨 |
+| NCHAR | | 예약됨 |
+| NCLOB | | 예약됨 |
 | NESTING | | |
-| NEW | Reserved | Reserved |
-| NEXT | Reserved | |
-| NO | | Reserved |
+| NEW | 예약됨 | 예약됨 |
+| NEXT | 예약됨 | |
+| NO | | 예약됨 |
 | NODES | | |
-| NONE | | Reserved |
-| NORMALIZE | | Reserved |
+| NONE | | 예약됨 |
+| NORMALIZE | | 예약됨 |
 | NORMALIZED | | |
-| NOT | Reserved | Reserved |
-| NTH_VALUE | Reserved | Reserved |
-| NTILE | Reserved | Reserved |
-| NULL | Reserved | Reserved |
+| NOT | 예약됨 | 예약됨 |
+| NTH_VALUE | 예약됨 | 예약됨 |
+| NTILE | 예약됨 | 예약됨 |
+| NULL | 예약됨 | 예약됨 |
 | NULLABLE | | |
-| NULLIF | Reserved | Reserved |
+| NULLIF | 예약됨 | 예약됨 |
 | NULLS | | |
 | NUMBER | | |
-| NUMERIC | | Reserved |
+| NUMERIC | | 예약됨 |
 | OBJECT | | |
-| OCCURRENCES_REGEX | | Reserved |
-| OCTET_LENGTH | Reserved | Reserved |
+| OCCURRENCES_REGEX | | 예약됨 |
+| OCTET_LENGTH | 예약됨 | 예약됨 |
 | OCTETS | | |
-| OF | | Reserved |
+| OF | | 예약됨 |
 | OFF | | |
-| OFFSET | Reserved | |
-| OLD | | Reserved |
-| OMIT | | Reserved |
-| ON | Reserved | Reserved |
-| ONE | | Reserved |
-| ONLY | | Reserved |
-| OPEN | | Reserved |
+| OFFSET | 예약됨 | |
+| OLD | | 예약됨 |
+| OMIT | | 예약됨 |
+| ON | 예약됨 | 예약됨 |
+| ONE | | 예약됨 |
+| ONLY | | 예약됨 |
+| OPEN | | 예약됨 |
 | OPTION | | |
 | OPTIONS | | |
-| OR | Reserved | Reserved |
-| ORDER | Reserved | Reserved |
+| OR | 예약됨 | 예약됨 |
+| ORDER | 예약됨 | 예약됨 |
 | ORDERING | | |
 | ORDINAL | | |
 | ORDINALITY | | |
 | OTHERS | | |
-| OUT | | Reserved |
-| OUTER | Reserved | Reserved |
+| OUT | | 예약됨 |
+| OUTER | 예약됨 | 예약됨 |
 | OUTPUT | | |
-| OVER | Reserved | Reserved |
-| OVERLAPS | | Reserved |
-| OVERLAY | | Reserved |
+| OVER | 예약됨 | 예약됨 |
+| OVERLAPS | | 예약됨 |
+| OVERLAY | | 예약됨 |
 | OVERRIDING | | |
 | PAD | | |
-| PARAMETER | | Reserved |
+| PARAMETER | | 예약됨 |
 | PARAMETER_MODE | | |
 | PARAMETER_NAME | | |
 | PARAMETER_ORDINAL_POSITION | | |
@@ -471,148 +471,148 @@ The following list shows the keywords in Apache Ignite 3.
 | PARAMETER_SPECIFIC_NAME | | |
 | PARAMETER_SPECIFIC_SCHEMA | | |
 | PARTIAL | | |
-| PARTITION | Reserved | Reserved |
+| PARTITION | 예약됨 | 예약됨 |
 | PARTITIONS | | |
 | PASCAL | | |
 | PASSING | | |
 | PASSTHROUGH | | |
 | PAST | | |
 | PATH | | |
-| PATTERN | | Reserved |
-| PER | | Reserved |
-| PERCENT | | Reserved |
-| PERCENTILE_CONT | Reserved | Reserved |
-| PERCENTILE_DISC | Reserved | Reserved |
-| PERCENT_RANK | Reserved | Reserved |
-| PERIOD | Reserved | Reserved |
-| PERMUTE | Reserved | |
+| PATTERN | | 예약됨 |
+| PER | | 예약됨 |
+| PERCENT | | 예약됨 |
+| PERCENTILE_CONT | 예약됨 | 예약됨 |
+| PERCENTILE_DISC | 예약됨 | 예약됨 |
+| PERCENT_RANK | 예약됨 | 예약됨 |
+| PERIOD | 예약됨 | 예약됨 |
+| PERMUTE | 예약됨 | |
 | PIVOT | | |
 | PLACING | | |
 | PLAN | | |
 | PLI | | |
-| PORTION | | Reserved |
-| POSITION | | Reserved |
-| POSITION_REGEX | | Reserved |
-| POWER | Reserved | Reserved |
-| PRECEDES | | Reserved |
+| PORTION | | 예약됨 |
+| POSITION | | 예약됨 |
+| POSITION_REGEX | | 예약됨 |
+| POWER | 예약됨 | 예약됨 |
+| PRECEDES | | 예약됨 |
 | PRECEDING | | |
-| PRECISION | Reserved | Reserved |
-| PREPARE | | Reserved |
+| PRECISION | 예약됨 | 예약됨 |
+| PREPARE | | 예약됨 |
 | PRESERVE | | |
 | PREV | | |
-| PRIMARY | Reserved | Reserved |
+| PRIMARY | 예약됨 | 예약됨 |
 | PRIOR | | |
 | PRIVILEGES | | |
-| PROCEDURE | | Reserved |
+| PROCEDURE | | 예약됨 |
 | PROFILE | | |
 | PROFILES | | |
-| PTF | | Reserved |
+| PTF | | 예약됨 |
 | PUBLIC | | |
-| QUALIFY | Reserved | |
+| QUALIFY | 예약됨 | |
 | QUARTER | | |
 | QUARTERS | | |
 | QUERY | | |
 | QUORUM | | |
-| RANGE | | Reserved |
-| RANK | Reserved | Reserved |
+| RANGE | | 예약됨 |
+| RANK | 예약됨 | 예약됨 |
 | READ | | |
-| READS | | Reserved |
-| REAL | | Reserved |
-| RECURSIVE | | Reserved |
-| REF | | Reserved |
-| REFERENCES | | Reserved |
-| REFERENCING | | Reserved |
-| REGR_AVGX | | Reserved |
-| REGR_AVGY | | Reserved |
-| REGR_COUNT | Reserved | Reserved |
-| REGR_INTERCEPT | | Reserved |
-| REGR_R2 | | Reserved |
-| REGR_SLOPE | | Reserved |
-| REGR_SXX | Reserved | Reserved |
-| REGR_SXY | | Reserved |
-| REGR_SYY | Reserved | Reserved |
+| READS | | 예약됨 |
+| REAL | | 예약됨 |
+| RECURSIVE | | 예약됨 |
+| REF | | 예약됨 |
+| REFERENCES | | 예약됨 |
+| REFERENCING | | 예약됨 |
+| REGR_AVGX | | 예약됨 |
+| REGR_AVGY | | 예약됨 |
+| REGR_COUNT | 예약됨 | 예약됨 |
+| REGR_INTERCEPT | | 예약됨 |
+| REGR_R2 | | 예약됨 |
+| REGR_SLOPE | | 예약됨 |
+| REGR_SXX | 예약됨 | 예약됨 |
+| REGR_SXY | | 예약됨 |
+| REGR_SYY | 예약됨 | 예약됨 |
 | RELATIVE | | |
-| RELEASE | | Reserved |
-| RENAME | Reserved | |
+| RELEASE | | 예약됨 |
+| RENAME | 예약됨 | |
 | REPEATABLE | | |
 | REPLACE | | |
 | REPLICAS | | |
-| RESET | Reserved | |
+| RESET | 예약됨 | |
 | RESPECT | | |
 | RESTART | | |
 | RESTRICT | | |
-| RESULT | | Reserved |
-| RETURN | | Reserved |
+| RESULT | | 예약됨 |
+| RETURN | | 예약됨 |
 | RETURNED_CARDINALITY | | |
 | RETURNED_LENGTH | | |
 | RETURNED_OCTET_LENGTH | | |
 | RETURNED_SQLSTATE | | |
 | RETURNING | | |
-| RETURNS | | Reserved |
-| REVOKE | | Reserved |
-| RIGHT | Reserved | Reserved |
+| RETURNS | | 예약됨 |
+| REVOKE | | 예약됨 |
+| RIGHT | 예약됨 | 예약됨 |
 | RLIKE | | |
 | ROLE | | |
-| ROLLBACK | | Reserved |
-| ROLLUP | Reserved | Reserved |
+| ROLLBACK | | 예약됨 |
+| ROLLUP | 예약됨 | 예약됨 |
 | ROUTINE | | |
 | ROUTINE_CATALOG | | |
 | ROUTINE_NAME | | |
 | ROUTINE_SCHEMA | | |
-| ROW | Reserved | Reserved |
-| ROWS | | Reserved |
+| ROW | 예약됨 | 예약됨 |
+| ROWS | | 예약됨 |
 | ROW_COUNT | | |
-| ROW_NUMBER | Reserved | Reserved |
-| RUNNING | | Reserved |
+| ROW_NUMBER | 예약됨 | 예약됨 |
+| RUNNING | | 예약됨 |
 | SAFE_CAST | | |
 | SAFE_OFFSET | | |
 | SAFE_ORDINAL | | |
-| SATURDAY | Reserved | |
-| SAVEPOINT | | Reserved |
+| SATURDAY | 예약됨 | |
+| SAVEPOINT | | 예약됨 |
 | SCALAR | | |
 | SCALE | | |
 | SCHEMA | | |
 | SCHEMA_NAME | | |
-| SCOPE | | Reserved |
+| SCOPE | | 예약됨 |
 | SCOPE_CATALOGS | | |
 | SCOPE_NAME | | |
 | SCOPE_SCHEMA | | |
-| SCROLL | | Reserved |
-| SEARCH | | Reserved |
-| SECOND | Reserved | Reserved |
+| SCROLL | | 예약됨 |
+| SEARCH | | 예약됨 |
+| SECOND | 예약됨 | 예약됨 |
 | SECONDS | | |
 | SECTION | | |
 | SECURITY | | |
 | SEEK | | |
-| SELECT | Reserved | Reserved |
+| SELECT | 예약됨 | 예약됨 |
 | SELF | | |
-| SENSITIVE | | Reserved |
+| SENSITIVE | | 예약됨 |
 | SEPARATOR | | |
 | SEQUENCE | | |
 | SERIALIZABLE | | |
 | SERVER | | |
 | SERVER_NAME | | |
 | SESSION | | |
-| SESSION_USER | Reserved | Reserved |
-| SET | Reserved | Reserved |
+| SESSION_USER | 예약됨 | 예약됨 |
+| SET | 예약됨 | 예약됨 |
 | SETS | | |
-| SHOW | | Reserved |
-| SIMILAR | | Reserved |
+| SHOW | | 예약됨 |
+| SIMILAR | | 예약됨 |
 | SIMPLE | | |
 | SIZE | | |
-| SKIP | | Reserved |
-| SMALLINT | | Reserved |
-| SOME | Reserved | Reserved |
+| SKIP | | 예약됨 |
+| SMALLINT | | 예약됨 |
+| SOME | 예약됨 | 예약됨 |
 | SORTED | | |
 | SOURCE | | |
 | SPACE | | |
-| SPECIFIC | Reserved | Reserved |
-| SPECIFICTYPE | | Reserved |
+| SPECIFIC | 예약됨 | 예약됨 |
+| SPECIFICTYPE | | 예약됨 |
 | SPECIFIC_NAME | | |
-| SQL | | Reserved |
-| SQLEXCEPTION | | Reserved |
-| SQLSTATE | | Reserved |
-| SQLWARNING | | Reserved |
+| SQL | | 예약됨 |
+| SQLEXCEPTION | | 예약됨 |
+| SQLSTATE | | 예약됨 |
+| SQLWARNING | | 예약됨 |
 | SQL_BIGINT | | |
 | SQL_BINARY | | |
 | SQL_BIT | | |
@@ -662,147 +662,147 @@ The following list shows the keywords in Apache Ignite 3.
 | SQL_TSI_YEAR | | |
 | SQL_VARBINARY | | |
 | SQL_VARCHAR | | |
-| SQRT | Reserved | Reserved |
-| START | | Reserved |
+| SQRT | 예약됨 | 예약됨 |
+| START | | 예약됨 |
 | STATE | | |
 | STATEMENT | | |
-| STATIC | | Reserved |
-| STDDEV_POP | Reserved | Reserved |
-| STDDEV_SAMP | Reserved | Reserved |
+| STATIC | | 예약됨 |
+| STDDEV_POP | 예약됨 | 예약됨 |
+| STDDEV_SAMP | 예약됨 | 예약됨 |
 | STORAGE | | |
-| STREAM | Reserved | |
+| STREAM | 예약됨 | |
 | STRING_AGG | | |
 | STRUCTURE | | |
 | STYLE | | |
 | SUBCLASS_ORIGIN | | |
-| SUBMULTISET | | Reserved |
-| SUBSET | | Reserved |
+| SUBMULTISET | | 예약됨 |
+| SUBSET | | 예약됨 |
 | SUBSTITUTE | | |
-| SUBSTRING | Reserved | Reserved |
-| SUBSTRING_REGEX | | Reserved |
-| SUCCEEDS | | Reserved |
-| SUM | Reserved | Reserved |
-| SUNDAY | Reserved | |
-| SYMMETRIC | Reserved | Reserved |
-| SYSTEM | | Reserved |
-| SYSTEM_TIME | Reserved | Reserved |
-| SYSTEM_USER | Reserved | Reserved |
-| TABLE | Reserved | Reserved |
-| TABLESAMPLE | Reserved | Reserved |
+| SUBSTRING | 예약됨 | 예약됨 |
+| SUBSTRING_REGEX | | 예약됨 |
+| SUCCEEDS | | 예약됨 |
+| SUM | 예약됨 | 예약됨 |
+| SUNDAY | 예약됨 | |
+| SYMMETRIC | 예약됨 | 예약됨 |
+| SYSTEM | | 예약됨 |
+| SYSTEM_TIME | 예약됨 | 예약됨 |
+| SYSTEM_USER | 예약됨 | 예약됨 |
+| TABLE | 예약됨 | 예약됨 |
+| TABLESAMPLE | 예약됨 | 예약됨 |
 | TABLE_NAME | | |
 | TEMPORARY | | |
-| THEN | Reserved | Reserved |
-| THURSDAY | Reserved | |
+| THEN | 예약됨 | 예약됨 |
+| THURSDAY | 예약됨 | |
 | TIES | | |
-| TIME | Reserved | Reserved |
-| TIMESTAMP | Reserved | Reserved |
+| TIME | 예약됨 | 예약됨 |
+| TIMESTAMP | 예약됨 | 예약됨 |
 | TIMESTAMPADD | | |
 | TIMESTAMPDIFF | | |
 | TIMESTAMP_DIFF | | |
 | TIMESTAMP_TRUNC | | |
-| TIMEZONE_HOUR | | Reserved |
-| TIMEZONE_MINUTE | | Reserved |
+| TIMEZONE_HOUR | | 예약됨 |
+| TIMEZONE_MINUTE | | 예약됨 |
 | TIME_DIFF | | |
 | TIME_TRUNC | | |
 | TINYINT | | |
-| TO | Reserved | Reserved |
+| TO | 예약됨 | 예약됨 |
 | TOP_LEVEL_COUNT | | |
-| TRAILING | Reserved | Reserved |
+| TRAILING | 예약됨 | 예약됨 |
 | TRANSACTION | | |
 | TRANSACTIONS_ACTIVE | | |
 | TRANSACTIONS_COMMITTED | | |
 | TRANSACTIONS_ROLLED_BACK | | |
 | TRANSFORM | | |
 | TRANSFORMS | | |
-| TRANSLATE | | Reserved |
-| TRANSLATE_REGEX | | Reserved |
-| TRANSLATION | | Reserved |
-| TREAT | | Reserved |
-| TRIGGER | | Reserved |
+| TRANSLATE | | 예약됨 |
+| TRANSLATE_REGEX | | 예약됨 |
+| TRANSLATION | | 예약됨 |
+| TREAT | | 예약됨 |
+| TRIGGER | | 예약됨 |
 | TRIGGER_CATALOG | | |
 | TRIGGER_NAME | | |
 | TRIGGER_SCHEMA | | |
-| TRIM | | Reserved |
-| TRIM_ARRAY | | Reserved |
-| TRUE | Reserved | Reserved |
-| TRUNCATE | Reserved | Reserved |
+| TRIM | | 예약됨 |
+| TRIM_ARRAY | | 예약됨 |
+| TRUE | 예약됨 | 예약됨 |
+| TRUNCATE | 예약됨 | 예약됨 |
 | TRY_CAST | | |
-| TUESDAY | Reserved | |
+| TUESDAY | 예약됨 | |
 | TUMBLE | | |
 | TYPE | | |
-| UESCAPE | Reserved | Reserved |
+| UESCAPE | 예약됨 | 예약됨 |
 | UNBOUNDED | | |
 | UNCOMMITTED | | |
 | UNCONDITIONAL | | |
 | UNDER | | |
-| UNION | Reserved | Reserved |
-| UNIQUE | | Reserved |
-| UNKNOWN | Reserved | Reserved |
+| UNION | 예약됨 | 예약됨 |
+| UNIQUE | | 예약됨 |
+| UNKNOWN | 예약됨 | 예약됨 |
 | UNNAMED | | |
-| UNNEST | | Reserved |
+| UNNEST | | 예약됨 |
 | UNPIVOT | | |
 | UP | | |
-| UPDATE | Reserved | Reserved |
-| UPPER | Reserved | Reserved |
-| UPSERT | Reserved | |
+| UPDATE | 예약됨 | 예약됨 |
+| UPPER | 예약됨 | 예약됨 |
+| UPSERT | 예약됨 | |
 | USAGE | | |
-| USER | Reserved | Reserved |
+| USER | 예약됨 | 예약됨 |
 | USER_DEFINED_TYPE_CATALOG | | |
 | USER_DEFINED_TYPE_CODE | | |
 | USER_DEFINED_TYPE_NAME | | |
 | USER_DEFINED_TYPE_SCHEMA | | |
-| USING | Reserved | Reserved |
+| USING | 예약됨 | 예약됨 |
 | UTF16 | | |
 | UTF32 | | |
 | UTF8 | | |
-| UUID | Reserved | |
-| VALUE | Reserved | Reserved |
-| VALUES | Reserved | Reserved |
-| VALUE_OF | | Reserved |
-| VARBINARY | | Reserved |
-| VARCHAR | | Reserved |
-| VARIANT | Reserved | |
-| VARYING | | Reserved |
-| VAR_POP | Reserved | Reserved |
-| VAR_SAMP | Reserved | Reserved |
+| UUID | 예약됨 | |
+| VALUE | 예약됨 | 예약됨 |
+| VALUES | 예약됨 | 예약됨 |
+| VALUE_OF | | 예약됨 |
+| VARBINARY | | 예약됨 |
+| VARCHAR | | 예약됨 |
+| VARIANT | 예약됨 | |
+| VARYING | | 예약됨 |
+| VAR_POP | 예약됨 | 예약됨 |
+| VAR_SAMP | 예약됨 | 예약됨 |
 | VERSION | | |
-| VERSIONING | | Reserved |
+| VERSIONING | | 예약됨 |
 | VIEW | | |
 | WAIT | | |
-| WEDNESDAY | Reserved | |
+| WEDNESDAY | 예약됨 | |
 | WEEK | | |
 | WEEKS | | |
-| WHEN | Reserved | Reserved |
-| WHENEVER | | Reserved |
-| WHERE | Reserved | Reserved |
+| WHEN | 예약됨 | 예약됨 |
+| WHENEVER | | 예약됨 |
+| WHERE | 예약됨 | 예약됨 |
 | WIDTH_BUCKET | | |
-| WINDOW | Reserved | Reserved |
-| WITH | Reserved | Reserved |
-| WITHIN | Reserved | Reserved |
-| WITHOUT | | Reserved |
-| WORK | | Reserved |
+| WINDOW | 예약됨 | 예약됨 |
+| WITH | 예약됨 | 예약됨 |
+| WITHIN | 예약됨 | 예약됨 |
+| WITHOUT | | 예약됨 |
+| WORK | | 예약됨 |
 | WRAPPER | | |
-| WRITE | | Reserved |
-| XML | | Reserved |
-| XMLAGG | | Reserved |
-| XMLATTRIBUTES | | Reserved |
-| XMLBINARY | | Reserved |
-| XMLCAST | | Reserved |
-| XMLCOMMENT | | Reserved |
-| XMLCONCAT | | Reserved |
-| XMLDOCUMENT | | Reserved |
-| XMLELEMENT | | Reserved |
-| XMLEXISTS | | Reserved |
-| XMLFOREST | | Reserved |
-| XMLITERATE | | Reserved |
-| XMLNAMESPACES | | Reserved |
-| XMLPARSE | | Reserved |
-| XMLPI | | Reserved |
-| XMLQUERY | | Reserved |
-| XMLSERIALIZE | | Reserved |
-| XMLTABLE | | Reserved |
-| XMLTEXT | | Reserved |
-| XMLVALIDATE | | Reserved |
-| YEAR | Reserved | Reserved |
+| WRITE | | 예약됨 |
+| XML | | 예약됨 |
+| XMLAGG | | 예약됨 |
+| XMLATTRIBUTES | | 예약됨 |
+| XMLBINARY | | 예약됨 |
+| XMLCAST | | 예약됨 |
+| XMLCOMMENT | | 예약됨 |
+| XMLCONCAT | | 예약됨 |
+| XMLDOCUMENT | | 예약됨 |
+| XMLELEMENT | | 예약됨 |
+| XMLEXISTS | | 예약됨 |
+| XMLFOREST | | 예약됨 |
+| XMLITERATE | | 예약됨 |
+| XMLNAMESPACES | | 예약됨 |
+| XMLPARSE | | 예약됨 |
+| XMLPI | | 예약됨 |
+| XMLQUERY | | 예약됨 |
+| XMLSERIALIZE | | 예약됨 |
+| XMLTABLE | | 예약됨 |
+| XMLTEXT | | 예약됨 |
+| XMLVALIDATE | | 예약됨 |
+| YEAR | 예약됨 | 예약됨 |
 | YEARS | | |
 | ZONE | | |

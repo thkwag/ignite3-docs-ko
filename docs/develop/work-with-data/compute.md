@@ -1,58 +1,58 @@
 ---
 id: compute
-title: Distributed Computing
+title: 분산 컴퓨트
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Apache Ignite lets you run your own code on the cluster in a distributed, balanced, and fault-tolerant way.
+Apache Ignite에서는 직접 작성한 코드를 클러스터에서 분산 실행할 수 있으며, 부하 분산과 장애 허용성을 함께 제공합니다.
 
-Tasks can run on a single node, multiple nodes, or across the entire cluster, and you can choose between synchronous and asynchronous execution.
-
-:::note
-Apache Ignite compute engine now supports jobs implemented both in Java and in .NET. As .NET compute jobs require a bit of extra setup, see the [.NET Compute Jobs](#net-compute-jobs) subsection for details.
-:::
-
-In addition to standard compute tasks, Apache Ignite supports [Colocated Execution](#colocated-execution). This means your tasks can run directly on the nodes that store the required data, reducing network overhead and improving performance.
-The cluster also supports [MapReduce Tasks](#mapreduce-tasks), allowing for efficient processing of large datasets. In this case, tasks will be executed on nodes that hold the data required for them.
-
-When sending code and data between nodes, objects are converted into a transferable format so they can be accurately rebuilt. Apache Ignite automatically handles marshalling for common types like tuples, POJOs, and native types, but for more complex or custom objects, you may need to implement your own [marshalling](./serialization) logic.
-
-## Compute Job Code Deployment
-
-Before submitting your compute job, ensure that the required code is [deployed](./code-deployment) to the nodes where it will execute.
-
-If you are using [embedded nodes](/getting-started/embedded-mode), any code that is included in the project classpath will also be available to your compute jobs.
-
-## Configuring Jobs
-
-In Apache Ignite, compute job's execution is defined by two key components: `JobTarget` and `JobDescriptor`. These components determine on which nodes the job will run and how it will be structured, including input and output types, marshallers, and the deployed class that represents the job.
-
-### Job Target
-
-Before submitting a job, you must create a `JobTarget` object that specifies which nodes will execute the job. Job target can point to a specific node, any node on the cluster, or start a [colocated](#colocated-execution) compute job, that will be executed on nodes that hold a specific key. The following methods are available:
-
-- `JobTarget.anyNode()` - the job will be executed on any of the specified nodes.
-- `JobTarget.node()` - the job will be executed on the specific node.
-- `JobTarget.colocated()` - the job will be executed on a node that holds the specified key.
+작업은 단일 노드, 여러 노드, 또는 클러스터 전체에서 실행할 수 있으며, 동기 실행과 비동기 실행 중에서 선택할 수 있습니다.
 
 :::note
-Use the `BroadcastJobTarget` object instead in case you want to execute a job across [multiple nodes](#multiple-node-execution).
+이제 Apache Ignite 컴퓨트 엔진은 Java와 .NET으로 구현한 작업을 모두 지원합니다. .NET 컴퓨트 작업은 약간의 추가 설정이 필요하므로, 자세한 내용은 [.NET 컴퓨트 작업](#net-compute-jobs) 하위 절을 참고하세요.
 :::
 
-### Job Descriptor
+표준 컴퓨트 작업 외에도 Apache Ignite는 [콜로케이션 실행](#colocated-execution)을 지원합니다. 즉, 작업을 필요한 데이터가 저장된 노드에서 직접 실행하여 네트워크 부담을 줄이고 성능을 높일 수 있습니다.
+클러스터는 [맵리듀스 태스크](#mapreduce-tasks)도 지원하여 대규모 데이터셋을 효율적으로 처리합니다. 이 경우 태스크는 필요한 데이터를 보유한 노드에서 실행됩니다.
 
-The `JobDescriptor` object contains all the details required for job execution. The following arguments must be provided:
+노드 간에 코드와 데이터를 전송할 때, 객체는 정확하게 다시 만들 수 있도록 전송 가능한 형식으로 변환됩니다. Apache Ignite는 튜플, POJO, 네이티브 타입 같은 일반적인 타입의 마샬링(marshalling)을 자동으로 처리하지만, 더 복잡하거나 사용자 정의한 객체는 직접 [마샬링](./serialization) 로직을 구현해야 할 수 있습니다.
 
-- The job descriptor is created using a builder that specifies the input type for the job arguments, the expected output type, and the fully qualified name of the job class to execute.
-- `units` takes your deployment unit. You create it with the unit's name and specify `Version.LATEST` so that your job always runs the most recently deployed version.
-- `resultClass` sets the expected result type so the system can correctly process the job's output.
-- `argumentMarshaller` and `resultMarshaller` defines how to serialize the job's input argument and output result. For common types, you can omit the marshallers and pass `null` to the builder since Apache Ignite automatically handles marshalling.
+## 컴퓨트 작업 코드 배포 {#compute-job-code-deployment}
 
-Examples below assumes that the `NodeNameJob` class has been deployed to the node by using [code deployment](./code-deployment).
+컴퓨트 작업을 제출하기 전에, 필요한 코드가 실행될 노드에 [배포](./code-deployment)되어 있는지 확인하세요.
 
-- If you are working with common types, you don't need to define custom marshallers. Apache Ignite will handle them automatically. The following example shows a simpler job descriptor that uses built-in marshalling:
+[임베디드 노드](/getting-started/embedded-mode)를 사용하는 경우, 프로젝트 클래스패스에 포함된 코드는 컴퓨트 작업에서도 사용할 수 있습니다.
+
+## 작업 구성 {#configuring-jobs}
+
+Apache Ignite에서 컴퓨트 작업의 실행은 두 가지 핵심 컴포넌트 `JobTarget`과 `JobDescriptor`로 정의됩니다. 이 컴포넌트는 작업이 어느 노드에서 실행될지, 그리고 입력·출력 타입, 마샬러, 작업을 나타내는 배포된 클래스를 포함해 작업이 어떻게 구성될지를 결정합니다.
+
+### 작업 대상 {#job-target}
+
+작업을 제출하기 전에, 어느 노드가 작업을 실행할지 지정하는 `JobTarget` 객체를 만들어야 합니다. 작업 대상은 특정 노드나 클러스터의 임의 노드를 가리킬 수 있으며, 특정 키를 보유한 노드에서 실행되는 [콜로케이션](#colocated-execution) 컴퓨트 작업을 시작할 수도 있습니다. 사용할 수 있는 메서드는 다음과 같습니다.
+
+- `JobTarget.anyNode()` - 지정한 노드 중 아무 노드에서나 작업이 실행됩니다.
+- `JobTarget.node()` - 특정 노드에서 작업이 실행됩니다.
+- `JobTarget.colocated()` - 지정한 키를 보유한 노드에서 작업이 실행됩니다.
+
+:::note
+작업을 [여러 노드](#multiple-node-execution)에서 실행하려면 대신 `BroadcastJobTarget` 객체를 사용하세요.
+:::
+
+### 작업 디스크립터 {#job-descriptor}
+
+`JobDescriptor` 객체는 작업 실행에 필요한 모든 세부 정보를 담습니다. 다음 인수를 제공해야 합니다.
+
+- 작업 디스크립터는 작업 인수의 입력 타입, 예상 출력 타입, 실행할 작업 클래스의 정규화된 이름을 지정하는 빌더로 생성합니다.
+- `units`는 배포 단위를 받습니다. 단위 이름으로 배포 단위를 만들고 `Version.LATEST`를 지정하면 작업이 항상 가장 최근에 배포된 버전으로 실행됩니다.
+- `resultClass`는 예상 결과 타입을 설정하여 시스템이 작업 출력을 올바르게 처리하도록 합니다.
+- `argumentMarshaller`와 `resultMarshaller`는 작업의 입력 인수와 출력 결과를 직렬화하는 방식을 정의합니다. 일반적인 타입은 Apache Ignite가 마샬링을 자동으로 처리하므로 마샬러를 생략하고 빌더에 `null`을 전달할 수 있습니다.
+
+아래 예시는 `NodeNameJob` 클래스가 [코드 배포](./code-deployment)로 노드에 배포되어 있다고 가정합니다.
+
+- 일반적인 타입을 다룰 때는 사용자 정의 마샬러를 정의할 필요가 없습니다. Apache Ignite가 자동으로 처리합니다. 다음 예시는 내장 마샬링을 사용하는 더 간단한 작업 디스크립터를 보여줍니다.
 
   ```java
   String result = client.compute().execute(
@@ -65,7 +65,7 @@ Examples below assumes that the `NodeNameJob` class has been deployed to the nod
   );
   ```
 
-- This example shows how to create a custom job descriptor for a job that takes a user-defined `MyJobArgument`, runs on a random cluster node, and returns a `MyJobResult` object using custom marshallers:
+- 다음 예시는 사용자 정의 `MyJobArgument`를 받아 임의의 클러스터 노드에서 실행되고, 사용자 정의 마샬러로 `MyJobResult` 객체를 반환하는 작업의 사용자 정의 작업 디스크립터를 만드는 방법을 보여줍니다.
 
   ```java
   MyJobResult result = client.compute().execute(
@@ -80,17 +80,17 @@ Examples below assumes that the `NodeNameJob` class has been deployed to the nod
   );
   ```
 
-For more details on configuring jobs refer to the corresponding API section.
+작업 구성에 관한 자세한 내용은 해당 API 섹션을 참고하세요.
 
-### Deployment Unit Information
+### 배포 단위 정보 {#deployment-unit-information}
 
-The `JobExecutionContext` object contains the information about the deployment units the job is using as a collection of `DeploymentUnitInfo` for each deployment unit involved in the job.
+`JobExecutionContext` 객체는 작업이 사용하는 배포 단위 정보를, 작업에 관련된 각 배포 단위에 대한 `DeploymentUnitInfo` 컬렉션으로 담습니다.
 
-Each `DeploymentUnitInfo` object provides the following information:
+각 `DeploymentUnitInfo` 객체는 다음 정보를 제공합니다.
 
-* `name()` - The name of the deployment unit
-* `version()` - The version of the deployment unit
-* `path()` - The filesystem path to the deployment unit contents
+* `name()` - 배포 단위의 이름
+* `version()` - 배포 단위의 버전
+* `path()` - 배포 단위 콘텐츠의 파일 시스템 경로
 
 ```java
 public class DiagnosticJob implements ComputeJob<Void, String> {
@@ -109,17 +109,17 @@ public class DiagnosticJob implements ComputeJob<Void, String> {
 }
 ```
 
-## Executing Jobs
+## 작업 실행 {#executing-jobs}
 
-Apache Ignite compute jobs can run on a specific node, any node, or using a colocated approach when job is executed on the node holding the relevant data key.
+Apache Ignite 컴퓨트 작업은 특정 노드나 임의 노드에서 실행하거나, 관련 데이터 키를 보유한 노드에서 실행하는 콜로케이션 방식으로 실행할 수 있습니다.
 
-### Single Node Execution
+### 단일 노드 실행 {#single-node-execution}
 
-Often, you need to perform a job on one node in the cluster. In this case, there are multiple ways to start job execution:
+클러스터의 한 노드에서 작업을 수행해야 하는 경우가 많습니다. 이때 작업 실행을 시작하는 방법은 여러 가지입니다.
 
-- `submitAsync()` - sends the job to the cluster and returns a future that will be completed with the `JobExecution` object when the job is submitted for execution.
-- `executeAsync()` - sends the job to the cluster and returns a future that will be completed when job execution result is ready.
-- `execute()` - sends the job to the cluster and waits for the result of job execution.
+- `submitAsync()` - 작업을 클러스터로 보내고, 작업이 실행을 위해 제출되면 `JobExecution` 객체로 완료되는 future를 반환합니다.
+- `executeAsync()` - 작업을 클러스터로 보내고, 작업 실행 결과가 준비되면 완료되는 future를 반환합니다.
+- `execute()` - 작업을 클러스터로 보내고 작업 실행 결과를 기다립니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -184,16 +184,16 @@ std::string result = execution.get_result()->get<std::string>();
 </TabItem>
 </Tabs>
 
-### Multiple Node Execution
+### 다중 노드 실행 {#multiple-node-execution}
 
-To execute the compute task on multiple nodes, you use the same methods as for single node execution, except instead of creating a `JobTarget` object to designate execution nodes you use the `BroadcastJobTarget` and specify the list of nodes that the job must be executed on.
+여러 노드에서 컴퓨트 작업을 실행할 때는 단일 노드 실행과 동일한 메서드를 사용하되, 실행 노드를 지정하는 `JobTarget` 객체를 만드는 대신 `BroadcastJobTarget`을 사용하고 작업을 실행할 노드 목록을 지정합니다.
 
-The `BroadcastJobTarget` object can specify the following:
+`BroadcastJobTarget` 객체는 다음을 지정할 수 있습니다.
 
-- `BroadcastJobTarget.nodes()` - the job will be executed on all nodes in the list.
-- `BroadcastJobTarget.table()` - the job will be executed on all nodes that hold partitions of the specified table.
+- `BroadcastJobTarget.nodes()` - 목록에 있는 모든 노드에서 작업이 실행됩니다.
+- `BroadcastJobTarget.table()` - 지정한 테이블의 파티션을 보유한 모든 노드에서 작업이 실행됩니다.
 
-You can control what nodes the task is executed on by setting the list of nodes:
+노드 목록을 설정하여 작업이 실행되는 노드를 제어할 수 있습니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -264,13 +264,13 @@ std::string result = exec.get_result()->get<std::string>();
 </TabItem>
 </Tabs>
 
-### Colocated Execution
+### 콜로케이션 실행 {#colocated-execution}
 
-In Apache Ignite, you can execute colocated computations by specifying a job target that directs the task to run on the node holding the required data.
+Apache Ignite에서는 필요한 데이터를 보유한 노드에서 작업을 실행하도록 작업 대상을 지정하여 콜로케이션 연산을 실행할 수 있습니다.
 
-In the example below, the job runs on the node that owns the partition for the row in the `accounts` table identified by the primary key `accountNumber`.
-We pass the key both to `JobTarget.colocated()` to select the node and as the
-job argument, so the job knows which record to read.
+아래 예시에서 작업은 기본 키 `accountNumber`로 식별되는 `accounts` 테이블 행의 파티션을 소유한 노드에서 실행됩니다.
+노드를 선택하기 위해 `JobTarget.colocated()`에 키를 전달하고, 작업이 어떤 레코드를 읽어야 하는지 알 수 있도록
+같은 키를 작업 인수로도 전달합니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -330,11 +330,11 @@ std::string result = execution.get_result()->get<std::string>();
 </TabItem>
 </Tabs>
 
-Alternatively, you can execute the compute job on all nodes in the cluster that hold partitions for the specified table by creating a `BroadcastJobTarget.table()` target. In this case, Apache Ignite will automatically find all nodes that hold data partitions for the specified table and execute the job on all of them.
+또는 `BroadcastJobTarget.table()` 대상을 만들어, 지정한 테이블의 파티션을 보유한 클러스터의 모든 노드에서 컴퓨트 작업을 실행할 수 있습니다. 이 경우 Apache Ignite는 지정한 테이블의 데이터 파티션을 보유한 모든 노드를 자동으로 찾아 그 노드 전부에서 작업을 실행합니다.
 
-## Using Qualified Table Names
+## 정규화된 테이블 이름 사용 {#using-qualified-table-names}
 
-If you do not specify the table schema, the `PUBLIC` schema will be used. To use a different schema, specify a fully qualified table name. You can provide it in a string or by creating the `QualifiedName` object:
+테이블 스키마를 지정하지 않으면 `PUBLIC` 스키마가 사용됩니다. 다른 스키마를 사용하려면 정규화된 테이블 이름을 지정하세요. 문자열로 제공하거나 `QualifiedName` 객체를 만들어 제공할 수 있습니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -352,17 +352,17 @@ null
 </TabItem>
 <TabItem value="dotnet" label=".NET">
 
-Not supported
+지원되지 않음
 
 </TabItem>
 <TabItem value="cpp" label="C++">
 
-Not supported
+지원되지 않음
 
 </TabItem>
 </Tabs>
 
-Just like with execution on a single node, you can use the `QualifiedName` object to specify a qualified table name and run a job on multiple nodes using `BroadcastJobTarget`:
+단일 노드 실행과 마찬가지로, `QualifiedName` 객체로 정규화된 테이블 이름을 지정하고 `BroadcastJobTarget`을 사용해 여러 노드에서 작업을 실행할 수 있습니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -376,7 +376,7 @@ client.compute().execute(BroadcastJobTarget.table(customSchemaTable), JobDescrip
 </TabItem>
 </Tabs>
 
-You can also use the `of` method to instead specify the table name and the schema separately:
+또는 `of` 메서드를 사용해 테이블 이름과 스키마를 따로 지정할 수도 있습니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -390,40 +390,40 @@ client.compute().execute(BroadcastJobTarget.table(customSchemaTableName), JobDes
 </TabItem>
 </Tabs>
 
-The provided names must follow SQL syntax rules for identifiers:
+제공하는 이름은 SQL의 식별자 구문 규칙을 따라야 합니다.
 
-- Identifier must start from a character in the "Lu", "Ll", "Lt", "Lm", "Lo", or "Nl" Unicode categories;
-- Identifier characters (except for the first one) may be `U+00B7` (middle dot), `U+0331` (underscore), or any character in the "Mn", "Mc", "Nd", "Pc", or "Cf" Unicode categories;
-- Identifiers that contain any other characters must be quoted with double-quotes;
-- Double-quote inside the identifier must be 2 double-quote chars.
+- 식별자는 "Lu", "Ll", "Lt", "Lm", "Lo", "Nl" 유니코드 범주에 속하는 문자로 시작해야 합니다.
+- 식별자 문자(첫 번째 문자 제외)는 `U+00B7`(가운뎃점), `U+0331`(밑줄), 또는 "Mn", "Mc", "Nd", "Pc", "Cf" 유니코드 범주에 속하는 문자일 수 있습니다.
+- 그 밖의 문자를 포함하는 식별자는 큰따옴표로 감싸야 합니다.
+- 식별자 안의 큰따옴표는 큰따옴표 2개로 표기해야 합니다.
 
-Any unquoted names will be cast to upper case. In this case, `Person` and `PERSON` names are equivalent. To avoid this, add escaped quotes around the name. For example, `\"Person\"` will be encoded as a case-sensitive `Person` name. If the name contains the `U+2033` (double quote) symbol, it must be escaped as `""` (2 double quote symbols).
+따옴표로 감싸지 않은 이름은 모두 대문자로 변환됩니다. 이 경우 `Person`과 `PERSON` 이름은 동일합니다. 이를 피하려면 이름을 이스케이프된 따옴표로 감싸세요. 예를 들어 `\"Person\"`은 대소문자를 구분하는 `Person` 이름으로 인코딩됩니다. 이름에 `U+2033`(큰따옴표) 기호가 포함되면 `""`(큰따옴표 기호 2개)로 이스케이프해야 합니다.
 
-## .NET Compute Jobs
+## .NET 컴퓨트 작업 {#net-compute-jobs}
 
-When working with compute jobs written in .NET, resulting binaries (DLL files) should be deployed to server nodes and invoked by the assembly-qualified type name. Every deployment unit combination is loaded into a separate [AssemblyLoadContext](https://learn.microsoft.com/en-us/dotnet/core/dependency-loading/understanding-assemblyloadcontext).
+.NET으로 작성한 컴퓨트 작업을 다룰 때는, 결과 바이너리(DLL 파일)를 서버 노드에 배포하고 어셈블리 정규화된 타입 이름으로 호출해야 합니다. 배포 단위 조합마다 별도의 [AssemblyLoadContext](https://learn.microsoft.com/en-us/dotnet/core/dependency-loading/understanding-assemblyloadcontext)로 로드됩니다.
 
-You can have multiple versions of the same job (assembly) deployed to the cluster as Apache Ignite supports deployment unit isolation. One job can consist of multiple deployment units. Assemblies and types are looked up in the order you list them.
+Apache Ignite는 배포 단위 격리를 지원하므로, 같은 작업(어셈블리)의 여러 버전을 클러스터에 배포할 수 있습니다. 하나의 작업은 여러 배포 단위로 구성될 수 있습니다. 어셈블리와 타입은 나열한 순서대로 조회됩니다.
 
 :::note
-.NET compute jobs are executed in a separate process ([Sidecar](https://learn.microsoft.com/en-us/azure/architecture/patterns/sidecar)) on the server node. The process is started on the first .NET job call and then reused for subsequent jobs.
+.NET 컴퓨트 작업은 서버 노드에서 별도 프로세스([Sidecar](https://learn.microsoft.com/en-us/azure/architecture/patterns/sidecar))로 실행됩니다. 이 프로세스는 첫 .NET 작업 호출 시 시작되어 이후 작업에 재사용됩니다.
 :::
 
-Compute job classes may implement `IDisposable` and `IAsyncDisposable` interfaces. Apache Ignite will call `Dispose` or `DisposeAsync` after job execution whether it succeeds or fails.
+컴퓨트 작업 클래스는 `IDisposable`과 `IAsyncDisposable` 인터페이스를 구현할 수 있습니다. Apache Ignite는 작업 실행이 성공하든 실패하든 실행 후 `Dispose` 또는 `DisposeAsync`를 호출합니다.
 
-### .NET Compute Requirements
+### .NET 컴퓨트 요구 사항 {#net-compute-requirements}
 
-* .NET 8 Runtime or later (not SDK) is required on each server node.
-* When using ZIP, DEB, RPM installation, you have to install .NET runtime yourself. Apache Ignite Docker image includes .NET 8 runtime, so you can run .NET jobs in Docker out of the box.
+* 각 서버 노드에 .NET 8 런타임 이상(SDK 아님)이 필요합니다.
+* ZIP, DEB, RPM 설치를 사용할 때는 .NET 런타임을 직접 설치해야 합니다. Apache Ignite Docker 이미지에는 .NET 8 런타임이 포함되어 있어, Docker에서는 별도 설정 없이 .NET 작업을 실행할 수 있습니다.
 
-### Implementing .NET Compute Jobs
+### .NET 컴퓨트 작업 구현 {#implementing-net-compute-jobs}
 
-Below is an example on implementing a .NET compute job:
+다음은 .NET 컴퓨트 작업을 구현하는 예시입니다.
 
-1. First, prepare a "class library" project for the job implementation using `dotnet new classlib`.
+1. 먼저 `dotnet new classlib`로 작업 구현을 위한 "클래스 라이브러리" 프로젝트를 준비합니다.
 
    :::tip
-   In most cases, it is better to use a separate project for compute jobs to reduce deployment size.
+   대부분의 경우 배포 크기를 줄이기 위해 컴퓨트 작업에는 별도 프로젝트를 사용하는 것이 좋습니다.
    :::
 
    ```bash
@@ -432,13 +432,13 @@ Below is an example on implementing a .NET compute job:
    dotnet add package Apache.Ignite
    ```
 
-2. Add a reference to `Apache.Ignite` package to the class library project:
+2. 클래스 라이브러리 프로젝트에 `Apache.Ignite` 패키지 참조를 추가합니다.
 
    ```bash
    dotnet add package Apache.Ignite
    ```
 
-3. Then create a class that implements `IComputeJob<TArg, TRes>` interface, for example:
+3. 그런 다음 `IComputeJob<TArg, TRes>` 인터페이스를 구현하는 클래스를 만듭니다. 예를 들면 다음과 같습니다.
 
    ```csharp
    public class HelloJob : IComputeJob<string, string>
@@ -448,7 +448,7 @@ Below is an example on implementing a .NET compute job:
    }
    ```
 
-4. Publish the project by using the `dotnet publish -c Release` command:
+4. `dotnet publish -c Release` 명령어로 프로젝트를 게시합니다.
 
    ```bash
    dotnet publish -c Release
@@ -458,19 +458,19 @@ Below is an example on implementing a .NET compute job:
    ignite cluster unit deploy --name MyDotNetJobsUnit --path ./deploy
    ```
 
-5. Copy the resulting dll file and any extra dependencies to a separate directory, **excluding** Apache Ignite dlls.
+5. 결과 dll 파일과 추가 의존성을 Apache Ignite dll을 **제외하고** 별도 디렉터리로 복사합니다.
 
    :::note
-   The directory with the dll must not contain any subdirectories.
+   dll이 있는 디렉터리에는 하위 디렉터리가 없어야 합니다.
    :::
 
-6. Use the Apache Ignite CLI command `cluster unit deploy command` to [deploy](./code-deployment) the directory to the cluster as a deployment unit. The deployed code will be available on the cluster.
+6. Apache Ignite CLI 명령어 `cluster unit deploy command`를 사용해 디렉터리를 배포 단위로 클러스터에 [배포](./code-deployment)합니다. 배포된 코드는 클러스터에서 사용할 수 있습니다.
 
-### Running .NET Compute Jobs
+### .NET 컴퓨트 작업 실행 {#running-net-compute-jobs}
 
-You can execute .NET compute jobs from any client (.NET, Java, C++, etc) as long as you created a `JobDescriptor` with the assembly-qualified job class name and set `JobExecutionOptions` with `JobExecutorType.DotNetSidecar`.
+어셈블리 정규화된 작업 클래스 이름으로 `JobDescriptor`를 만들고 `JobExecutionOptions`에 `JobExecutorType.DotNetSidecar`를 설정하면, 모든 클라이언트(.NET, Java, C++ 등)에서 .NET 컴퓨트 작업을 실행할 수 있습니다.
 
-- For example, this is how to run your job on a single node from .NET:
+- 예를 들어, .NET에서 단일 노드에 작업을 실행하는 방법은 다음과 같습니다.
 
   ```csharp
   var jobTarget = JobTarget.AnyNode(await client.GetClusterNodesAsync());
@@ -482,14 +482,14 @@ You can execute .NET compute jobs from any client (.NET, Java, C++, etc) as long
   IJobExecution<string> jobExec = await client.Compute.SubmitAsync(jobTarget, jobDesc, "world");
   ```
 
-  Alternatively, use the `JobDescriptor.Of` shortcut method to create a job descriptor from a job instance:
+  또는 `JobDescriptor.Of` 단축 메서드를 사용해 작업 인스턴스에서 작업 디스크립터를 만들 수 있습니다.
 
   ```csharp
   JobDescriptor<string, string> jobDesc = JobDescriptor.Of(new HelloJob())
   with { DeploymentUnits = [new DeploymentUnit("MyDeploymentUnit")] };
   ```
 
-- You can call [Java computing jobs](./compute) from your .NET code, for example:
+- .NET 코드에서 [Java 컴퓨트 작업](./compute)을 호출할 수 있습니다. 예를 들면 다음과 같습니다.
 
   ```csharp
   IList<IClusterNode> nodes = await client.GetClusterNodesAsync();
@@ -502,7 +502,7 @@ You can execute .NET compute jobs from any client (.NET, Java, C++, etc) as long
   string jobResult = await jobExecution.GetResultAsync();
   ```
 
-- You can also run .NET compute jobs from Java client, for example:
+- Java 클라이언트에서 .NET 컴퓨트 작업을 실행할 수도 있습니다. 예를 들면 다음과 같습니다.
 
   ```java
   try (IgniteClient client = IgniteClient.builder().addresses("127.0.0.1:10800")
@@ -521,13 +521,13 @@ You can execute .NET compute jobs from any client (.NET, Java, C++, etc) as long
   }
   ```
 
-## Job Ownership
+## 작업 소유권 {#job-ownership}
 
-If the cluster has [Authentication](/configure-and-operate/configuration/config-authentication) enabled, compute jobs are executed by a specific user. If user permissions are configured on the cluster, the user needs the appropriate [distributed computing permissions](/configure-and-operate/configuration/config-cluster-security) to work with distributed computing jobs. Only users with `JOBS_ADMIN` action can interact with jobs of other users.
+클러스터에 [인증](/configure-and-operate/configuration/config-authentication)이 활성화되어 있으면 컴퓨트 작업은 특정 사용자로 실행됩니다. 클러스터에 사용자 권한이 구성되어 있으면, 분산 컴퓨트 작업을 다루려면 해당 사용자에게 적절한 [분산 컴퓨트 권한](/configure-and-operate/configuration/config-cluster-security)이 필요합니다. `JOBS_ADMIN` 액션을 가진 사용자만 다른 사용자의 작업을 다룰 수 있습니다.
 
-## Job Execution States
+## 작업 실행 상태 {#job-execution-states}
 
-When using asynchronous API, you can keep track of the status of the job on the server and react to status changes. For example:
+비동기 API를 사용하면 서버에서 작업 상태를 추적하고 상태 변화에 대응할 수 있습니다. 예를 들면 다음과 같습니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -596,30 +596,30 @@ std::string result = execution.get_result()->get<std::string>();
 </TabItem>
 </Tabs>
 
-### Possible States and Transitions
+### 가능한 상태와 전환 {#possible-states-and-transitions}
 
-The diagram below depicts the possible transitions of job statuses:
+아래 다이어그램은 작업 상태의 가능한 전환을 나타냅니다.
 
-![Compute Job Statuses](/img/compute_job_statuses.png)
+![컴퓨트 작업 상태](/img/compute_job_statuses.png)
 
-The table below lists the possible job statuses:
+아래 표는 가능한 작업 상태를 나열합니다.
 
-| Status | Description | Transitions to |
+| 상태 | 설명 | 전환 대상 |
 |--------|-------------|----------------|
-| `Queued` | The job was added to the queue and is waiting for execution. | `Executing`, `Canceled` |
-| `Executing` | The job is being executed. | `Canceling`, `Completed`, `Queued` |
-| `Completed` | The job was executed successfully and the execution result was returned. | |
-| `Failed` | The job was unexpectedly terminated during execution. | `Queued` |
-| `Canceling` | Job has received the cancel command, but is still running. | `Completed`, `Canceled` |
-| `Canceled` | Job was successfully cancelled. | |
+| `Queued` | 작업이 큐에 추가되어 실행을 기다리고 있습니다. | `Executing`, `Canceled` |
+| `Executing` | 작업이 실행되고 있습니다. | `Canceling`, `Completed`, `Queued` |
+| `Completed` | 작업이 성공적으로 실행되어 실행 결과가 반환되었습니다. | |
+| `Failed` | 작업이 실행 중 예기치 않게 종료되었습니다. | `Queued` |
+| `Canceling` | 작업이 취소 명령을 받았지만 아직 실행 중입니다. | `Completed`, `Canceled` |
+| `Canceled` | 작업이 성공적으로 취소되었습니다. | |
 
-If all job execution threads are busy, new jobs received by the node are put into job queue according to their [Job Priority](#job-priority). Apache Ignite sorts all incoming jobs first by priority, then by the time, executing jobs queued earlier first.
+모든 작업 실행 스레드가 사용 중이면, 노드가 받은 새 작업은 [작업 우선순위](#job-priority)에 따라 작업 큐에 들어갑니다. Apache Ignite는 들어오는 모든 작업을 먼저 우선순위로, 그다음 시간순으로 정렬하여 먼저 큐에 들어온 작업을 먼저 실행합니다.
 
-### Cancelling Executing Jobs
+### 실행 중인 작업 취소 {#cancelling-executing-jobs}
 
-When the node receives the command to cancel the job in the `Executing` status, it will immediately send an interrupt to the thread that is responsible for the job. In most cases, this will lead to the job being immediately canceled, however there are cases in which the job will continue. If this happens, the job will be in the `Canceling` state. Depending on specific code being executed, the job may complete successfully, be canceled once the uninterruptible operation is finished, or remain in unfinished state (for example, if code is stuck in a loop). You can use the `JobExecution.stateAsync()` method to keep track of what status the job is in, and react to status change.
+노드가 `Executing` 상태인 작업을 취소하라는 명령을 받으면, 해당 작업을 담당하는 스레드에 즉시 인터럽트를 보냅니다. 대부분의 경우 작업이 즉시 취소되지만, 작업이 계속되는 경우도 있습니다. 이때 작업은 `Canceling` 상태가 됩니다. 실행 중인 코드에 따라 작업은 성공적으로 완료되거나, 중단할 수 없는 연산이 끝난 뒤 취소되거나, 완료되지 않은 상태로 남을 수 있습니다(예: 코드가 루프에 갇힌 경우). `JobExecution.stateAsync()` 메서드로 작업이 어떤 상태인지 추적하고 상태 변화에 대응할 수 있습니다.
 
-To be able to cancel a compute job, you first create a cancel handler and retrieve a token from it. You can then use this token to cancel the compute job:
+컴퓨트 작업을 취소하려면, 먼저 취소 핸들러를 만들고 거기서 토큰을 가져옵니다. 그런 다음 이 토큰으로 컴퓨트 작업을 취소할 수 있습니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -651,11 +651,11 @@ cts.Cancel();
 </TabItem>
 </Tabs>
 
-Another way to cancel jobs is by using the SQL [KILL COMPUTE](/sql/reference/data-types-and-functions/operational-commands#kill-compute) command. The job id can be retrieved via the `COMPUTE_JOBS` [system view](/configure-and-operate/monitoring/metrics-system-views).
+작업을 취소하는 또 다른 방법은 SQL [KILL COMPUTE](/sql/reference/data-types-and-functions/operational-commands#kill-compute) 명령어를 사용하는 것입니다. 작업 id는 `COMPUTE_JOBS` [시스템 뷰](/configure-and-operate/monitoring/metrics-system-views)로 가져올 수 있습니다.
 
-### Job Priority
+### 작업 우선순위 {#job-priority}
 
-You can specify a job priority by setting the `JobExecutionOptions.priority` property. Jobs with a higher priority will be queued before jobs with lower priority (for example, a job with priority 4 will be executed before the job with priority 2).
+`JobExecutionOptions.priority` 속성을 설정하여 작업 우선순위를 지정할 수 있습니다. 우선순위가 높은 작업은 낮은 작업보다 먼저 큐에 배치됩니다(예: 우선순위 4인 작업이 우선순위 2인 작업보다 먼저 실행됩니다).
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -712,9 +712,9 @@ std::string result = execution.get_result()->get<std::string>();
 </TabItem>
 </Tabs>
 
-### Job Retries
+### 작업 재시도 {#job-retries}
 
-You can set the number the job will be retried on failure by setting the `JobExecutionOptions.maxRetries` property. If set, the failed job will be retried the specified number of times before moving to `Failed` state.
+`JobExecutionOptions.maxRetries` 속성을 설정하여 작업이 실패 시 재시도되는 횟수를 지정할 수 있습니다. 설정하면 실패한 작업은 `Failed` 상태로 넘어가기 전에 지정한 횟수만큼 재시도됩니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -771,39 +771,39 @@ std::string result = execution.get_result()->get<std::string>();
 </TabItem>
 </Tabs>
 
-## Job Failover
+## 작업 장애 조치 {#job-failover}
 
-Apache Ignite implements mechanics to handle issues that happen during job execution. The following situations are handled:
+Apache Ignite는 작업 실행 중 발생하는 문제를 처리하는 메커니즘을 구현합니다. 다음 상황이 처리됩니다.
 
-### Worker Node Shutdown
+### 워커 노드 종료 {#worker-node-shutdown}
 
-If the worker node is shut down, the coordinator node will redistribute all jobs assigned to worker to other viable nodes. If no nodes are found, the job will fail and an exception will be sent to the client.
+워커 노드가 종료되면, 코디네이터 노드는 워커에 배정된 모든 작업을 다른 사용 가능한 노드로 재분배합니다. 사용 가능한 노드가 없으면 작업이 실패하고 클라이언트로 예외가 전송됩니다.
 
-### Coordinator Node Shutdown
+### 코디네이터 노드 종료 {#coordinator-node-shutdown}
 
-If the coordinator node shuts down, all jobs will be cancelled as soon as the node detects that the coordinator is shut down. Note that [some jobs](#cancelling-executing-jobs) may take a long time to cancel.
+코디네이터 노드가 종료되면, 노드가 코디네이터의 종료를 감지하는 즉시 모든 작업이 취소됩니다. [일부 작업](#cancelling-executing-jobs)은 취소되는 데 오래 걸릴 수 있습니다.
 
-### Client Disconnect
+### 클라이언트 연결 해제 {#client-disconnect}
 
-If the client disconnects, all jobs will be cancelled as soon as the coordinator node detects the disconnect. Note that [some jobs](#cancelling-executing-jobs) may take a long time to cancel.
+클라이언트 연결이 끊기면, 코디네이터 노드가 연결 해제를 감지하는 즉시 모든 작업이 취소됩니다. [일부 작업](#cancelling-executing-jobs)은 취소되는 데 오래 걸릴 수 있습니다.
 
-## MapReduce Tasks
+## 맵리듀스 태스크 {#mapreduce-tasks}
 
-Apache Ignite provides an API for performing MapReduce operations in the cluster. This allows you to split your computing task between multiple nodes before aggregating the result and returning it to the user.
+Apache Ignite는 클러스터에서 맵리듀스 연산을 수행하는 API를 제공합니다. 이렇게 하면 컴퓨트 작업을 여러 노드로 나눈 뒤 결과를 집계하여 사용자에게 반환합니다.
 
-### Understanding MapReduce Tasks
+### 맵리듀스 태스크 이해하기 {#understanding-mapreduce-tasks}
 
-A MapReduce task must be executed on a node that has a [deployed](./code-deployment) class implementing the `MapReduceTask` interface. This interface provides a way to implement custom map and reduce logic. A node that receives the task becomes a coordinator node, that will be responsible for both mapping tasks to other nodes, reducing their results and returning the final result to the client.
+맵리듀스 태스크는 `MapReduceTask` 인터페이스를 구현한 클래스가 [배포](./code-deployment)된 노드에서 실행해야 합니다. 이 인터페이스는 사용자 정의 map·reduce 로직을 구현하는 방법을 제공합니다. 태스크를 받은 노드는 코디네이터 노드가 되며, 다른 노드에 작업을 매핑하고 그 결과를 리듀스하여 최종 결과를 클라이언트에 반환하는 일을 모두 담당합니다.
 
-The class must implement two methods: `splitAsync` and `reduceAsync`.
+클래스는 두 메서드 `splitAsync`와 `reduceAsync`를 구현해야 합니다.
 
-The `splitAsync()` method should be implemented to create compute jobs based on input parameters and map them to worker nodes. The method receives the execution context and your task arguments and returns a completable future containing the list of the job descriptors that will be sent to the worker nodes.
+`splitAsync()` 메서드는 입력 매개변수를 바탕으로 컴퓨트 작업을 만들어 워커 노드에 매핑하도록 구현해야 합니다. 이 메서드는 실행 컨텍스트와 태스크 인수를 받아, 워커 노드로 전송될 작업 디스크립터 목록을 담은 completable future를 반환합니다.
 
-The `reduceAsync()` method is called during the reduce step, when all the jobs have completed. The method receives a map from the worker node to the completed job result and returns the final result of the computation.
+`reduceAsync()` 메서드는 모든 작업이 완료된 뒤 reduce 단계에서 호출됩니다. 이 메서드는 각 워커 노드와 완료된 작업 결과를 대응시킨 맵을 받아 연산의 최종 결과를 반환합니다.
 
-### Creating a Mapper Class
+### 매퍼 클래스 만들기 {#creating-a-mapper-class}
 
-All MapReduce jobs must be submitted to a node that has an appropriate class [deployed](./code-deployment). Below is an example of a map reduce job:
+모든 맵리듀스 작업은 적절한 클래스가 [배포](./code-deployment)된 노드에 제출해야 합니다. 다음은 맵리듀스 작업의 예시입니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -849,15 +849,15 @@ public static class PhraseWordLengthCountMapReduceTask implements MapReduceTask<
 </TabItem>
 </Tabs>
 
-### Executing a MapReduce Task
+### 맵리듀스 태스크 실행 {#executing-a-mapreduce-task}
 
-To execute the MapReduce task, you use one of the following methods:
+맵리듀스 태스크를 실행하려면 다음 메서드 중 하나를 사용합니다.
 
-- `submitMapReduce()` - sends the MapReduce job to the cluster and returns the `TaskExecution` object that can be used to monitor or modify the compute task execution.
-- `executeMapReduceAsync()` - sends the MapReduce job to the cluster in the cluster and gets the future for job execution results.
-- `executeMapReduce()` - sends the job to the cluster and waits for the result of job execution.
+- `submitMapReduce()` - 맵리듀스 작업을 클러스터로 보내고, 컴퓨트 작업 실행을 모니터링하거나 수정하는 데 사용할 수 있는 `TaskExecution` 객체를 반환합니다.
+- `executeMapReduceAsync()` - 맵리듀스 작업을 클러스터로 보내고 작업 실행 결과에 대한 future를 가져옵니다.
+- `executeMapReduce()` - 작업을 클러스터로 보내고 작업 실행 결과를 기다립니다.
 
-The node that the MapReduce task is sent to must have a class implementing the `MapReduceTask` interface.
+맵리듀스 태스크를 보내는 노드에는 `MapReduceTask` 인터페이스를 구현한 클래스가 있어야 합니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -898,7 +898,7 @@ Console.WriteLine(result);
 </TabItem>
 <TabItem value="cpp" label="C++">
 
-Not supported
+지원되지 않음
 
 </TabItem>
 </Tabs>

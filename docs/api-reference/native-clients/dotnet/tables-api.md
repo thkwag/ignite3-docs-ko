@@ -6,27 +6,27 @@ sidebar_position: 2
 
 # Tables API
 
-The Tables API provides type-safe data access through record views and key-value views. This API supports both strongly-typed operations using C# classes and schema-free operations using tuples.
+Tables API는 레코드 뷰와 키-값 뷰로 타입 안전한 데이터 접근을 제공합니다. 이 API는 C# 클래스를 사용하는 강타입 작업과 튜플을 사용하는 스키마 없는 작업을 모두 지원합니다.
 
-## Key Concepts
+## 핵심 개념 {#key-concepts}
 
-Tables in Ignite 3 are accessed through view interfaces that provide different access patterns. Record views work with complete rows as single objects, while key-value views separate keys and values into distinct objects. Both patterns support typed access (using C# classes) and untyped access (using IIgniteTuple).
+Ignite 3의 테이블은 서로 다른 접근 패턴을 제공하는 뷰 인터페이스로 접근합니다. 레코드 뷰는 완전한 행을 단일 객체로 다루고, 키-값 뷰는 키와 값을 별개의 객체로 분리합니다. 두 패턴 모두 타입 지정 접근(C# 클래스 사용)과 타입 미지정 접근(IIgniteTuple 사용)을 지원합니다.
 
-### View Types
+### 뷰 타입 {#view-types}
 
-**Record View** treats each row as a single object containing all columns. Use this when your operations work with complete records.
+**레코드 뷰**는 각 행을 모든 컬럼을 담은 단일 객체로 다룹니다. 작업이 완전한 레코드를 다룰 때 사용합니다.
 
-**Key-Value View** separates key columns from value columns into distinct objects. Use this when you primarily access data by key or when your schema naturally divides into key and value sections.
+**키-값 뷰**는 키 컬럼과 값 컬럼을 별개의 객체로 분리합니다. 주로 키로 데이터에 접근하거나 스키마가 자연스럽게 키와 값 영역으로 나뉠 때 사용합니다.
 
-**Binary View** provides untyped access using IIgniteTuple. Use this for dynamic schemas or when working with multiple table types through generic code.
+**바이너리 뷰**는 IIgniteTuple을 사용해 타입 미지정 접근을 제공합니다. 동적 스키마에 사용하거나 제네릭 코드로 여러 테이블 타입을 다룰 때 사용합니다.
 
-### Transaction Support
+### 트랜잭션 지원 {#transaction-support}
 
-All data operations accept an optional transaction parameter. Pass null for auto-commit mode or pass an ITransaction instance to include operations in a transaction scope.
+모든 데이터 작업은 선택적 트랜잭션 매개변수를 받습니다. 자동 커밋 모드에는 null을 전달하고, 트랜잭션 범위에 작업을 포함하려면 ITransaction 인스턴스를 전달합니다.
 
-## Usage Examples
+## 사용 예시 {#usage-examples}
 
-### Getting Tables
+### 테이블 가져오기 {#getting-tables}
 
 ```csharp
 var tables = client.Tables;
@@ -42,7 +42,7 @@ var table = await tables.GetTableAsync(qualifiedName);
 var allTables = await tables.GetTablesAsync();
 ```
 
-### Record View Operations
+### 레코드 뷰 작업 {#record-view-operations}
 
 ```csharp
 // Define a POCO class matching table schema
@@ -72,7 +72,7 @@ if (result.HasValue)
 await view.DeleteAsync(null, key);
 ```
 
-### Key-Value View Operations
+### 키-값 뷰 작업 {#key-value-view-operations}
 
 ```csharp
 public class OrderKey
@@ -111,7 +111,7 @@ if (result.HasValue)
 await view.RemoveAsync(null, key);
 ```
 
-### Binary View with Tuples
+### 튜플을 사용하는 바이너리 뷰 {#binary-view-with-tuples}
 
 ```csharp
 var table = await tables.GetTableAsync("products");
@@ -137,7 +137,7 @@ if (result.HasValue)
 }
 ```
 
-### Batch Operations
+### 일괄 작업 {#batch-operations}
 
 ```csharp
 var view = table.GetRecordView<Customer>();
@@ -161,7 +161,7 @@ var keys = new[]
 var results = await view.GetAllAsync(null, keys);
 ```
 
-### Conditional Operations
+### 조건부 작업 {#conditional-operations}
 
 ```csharp
 var view = table.GetRecordView<Customer>();
@@ -179,7 +179,7 @@ var newRecord = new Customer { Id = 1, Name = "Alice", Email = "alice@newdomain.
 var swapped = await view.ReplaceAsync(null, oldRecord, newRecord);
 ```
 
-### Get-and-Modify Operations
+### 가져와서 수정하는 작업 {#get-and-modify-operations}
 
 ```csharp
 var view = table.GetRecordView<Customer>();
@@ -200,7 +200,7 @@ if (deleted.HasValue)
 }
 ```
 
-### LINQ Queries
+### LINQ 쿼리 {#linq-queries}
 
 ```csharp
 var view = table.GetRecordView<Customer>();
@@ -228,125 +228,125 @@ await foreach (var customer in resultSet)
 }
 ```
 
-## Reference
+## 참조 {#reference}
 
-### ITables Interface
+### ITables 인터페이스 {#itables-interface}
 
-Methods for table discovery:
+테이블 검색 메서드:
 
-- **GetTableAsync(string name)** - Get table by name, returns null if not found
-- **GetTableAsync(QualifiedName name)** - Get table by schema-qualified name
-- **GetTablesAsync()** - Get all available tables in the cluster
+- **GetTableAsync(string name)** - 이름으로 테이블을 가져옵니다. 찾을 수 없으면 null을 반환합니다
+- **GetTableAsync(QualifiedName name)** - 스키마로 정규화된 이름으로 테이블을 가져옵니다
+- **GetTablesAsync()** - 클러스터의 사용 가능한 모든 테이블을 가져옵니다
 
-### ITable Interface
+### ITable 인터페이스 {#itable-interface}
 
-Properties:
+속성:
 
-- **Name** - Table name without schema qualifier
-- **QualifiedName** - Full schema-qualified name
-- **RecordBinaryView** - Untyped record view using IIgniteTuple
-- **KeyValueBinaryView** - Untyped key-value view using IIgniteTuple
-- **PartitionManager** - Advanced partition management
+- **Name** - 스키마 접두어가 없는 테이블 이름
+- **QualifiedName** - 스키마로 완전히 정규화된 이름
+- **RecordBinaryView** - IIgniteTuple을 사용하는 타입 미지정 레코드 뷰
+- **KeyValueBinaryView** - IIgniteTuple을 사용하는 타입 미지정 키-값 뷰
+- **PartitionManager** - 고급 파티션 관리
 
-Methods:
+메서드:
 
-- **GetRecordView&lt;T&gt;()** - Create typed record view for type T
-- **GetKeyValueView&lt;TK, TV&gt;()** - Create typed key-value view with key type TK and value type TV
+- **GetRecordView&lt;T&gt;()** - 타입 T에 대한 타입 지정 레코드 뷰를 생성합니다
+- **GetKeyValueView&lt;TK, TV&gt;()** - 키 타입 TK와 값 타입 TV로 타입 지정 키-값 뷰를 생성합니다
 
-### IRecordView&lt;T&gt; Interface
+### IRecordView&lt;T&gt; 인터페이스 {#irecordviewt-interface}
 
-Read operations:
+읽기 작업:
 
-- **GetAsync(ITransaction?, T key)** - Get record by key, returns Option&lt;T&gt;
-- **GetAllAsync(ITransaction?, IEnumerable&lt;T&gt; keys)** - Get multiple records
-- **ContainsKeyAsync(ITransaction?, T key)** - Check if key exists
+- **GetAsync(ITransaction?, T key)** - 키로 레코드를 가져옵니다. Option&lt;T&gt;를 반환합니다
+- **GetAllAsync(ITransaction?, IEnumerable&lt;T&gt; keys)** - 여러 레코드를 가져옵니다
+- **ContainsKeyAsync(ITransaction?, T key)** - 키가 존재하는지 확인합니다
 
-Write operations:
+쓰기 작업:
 
-- **UpsertAsync(ITransaction?, T record)** - Insert or replace record
-- **UpsertAllAsync(ITransaction?, IEnumerable&lt;T&gt; records)** - Insert or replace multiple records
-- **InsertAsync(ITransaction?, T record)** - Insert only if not exists, returns bool
-- **InsertAllAsync(ITransaction?, IEnumerable&lt;T&gt; records)** - Insert multiple, returns list of skipped keys
-- **ReplaceAsync(ITransaction?, T record)** - Replace existing record, returns bool
-- **ReplaceAsync(ITransaction?, T record, T newRecord)** - Conditional replace (compare-and-swap)
+- **UpsertAsync(ITransaction?, T record)** - 레코드를 삽입하거나 교체합니다
+- **UpsertAllAsync(ITransaction?, IEnumerable&lt;T&gt; records)** - 여러 레코드를 삽입하거나 교체합니다
+- **InsertAsync(ITransaction?, T record)** - 존재하지 않을 때만 삽입합니다. bool을 반환합니다
+- **InsertAllAsync(ITransaction?, IEnumerable&lt;T&gt; records)** - 여러 개를 삽입합니다. 건너뛴 키 목록을 반환합니다
+- **ReplaceAsync(ITransaction?, T record)** - 기존 레코드를 교체합니다. bool을 반환합니다
+- **ReplaceAsync(ITransaction?, T record, T newRecord)** - 조건부 교체(compare-and-swap)
 
-Delete operations:
+삭제 작업:
 
-- **DeleteAsync(ITransaction?, T key)** - Delete by key, returns bool
-- **DeleteAllAsync(ITransaction?, IEnumerable&lt;T&gt; keys)** - Delete multiple, returns list of non-existent keys
-- **DeleteExactAsync(ITransaction?, T record)** - Delete only if exact match on all columns
-- **DeleteAllExactAsync(ITransaction?, IEnumerable&lt;T&gt; records)** - Delete exact matches
+- **DeleteAsync(ITransaction?, T key)** - 키로 삭제합니다. bool을 반환합니다
+- **DeleteAllAsync(ITransaction?, IEnumerable&lt;T&gt; keys)** - 여러 개를 삭제합니다. 존재하지 않는 키 목록을 반환합니다
+- **DeleteExactAsync(ITransaction?, T record)** - 모든 컬럼이 정확히 일치할 때만 삭제합니다
+- **DeleteAllExactAsync(ITransaction?, IEnumerable&lt;T&gt; records)** - 정확히 일치하는 것을 삭제합니다
 
-Get-and-modify operations:
+가져와서 수정하는 작업:
 
-- **GetAndUpsertAsync(ITransaction?, T record)** - Upsert and return old value
-- **GetAndReplaceAsync(ITransaction?, T record)** - Replace and return old value
-- **GetAndDeleteAsync(ITransaction?, T key)** - Delete and return old value
+- **GetAndUpsertAsync(ITransaction?, T record)** - 삽입 또는 교체하고 이전 값을 반환합니다
+- **GetAndReplaceAsync(ITransaction?, T record)** - 교체하고 이전 값을 반환합니다
+- **GetAndDeleteAsync(ITransaction?, T key)** - 삭제하고 이전 값을 반환합니다
 
-Query operations:
+쿼리 작업:
 
-- **AsQueryable(ITransaction?, QueryableOptions?)** - Create LINQ queryable interface
+- **AsQueryable(ITransaction?, QueryableOptions?)** - LINQ 쿼리 가능 인터페이스를 생성합니다
 
-### IKeyValueView&lt;TK, TV&gt; Interface
+### IKeyValueView&lt;TK, TV&gt; 인터페이스 {#ikeyvalueviewtk-tv-interface}
 
-Read operations:
+읽기 작업:
 
-- **GetAsync(ITransaction?, TK key)** - Get value by key, returns Option&lt;TV&gt;
-- **GetAllAsync(ITransaction?, IEnumerable&lt;TK&gt; keys)** - Get multiple values, returns Dictionary
-- **ContainsAsync(ITransaction?, TK key)** - Check if key exists
+- **GetAsync(ITransaction?, TK key)** - 키로 값을 가져옵니다. Option&lt;TV&gt;를 반환합니다
+- **GetAllAsync(ITransaction?, IEnumerable&lt;TK&gt; keys)** - 여러 값을 가져옵니다. Dictionary를 반환합니다
+- **ContainsAsync(ITransaction?, TK key)** - 키가 존재하는지 확인합니다
 
-Write operations:
+쓰기 작업:
 
-- **PutAsync(ITransaction?, TK key, TV val)** - Put key-value pair
-- **PutAllAsync(ITransaction?, IEnumerable&lt;KeyValuePair&lt;TK, TV&gt;&gt; pairs)** - Put multiple pairs
-- **PutIfAbsentAsync(ITransaction?, TK key, TV val)** - Put only if key absent, returns bool
+- **PutAsync(ITransaction?, TK key, TV val)** - 키-값 쌍을 넣습니다
+- **PutAllAsync(ITransaction?, IEnumerable&lt;KeyValuePair&lt;TK, TV&gt;&gt; pairs)** - 여러 쌍을 넣습니다
+- **PutIfAbsentAsync(ITransaction?, TK key, TV val)** - 키가 없을 때만 넣습니다. bool을 반환합니다
 
-Replace operations:
+교체 작업:
 
-- **ReplaceAsync(ITransaction?, TK key, TV val)** - Replace value for existing key, returns bool
-- **ReplaceAsync(ITransaction?, TK key, TV oldVal, TV newVal)** - Conditional replace
+- **ReplaceAsync(ITransaction?, TK key, TV val)** - 기존 키의 값을 교체합니다. bool을 반환합니다
+- **ReplaceAsync(ITransaction?, TK key, TV oldVal, TV newVal)** - 조건부 교체
 
-Remove operations:
+제거 작업:
 
-- **RemoveAsync(ITransaction?, TK key)** - Remove by key, returns bool
-- **RemoveAsync(ITransaction?, TK key, TV val)** - Remove only if value matches
-- **RemoveAllAsync(ITransaction?, IEnumerable&lt;TK&gt; keys)** - Remove multiple by key
-- **RemoveAllAsync(ITransaction?, IEnumerable&lt;KeyValuePair&lt;TK, TV&gt;&gt; pairs)** - Remove by key-value pairs
+- **RemoveAsync(ITransaction?, TK key)** - 키로 제거합니다. bool을 반환합니다
+- **RemoveAsync(ITransaction?, TK key, TV val)** - 값이 일치할 때만 제거합니다
+- **RemoveAllAsync(ITransaction?, IEnumerable&lt;TK&gt; keys)** - 키로 여러 개를 제거합니다
+- **RemoveAllAsync(ITransaction?, IEnumerable&lt;KeyValuePair&lt;TK, TV&gt;&gt; pairs)** - 키-값 쌍으로 제거합니다
 
-Get-and-modify operations:
+가져와서 수정하는 작업:
 
-- **GetAndPutAsync(ITransaction?, TK key, TV val)** - Put and return old value
-- **GetAndReplaceAsync(ITransaction?, TK key, TV val)** - Replace and return old value
-- **GetAndRemoveAsync(ITransaction?, TK key)** - Remove and return value
+- **GetAndPutAsync(ITransaction?, TK key, TV val)** - 넣고 이전 값을 반환합니다
+- **GetAndReplaceAsync(ITransaction?, TK key, TV val)** - 교체하고 이전 값을 반환합니다
+- **GetAndRemoveAsync(ITransaction?, TK key)** - 제거하고 값을 반환합니다
 
-Query operations:
+쿼리 작업:
 
-- **AsQueryable(ITransaction?, QueryableOptions?)** - Create LINQ queryable interface
+- **AsQueryable(ITransaction?, QueryableOptions?)** - LINQ 쿼리 가능 인터페이스를 생성합니다
 
-### IIgniteTuple Interface
+### IIgniteTuple 인터페이스 {#iignitetuple-interface}
 
-Properties:
+속성:
 
-- **FieldCount** - Number of columns in the tuple
-- **this[int ordinal]** - Get or set column value by ordinal position
-- **this[string name]** - Get or set column value by name
+- **FieldCount** - 튜플의 컬럼 수
+- **this[int ordinal]** - 순서 위치로 컬럼 값을 가져오거나 설정합니다
+- **this[string name]** - 이름으로 컬럼 값을 가져오거나 설정합니다
 
-Methods:
+메서드:
 
-- **GetName(int ordinal)** - Get column name by ordinal
-- **GetOrdinal(string name)** - Get column ordinal by name (returns -1 if not found)
+- **GetName(int ordinal)** - 순서 위치로 컬럼 이름을 가져옵니다
+- **GetOrdinal(string name)** - 이름으로 컬럼 순서 위치를 가져옵니다(찾을 수 없으면 -1 반환)
 
-Static methods:
+정적 메서드:
 
-- **GetHashCode(IIgniteTuple)** - Compute hash considering names and values
-- **Equals(IIgniteTuple?, IIgniteTuple?)** - Compare tuples ignoring column order
-- **ToString(IIgniteTuple)** - Generate string representation
+- **GetHashCode(IIgniteTuple)** - 이름과 값을 고려해 해시를 계산합니다
+- **Equals(IIgniteTuple?, IIgniteTuple?)** - 컬럼 순서를 무시하고 튜플을 비교합니다
+- **ToString(IIgniteTuple)** - 문자열 표현을 생성합니다
 
-### Option&lt;T&gt; Type
+### Option&lt;T&gt; 타입 {#optiont-type}
 
-The Option type wraps nullable results:
+Option 타입은 null이 될 수 있는 결과를 감쌉니다:
 
-- **HasValue** - True if value exists
-- **Value** - The actual value (throws if HasValue is false)
+- **HasValue** - 값이 있으면 true
+- **Value** - 실제 값(HasValue가 false이면 예외를 던집니다)
 
-This pattern avoids null reference issues and makes null handling explicit.
+이 패턴은 null 참조 문제를 피하고 null 처리를 명시적으로 만듭니다.

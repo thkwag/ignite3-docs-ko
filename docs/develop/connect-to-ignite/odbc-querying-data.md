@@ -1,21 +1,21 @@
 ---
 id: odbc-querying-data
-title: Querying and Modifying Data with ODBC
+title: ODBC로 데이터 쿼리 및 수정
 sidebar_position: 4
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-## Overview
+## 개요 {#overview}
 
-This page describes how to connect to a cluster and execute a variety of SQL queries by using the ODBC driver.
+이 페이지에서는 ODBC 드라이버로 클러스터에 연결하고 다양한 SQL 쿼리를 실행하는 방법을 설명합니다.
 
-The ODBC driver supports DML (Data Modification Layer), which means that you can modify your data using an ODBC connection.
+ODBC 드라이버는 DML(Data Modification Layer)을 지원하므로, ODBC 연결로 데이터를 수정할 수 있습니다.
 
-## Creating Tables
+## 테이블 생성 {#creating-tables}
 
-The simplest way to create tables by using ODBC Driver is to use DDL statements:
+ODBC 드라이버로 테이블을 만드는 가장 간단한 방법은 DDL 문을 사용하는 것입니다:
 
 <Tabs groupId="languages">
 <TabItem value="ddl" label="DDL">
@@ -67,11 +67,11 @@ SQLExecDirect(stmt, query3, SQL_NTS);
 </TabItem>
 </Tabs>
 
-As you can see, we defined two tables that will contain the data of `Person` and `Organization` types. For both types, we listed specific fields and indexes that will be read or updated using SQL.
+위 예시에서는 `Person`과 `Organization` 타입의 데이터를 담을 테이블 두 개를 정의했습니다. 두 타입 모두 SQL로 읽거나 업데이트할 특정 필드와 인덱스를 지정했습니다.
 
-## Handling Errors
+## 오류 처리 {#handling-errors}
 
-The section below covers how you can handle possible errors when working with ODBC. In this example we handle an issue with connecting to the cluster:
+아래 섹션에서는 ODBC를 사용할 때 발생할 수 있는 오류를 처리하는 방법을 다룹니다. 이 예시에서는 클러스터 연결 시 발생하는 문제를 처리합니다:
 
 ```c++
 // Connecting to Ignite Cluster.
@@ -101,9 +101,9 @@ if (!SQL_SUCCEEDED(ret))
 }
 ```
 
-## Querying Data
+## 데이터 쿼리 {#querying-data}
 
-After everything is up and running, we're ready to execute `SQL SELECT` queries using the `ODBC API`.
+모든 준비가 끝났으면 이제 `ODBC API`로 `SQL SELECT` 쿼리를 실행할 수 있습니다.
 
 ```c++
 SQLHSTMT stmt;
@@ -171,13 +171,13 @@ else
 SQLFreeHandle(SQL_HANDLE_STMT, stmt);
 ```
 
-:::note Columns binding
-In the example above, we bind all columns to the SQL_C_CHAR columns. This means that all values are going to be converted to strings upon fetching. This is done for the sake of simplicity. Value conversion upon fetching can be pretty slow, so your default decision should be to fetch the value the same way as it is stored.
+:::note 컬럼 바인딩
+위 예시에서는 모든 컬럼을 SQL_C_CHAR 컬럼에 바인딩합니다. 즉, 값을 가져올 때 모든 값이 문자열로 변환됩니다. 간결하게 설명하기 위한 것입니다. 값을 가져올 때 변환하는 작업은 상당히 느릴 수 있으므로, 기본적으로는 값을 저장된 형태 그대로 가져오는 것이 좋습니다.
 :::
 
-## Inserting Data
+## 데이터 삽입 {#inserting-data}
 
-To insert new data into the cluster, `SQL INSERT` statements can be used from the ODBC side.
+클러스터에 새 데이터를 삽입하려면 ODBC 쪽에서 `SQL INSERT` 문을 사용할 수 있습니다.
 
 ```c++
 SQLHSTMT stmt;
@@ -239,7 +239,7 @@ SQLExecute(stmt);
 SQLFreeHandle(SQL_HANDLE_STMT, stmt);
 ```
 
-Next, we are going to insert additional organizations without the usage of prepared statements.
+다음으로, 준비된 문(prepared statement) 없이 조직 데이터를 추가로 삽입합니다.
 
 ```c++
 SQLHSTMT stmt;
@@ -261,13 +261,13 @@ SQLCHAR query2[] = "INSERT INTO Organization (id, name) VALUES (2L, 'Some other 
 SQLFreeHandle(SQL_HANDLE_STMT, stmt);
 ```
 
-:::warning Error Checking
-For simplicity the example code above does not check for an error return code. You will want to do error checking in production.
+:::warning 오류 검사
+간결하게 하기 위해 위 예시 코드는 오류 반환 코드를 검사하지 않습니다. 프로덕션 환경에서는 오류 검사를 수행하는 것이 좋습니다.
 :::
 
-## Updating Data
+## 데이터 업데이트 {#updating-data}
 
-Let's now update the salary for some of the persons stored in the cluster using SQL `UPDATE` statement.
+이제 SQL `UPDATE` 문으로 클러스터에 저장된 일부 사람의 급여를 업데이트해 보겠습니다.
 
 ```c++
 void AdjustSalary(SQLHDBC dbc, int64_t key, double salary)
@@ -296,9 +296,9 @@ AdjustSalary(dbc, 3, 1200.0);
 AdjustSalary(dbc, 1, 2500.0);
 ```
 
-## Deleting Data
+## 데이터 삭제 {#deleting-data}
 
-Finally, let's remove a few records with the help of SQL `DELETE` statement.
+마지막으로 SQL `DELETE` 문을 사용해 레코드 몇 개를 삭제해 보겠습니다.
 
 ```c++
 void DeletePerson(SQLHDBC dbc, int64_t key)

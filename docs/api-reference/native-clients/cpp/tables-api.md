@@ -6,37 +6,37 @@ sidebar_position: 2
 
 # Tables API
 
-The Tables API provides CRUD operations on table data. It supports both binary tuple operations and typed C++ object operations through record views and key-value views.
+Tables API는 테이블 데이터에 CRUD 작업을 제공합니다. 레코드 뷰와 키-값 뷰로 바이너리 튜플 작업과 타입 지정 C++ 객체 작업을 모두 지원합니다.
 
-## Key Concepts
+## 핵심 개념 {#key-concepts}
 
-### Table Access
+### 테이블 접근 {#table-access}
 
-Tables are accessed through the `tables` interface obtained from the client. Each table provides multiple view types for different access patterns.
+테이블은 클라이언트에서 얻은 `tables` 인터페이스로 접근합니다. 각 테이블은 접근 패턴별로 여러 뷰 유형을 제공합니다.
 
-### View Types
+### 뷰 유형 {#view-types}
 
-Apache Ignite provides two view categories:
+Apache Ignite는 두 가지 뷰 범주를 제공합니다:
 
-**Record Views** operate on complete row data. A single tuple or object contains all columns including the primary key. Use record views when working with complete records.
+**레코드 뷰**는 전체 행 데이터를 다룹니다. 하나의 튜플이나 객체가 기본 키를 포함한 모든 컬럼을 담습니다. 완전한 레코드를 다룰 때는 레코드 뷰를 사용하세요.
 
-**Key-Value Views** separate primary key columns from value columns. Operations use distinct key and value tuples or objects. Use key-value views when the domain model separates keys from data.
+**키-값 뷰**는 기본 키 컬럼과 값 컬럼을 분리합니다. 작업 시 키와 값 튜플 또는 객체를 따로 사용합니다. 도메인 모델이 키와 데이터를 분리한다면 키-값 뷰를 사용하세요.
 
-### Binary vs Typed Operations
+### 바이너리 작업과 타입 지정 작업 {#binary-vs-typed-operations}
 
-**Binary Views** use `ignite_tuple` for dynamic column access without schema knowledge. Column values are accessed by name or index at runtime.
+**바이너리 뷰**는 스키마를 몰라도 컬럼에 동적으로 접근할 수 있도록 `ignite_tuple`을 사용합니다. 컬럼 값은 런타임에 이름이나 인덱스로 접근합니다.
 
-**Typed Views** use C++ structs or classes with compile-time type safety. Type conversion happens through `convert_to_tuple` and `convert_from_tuple` template specializations.
+**타입 지정 뷰**는 컴파일 시점 타입 안전성을 갖춘 C++ 구조체나 클래스를 사용합니다. 타입 변환은 `convert_to_tuple`과 `convert_from_tuple` 템플릿 특수화로 이루어집니다.
 
-### Transaction Support
+### 트랜잭션 지원 {#transaction-support}
 
-All view operations accept an optional `transaction*` parameter. Pass `nullptr` for implicit transactions. Pass a transaction object for explicit transaction control.
+모든 뷰 작업은 선택적 `transaction*` 매개변수를 받습니다. 암시적 트랜잭션에는 `nullptr`를 전달합니다. 명시적으로 트랜잭션을 제어하려면 트랜잭션 객체를 전달합니다.
 
-## Getting Tables
+## 테이블 가져오기 {#getting-tables}
 
-### Retrieve a Single Table
+### 단일 테이블 조회 {#retrieve-a-single-table}
 
-Get a table by name:
+이름으로 테이블을 가져옵니다:
 
 ```cpp
 using namespace ignite;
@@ -49,13 +49,13 @@ if (table.has_value()) {
 }
 ```
 
-Get a table with qualified name:
+정규화된 이름으로 테이블을 가져옵니다:
 
 ```cpp
 auto table = tables.get_table("my_schema.my_table");
 ```
 
-Use async retrieval:
+비동기 조회를 사용합니다:
 
 ```cpp
 tables.get_table_async("my_table", [](ignite_result<std::optional<table>> result) {
@@ -68,9 +68,9 @@ tables.get_table_async("my_table", [](ignite_result<std::optional<table>> result
 });
 ```
 
-### List All Tables
+### 모든 테이블 나열 {#list-all-tables}
 
-Retrieve all tables:
+모든 테이블을 조회합니다:
 
 ```cpp
 auto all_tables = tables.get_tables();
@@ -79,7 +79,7 @@ for (const auto& table : all_tables) {
 }
 ```
 
-Use async retrieval:
+비동기 조회를 사용합니다:
 
 ```cpp
 tables.get_tables_async([](ignite_result<std::vector<table>> result) {
@@ -90,11 +90,11 @@ tables.get_tables_async([](ignite_result<std::vector<table>> result) {
 });
 ```
 
-## Record Views
+## 레코드 뷰 {#record-views}
 
-### Binary Record View
+### 바이너리 레코드 뷰 {#binary-record-view}
 
-Work with tuples directly:
+튜플을 직접 다룹니다:
 
 ```cpp
 auto table = tables.get_table("accounts").value();
@@ -118,9 +118,9 @@ if (result.has_value()) {
 }
 ```
 
-### Typed Record View
+### 타입 지정 레코드 뷰 {#typed-record-view}
 
-Work with C++ types:
+C++ 타입을 다룹니다:
 
 ```cpp
 struct account {
@@ -165,9 +165,9 @@ account key{42};
 auto result = view.get(nullptr, key);
 ```
 
-### Record View Operations
+### 레코드 뷰 작업 {#record-view-operations}
 
-**Basic Operations:**
+**기본 작업:**
 
 ```cpp
 // Insert (fails if exists)
@@ -189,7 +189,7 @@ auto old_record = view.get_and_replace(nullptr, new_record);
 auto old_record = view.get_and_upsert(nullptr, record);
 ```
 
-**Delete Operations:**
+**삭제 작업:**
 
 ```cpp
 // Remove by key
@@ -202,7 +202,7 @@ bool removed = view.remove_exact(nullptr, full_record);
 auto old_record = view.get_and_remove(nullptr, key);
 ```
 
-**Batch Operations:**
+**일괄 작업:**
 
 ```cpp
 std::vector<ignite_tuple> records = {record1, record2, record3};
@@ -223,11 +223,11 @@ auto non_existent = view.remove_all(nullptr, keys);
 auto not_matched = view.remove_all_exact(nullptr, records);
 ```
 
-## Key-Value Views
+## 키-값 뷰 {#key-value-views}
 
-### Binary Key-Value View
+### 바이너리 키-값 뷰 {#binary-key-value-view}
 
-Separate keys from values:
+키와 값을 분리합니다:
 
 ```cpp
 auto table = tables.get_table("accounts").value();
@@ -249,9 +249,9 @@ auto result = view.get(nullptr, key);
 bool exists = view.contains(nullptr, key);
 ```
 
-### Typed Key-Value View
+### 타입 지정 키-값 뷰 {#typed-key-value-view}
 
-Use separate C++ types for keys and values:
+키와 값에 별도의 C++ 타입을 사용합니다:
 
 ```cpp
 struct account_key {
@@ -276,9 +276,9 @@ view.put(nullptr, key, data);
 auto result = view.get(nullptr, key);
 ```
 
-### Key-Value View Operations
+### 키-값 뷰 작업 {#key-value-view-operations}
 
-**Basic Operations:**
+**기본 작업:**
 
 ```cpp
 // Put (insert or replace)
@@ -303,7 +303,7 @@ auto old_value = view.get_and_replace(nullptr, key, value);
 bool exists = view.contains(nullptr, key);
 ```
 
-**Delete Operations:**
+**삭제 작업:**
 
 ```cpp
 // Remove by key
@@ -316,7 +316,7 @@ bool removed = view.remove(nullptr, key, expected_value);
 auto old_value = view.get_and_remove(nullptr, key);
 ```
 
-**Batch Operations:**
+**일괄 작업:**
 
 ```cpp
 std::vector<std::pair<K, V>> pairs = {{key1, val1}, {key2, val2}};
@@ -334,11 +334,11 @@ auto non_existent = view.remove_all(nullptr, keys);
 auto not_matched = view.remove_all(nullptr, pairs);
 ```
 
-## Ignite Tuple
+## Ignite 튜플 {#ignite-tuple}
 
-### Creating Tuples
+### 튜플 생성 {#creating-tuples}
 
-Use initializer lists:
+초기화 리스트를 사용합니다:
 
 ```cpp
 ignite_tuple tuple{
@@ -348,7 +348,7 @@ ignite_tuple tuple{
 };
 ```
 
-Construct with capacity hint:
+용량 힌트를 지정해 생성합니다:
 
 ```cpp
 ignite_tuple tuple(10); // Reserve space for 10 columns
@@ -356,9 +356,9 @@ tuple.set("id", 42);
 tuple.set("name", "John");
 ```
 
-### Accessing Values
+### 값 접근 {#accessing-values}
 
-Access by name:
+이름으로 접근합니다:
 
 ```cpp
 auto id = tuple.get<int64_t>("id");
@@ -368,16 +368,16 @@ auto name = tuple.get<std::string>("name");
 auto value = tuple.get("id"); // Returns primitive
 ```
 
-Access by index:
+인덱스로 접근합니다:
 
 ```cpp
 auto id = tuple.get<int64_t>(0);
 auto name = tuple.get<std::string>(1);
 ```
 
-### Column Metadata
+### 컬럼 메타데이터 {#column-metadata}
 
-Query column information:
+컬럼 정보를 조회합니다:
 
 ```cpp
 int32_t count = tuple.column_count();
@@ -385,9 +385,9 @@ std::string name = tuple.column_name(0);
 int32_t index = tuple.column_ordinal("id");
 ```
 
-### Column Names
+### 컬럼 이름 {#column-names}
 
-Column names are case-insensitive and normalized to uppercase unless quoted:
+컬럼 이름은 대소문자를 구분하지 않으며, 따옴표로 감싸지 않으면 대문자로 정규화됩니다:
 
 ```cpp
 tuple.set("ID", 42);
@@ -398,9 +398,9 @@ tuple.set("Id", 42);  // Same as above
 tuple.set("\"Id\"", 42);  // Different from above
 ```
 
-## Asynchronous Operations
+## 비동기 작업 {#asynchronous-operations}
 
-All operations have async variants with `_async` suffix:
+모든 작업에는 `_async` 접미사가 붙은 비동기 변형이 있습니다:
 
 ```cpp
 view.get_async(nullptr, key, [](ignite_result<std::optional<ignite_tuple>> result) {
@@ -419,9 +419,9 @@ view.upsert_async(nullptr, record, [](ignite_result<void> result) {
 });
 ```
 
-## Transaction Integration
+## 트랜잭션 연동 {#transaction-integration}
 
-Use explicit transactions:
+명시적 트랜잭션을 사용합니다:
 
 ```cpp
 auto tx = client.get_transactions().begin();
@@ -436,9 +436,9 @@ try {
 }
 ```
 
-## Reference
+## 참조 {#reference}
 
-- [C++ API Documentation](https://ignite.apache.org/releases/ignite3/cppdoc/)
+- [C++ API 문서](https://ignite.apache.org/releases/ignite3/cppdoc/)
 - [Client API](./client-api)
 - [SQL API](./sql-api)
 - [Transactions API](./transactions-api)

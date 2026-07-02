@@ -1,12 +1,12 @@
 ---
 id: streaming
-title: Streaming Data
+title: 데이터 스트리밍
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Apache Ignite participates in streaming architectures as both a data consumer and data source. The Data Streamer API accepts entries from any Java Flow publisher, partitions them by key, and delivers batches to cluster nodes for processing. You can stream data into tables, use receivers to transform and route data across multiple tables, or return computed results to downstream systems.
+Apache Ignite는 데이터를 받는 쪽이자 데이터 소스로서 스트리밍 아키텍처에 참여합니다. Data Streamer API는 임의의 Java Flow 발행자로부터 항목을 받아 키로 파티셔닝한 뒤, 처리를 위해 클러스터 노드에 묶어서 전달합니다. 데이터를 테이블로 스트리밍하거나, 수신기로 데이터를 변환하고 여러 테이블로 라우팅하거나, 계산 결과를 다운스트림 시스템으로 반환할 수 있습니다.
 
 ```mermaid
 flowchart LR
@@ -41,15 +41,15 @@ flowchart LR
     Ignite --> Targets
 ```
 
-Data streaming provides at-least-once delivery guarantee. Under normal operation, each item is delivered exactly once. If a batch fails and is retried, some items in that batch may be delivered again. Design your data model to handle potential duplicates, either through idempotent operations (upsert) or by using primary keys that allow safe re-insertion.
+데이터 스트리밍은 최소 한 번 전달(at-least-once) 보장을 제공합니다. 정상 동작 시 각 항목은 정확히 한 번 전달됩니다. 묶음(batch)이 실패해 재시도되면, 그 묶음의 일부 항목이 다시 전달될 수 있습니다. 멱등 연산(upsert)을 사용하거나 안전하게 다시 삽입할 수 있는 기본 키를 사용하여, 중복 가능성을 처리하도록 데이터 모델을 설계하세요.
 
-## Using Data Streamer API
+## Data Streamer API 사용 {#using-data-streamer-api}
 
-The [Data Streamer API](../../api-reference/native-clients/java/data-streamer-api) uses the Java Flow API (`java.util.concurrent.Flow`) publisher-subscriber model. You create a publisher that streams data entries to a table view, and the streamer distributes these entries across the cluster. The `DataStreamerOptions` object configures batch sizes, parallelism, auto-flush intervals, and retry limits.
+[Data Streamer API](../../api-reference/native-clients/java/data-streamer-api)는 Java Flow API(`java.util.concurrent.Flow`)의 발행자-구독자(publisher-subscriber) 모델을 사용합니다. 데이터 항목을 테이블 뷰로 스트리밍하는 발행자를 만들면, 스트리머가 이 항목을 클러스터 전체에 분산합니다. `DataStreamerOptions` 객체는 묶음 크기, 병렬성, 자동 플러시 간격, 재시도 한도를 구성합니다.
 
-### Configuring Data Streamer
+### 데이터 스트리머 구성 {#configuring-data-streamer}
 
-`DataStreamerOptions` controls how data flows into your cluster:
+`DataStreamerOptions`는 데이터가 클러스터로 흘러 들어가는 방식을 제어합니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -78,38 +78,38 @@ var options = new DataStreamerOptions
 </TabItem>
 </Tabs>
 
-| Option | Default | Description |
+| 옵션 | 기본값 | 설명 |
 |--------|---------|-------------|
-| `pageSize` | 1000 | Number of entries per batch sent to the cluster. |
-| `perPartitionParallelOperations` | 1 | Concurrent batches allowed per partition. |
-| `autoFlushInterval` | 5000 ms | Time before incomplete buffers are flushed. |
-| `retryLimit` | 16 | Maximum retry attempts for failed submissions. |
+| `pageSize` | 1000 | 클러스터로 전송되는 묶음당 항목 수. |
+| `perPartitionParallelOperations` | 1 | 파티션당 허용되는 동시 묶음 수. |
+| `autoFlushInterval` | 5000 ms | 완성되지 않은 버퍼가 플러시되기까지의 시간. |
+| `retryLimit` | 16 | 실패한 제출에 대한 최대 재시도 횟수. |
 
-#### Memory and Throughput Considerations
+#### 메모리와 처리량 고려 사항 {#memory-and-throughput-considerations}
 
-The streamer allocates buffers based on these settings. Client memory usage per partition:
+스트리머는 이 설정에 따라 버퍼를 할당합니다. 파티션당 클라이언트 메모리 사용량은 다음과 같습니다.
 
 ```text
 memoryPerPartition = pageSize × perPartitionParallelOperations × avgRecordSize
 ```
 
-For a table with 25 partitions and 1KB average record size:
+파티션 25개, 평균 레코드 크기 1KB인 테이블의 경우:
 
-| Configuration | Page Size | Parallel Ops | Memory |
+| 구성 | 페이지 크기 | 병렬 연산 | 메모리 |
 |---------------|-----------|--------------|--------|
-| Default | 1,000 | 1 | ~25 MB |
-| High throughput | 500 | 8 | ~100 MB |
+| 기본값 | 1,000 | 1 | ~25 MB |
+| 고처리량 | 500 | 8 | ~100 MB |
 
-Smaller page sizes with higher parallelism create more frequent, smaller batches. This produces smoother I/O patterns that align with cluster checkpoint and replication cycles.
+페이지 크기가 작고 병렬성이 높으면 더 자주, 더 작은 묶음이 만들어집니다. 이렇게 하면 클러스터의 체크포인트·복제 주기와 맞물리는 더 매끄러운 I/O 패턴이 나타납니다.
 
-### Streaming Data
+### 데이터 스트리밍 {#streaming-data}
 
-Each entry must be wrapped in a `DataStreamerItem<T>` before streaming:
+각 항목은 스트리밍하기 전에 `DataStreamerItem<T>`로 감싸야 합니다.
 
-- `DataStreamerItem.of(entry)` performs an upsert: inserts the entry if the key does not exist, or updates it if the key already exists.
-- `DataStreamerItem.removed(entry)` deletes the entry by key. The entry object only needs to contain the primary key fields.
+- `DataStreamerItem.of(entry)`는 upsert를 수행합니다. 키가 없으면 항목을 삽입하고, 키가 이미 있으면 갱신합니다.
+- `DataStreamerItem.removed(entry)`는 키로 항목을 삭제합니다. 항목 객체는 기본 키 필드만 포함하면 됩니다.
 
-The example below uses `SubmissionPublisher` to stream account records:
+아래 예시는 `SubmissionPublisher`를 사용해 계정 레코드를 스트리밍합니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -215,15 +215,15 @@ public record Account(int Id, string Name);
 </TabItem>
 </Tabs>
 
-## High-Volume Streaming
+## 대용량 스트리밍 {#high-volume-streaming}
 
-The basic examples above work well for moderate data volumes. When streaming millions of records, the rate at which your application produces data typically exceeds the rate at which the cluster can persist it. This section covers flow control mechanisms that keep memory bounded and cluster load stable.
+위의 기본 예시는 중간 규모의 데이터 양에서는 잘 동작합니다. 수백만 개의 레코드를 스트리밍할 때는, 애플리케이션이 데이터를 생성하는 속도가 클러스터가 이를 영속화하는 속도를 대개 앞지릅니다. 이 섹션에서는 메모리를 제한된 범위로 유지하고 클러스터 부하를 안정적으로 유지하는 흐름 제어 메커니즘을 다룹니다.
 
-### Understanding Backpressure
+### 배압 이해하기 {#understanding-backpressure}
 
-Backpressure is a flow control mechanism that allows a slower consumer to signal a faster producer to slow down. Without backpressure, a fast producer overwhelms a slow consumer, causing unbounded memory growth, increased latency, or dropped data.
+배압(backpressure)은 느린 받는 쪽이 빠른 생산자에게 속도를 늦추라고 신호를 보낼 수 있게 하는 흐름 제어 메커니즘입니다. 배압이 없으면 빠른 생산자가 느린 받는 쪽을 압도하여 메모리가 무한정 늘거나 지연이 커지거나 데이터가 유실됩니다.
 
-In data streaming, three components operate at different speeds:
+데이터 스트리밍에서는 세 컴포넌트가 서로 다른 속도로 동작합니다.
 
 ```mermaid
 flowchart LR
@@ -243,59 +243,59 @@ flowchart LR
     BUF -->|"Varies"| DISK
 ```
 
-- **Record generation** runs at CPU speed, potentially millions of records per second
-- **Network transmission** depends on bandwidth and batch size
-- **Cluster storage** involves disk writes, replication, and consensus protocols
+- **레코드 생성**은 CPU 속도로 실행되며, 초당 수백만 개의 레코드에 이를 수 있습니다
+- **네트워크 전송**은 대역폭과 묶음 크기에 좌우됩니다
+- **클러스터 스토리지**는 디스크 쓰기, 복제, 합의 프로토콜을 수반합니다
 
-The Java Flow API provides backpressure through a request-based model. The consumer (data streamer) tells the producer (your publisher) exactly how many items it can accept by calling `subscription.request(n)`. The producer should deliver at most `n` items, then wait for the next request. This creates a pull-based flow where the slowest component controls the overall rate.
+Java Flow API는 요청 기반 모델로 배압을 제공합니다. 받는 쪽(데이터 스트리머)은 `subscription.request(n)`을 호출하여 받아들일 수 있는 항목 수를 생산자(사용자의 발행자)에게 정확히 알려 줍니다. 생산자는 최대 `n`개 항목을 전달한 뒤 다음 요청을 기다려야 합니다. 이렇게 하면 가장 느린 컴포넌트가 전체 속도를 제어하는 풀 기반(pull-based) 흐름이 만들어집니다.
 
-When the streamer's partition buffers fill, it stops calling `request(n)`. A well-behaved publisher pauses generation until the next request arrives. This keeps memory bounded and prevents the producer from overwhelming downstream components.
+스트리머의 파티션 버퍼가 가득 차면 스트리머는 `request(n)` 호출을 멈춥니다. 잘 동작하는 발행자는 다음 요청이 올 때까지 생성을 일시 중지합니다. 이렇게 하면 메모리가 제한된 범위로 유지되고, 생산자가 다운스트림 컴포넌트를 압도하지 못하게 막습니다.
 
-### Choosing a Publisher Approach
+### 발행자 방식 선택 {#choosing-a-publisher-approach}
 
-How your publisher responds to backpressure signals determines memory usage and cluster load patterns. Two common approaches exist:
+발행자가 배압 신호에 어떻게 반응하는지에 따라 메모리 사용량과 클러스터 부하 패턴이 결정됩니다. 흔히 쓰이는 방식은 두 가지입니다.
 
-**SubmissionPublisher** (shown in the basic example above) provides a ready-made implementation with an internal buffer (default 256 items). Records go into this buffer via `submit()`, and the streamer pulls from it. When the buffer fills, `submit()` blocks until space becomes available. This provides backpressure through blocking, which works well when your data source can tolerate pauses.
+**SubmissionPublisher**(위 기본 예시에 나옴)는 내부 버퍼(기본 256개 항목)를 갖춘 기성 구현을 제공합니다. 레코드는 `submit()`으로 이 버퍼에 들어가고, 스트리머가 버퍼에서 가져옵니다. 버퍼가 가득 차면 `submit()`은 공간이 생길 때까지 블로킹됩니다. 이는 블로킹으로 배압을 제공하며, 데이터 소스가 일시 중지를 견딜 수 있을 때 잘 동작합니다.
 
-**Demand-driven publishers** generate records only when the streamer requests them via `request(n)`. Instead of blocking on a full buffer, generation simply pauses when demand is zero and resumes when new requests arrive. This approach requires implementing `Flow.Publisher` and `Flow.Subscription`, but gives precise control over when data is created.
+**수요 기반 발행자**는 스트리머가 `request(n)`으로 요청할 때만 레코드를 생성합니다. 가득 찬 버퍼에서 블로킹하는 대신, 수요가 0이 되면 생성이 그냥 멈추고 새 요청이 오면 다시 시작됩니다. 이 방식은 `Flow.Publisher`와 `Flow.Subscription`을 구현해야 하지만, 데이터가 생성되는 시점을 정밀하게 제어할 수 있습니다.
 
-| Consideration | SubmissionPublisher | Demand-Driven Publisher |
+| 고려 사항 | SubmissionPublisher | 수요 기반 발행자 |
 |---------------|---------------------|------------------------|
-| Backpressure response | `submit()` blocks when buffer full | Generation pauses when demand is zero |
-| Memory profile | Publisher buffer + partition buffers | Partition buffers only |
-| Implementation effort | Minimal (JDK provided) | Custom implementation required |
-| Use case | Existing data sources, moderate volumes | Synthetic data, large volumes, controlled generation |
+| 배압 반응 | 버퍼가 가득 차면 `submit()`이 블로킹됨 | 수요가 0이면 생성이 멈춤 |
+| 메모리 특성 | 발행자 버퍼 + 파티션 버퍼 | 파티션 버퍼만 |
+| 구현 노력 | 최소(JDK 제공) | 커스텀 구현 필요 |
+| 사용 사례 | 기존 데이터 소스, 중간 규모 | 합성 데이터, 대용량, 제어된 생성 |
 
-For streaming from existing collections or external data sources, `SubmissionPublisher` offers simplicity. For generating or transforming millions of records, a demand-driven publisher provides predictable memory usage by creating data only when the cluster is ready to accept it.
+기존 컬렉션이나 외부 데이터 소스에서 스트리밍할 때는 `SubmissionPublisher`가 단순합니다. 수백만 개의 레코드를 생성하거나 변환할 때는, 수요 기반 발행자가 클러스터가 받아들일 준비가 됐을 때만 데이터를 만들어 예측 가능한 메모리 사용량을 제공합니다.
 
-### Flow API Handshake
+### Flow API 핸드셰이크 {#flow-api-handshake}
 
-The streaming lifecycle follows this sequence:
+스트리밍 라이프사이클은 다음 순서를 따릅니다.
 
-1. `view.streamData(publisher, options)` initiates streaming
-2. The streamer calls `publisher.subscribe(subscriber)`
-3. Your publisher calls `subscriber.onSubscribe(subscription)`
-4. The streamer calls `subscription.request(n)` when ready for items
-5. Your publisher generates `n` items and calls `subscriber.onNext(item)` for each
-6. Steps 4-5 repeat until your publisher calls `subscriber.onComplete()`
+1. `view.streamData(publisher, options)`가 스트리밍을 시작합니다
+2. 스트리머가 `publisher.subscribe(subscriber)`를 호출합니다
+3. 발행자가 `subscriber.onSubscribe(subscription)`을 호출합니다
+4. 스트리머가 항목을 받을 준비가 되면 `subscription.request(n)`을 호출합니다
+5. 발행자가 `n`개 항목을 생성하고 각각에 대해 `subscriber.onNext(item)`을 호출합니다
+6. 4~5단계는 발행자가 `subscriber.onComplete()`를 호출할 때까지 반복됩니다
 
-The streamer calculates how many items to request:
+스트리머는 요청할 항목 수를 다음과 같이 계산합니다.
 
 ```text
 desiredInFlight = Math.max(1, buffers.size()) × pageSize × perPartitionParallelOperations
 toRequest = desiredInFlight - inFlight - pending
 ```
 
-When `toRequest` is zero or negative, the streamer applies backpressure by not requesting more items.
+`toRequest`가 0이거나 음수이면, 스트리머는 더 이상 항목을 요청하지 않는 방식으로 배압을 적용합니다.
 
-### Demand-Driven Publisher
+### 수요 기반 발행자 {#demand-driven-publisher}
 
-A demand-driven publisher inverts the control flow. Instead of pushing records into a buffer and waiting for space, the publisher waits for the streamer to request records and generates them on demand. This requires implementing two interfaces:
+수요 기반 발행자는 제어 흐름을 뒤집습니다. 레코드를 버퍼에 밀어 넣고 공간을 기다리는 대신, 발행자는 스트리머가 레코드를 요청하기를 기다렸다가 필요할 때 생성합니다. 이를 위해 두 인터페이스를 구현해야 합니다.
 
-- **`Flow.Publisher<T>`**: The outer class that accepts a subscriber and creates a subscription
-- **`Flow.Subscription`**: The inner class that tracks demand and delivers items
+- **`Flow.Publisher<T>`**: 구독자를 받아 구독을 만드는 외부 클래스
+- **`Flow.Subscription`**: 수요를 추적하고 항목을 전달하는 내부 클래스
 
-The subscription maintains an `AtomicLong` counter for outstanding demand. When the streamer calls `request(n)`, the subscription increments the counter and begins delivery. Each `onNext()` call decrements the counter. When demand reaches zero, the publisher pauses until the next `request(n)` call.
+구독은 남은 수요를 나타내는 `AtomicLong` 카운터를 유지합니다. 스트리머가 `request(n)`을 호출하면, 구독은 카운터를 늘리고 전달을 시작합니다. `onNext()` 호출마다 카운터가 줄어듭니다. 수요가 0에 도달하면, 발행자는 다음 `request(n)` 호출이 올 때까지 일시 중지합니다.
 
 ```mermaid
 sequenceDiagram
@@ -329,7 +329,7 @@ sequenceDiagram
     Sub->>Str: onComplete()
 ```
 
-The following implementation demonstrates this pattern:
+다음 구현은 이 패턴을 보여줍니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -408,7 +408,7 @@ public class DemandDrivenPublisher implements Flow.Publisher<DataStreamerItem<Tu
 </TabItem>
 </Tabs>
 
-Use the publisher with `streamData`:
+발행자를 `streamData`와 함께 사용합니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -430,24 +430,24 @@ streamFuture.join();
 </TabItem>
 </Tabs>
 
-### Configuration Tuning
+### 구성 튜닝 {#configuration-tuning}
 
-The `pageSize` and `perPartitionParallelOperations` settings control batch size and concurrency. Their interaction affects throughput and cluster load:
+`pageSize`와 `perPartitionParallelOperations` 설정은 묶음 크기와 동시성을 제어합니다. 이 둘의 상호작용은 처리량과 클러스터 부하에 영향을 줍니다.
 
-| Configuration | Behavior | Tradeoff |
+| 구성 | 동작 | 절충 |
 |---------------|----------|----------|
-| Large `pageSize`, low parallelism (e.g., 1000 × 1) | Fewer, larger batches | Lower network overhead, but uneven I/O |
-| Small `pageSize`, high parallelism (e.g., 500 × 8) | More frequent, smaller batches | Higher network overhead, but steadier I/O |
+| `pageSize`가 크고 병렬성이 낮음(예: 1000 × 1) | 더 적고 큰 묶음 | 네트워크 오버헤드는 낮지만 I/O가 고르지 않음 |
+| `pageSize`가 작고 병렬성이 높음(예: 500 × 8) | 더 자주, 더 작은 묶음 | 네트워크 오버헤드는 높지만 I/O가 더 안정적 |
 
-Cluster nodes periodically flush data to disk and synchronize replicas. Batch size and timing can affect how streaming interacts with these operations. Monitor your cluster's performance metrics and adjust settings based on observed behavior.
+클러스터 노드는 주기적으로 데이터를 디스크로 플러시하고 복제본을 동기화합니다. 묶음 크기와 타이밍은 스트리밍이 이러한 작업과 상호작용하는 방식에 영향을 줄 수 있습니다. 클러스터의 성능 메트릭을 모니터링하고 관찰된 동작을 바탕으로 설정을 조정하세요.
 
-## Streaming Results Out
+## 결과를 밖으로 스트리밍 {#streaming-results-out}
 
-The previous sections covered streaming data into Ignite tables. To stream data through Ignite and forward results to downstream systems, use receivers with result subscribers. A receiver processes incoming batches on cluster nodes and returns results that flow back to your application for delivery to the next pipeline stage.
+앞 섹션에서는 Ignite 테이블로 데이터를 스트리밍하는 방법을 다뤘습니다. 데이터를 Ignite로 통과시켜 결과를 다운스트림 시스템으로 전달하려면, 수신기와 결과 구독자를 함께 사용합니다. 수신기는 들어오는 묶음을 클러스터 노드에서 처리하고, 다음 파이프라인 단계로 전달되도록 애플리케이션으로 되돌아오는 결과를 반환합니다.
 
-Receivers execute on cluster nodes, not on the client. The receiver class must be deployed to all cluster nodes before streaming begins. See [Code Deployment](./code-deployment) for deployment options.
+수신기는 클라이언트가 아니라 클러스터 노드에서 실행됩니다. 수신기 클래스는 스트리밍을 시작하기 전에 모든 클러스터 노드에 배포되어 있어야 합니다. 배포 옵션은 [코드 배포](./code-deployment)를 참고하세요.
 
-Result delivery differs from input streaming: the streamer does not respect backpressure signals from `subscription.request(n)` on the result subscriber. Results arrive as fast as the cluster produces them, regardless of how many items your subscriber requests. Your subscriber must handle results without blocking or buffer them internally when downstream systems are slower than the cluster.
+결과 전달은 입력 스트리밍과 다릅니다. 스트리머는 결과 구독자의 `subscription.request(n)`에서 오는 배압 신호를 따르지 않습니다. 구독자가 항목을 몇 개 요청하든 상관없이, 결과는 클러스터가 생성하는 속도만큼 빠르게 도착합니다. 구독자는 블로킹 없이 결과를 처리하거나, 다운스트림 시스템이 클러스터보다 느릴 때는 결과를 내부에 버퍼링해야 합니다.
 
 ```mermaid
 flowchart LR
@@ -469,27 +469,27 @@ flowchart LR
     SUB -->|"Forward"| DS
 ```
 
-### Understanding Receivers
+### 수신기 이해하기 {#understanding-receivers}
 
-A receiver implements `DataStreamerReceiver<T, A, R>` with three type parameters:
+수신기는 세 타입 매개변수로 `DataStreamerReceiver<T, A, R>`를 구현합니다.
 
-- **T** (payload type): The data type sent to cluster nodes for processing
-- **A** (argument type): Optional parameters passed to every receiver invocation
-- **R** (result type): The data type returned from cluster nodes to your subscriber
+- **T**(페이로드 타입): 처리를 위해 클러스터 노드로 전송되는 데이터 타입
+- **A**(인수 타입): 모든 수신기 호출에 전달되는 선택적 매개변수
+- **R**(결과 타입): 클러스터 노드에서 구독자로 반환되는 데이터 타입
 
-The receiver's `receive()` method executes on cluster nodes, not on your client. Each invocation receives a batch of items that share the same partition, enabling data-local operations. The method returns a `CompletableFuture<List<R>>` containing results for each processed item, or `null` if no results are needed.
+수신기의 `receive()` 메서드는 클라이언트가 아니라 클러스터 노드에서 실행됩니다. 각 호출은 같은 파티션을 공유하는 항목 묶음을 받아, 데이터 로컬 연산을 가능하게 합니다. 이 메서드는 처리한 각 항목의 결과를 담은 `CompletableFuture<List<R>>`를 반환하며, 결과가 필요 없으면 `null`을 반환합니다.
 
-The `DataStreamerReceiverContext` parameter provides access to the Ignite API within the receiver. Use `ctx.ignite()` to access tables, execute SQL, or perform other cluster operations during processing.
+`DataStreamerReceiverContext` 매개변수는 수신기 안에서 Ignite API에 접근할 수 있게 합니다. `ctx.ignite()`로 테이블에 접근하거나, SQL을 실행하거나, 처리 중 다른 클러스터 작업을 수행하세요.
 
-### Enrichment Example
+### 보강 예시 {#enrichment-example}
 
-The following example demonstrates data flowing through Ignite. Account events enter the stream, receive processing metadata on cluster nodes, and continue to a downstream system. This complements the account streaming example from the previous section.
+다음 예시는 데이터가 Ignite를 통과하는 흐름을 보여줍니다. 계정 이벤트가 스트림에 들어와 클러스터 노드에서 처리 메타데이터를 받고, 다운스트림 시스템으로 이어집니다. 이는 앞 섹션의 계정 스트리밍 예시를 보완합니다.
 
-#### Step 1: Create an Enrichment Receiver
+#### 1단계: 보강 수신기 만들기 {#step-1-create-an-enrichment-receiver}
 
-The receiver transforms each incoming record by adding processing metadata. This pattern applies to any enrichment scenario: adding timestamps, looking up related data, validating against cluster state, or computing derived fields.
+수신기는 처리 메타데이터를 추가하여 들어오는 각 레코드를 변환합니다. 이 패턴은 타임스탬프 추가, 관련 데이터 조회, 클러스터 상태 대조 검증, 파생 필드 계산 등 모든 보강 시나리오에 적용됩니다.
 
-The receiver class must be deployed to all cluster nodes before streaming begins. When the streamer sends a batch to a node, that node instantiates the receiver class and calls its `receive()` method.
+수신기 클래스는 스트리밍을 시작하기 전에 모든 클러스터 노드에 배포되어 있어야 합니다. 스트리머가 노드로 묶음을 보내면, 그 노드는 수신기 클래스를 인스턴스화하고 그 `receive()` 메서드를 호출합니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -562,13 +562,13 @@ public class EnrichmentReceiver : IDataStreamerReceiver<IIgniteTuple, object?, I
 </TabItem>
 </Tabs>
 
-#### Step 2: Create a Forwarding Subscriber
+#### 2단계: 전달 구독자 만들기 {#step-2-create-a-forwarding-subscriber}
 
-The result subscriber receives enriched records as they return from cluster nodes. Because the streamer ignores backpressure on the result side, your subscriber must keep pace with incoming results or buffer them internally.
+결과 구독자는 클러스터 노드에서 돌아오는 보강된 레코드를 받습니다. 스트리머는 결과 측 배압을 무시하므로, 구독자는 들어오는 결과를 따라잡거나 내부에 버퍼링해야 합니다.
 
-This subscriber implements a common pattern: buffer incoming results until a batch threshold is reached, then forward the batch to a downstream system. Batching amortizes the cost of downstream operations (network calls, disk writes) across multiple records.
+이 구독자는 흔한 패턴을 구현합니다. 즉, 묶음 임계값에 도달할 때까지 들어오는 결과를 버퍼링한 뒤, 그 묶음을 다운스트림 시스템으로 전달합니다. 묶어서 처리하면 다운스트림 작업(네트워크 호출, 디스크 쓰기)의 비용이 여러 레코드에 분산됩니다.
 
-The `onSubscribe()` method requests `Long.MAX_VALUE` items because backpressure signals have no effect on result delivery. The `onNext()` method accumulates results and flushes when the buffer fills. The `onComplete()` and `onError()` methods flush any remaining buffered items before the stream ends.
+`onSubscribe()` 메서드는 배압 신호가 결과 전달에 영향을 주지 않으므로 `Long.MAX_VALUE`개 항목을 요청합니다. `onNext()` 메서드는 결과를 누적하고 버퍼가 가득 차면 플러시합니다. `onComplete()`와 `onError()` 메서드는 스트림이 끝나기 전에 버퍼에 남은 항목을 플러시합니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -621,7 +621,7 @@ class ForwardingSubscriber implements Flow.Subscriber<Tuple> {
 </TabItem>
 <TabItem value="dotnet" label=".NET">
 
-In .NET, the `IAsyncEnumerable` pattern provides natural iteration over results. Buffering can be implemented inline:
+.NET에서는 `IAsyncEnumerable` 패턴이 결과를 자연스럽게 순회하도록 해줍니다. 버퍼링은 인라인으로 구현할 수 있습니다.
 
 ```csharp
 var buffer = new List<IIgniteTuple>(batchSize);
@@ -646,23 +646,23 @@ if (buffer.Count > 0)
 </TabItem>
 </Tabs>
 
-#### Step 3: Wire the Pipeline
+#### 3단계: 파이프라인 연결 {#step-3-wire-the-pipeline}
 
-The `streamData()` overload for receivers accepts additional parameters that control how data flows through the pipeline:
+수신기용 `streamData()` 오버로드는 데이터가 파이프라인을 통과하는 방식을 제어하는 추가 매개변수를 받습니다.
 
-| Parameter | Purpose |
+| 매개변수 | 용도 |
 |-----------|---------|
-| `publisher` | Source of input data (your `Flow.Publisher` or `SubmissionPublisher`) |
-| `receiverDesc` | Descriptor identifying the receiver class and deployment units |
-| `keyFunc` | Extracts a key from each input item for partition routing |
-| `payloadFunc` | Transforms input items into the payload type expected by the receiver |
-| `receiverArg` | Optional argument passed to every receiver invocation |
-| `resultSubscriber` | Receives results returned by the receiver (can be `null` if no results needed) |
-| `options` | Streaming configuration (batch size, parallelism, flush interval) |
+| `publisher` | 입력 데이터의 소스(사용자의 `Flow.Publisher` 또는 `SubmissionPublisher`) |
+| `receiverDesc` | 수신기 클래스와 배포 단위를 식별하는 디스크립터 |
+| `keyFunc` | 파티션 라우팅을 위해 각 입력 항목에서 키를 추출 |
+| `payloadFunc` | 입력 항목을 수신기가 기대하는 페이로드 타입으로 변환 |
+| `receiverArg` | 모든 수신기 호출에 전달되는 선택적 인수 |
+| `resultSubscriber` | 수신기가 반환하는 결과를 받음(결과가 필요 없으면 `null` 가능) |
+| `options` | 스트리밍 구성(묶음 크기, 병렬성, 플러시 간격) |
 
-The `keyFunc` determines which cluster node processes each item. Items with keys that hash to the same partition are batched together and sent to that partition's primary node. This enables data-local operations when the receiver accesses tables that share the same partitioning scheme.
+`keyFunc`는 각 항목을 어느 클러스터 노드가 처리할지 결정합니다. 키가 같은 파티션으로 해시되는 항목은 함께 묶여 그 파티션의 프라이머리 노드로 전송됩니다. 이렇게 하면 수신기가 같은 파티셔닝 방식을 공유하는 테이블에 접근할 때 데이터 로컬 연산이 가능해집니다.
 
-The `payloadFunc` separates the key extraction concern from the data sent to receivers. Your input items might contain fields used only for routing, while the receiver needs a different shape. Use `Function.identity()` when the input and payload types are the same.
+`payloadFunc`는 키 추출 관심사를 수신기로 전송되는 데이터에서 분리합니다. 입력 항목에는 라우팅에만 쓰이는 필드가 있을 수 있는 반면, 수신기는 다른 형태를 필요로 할 수 있습니다. 입력 타입과 페이로드 타입이 같으면 `Function.identity()`를 사용하세요.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -765,25 +765,25 @@ if (buffer.Count > 0)
 </TabItem>
 </Tabs>
 
-### Managing Result Flow
+### 결과 흐름 관리 {#managing-result-flow}
 
-For high-volume streams, the rate at which cluster nodes produce results may exceed the rate at which your downstream system can accept them. Unlike input streaming where backpressure signals control flow, result delivery continues regardless of subscriber readiness.
+대용량 스트림에서는 클러스터 노드가 결과를 생성하는 속도가 다운스트림 시스템이 이를 받아들일 수 있는 속도를 앞지를 수 있습니다. 배압 신호가 흐름을 제어하는 입력 스트리밍과 달리, 결과 전달은 구독자의 준비 상태와 상관없이 계속됩니다.
 
-Consider these patterns for managing result flow:
+결과 흐름을 관리하려면 다음 패턴을 고려하세요.
 
-- **Bounded queue**: Place a `BlockingQueue` between the subscriber and downstream operations. The subscriber adds to the queue (blocking if full), while a separate thread drains to downstream. This decouples cluster throughput from downstream latency.
+- **제한된 큐**: 구독자와 다운스트림 작업 사이에 `BlockingQueue`를 둡니다. 구독자는 큐에 항목을 추가하고(가득 차면 블로킹), 별도 스레드가 다운스트림으로 큐를 비웁니다. 이렇게 하면 클러스터 처리량이 다운스트림 지연과 분리됩니다.
 
-- **Async forwarding**: If your downstream client supports async operations, use `CompletableFuture` to pipeline multiple in-flight requests. This overlaps network latency with continued result processing.
+- **비동기 전달**: 다운스트림 클라이언트가 비동기 작업을 지원하면, `CompletableFuture`로 여러 진행 중 요청을 파이프라인 처리하세요. 이렇게 하면 네트워크 지연이 계속되는 결과 처리와 겹쳐집니다.
 
-- **Batch size alignment**: Match the forwarding subscriber's batch size to your downstream system's optimal batch size. Mismatched sizes cause either too many small operations or memory pressure from oversized batches.
+- **묶음 크기 정렬**: 전달 구독자의 묶음 크기를 다운스트림 시스템의 최적 묶음 크기에 맞추세요. 크기가 어긋나면 작은 작업이 너무 많아지거나, 지나치게 큰 묶음으로 인한 메모리 압박이 발생합니다.
 
-If results arrive faster than your subscriber can process them, memory usage grows until the JVM runs out of heap. Monitor result processing throughput relative to cluster output and adjust batch sizes or add buffering as needed.
+구독자가 처리할 수 있는 속도보다 결과가 빠르게 도착하면, JVM 힙이 소진될 때까지 메모리 사용량이 늘어납니다. 클러스터 출력 대비 결과 처리량을 모니터링하고, 필요에 따라 묶음 크기를 조정하거나 버퍼링을 추가하세요.
 
-## Handling Failures
+## 실패 처리 {#handling-failures}
 
-Whether streaming to tables or receivers, network failures, schema mismatches, or cluster issues can cause batch failures. The data streamer automatically retries failed batches up to `retryLimit` times (default 16). Items that exhaust all retry attempts are collected in a `DataStreamerException`.
+테이블로 스트리밍하든 수신기로 스트리밍하든, 네트워크 장애, 스키마 불일치, 클러스터 문제로 묶음 처리가 실패할 수 있습니다. 데이터 스트리머는 실패한 묶음을 `retryLimit` 횟수(기본 16회)까지 자동으로 재시도합니다. 모든 재시도를 소진한 항목은 `DataStreamerException`에 수집됩니다.
 
-Access failed entries using the `failedItems()` method:
+실패한 항목은 `failedItems()` 메서드로 가져옵니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -847,26 +847,26 @@ catch (DataStreamerException e)
 </TabItem>
 </Tabs>
 
-### Handling Persistent Failures
+### 지속적인 실패 처리 {#handling-persistent-failures}
 
-Items fail after exhausting retries for reasons such as:
+항목은 다음과 같은 이유로 재시도를 소진한 뒤 실패합니다.
 
-- **Schema mismatch**: Entry fields do not match the table schema
-- **Constraint violations**: Duplicate keys or foreign key violations
-- **Cluster unavailability**: Partition leader unavailable during all retry attempts
+- **스키마 불일치**: 항목 필드가 테이블 스키마와 일치하지 않음
+- **제약 조건 위반**: 중복 키 또는 외래 키 위반
+- **클러스터 사용 불가**: 모든 재시도 동안 파티션 리더를 사용할 수 없음
 
-Before retrying failed items:
+실패한 항목을 재시도하기 전에:
 
-1. Examine the exception cause to determine the failure reason
-2. Fix data issues (schema mismatches, constraint violations)
-3. Verify cluster health if failures were caused by unavailability
-4. Consider using direct table operations (`upsert`, `insert`) for small numbers of failed items rather than restarting the streamer
+1. 예외 원인을 살펴 실패 사유를 파악합니다
+2. 데이터 문제(스키마 불일치, 제약 조건 위반)를 해결합니다
+3. 실패가 사용 불가로 인한 것이면 클러스터 상태를 확인합니다
+4. 실패한 항목이 적을 때는 스트리머를 다시 시작하기보다 직접 테이블 작업(`upsert`, `insert`)을 사용하는 것을 고려합니다
 
-## Tuning Flush Behavior
+## 플러시 동작 튜닝 {#tuning-flush-behavior}
 
-The `autoFlushInterval` setting (default 5000ms) controls how long the streamer waits before sending incomplete batches. This addresses two scenarios:
+`autoFlushInterval` 설정(기본 5000ms)은 스트리머가 완성되지 않은 묶음을 보내기 전에 얼마나 기다릴지를 제어합니다. 이는 두 가지 시나리오를 해결합니다.
 
-- **Slow data sources**: When your publisher produces data slowly, buffers may not fill to `pageSize` within a reasonable time. The auto-flush ensures data reaches the cluster without waiting for a full batch.
-- **Uneven partition distribution**: If your data keys cluster into a few partitions, some partition buffers fill while others remain nearly empty. Auto-flush sends partial batches from slow-filling partitions.
+- **느린 데이터 소스**: 발행자가 데이터를 느리게 생성하면, 버퍼가 적절한 시간 안에 `pageSize`까지 차지 않을 수 있습니다. 자동 플러시는 완전한 묶음을 기다리지 않고도 데이터가 클러스터에 도달하도록 보장합니다.
+- **고르지 않은 파티션 분포**: 데이터 키가 몇몇 파티션에 몰리면, 일부 파티션 버퍼는 차는 반면 다른 버퍼는 거의 비어 있습니다. 자동 플러시는 천천히 차는 파티션에서 부분 묶음을 보냅니다.
 
-Set a shorter interval for latency-sensitive workloads. Set a longer interval (or increase `pageSize`) for throughput-focused bulk loads where latency is less critical.
+지연에 민감한 워크로드에는 더 짧은 간격을 설정하세요. 지연이 덜 중요한 처리량 중심의 대량 적재에는 더 긴 간격을 설정하거나 `pageSize`를 늘리세요.

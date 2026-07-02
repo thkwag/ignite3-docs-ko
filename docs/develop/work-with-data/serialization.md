@@ -1,16 +1,16 @@
 ---
 id: serialization
-title: Object Serialization
+title: 객체 직렬화
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Apache Ignite provides a way to serialize your java objects and types and send the data between servers and clients.
+Apache Ignite는 Java 객체와 타입을 직렬화해 서버와 클라이언트 사이에서 데이터를 주고받는 방법을 제공합니다.
 
-## Native Types
+## 네이티브 타입 {#native-types}
 
-Apache Ignite handles native type serialization automatically. For example, the following Compute job accepts an Integer and returns an Integer:
+Apache Ignite는 네이티브 타입 직렬화를 자동으로 처리합니다. 예를 들어 다음 컴퓨트 작업은 Integer를 받아 Integer를 반환합니다:
 
 ```java
 class IntegerComputeJob implements ComputeJob<Integer, Integer> {
@@ -23,7 +23,7 @@ class IntegerComputeJob implements ComputeJob<Integer, Integer> {
 }
 ```
 
-Since both the argument and the result are native types and are serialized automatically, you do not need any additional code to handle the serialization:
+인수와 결과가 모두 네이티브 타입이라 자동으로 직렬화되므로, 직렬화를 처리하는 추가 코드가 필요하지 않습니다:
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -56,9 +56,9 @@ int result = await jobExec.GetResultAsync();
 </TabItem>
 </Tabs>
 
-## Tuples
+## 튜플 {#tuples}
 
-Apache Ignite is designed around working with Tuples, and handles tuple serialization automatically. For example, the following Job accepts Tuple and returns Tuple:
+Apache Ignite는 튜플을 중심으로 설계되었으며, 튜플 직렬화를 자동으로 처리합니다. 예를 들어 다음 작업은 Tuple을 받아 Tuple을 반환합니다:
 
 ```java
 class TupleComputeJob implements ComputeJob<Tuple, Tuple> {
@@ -72,7 +72,7 @@ class TupleComputeJob implements ComputeJob<Tuple, Tuple> {
 }
 ```
 
-Since both the argument and the result are tuples, they are serialized automatically, and you do not need to handle serialization:
+인수와 결과가 모두 튜플이라 자동으로 직렬화되므로, 직렬화를 직접 처리할 필요가 없습니다:
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -105,23 +105,23 @@ IIgniteTuple result = await jobExec.GetResultAsync();
 </TabItem>
 </Tabs>
 
-## User Objects
+## 사용자 객체 {#user-objects}
 
-User objects are marshalled automatically in the following way:
+사용자 객체는 다음과 같은 방식으로 자동으로 마샬링됩니다:
 
-- If a custom marshaller is defined, it is used.
-- If no marshaller is defined, user Java objects are marshalled to binary tuples.
-- If there are nested objects, they are recursively marshalled to tuples.
+- 사용자 정의 마샬러가 정의되어 있으면 해당 마샬러를 사용합니다.
+- 마샬러가 정의되어 있지 않으면 사용자 Java 객체는 바이너리 튜플로 마샬링됩니다.
+- 중첩 객체가 있으면 재귀적으로 튜플로 마샬링됩니다.
 
-Below is an example of user objects marshalled with custom logic (using JSON serialization with `ObjectMapper`, but you can do whatever you think is good for your use case).
+아래는 사용자 정의 로직으로 사용자 객체를 마샬링하는 예시입니다(여기서는 `ObjectMapper`로 JSON 직렬화를 사용하지만, 사용 사례에 맞다고 판단하는 방식은 무엇이든 사용할 수 있습니다).
 
-Let's start with Compute job definition that should be a part of the same deployment unit.
+먼저 같은 배포 단위에 포함되어야 하는 컴퓨트 작업 정의부터 시작합니다.
 
-### Server-Side
+### 서버 측 {#server-side}
 
-The code below shows how to handle marshalling on a server, so that it can properly send the data to the clients and receive their responses:
+아래 코드는 서버에서 마샬링을 처리해 클라이언트로 데이터를 올바르게 보내고 응답을 받는 방법을 보여줍니다:
 
-- This is the custom object that we will be using as an argument the job:
+- 다음은 작업의 인수로 사용할 사용자 정의 객체입니다:
 
   ```java
   class ArgumentCustomServerObject {
@@ -130,7 +130,7 @@ The code below shows how to handle marshalling on a server, so that it can prope
   }
   ```
 
-- We need to define a marshaller for it using the `ObjectMapper` object:
+- `ObjectMapper` 객체를 사용해 이 객체의 마샬러를 정의해야 합니다:
 
   ```java
   final ObjectMapper MAPPER = new ObjectMapper();
@@ -156,7 +156,7 @@ The code below shows how to handle marshalling on a server, so that it can prope
   }
   ```
 
-- Let's also create another object that will be used to store Compute job results, and the corresponding marshaller:
+- 컴퓨트 작업 결과를 저장할 또 다른 객체와 그에 대응하는 마샬러도 만들어 봅니다:
 
   ```java
   class ResultCustomServerObject {
@@ -186,9 +186,9 @@ The code below shows how to handle marshalling on a server, so that it can prope
   }
   ```
 
-The marshallers above define how to represent corresponding objects as `byte[]`, and how to read these objects from `byte[]`. However, defining these classes does not enable custom serialization, as you need to specify the marshaller to use when serializing objects. In Apache Ignite, this is done by overriding two methods in  Compute job definition to use them as factory methods for marshallers:
+위 마샬러들은 해당 객체를 `byte[]`로 표현하는 방법과 `byte[]`에서 이 객체를 읽는 방법을 정의합니다. 하지만 이 클래스들을 정의하는 것만으로는 사용자 정의 직렬화가 활성화되지 않습니다. 객체를 직렬화할 때 사용할 마샬러를 지정해야 하기 때문입니다. Apache Ignite에서는 컴퓨트 작업 정의의 두 메서드를 재정의해 마샬러의 팩토리 메서드로 사용함으로써 이를 처리합니다:
 
-The code below provides an example of implementing marshallers in a compute job:
+아래 코드는 컴퓨트 작업에서 마샬러를 구현하는 예시를 보여줍니다:
 
 ```java
 class PojoComputeJob implements ComputeJob<ArgumentCustomServerObject, ResultCustomServerObject> {
@@ -218,13 +218,13 @@ class PojoComputeJob implements ComputeJob<ArgumentCustomServerObject, ResultCus
 }
 ```
 
-With this, the Apache Ignite server will be able to handle marshalling the required objects to sending them to clients, and unmarshalling the client responses.
+이렇게 하면 Apache Ignite 서버가 클라이언트로 보낼 객체를 마샬링하고 클라이언트 응답을 언마샬링할 수 있습니다.
 
-### Client-Side
+### 클라이언트 측 {#client-side}
 
-On the client side, largely the same code is required to handle the incoming objects and to marshal the response:
+클라이언트 측에서도 들어오는 객체를 처리하고 응답을 마샬링하려면 거의 같은 코드가 필요합니다:
 
-- Define the custom object that is used for compute job:
+- 컴퓨트 작업에 사용할 사용자 정의 객체를 정의하세요:
 
   <Tabs>
   <TabItem value="java" label="Java">
@@ -246,7 +246,7 @@ On the client side, largely the same code is required to handle the incoming obj
   </TabItem>
   </Tabs>
 
-- Define the marshaller for the object:
+- 객체의 마샬러를 정의하세요:
 
   <Tabs>
   <TabItem value="java" label="Java">
@@ -295,7 +295,7 @@ On the client side, largely the same code is required to handle the incoming obj
   </TabItem>
   </Tabs>
 
-- Do the same for the result object:
+- 결과 객체에도 같은 작업을 하세요:
 
   <Tabs>
   <TabItem value="java" label="Java">
@@ -343,7 +343,7 @@ On the client side, largely the same code is required to handle the incoming obj
   </TabItem>
   </Tabs>
 
-Now that all marshallers are defined, you can start working with the custom objects and handle marshalling of arguments and results in your compute jobs:
+이제 모든 마샬러가 정의되었으니, 사용자 정의 객체를 다루고 컴퓨트 작업에서 인수와 결과의 마샬링을 처리할 수 있습니다:
 
 <Tabs>
 <TabItem value="java" label="Java">

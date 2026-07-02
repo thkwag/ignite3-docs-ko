@@ -6,35 +6,35 @@ sidebar_position: 3
 
 # SQL API
 
-The SQL API executes SQL statements and scripts against Apache Ignite clusters. It supports parameterized queries, pagination, transaction integration, and query cancellation.
+SQL API는 Apache Ignite 클러스터를 대상으로 SQL 문과 스크립트를 실행합니다. 매개변수화된 쿼리, 페이지네이션, 트랜잭션 연동, 쿼리 취소를 지원합니다.
 
-## Key Concepts
+## 핵심 개념 {#key-concepts}
 
-### Statement Execution
+### SQL 문 실행 {#statement-execution}
 
-Single-statement queries return result sets. Multi-statement scripts execute multiple statements without returning results. Use statements for queries and DML operations. Use scripts for DDL operations and batch updates.
+단일 문 쿼리는 결과 집합을 반환합니다. 다중 문 스크립트는 여러 문을 실행하되 결과를 반환하지 않습니다. 쿼리와 DML 작업에는 문을, DDL 작업과 일괄 업데이트에는 스크립트를 사용하세요.
 
-### Parameterized Queries
+### 매개변수화된 쿼리 {#parameterized-queries}
 
-Parameters prevent SQL injection and enable query plan reuse. Use question marks (`?`) as placeholders. Pass parameter values as a vector of `primitive` values in execution order.
+매개변수를 사용하면 SQL 인젝션을 막고 쿼리 계획을 재사용할 수 있습니다. 물음표(`?`)를 자리표시자로 사용하세요. 매개변수 값은 실행 순서에 맞춰 `primitive` 값의 벡터로 전달합니다.
 
-### Result Sets
+### 결과 집합 {#result-sets}
 
-Query results return as `result_set` objects containing rows and metadata. Result sets support pagination for large queries. Each page contains a batch of rows. Fetch additional pages explicitly.
+쿼리 결과는 행과 메타데이터를 담은 `result_set` 객체로 반환됩니다. 결과 집합은 대규모 쿼리에서 페이지네이션을 지원합니다. 각 페이지에는 행 묶음이 담깁니다. 추가 페이지는 명시적으로 가져옵니다.
 
-### Transaction Integration
+### 트랜잭션 연동 {#transaction-integration}
 
-Pass a transaction pointer to execute statements within explicit transactions. Pass `nullptr` for implicit transactions that commit immediately.
+명시적 트랜잭션 안에서 문을 실행하려면 트랜잭션 포인터를 전달합니다. 즉시 커밋되는 암시적 트랜잭션에는 `nullptr`를 전달합니다.
 
-### Query Cancellation
+### 쿼리 취소 {#query-cancellation}
 
-Pass a `cancellation_token` to cancel long-running queries. Create tokens before execution. Trigger cancellation from another thread when needed.
+장시간 실행되는 쿼리를 취소하려면 `cancellation_token`을 전달합니다. 실행 전에 토큰을 생성하세요. 필요하면 다른 스레드에서 취소를 요청합니다.
 
-## Basic Execution
+## 기본 실행 {#basic-execution}
 
-### Simple Query
+### 단순 쿼리 {#simple-query}
 
-Execute a SELECT statement:
+SELECT 문을 실행합니다:
 
 ```cpp
 using namespace ignite;
@@ -50,9 +50,9 @@ if (result.has_rowset()) {
 }
 ```
 
-### Parameterized Query
+### 매개변수화된 쿼리 {#parameterized-query}
 
-Use parameters for safe value binding:
+값을 안전하게 바인딩하려면 매개변수를 사용합니다:
 
 ```cpp
 sql_statement stmt("SELECT * FROM accounts WHERE balance > ? AND active = ?");
@@ -61,9 +61,9 @@ std::vector<primitive> params{1000.0, true};
 auto result = sql.execute(nullptr, nullptr, stmt, params);
 ```
 
-### DML Operations
+### DML 작업 {#dml-operations}
 
-Execute INSERT, UPDATE, DELETE:
+INSERT, UPDATE, DELETE를 실행합니다:
 
 ```cpp
 // Insert
@@ -84,9 +84,9 @@ auto result3 = sql.execute(nullptr, nullptr, del, {42});
 std::cout << "Rows deleted: " << result3.affected_rows() << std::endl;
 ```
 
-### DDL Operations
+### DDL 작업 {#ddl-operations}
 
-Execute schema changes:
+스키마 변경을 실행합니다:
 
 ```cpp
 sql_statement ddl("CREATE TABLE new_table (id INT PRIMARY KEY, data VARCHAR)");
@@ -98,11 +98,11 @@ if (result.was_applied()) {
 }
 ```
 
-## SQL Statements
+## SQL 문 {#sql-statements}
 
-### Statement Configuration
+### SQL 문 구성 {#statement-configuration}
 
-Configure statement properties:
+문 속성을 구성합니다:
 
 ```cpp
 sql_statement stmt;
@@ -113,23 +113,23 @@ stmt.timeout(std::chrono::seconds(30));
 stmt.timezone_id("America/New_York");
 ```
 
-### Statement Properties
+### SQL 문 속성 {#statement-properties}
 
-**query()** - SQL text to execute (required)
+**query()** - 실행할 SQL 텍스트(필수)
 
-**schema()** - Default schema name (default: "PUBLIC")
+**schema()** - 기본 스키마 이름(기본값: "PUBLIC")
 
-**page_size()** - Rows per result page (default: 1024)
+**page_size()** - 결과 페이지당 행 수(기본값: 1024)
 
-**timeout()** - Query timeout in milliseconds (default: 0 for no timeout)
+**timeout()** - 쿼리 타임아웃(밀리초 단위, 기본값 0은 타임아웃 없음)
 
-**timezone_id()** - Timezone for time functions
+**timezone_id()** - 시간 함수에 사용할 시간대
 
-**properties()** - Additional statement properties as key-value map
+**properties()** - 키-값 맵 형태의 추가 문 속성
 
-### Builder Pattern
+### 빌더 패턴 {#builder-pattern}
 
-Chain configuration calls:
+구성 호출을 연쇄합니다:
 
 ```cpp
 sql_statement stmt;
@@ -139,11 +139,11 @@ stmt.query("SELECT * FROM accounts")
     .timeout(std::chrono::seconds(10));
 ```
 
-## Result Sets
+## 결과 집합 {#result-sets-1}
 
-### Accessing Rows
+### 행 접근 {#accessing-rows}
 
-Iterate current page:
+현재 페이지를 순회합니다:
 
 ```cpp
 auto result = sql.execute(nullptr, nullptr, stmt, {});
@@ -159,9 +159,9 @@ for (const auto& row : result.current_page()) {
 }
 ```
 
-### Pagination
+### 페이지네이션 {#pagination}
 
-Handle large result sets:
+대규모 결과 집합을 처리합니다:
 
 ```cpp
 auto result = sql.execute(nullptr, nullptr, stmt, {});
@@ -180,7 +180,7 @@ while (result.has_more_pages()) {
 }
 ```
 
-Use async pagination:
+비동기 페이지네이션을 사용합니다:
 
 ```cpp
 void process_page(result_set& result) {
@@ -201,9 +201,9 @@ auto result = sql.execute(nullptr, nullptr, stmt, {});
 process_page(result);
 ```
 
-### Metadata
+### 메타데이터 {#metadata}
 
-Access result metadata:
+결과 메타데이터에 접근합니다:
 
 ```cpp
 auto result = sql.execute(nullptr, nullptr, stmt, {});
@@ -223,15 +223,15 @@ for (const auto& column : metadata.columns()) {
 }
 ```
 
-Find column index by name:
+이름으로 컬럼 인덱스를 찾습니다:
 
 ```cpp
 int32_t col_index = metadata.index_of("balance");
 ```
 
-### Checking Result Type
+### 결과 타입 확인 {#checking-result-type}
 
-Determine if result contains rows or is a DML result:
+결과에 행이 담겼는지, 아니면 DML 결과인지 판별합니다:
 
 ```cpp
 auto result = sql.execute(nullptr, nullptr, stmt, {});
@@ -250,9 +250,9 @@ if (result.was_applied()) {
 }
 ```
 
-### Closing Result Sets
+### 결과 집합 닫기 {#closing-result-sets}
 
-Close result sets explicitly to free resources:
+리소스를 해제하려면 결과 집합을 명시적으로 닫습니다:
 
 ```cpp
 auto result = sql.execute(nullptr, nullptr, stmt, {});
@@ -260,7 +260,7 @@ auto result = sql.execute(nullptr, nullptr, stmt, {});
 result.close();
 ```
 
-Use async close:
+비동기 닫기를 사용합니다:
 
 ```cpp
 result.close_async([](ignite_result<void> res) {
@@ -270,11 +270,11 @@ result.close_async([](ignite_result<void> res) {
 });
 ```
 
-## Script Execution
+## 스크립트 실행 {#script-execution}
 
-### Multi-Statement Scripts
+### 다중 문 스크립트 {#multi-statement-scripts}
 
-Execute multiple statements:
+여러 문을 실행합니다:
 
 ```cpp
 sql_statement script(R"(
@@ -286,7 +286,7 @@ sql_statement script(R"(
 sql.execute_script(nullptr, script, {});
 ```
 
-Use async execution:
+비동기 실행을 사용합니다:
 
 ```cpp
 sql.execute_script_async(nullptr, script, {}, [](ignite_result<void> result) {
@@ -296,13 +296,13 @@ sql.execute_script_async(nullptr, script, {}, [](ignite_result<void> result) {
 });
 ```
 
-Scripts do not return result sets. Use individual statements for queries. Scripts do not support transactions.
+스크립트는 결과 집합을 반환하지 않습니다. 쿼리에는 개별 문을 사용하세요. 스크립트는 트랜잭션을 지원하지 않습니다.
 
-## Transaction Integration
+## 트랜잭션 연동 {#transaction-integration-1}
 
-### Explicit Transactions
+### 명시적 트랜잭션 {#explicit-transactions}
 
-Execute statements in a transaction:
+트랜잭션 안에서 문을 실행합니다:
 
 ```cpp
 auto tx = client.get_transactions().begin();
@@ -321,29 +321,29 @@ try {
 }
 ```
 
-### Implicit Transactions
+### 암시적 트랜잭션 {#implicit-transactions}
 
-Pass `nullptr` for auto-commit:
+자동 커밋에는 `nullptr`를 전달합니다:
 
 ```cpp
 // Each statement commits immediately
 sql.execute(nullptr, nullptr, stmt, params);
 ```
 
-## Query Cancellation
+## 쿼리 취소 {#query-cancellation-1}
 
-### Creating Cancellation Tokens
+### 취소 토큰 생성 {#creating-cancellation-tokens}
 
-Create a token before execution:
+실행 전에 토큰을 생성합니다:
 
 ```cpp
 cancel_handle handle;
 cancellation_token token(&handle);
 ```
 
-### Cancelling Queries
+### 쿼리 취소하기 {#cancelling-queries}
 
-Cancel from another thread:
+다른 스레드에서 취소합니다:
 
 ```cpp
 // Thread 1: Execute long query
@@ -354,7 +354,7 @@ auto result = sql.execute(nullptr, &token,
 handle.cancel();
 ```
 
-Use with async execution:
+비동기 실행과 함께 사용합니다:
 
 ```cpp
 cancel_handle handle;
@@ -373,9 +373,9 @@ sql.execute_async(nullptr, &token, stmt, {},
 handle.cancel();
 ```
 
-## Asynchronous Execution
+## 비동기 실행 {#asynchronous-execution}
 
-Execute statements without blocking:
+블로킹 없이 문을 실행합니다:
 
 ```cpp
 sql.execute_async(nullptr, nullptr, stmt, params,
@@ -389,7 +389,7 @@ sql.execute_async(nullptr, nullptr, stmt, params,
     });
 ```
 
-Execute scripts asynchronously:
+스크립트를 비동기로 실행합니다:
 
 ```cpp
 sql.execute_script_async(nullptr, script, {},
@@ -400,11 +400,11 @@ sql.execute_script_async(nullptr, script, {},
     });
 ```
 
-## Data Type Mapping
+## 데이터 타입 매핑 {#data-type-mapping}
 
-C++ types map to SQL types:
+C++ 타입은 SQL 타입에 매핑됩니다:
 
-| C++ Type | SQL Type |
+| C++ 타입 | SQL 타입 |
 |----------|----------|
 | `bool` | BOOLEAN |
 | `int8_t` | TINYINT |
@@ -423,9 +423,9 @@ C++ types map to SQL types:
 | `big_decimal` | DECIMAL |
 | `big_integer` | DECIMAL |
 
-## Error Handling
+## 오류 처리 {#error-handling}
 
-Handle SQL errors:
+SQL 오류를 처리합니다:
 
 ```cpp
 try {
@@ -435,7 +435,7 @@ try {
 }
 ```
 
-With async operations:
+비동기 작업의 경우:
 
 ```cpp
 sql.execute_async(nullptr, nullptr, stmt, params,
@@ -448,10 +448,10 @@ sql.execute_async(nullptr, nullptr, stmt, params,
     });
 ```
 
-## Reference
+## 참조 {#reference}
 
-- [C++ API Documentation](https://ignite.apache.org/releases/ignite3/cppdoc/)
-- [SQL Reference](../../../sql)
+- [C++ API 문서](https://ignite.apache.org/releases/ignite3/cppdoc/)
+- [SQL 참조](../../../sql)
 - [Client API](./client-api)
 - [Tables API](./tables-api)
 - [Transactions API](./transactions-api)

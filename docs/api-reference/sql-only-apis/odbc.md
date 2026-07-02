@@ -1,71 +1,71 @@
 ---
-title: ODBC Driver
+title: ODBC 드라이버
 id: odbc
 sidebar_position: 2
 ---
 
-# ODBC Driver
+# ODBC 드라이버
 
-The Apache Ignite 3 ODBC driver implements ODBC 3.8 standard for C and C++ applications. It provides SQL access through the standard ODBC API without requiring server-side libraries.
+Apache Ignite 3 ODBC 드라이버는 C 및 C++ 애플리케이션을 위해 ODBC 3.8 표준을 구현합니다. 서버 측 라이브러리 없이 표준 ODBC API로 SQL 접근을 제공합니다.
 
-## Connection String Format
+## 연결 문자열 형식 {#connection-string-format}
 
 ```
 DRIVER={Apache Ignite 3};ADDRESS=host:port;param=value;param=value
 ```
 
-Parameters are semicolon-separated key-value pairs. The driver requires either `ADDRESS` or both `HOST` and `PORT`.
+매개변수는 세미콜론으로 구분된 키-값 쌍입니다. 드라이버는 `ADDRESS`를 지정하거나 `HOST`와 `PORT`를 모두 지정해야 합니다.
 
-Default port: 10800
-Default schema: PUBLIC
+기본 포트: 10800
+기본 스키마: PUBLIC
 
-## Configuration Parameters
+## 구성 매개변수 {#configuration-parameters}
 
-### Connection Parameters
+### 연결 매개변수 {#connection-parameters}
 
-- `DRIVER` - ODBC driver name (required): `{Apache Ignite 3}`
-- `ADDRESS` - Host and port in format `host:port` (can specify multiple comma-separated addresses)
-- `HOST` - Host address (alternative to ADDRESS)
-- `PORT` - Port number (alternative to ADDRESS, default: 10800)
+- `DRIVER` - ODBC 드라이버 이름(필수): `{Apache Ignite 3}`
+- `ADDRESS` - `host:port` 형식의 호스트와 포트(쉼표로 구분해 여러 개 지정 가능)
+- `HOST` - 호스트 주소(ADDRESS의 대안)
+- `PORT` - 포트 번호(ADDRESS의 대안, 기본값: 10800)
 
-### Authentication
+### 인증 {#authentication}
 
-- `IDENTITY` - Username for authentication
-- `SECRET` - Password for authentication
+- `IDENTITY` - 인증에 사용할 사용자 이름
+- `SECRET` - 인증에 사용할 비밀번호
 
-### Schema Selection
+### 스키마 선택 {#schema-selection}
 
-- `SCHEMA` - Default schema for queries (default: `PUBLIC`)
+- `SCHEMA` - 쿼리에 사용할 기본 스키마(기본값: `PUBLIC`)
 
-### Performance Tuning
+### 성능 튜닝 {#performance-tuning}
 
-- `PAGE_SIZE` - Number of rows fetched per request (default: 1024)
-- `TIMEZONE` - Client timezone for timestamp conversions
+- `PAGE_SIZE` - 요청당 가져오는 행 수(기본값: 1024)
+- `TIMEZONE` - 타임스탬프 변환에 사용할 클라이언트 시간대
 
-### SSL Configuration
+### SSL 구성 {#ssl-configuration}
 
-- `SSL_MODE` - SSL connection mode: `disable` or `require` (default: `disable`)
-- `SSL_KEY_FILE` - Path to PEM-encoded private key file
-- `SSL_CERT_FILE` - Path to PEM-encoded certificate file
-- `SSL_CA_FILE` - Path to PEM-encoded CA certificate file
+- `SSL_MODE` - SSL 연결 모드: `disable` 또는 `require`(기본값: `disable`)
+- `SSL_KEY_FILE` - PEM으로 인코딩된 개인 키 파일 경로
+- `SSL_CERT_FILE` - PEM으로 인코딩된 인증서 파일 경로
+- `SSL_CA_FILE` - PEM으로 인코딩된 CA 인증서 파일 경로
 
-## DSN Configuration
+## DSN 구성 {#dsn-configuration}
 
-Configure Data Source Names (DSN) through your system's ODBC administrator.
+시스템의 ODBC 관리자에서 데이터 원본 이름(DSN)을 구성하세요.
 
 ### Windows
 
-Use ODBC Data Source Administrator (`odbcad32.exe`):
+ODBC 데이터 원본 관리자(`odbcad32.exe`)를 사용하세요.
 
-1. Open ODBC Data Source Administrator
-2. Add new data source
-3. Select "Apache Ignite 3" driver
-4. Configure connection parameters
-5. Test connection
+1. ODBC 데이터 원본 관리자를 엽니다
+2. 새 데이터 원본을 추가합니다
+3. "Apache Ignite 3" 드라이버를 선택합니다
+4. 연결 매개변수를 구성합니다
+5. 연결을 테스트합니다
 
 ### Linux
 
-Edit `/etc/odbc.ini` or `~/.odbc.ini`:
+`/etc/odbc.ini` 또는 `~/.odbc.ini`를 편집하세요.
 
 ```ini
 [IgniteDS]
@@ -74,7 +74,7 @@ ADDRESS=localhost:10800
 SCHEMA=PUBLIC
 ```
 
-Configure driver location in `/etc/odbcinst.ini`:
+`/etc/odbcinst.ini`에서 드라이버 위치를 구성하세요.
 
 ```ini
 [Apache Ignite 3]
@@ -84,7 +84,7 @@ Driver=/usr/local/lib/libignite-odbc.so
 
 ### macOS
 
-Edit `~/Library/ODBC/odbc.ini`:
+`~/Library/ODBC/odbc.ini`를 편집하세요.
 
 ```ini
 [IgniteDS]
@@ -93,7 +93,7 @@ ADDRESS=localhost:10800
 SCHEMA=PUBLIC
 ```
 
-Configure driver in `~/Library/ODBC/odbcinst.ini`:
+`~/Library/ODBC/odbcinst.ini`에서 드라이버를 구성하세요.
 
 ```ini
 [Apache Ignite 3]
@@ -101,9 +101,9 @@ Description=Apache Ignite 3 ODBC Driver
 Driver=/usr/local/lib/libignite-odbc.dylib
 ```
 
-## Usage Examples
+## 사용 예시 {#usage-examples}
 
-### Basic Connection
+### 기본 연결 {#basic-connection}
 
 ```c
 #include <sql.h>
@@ -149,21 +149,21 @@ SQLFreeHandle(SQL_HANDLE_DBC, dbc);
 SQLFreeHandle(SQL_HANDLE_ENV, env);
 ```
 
-### DSN Connection
+### DSN 연결 {#dsn-connection}
 
 ```c
 SQLCHAR dsn[] = "DSN=IgniteDS";
 SQLConnect(dbc, dsn, SQL_NTS, NULL, 0, NULL, 0);
 ```
 
-### Connection with Authentication
+### 인증을 사용한 연결 {#connection-with-authentication}
 
 ```c
 SQLCHAR connStr[] = "DRIVER={Apache Ignite 3};ADDRESS=localhost:10800;IDENTITY=admin;SECRET=password";
 SQLDriverConnect(dbc, NULL, connStr, SQL_NTS, NULL, 0, NULL, SQL_DRIVER_NOPROMPT);
 ```
 
-### Connection with SSL
+### SSL을 사용한 연결 {#connection-with-ssl}
 
 ```c
 SQLCHAR connStr[] =
@@ -177,7 +177,7 @@ SQLCHAR connStr[] =
 SQLDriverConnect(dbc, NULL, connStr, SQL_NTS, NULL, 0, NULL, SQL_DRIVER_NOPROMPT);
 ```
 
-### Prepared Statements
+### 준비된 문 {#prepared-statements}
 
 ```c
 SQLCHAR sql[] = "INSERT INTO users (id, name, email) VALUES (?, ?, ?)";
@@ -195,7 +195,7 @@ SQLBindParameter(stmt, 3, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, 0, 0, email,
 SQLExecute(stmt);
 ```
 
-### Batch Operations
+### 일괄 처리 작업 {#batch-operations}
 
 ```c
 #define ARRAY_SIZE 100
@@ -226,7 +226,7 @@ SQLCHAR sql[] = "INSERT INTO users (id, name) VALUES (?, ?)";
 SQLExecDirect(stmt, sql, SQL_NTS);
 ```
 
-### Transaction Control
+### 트랜잭션 제어 {#transaction-control}
 
 ```c
 // Disable auto-commit
@@ -246,7 +246,7 @@ SQLEndTran(SQL_HANDLE_DBC, dbc, SQL_COMMIT);
 SQLSetConnectAttr(dbc, SQL_ATTR_AUTOCOMMIT, SQL_AUTOCOMMIT_ON, 0);
 ```
 
-### Error Handling
+### 오류 처리 {#error-handling}
 
 ```c
 SQLRETURN ret = SQLExecDirect(stmt, (SQLCHAR*)"SELECT * FROM invalid_table", SQL_NTS);
@@ -264,7 +264,7 @@ if (!SQL_SUCCEEDED(ret)) {
 }
 ```
 
-### Metadata Queries
+### 메타데이터 쿼리 {#metadata-queries}
 
 ```c
 // List tables
@@ -287,13 +287,13 @@ for (SQLSMALLINT i = 1; i <= columnCount; i++) {
 }
 ```
 
-## Ignite-Specific Behavior
+## Ignite 고유 동작 {#ignite-specific-behavior}
 
-### Type Mapping
+### 타입 매핑 {#type-mapping}
 
-ODBC SQL types map to C types:
+ODBC SQL 타입은 C 타입으로 매핑됩니다.
 
-| SQL Type | ODBC SQL Type | C Type |
+| SQL 타입 | ODBC SQL 타입 | C 타입 |
 |----------|---------------|--------|
 | BOOLEAN | SQL_BIT | SQL_C_BIT |
 | TINYINT | SQL_TINYINT | SQL_C_STINYINT |
@@ -313,15 +313,15 @@ ODBC SQL types map to C types:
 | VARBINARY | SQL_VARBINARY | SQL_C_BINARY |
 | UUID | SQL_GUID | SQL_C_GUID |
 
-### Result Set Characteristics
+### 결과 집합 특성 {#result-set-characteristics}
 
-- **Cursor Type**: Forward-only (SQL_CURSOR_FORWARD_ONLY)
-- **Concurrency**: Read-only
-- **Scrollable**: No (cursor moves forward only)
+- **커서 유형**: 앞으로만 이동(SQL_CURSOR_FORWARD_ONLY)
+- **동시성**: 읽기 전용
+- **스크롤 가능 여부**: 불가(커서가 앞으로만 이동)
 
-### Pagination
+### 페이지네이션 {#pagination}
 
-The driver fetches results in pages. Configure page size for performance:
+드라이버는 결과를 페이지 단위로 가져옵니다. 성능을 위해 페이지 크기를 구성하세요.
 
 ```c
 // Set page size before executing query
@@ -329,11 +329,11 @@ SQLUINTEGER pageSize = 2048;
 SQLSetStmtAttr(stmt, SQL_ATTR_ROW_ARRAY_SIZE, (SQLPOINTER)pageSize, 0);
 ```
 
-Default page size: 1024 rows.
+기본 페이지 크기: 1024행.
 
-### Connection Timeout
+### 연결 타임아웃 {#connection-timeout}
 
-Set connection timeout during allocation:
+핸들 할당 단계에서 연결 타임아웃을 설정합니다.
 
 ```c
 // Set 5-second connection timeout
@@ -341,9 +341,9 @@ SQLINTEGER timeout = 5;
 SQLSetConnectAttr(dbc, SQL_ATTR_CONNECTION_TIMEOUT, (SQLPOINTER)timeout, 0);
 ```
 
-### Query Timeout
+### 쿼리 타임아웃 {#query-timeout}
 
-Set query timeout on statement:
+문에 쿼리 타임아웃을 설정합니다.
 
 ```c
 // Set 30-second query timeout
@@ -351,7 +351,7 @@ SQLINTEGER timeout = 30;
 SQLSetStmtAttr(stmt, SQL_ATTR_QUERY_TIMEOUT, (SQLPOINTER)timeout, 0);
 ```
 
-## Connection String Examples
+## 연결 문자열 예시 {#connection-string-examples}
 
 ```
 # Basic
@@ -373,50 +373,50 @@ DRIVER={Apache Ignite 3};ADDRESS=node1:10800,node2:10800,node3:10800
 DRIVER={Apache Ignite 3};ADDRESS=node1:10800,node2:10800;SCHEMA=mySchema;IDENTITY=admin;SECRET=password;PAGE_SIZE=2048;SSL_MODE=require;SSL_CERT_FILE=/opt/certs/client.pem;SSL_KEY_FILE=/opt/certs/client-key.pem;SSL_CA_FILE=/opt/certs/ca.pem
 ```
 
-## Reference
+## 참조 {#reference}
 
-### ODBC Compliance
+### ODBC 준수 {#odbc-compliance}
 
-- ODBC 3.8 specification compliant
-- Core functions implemented (Level 1)
-- Supports SQLConnect, SQLDriverConnect, SQLExecDirect, SQLPrepare, SQLExecute
-- Supports SQLBindCol, SQLBindParameter, SQLFetch
-- Supports SQLGetInfo, SQLGetDiagRec for diagnostics
-- Implements metadata functions: SQLTables, SQLColumns, SQLPrimaryKeys
+- ODBC 3.8 사양 준수
+- 핵심 함수 구현(레벨 1)
+- SQLConnect, SQLDriverConnect, SQLExecDirect, SQLPrepare, SQLExecute 지원
+- SQLBindCol, SQLBindParameter, SQLFetch 지원
+- 진단을 위한 SQLGetInfo, SQLGetDiagRec 지원
+- 메타데이터 함수 구현: SQLTables, SQLColumns, SQLPrimaryKeys
 
-### Supported ODBC Functions
+### 지원하는 ODBC 함수 {#supported-odbc-functions}
 
-**Connection Management**:
+**연결 관리**:
 - SQLAllocHandle, SQLFreeHandle
 - SQLConnect, SQLDriverConnect, SQLDisconnect
 
-**Statement Management**:
+**문 관리**:
 - SQLAllocStmt, SQLFreeStmt
 - SQLPrepare, SQLExecute, SQLExecDirect
 - SQLCloseCursor
 
-**Result Handling**:
+**결과 처리**:
 - SQLBindCol, SQLFetch
 - SQLRowCount
 - SQLDescribeCol, SQLNumResultCols
 
-**Parameter Binding**:
+**매개변수 바인딩**:
 - SQLBindParameter
 - SQLNumParams
 
-**Transaction Control**:
-- SQLEndTran (commit/rollback)
-- SQLSetConnectAttr (auto-commit mode)
+**트랜잭션 제어**:
+- SQLEndTran (커밋/롤백)
+- SQLSetConnectAttr (자동 커밋 모드)
 
-**Metadata**:
+**메타데이터**:
 - SQLTables, SQLColumns
 - SQLPrimaryKeys, SQLForeignKeys
 - SQLGetInfo, SQLGetTypeInfo
 
-### Limitations
+### 제한 사항 {#limitations}
 
-- Scrollable cursors not supported (forward-only only)
-- Positioned updates/deletes not supported (read-only results)
-- Asynchronous execution not supported
-- Bookmarks not supported
-- Multiple active statements require multiple statement handles
+- 스크롤 가능 커서 미지원(앞으로만 이동)
+- 위치 지정 업데이트/삭제 미지원(읽기 전용 결과)
+- 비동기 실행 미지원
+- 북마크 미지원
+- 여러 활성 문에는 여러 문 핸들이 필요함

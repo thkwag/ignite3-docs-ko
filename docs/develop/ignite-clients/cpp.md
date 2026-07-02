@@ -1,29 +1,29 @@
 ---
 id: cpp-client
-title: C++ Client
+title: C++ 클라이언트
 sidebar_position: 3
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Ignite 3 clients connect to the cluster via a standard socket connection. Unlike Ignite 2.x, there is no separate Thin and Thick clients in Ignite 3. All clients are 'thin'.
+Ignite 3 클라이언트는 표준 소켓 연결로 클러스터에 연결합니다. Ignite 2.x와 달리 Ignite 3에는 씬 클라이언트(thin client)와 씩 클라이언트(thick client)의 구분이 없으며, 모든 클라이언트가 씬 클라이언트입니다.
 
-Clients do not become a part of the cluster topology, never hold any data, and are not used as a destination for compute calculations.
+클라이언트는 클러스터 토폴로지에 합류하지 않고, 데이터를 전혀 보유하지 않으며, 컴퓨트 연산의 대상으로도 사용되지 않습니다.
 
-## Getting Started
+## 시작하기 {#getting-started}
 
-### Prerequisites
+### 사전 요구 사항 {#prerequisites}
 
-To run C++ client, you need a C++ build environment to run the `cmake` command:
+C++ 클라이언트를 실행하려면 `cmake` 명령어를 실행할 수 있는 C++ 빌드 환경이 필요합니다:
 
-- C++ compiler supporting C++ 17
-- CMake 3.10+
-- One of build systems: make, ninja, MS Visual Studio, or other
+- C++ 17을 지원하는 C++ 컴파일러
+- CMake 3.10 이상
+- 빌드 시스템 중 하나: make, ninja, MS Visual Studio 등
 
-### Installation {#build-ref}
+### 설치 {#build-ref}
 
-The source code of the C++ client comes with the Ignite 3 distribution. To build it, use the following commands:
+C++ 클라이언트의 소스 코드는 Ignite 3 배포판에 포함되어 있습니다. 빌드하려면 다음 명령어를 사용하세요:
 
 <Tabs groupId="os">
 <TabItem value="windows" label="Windows">
@@ -58,30 +58,30 @@ cmake --build . -j8
 </TabItem>
 </Tabs>
 
-### Building C++ Client on CentOS 7 and RHEL 7
+### CentOS 7 및 RHEL 7에서 C++ 클라이언트 빌드하기 {#building-c-client-on-centos-7-and-rhel-7}
 
-If you are running on older systems, you need to set up the environment in the following way:
+구형 시스템에서 실행 중이라면 다음과 같이 환경을 구성해야 합니다:
 
-1. Install `epel-release` and `centos-release-scl`:
+1. `epel-release`와 `centos-release-scl`을 설치합니다:
 
 ```bash
 yum install epel-release centos-release-scl
 ```
 
-2. Update yum and accept `epel-release` keys:
+2. yum을 업데이트하고 `epel-release` 키를 승인합니다:
 
 ```bash
 yum update
 ```
 
-3. Install the build tools from the main repository and `devtoolset-11`:
+3. 메인 저장소에서 빌드 도구와 `devtoolset-11`을 설치합니다:
 
 ```bash
 yum install devtoolset-11-gcc devtoolset-11-gcc-c++ cmake3 git java-11-openjdk-devel gtest-devel gmock-devel
 ```
 
-4. Create and update alternatives for `cmake` to force the use of `cmake3`:
-   - Create an alternative for `cmake2` with priority 10:
+4. `cmake3`을 사용하도록 `cmake`의 alternatives를 만들고 업데이트합니다:
+   - 우선순위 10으로 `cmake2` alternative를 만듭니다:
 
 ```bash
 sudo alternatives --install /usr/local/bin/cmake cmake /usr/bin/cmake 10 \
@@ -91,7 +91,7 @@ sudo alternatives --install /usr/local/bin/cmake cmake /usr/bin/cmake 10 \
 --family cmake
 ```
 
-   - Create an alternative for `cmake3` with priority 20:
+   - 우선순위 20으로 `cmake3` alternative를 만듭니다:
 
 ```bash
 sudo alternatives --install /usr/local/bin/cmake cmake /usr/bin/cmake3 20 \
@@ -101,28 +101,28 @@ sudo alternatives --install /usr/local/bin/cmake cmake /usr/bin/cmake3 20 \
 --family cmake
 ```
 
-   - Check that the default alternative points to `cmake3`:
+   - 기본 alternative가 `cmake3`을 가리키는지 확인합니다:
 
 ```bash
 sudo alternatives --config cmake
 ```
 
-5. Enable the `devtoolset-11` compiler and start bash with the updated PATH:
+5. `devtoolset-11` 컴파일러를 활성화하고 업데이트된 PATH로 bash를 시작합니다:
 
 ```bash
 scl enable devtoolset-11 bash
 ```
 
-6. Start the [build](#build-ref) in the shell you have established.
+6. 설정한 셸에서 [빌드](#build-ref)를 시작합니다.
 
-## Client Connector Configuration
+## 클라이언트 커넥터 구성 {#client-connector-configuration}
 
-Client connection parameters are controlled by the client connector configuration. By default, Ignite accepts client connections on port 10800. You can change the configuration for the node by using the [CLI tool](/tools/cli-commands) at any time.
+클라이언트 연결 매개변수는 클라이언트 커넥터 구성으로 제어합니다. 기본적으로 Ignite는 10800 포트에서 클라이언트 연결을 받습니다. 노드 구성은 언제든지 [CLI 도구](/tools/cli-commands)로 변경할 수 있습니다.
 
-Here is how the client connector configuration looks like in the JSON format.
+JSON 형식의 클라이언트 커넥터 구성은 다음과 같습니다.
 
 :::note
-In Ignite 3, you can create and maintain the configuration in either JSON or HOCON format.
+Ignite 3에서는 JSON 또는 HOCON 형식으로 구성을 만들고 관리할 수 있습니다.
 :::
 
 ```json
@@ -147,34 +147,34 @@ In Ignite 3, you can create and maintain the configuration in either JSON or HOC
 }
 ```
 
-The table below covers the configuration for client connector:
+아래 표는 클라이언트 커넥터 구성을 설명합니다:
 
-| Property | Default | Description |
+| 속성 | 기본값 | 설명 |
 |----------|---------|-------------|
-| connectTimeoutMillis | 5000 | Connection attempt timeout, in milliseconds. |
-| idleTimeoutMillis | 0 | How long the client can be idle before the connection is dropped, in milliseconds. By default, there is no limit. |
-| metricsEnabled | `false` | Defines if client metrics are collected. |
-| port | 10800 | The port the client connector will be listening to. |
-| sendServerExceptionStackTraceToClient | `false` | Defines if cluster exceptions are sent to the client. |
-| ssl.ciphers | | The cipher used for SSL communication. |
-| ssl.clientAuth | | Type of client authentication used by clients. For more information, see [SSL/TLS](/configure-and-operate/configuration/config-ssl-tls). |
-| ssl.enabled | | Defines if SSL is enabled. |
-| ssl.keyStore.password | | SSL keystore password. |
-| ssl.keyStore.path | | Path to the SSL keystore. |
-| ssl.keyStore.type | `PKCS12` | The type of SSL keystore used. |
-| ssl.trustStore.password | | SSL keystore password. |
-| ssl.trustStore.path | | Path to the SSL keystore. |
-| ssl.trustStore.type | `PKCS12` | The type of SSL keystore used. |
+| connectTimeoutMillis | 5000 | 연결 시도 타임아웃(밀리초). |
+| idleTimeoutMillis | 0 | 연결이 끊기기 전까지 클라이언트가 유휴 상태로 있을 수 있는 시간(밀리초). 기본적으로 제한이 없습니다. |
+| metricsEnabled | `false` | 클라이언트 메트릭 수집 여부를 정의합니다. |
+| port | 10800 | 클라이언트 커넥터가 수신 대기할 포트. |
+| sendServerExceptionStackTraceToClient | `false` | 클러스터 예외를 클라이언트에 전송할지 정의합니다. |
+| ssl.ciphers | | SSL 통신에 사용하는 암호화 방식. |
+| ssl.clientAuth | | 클라이언트가 사용하는 클라이언트 인증 유형. 자세한 내용은 [SSL/TLS](/configure-and-operate/configuration/config-ssl-tls)를 참고하세요. |
+| ssl.enabled | | SSL 활성화 여부를 정의합니다. |
+| ssl.keyStore.password | | SSL 키스토어 비밀번호. |
+| ssl.keyStore.path | | SSL 키스토어 경로. |
+| ssl.keyStore.type | `PKCS12` | 사용하는 SSL 키스토어 유형. |
+| ssl.trustStore.password | | SSL 키스토어 비밀번호. |
+| ssl.trustStore.path | | SSL 키스토어 경로. |
+| ssl.trustStore.type | `PKCS12` | 사용하는 SSL 키스토어 유형. |
 
-Here is how you can change the parameters:
+매개변수는 다음과 같이 변경할 수 있습니다:
 
 ```
 node config update clientConnector.port=10469
 ```
 
-## Connecting to Cluster
+## 클러스터에 연결 {#connecting-to-cluster}
 
-To initialize a client, use the `IgniteClient` class, and provide it with the configuration:
+클라이언트를 초기화하려면 `IgniteClient` 클래스를 사용하고 구성 정보를 전달합니다:
 
 <Tabs groupId="languages">
 <TabItem value="cpp" label="C++">
@@ -189,9 +189,9 @@ auto client = ignite_client::start(cfg, std::chrono::seconds(5));
 </TabItem>
 </Tabs>
 
-## Authentication
+## 인증 {#authentication}
 
-To pass authentication information, pass it to `IgniteClient` builder:
+인증 정보를 전달하려면 `IgniteClient` 빌더에 전달합니다:
 
 <Tabs groupId="languages">
 <TabItem value="cpp" label="C++">
@@ -207,21 +207,21 @@ auto client = ignite_client::start(std::move(cfg), std::chrono::seconds(30));
 </TabItem>
 </Tabs>
 
-## User Object Serialization
+## 사용자 객체 직렬화 {#user-object-serialization}
 
-Ignite supports mapping user objects to table tuples. This ensures that objects created in any programming language can be used for key-value operations directly.
+Ignite는 사용자 객체를 테이블 튜플에 매핑하는 것을 지원합니다. 덕분에 어떤 프로그래밍 언어로 만든 객체든 키-값 작업에 직접 사용할 수 있습니다.
 
-### Limitations
+### 제한 사항 {#limitations}
 
-There are limitations to user types that can be used for such a mapping. Some limitations are common, and others are platform-specific due to the programming language used.
+이러한 매핑에 사용할 수 있는 사용자 타입에는 제한이 있습니다. 일부 제한은 공통이고, 일부는 사용하는 프로그래밍 언어에 따라 달라지는 플랫폼별 제한입니다.
 
-- Only flat field structure is supported, meaning no nesting user objects. This is because Ignite tables, and therefore tuples have flat structure themselves.
-- Fields should be mapped to Ignite types.
-- All fields in user type should either be mapped to Table column or explicitly excluded.
-- All columns from Table should be mapped to some field in the user type.
-- *C++ only*: User has to provide marshalling functions explicitly as there is no reflection to generate them based on user type structure.
+- 평면 필드 구조만 지원합니다. 즉, 사용자 객체를 중첩할 수 없습니다. Ignite 테이블, 그리고 그에 따른 튜플 자체가 평면 구조이기 때문입니다.
+- 필드는 Ignite 타입에 매핑해야 합니다.
+- 사용자 타입의 모든 필드는 테이블 컬럼에 매핑하거나 명시적으로 제외해야 합니다.
+- 테이블의 모든 컬럼은 사용자 타입의 어떤 필드에 매핑해야 합니다.
+- *C++ 전용*: 사용자 타입 구조로부터 마샬링 함수를 생성하는 리플렉션이 없으므로, 사용자가 마샬링 함수를 명시적으로 제공해야 합니다.
 
-### Usage Examples
+### 사용 예시 {#usage-examples}
 
 <Tabs groupId="languages">
 <TabItem value="cpp" label="C++">
@@ -268,9 +268,9 @@ namespace ignite {
 </TabItem>
 </Tabs>
 
-## SQL API
+## SQL API {#sql-api}
 
-Ignite 3 is focused on SQL, and SQL API is the primary way to work with the data. You can read more about supported SQL statements in the [SQL Reference](/sql/reference/language-definition/ddl) section. Here is how you can send SQL requests:
+Ignite 3는 SQL 중심으로 설계되었으며, SQL API가 데이터를 다루는 기본 방법입니다. 지원하는 SQL 문에 대한 자세한 내용은 [SQL 참조](/sql/reference/language-definition/ddl) 섹션에서 확인할 수 있습니다. SQL 요청은 다음과 같이 보낼 수 있습니다:
 
 <Tabs groupId="languages">
 <TabItem value="cpp" label="C++">
@@ -284,9 +284,9 @@ ignite_tuple& row = page.front();
 </TabItem>
 </Tabs>
 
-### SQL Scripts
+### SQL 스크립트 {#sql-scripts}
 
-The default API executes SQL statements one at a time. If you want to execute large SQL statements, pass them to the `executeScript()` method. These statements will be executed in order.
+기본 API는 SQL 문을 한 번에 하나씩 실행합니다. 큰 SQL 문을 실행하려면 `executeScript()` 메서드에 전달하세요. 이렇게 전달한 문은 순서대로 실행됩니다.
 
 <Tabs groupId="languages">
 <TabItem value="cpp" label="C++">
@@ -303,14 +303,14 @@ client.get_sql().execute_script(script);
 </Tabs>
 
 :::note
-Execution of each statement is considered complete when the first page is ready to be returned. As a result, when working with large data sets, SELECT statement may be affected by later statements in the same script.
+각 문의 실행은 첫 페이지를 반환할 준비가 되면 완료된 것으로 간주합니다. 따라서 큰 데이터 집합을 다룰 때는 같은 스크립트 내 뒤쪽 문이 SELECT 문에 영향을 줄 수 있습니다.
 :::
 
-## Transactions
+## 트랜잭션 {#transactions}
 
-All table operations in Ignite 3 are transactional. You can provide an explicit transaction as a first argument of any Table and SQL API call. If you do not provide an explicit transaction, an implicit one will be created for every call.
+Ignite 3의 모든 테이블 작업은 트랜잭션으로 처리됩니다. 모든 Table API와 SQL API 호출의 첫 번째 인수로 명시적 트랜잭션을 전달할 수 있습니다. 명시적 트랜잭션을 전달하지 않으면 호출마다 암시적 트랜잭션이 생성됩니다.
 
-Here is how you can provide a transaction explicitly:
+트랜잭션은 다음과 같이 명시적으로 전달할 수 있습니다:
 
 <Tabs groupId="languages">
 <TabItem value="cpp" label="C++">
@@ -337,15 +337,15 @@ assert(accounts.get(&tx, {42})->balance == 16'000);
 </TabItem>
 </Tabs>
 
-## Table API
+## Table API {#table-api}
 
-To execute table operations on a specific table, you need to get a specific view of the table and use one of its methods. You can only create new tables by using SQL API.
+특정 테이블에서 테이블 작업을 실행하려면 해당 테이블의 특정 뷰를 가져와 그 메서드 중 하나를 사용합니다. 새 테이블은 SQL API로만 만들 수 있습니다.
 
-When working with tables, you can use built-in Tuple type, which is a set of key-value pairs underneath, or map the data to your own types for a strongly-typed access. Here is how you can work with tables:
+테이블을 다룰 때는 내부적으로 키-값 쌍의 집합인 내장 Tuple 타입을 사용하거나, 타입 지정 접근을 위해 데이터를 직접 정의한 타입에 매핑할 수 있습니다. 테이블은 다음과 같이 다룹니다:
 
-### Getting a Table Instance
+### 테이블 인스턴스 가져오기 {#getting-a-table-instance}
 
-First, get an instance of the table. To obtain an instance of table, use the `IgniteTables.table(String)` method. You can also use `IgniteTables.tables()` method to list all existing tables.
+먼저 테이블 인스턴스를 가져옵니다. 테이블 인스턴스를 얻으려면 `IgniteTables.table(String)` 메서드를 사용합니다. `IgniteTables.tables()` 메서드로 기존 테이블을 모두 나열할 수도 있습니다.
 
 <Tabs groupId="languages">
 <TabItem value="cpp" label="C++">
@@ -363,13 +363,13 @@ std::optional<table> my_table = table_api.get_table("MY_TABLE");
 </TabItem>
 </Tabs>
 
-### Basic Table Operations
+### 기본 테이블 작업 {#basic-table-operations}
 
-Once you've got a table you need to get a specific view to choose how you want to operate table records.
+테이블을 가져왔으면 테이블 레코드를 어떻게 다룰지 선택할 수 있도록 특정 뷰를 가져와야 합니다.
 
-#### Binary Record View
+#### 바이너리 레코드 뷰 {#binary-record-view}
 
-A binary record view. It can be used to operate table tuples directly.
+바이너리 레코드 뷰입니다. 테이블 튜플을 직접 다루는 데 사용합니다.
 
 <Tabs groupId="languages">
 <TabItem value="cpp" label="C++">
@@ -394,9 +394,9 @@ assert(res_record->get<std::string>("name") == "John Doe");
 </TabItem>
 </Tabs>
 
-#### Record View
+#### 레코드 뷰 {#record-view}
 
-A record view mapped to a user type. It can be used to operate table using user objects which are mapped to table tuples.
+사용자 타입에 매핑된 레코드 뷰입니다. 테이블 튜플에 매핑된 사용자 객체로 테이블을 다루는 데 사용합니다.
 
 <Tabs groupId="languages">
 <TabItem value="cpp" label="C++">
@@ -417,9 +417,9 @@ assert(res->name == "John Doe");
 </TabItem>
 </Tabs>
 
-#### Key-Value Binary View
+#### 키-값 바이너리 뷰 {#key-value-binary-view}
 
-A binary key-value view. It can be used to operate table using key and value tuples separately.
+바이너리 키-값 뷰입니다. 키 튜플과 값 튜플을 분리해 테이블을 다루는 데 사용합니다.
 
 <Tabs groupId="languages">
 <TabItem value="cpp" label="C++">
@@ -442,9 +442,9 @@ assert(res_tuple->get<std::string>("name") == "John Doe");
 </TabItem>
 </Tabs>
 
-#### Key-Value View
+#### 키-값 뷰 {#key-value-view}
 
-A key-value view with user objects. It can be used to operate table using key and value user objects mapped to table tuples.
+사용자 객체를 사용하는 키-값 뷰입니다. 테이블 튜플에 매핑된 키 사용자 객체와 값 사용자 객체로 테이블을 다루는 데 사용합니다.
 
 <Tabs groupId="languages">
 <TabItem value="cpp" label="C++">

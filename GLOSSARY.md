@@ -54,6 +54,7 @@
 | distributed computing | 분산 컴퓨트 | 디스트리뷰티드 컴퓨팅, 분산 컴퓨팅 | Ignite의 컴퓨트 서브시스템을 가리키는 소개문·링크 텍스트·섹션 제목. compute job(컴퓨트 작업)과 같은 맥락에서 "컴퓨트"를 유지한다 |
 | broadcast | 브로드캐스트 | 브로드 캐스트, 방송 | 작업을 여러 노드에 동시에 전송하는 컴퓨트 실행 방식. `BroadcastJobTarget` 등 코드 식별자는 원문 유지 |
 | coordinator node | 코디네이터 노드 | 조정자 노드 | |
+| worker node | 워커 노드 | | Compute 작업이 실행되는 노드를 가리키는 일반 표현(장애 조치 등) |
 | deployment unit | 배포 단위 | 배포 유닛 | |
 | semantic version | 시맨틱 버전 | | semver.org 버전 규칙. 배포 단위 버전 디렉터리명 등에 쓰인다. 공식 semver.org 한국어판의 "유의적 버전" 대신 개발자에게 더 익숙한 "시맨틱 버전"을 표준으로 쓴다 |
 | data streamer | 데이터 스트리머 | | |
@@ -61,9 +62,17 @@
 | bulk loading | 대량 적재 | 벌크 로딩, 일괄 로딩 | Data Streamer API 등으로 대량 데이터를 한 번에 테이블에 적재하는 작업 |
 | reactive stream | 리액티브 스트림 | 반응형 스트림, 리액티브 스트림즈 | Reactive Streams 사양 기반 비동기 스트리밍 패턴 |
 | backpressure | 배압 | 백프레셔, 역압 | 빠른 생산자를 느린 소비자에 맞춰 늦추는 흐름 제어 메커니즘. `subscription.request(n)` 등 코드 요소는 원문 유지 |
+| publisher (Flow API) | 발행자 | 퍼블리셔 | Reactive Streams의 `Flow.Publisher` 역할을 가리키는 일반 명사. `Flow.Publisher`·`SubmissionPublisher` 등 코드 식별자는 원문 유지. demand-driven publisher → 수요 기반 발행자 |
+| subscriber (Flow API) | 구독자 | 서브스크라이버 | `Flow.Subscriber` 역할을 가리키는 일반 명사. 코드 식별자는 원문 유지. result subscriber → 결과 구독자, forwarding subscriber → 전달 구독자 |
+| subscription (Flow API) | 구독 | 서브스크립션 | `Flow.Subscription` 역할을 가리키는 일반 명사. 코드 식별자는 원문 유지 |
+| producer | 생산자 | 프로듀서 | backpressure(배압) 설명에서 subscriber/소비자와 짝을 이루는 데이터 발신 주체 |
+| enrichment | 보강 | 엔리치먼트 | Data Streamer receiver가 스트리밍 데이터를 가공·추가하는 것을 가리키는 표현 |
 | key-value | 키-값 | 키-밸류, 키밸류 | |
 | record view | 레코드 뷰 | | |
 | key-value view | 키-값 뷰 | | |
+| view (Table API 상위 개념) | 뷰 | | record view(레코드 뷰)·key-value view(키-값 뷰)를 아우르는 상위 개념을 가리킬 때 쓴다(예: "뷰 유형") |
+| typed access | 타입 지정 접근 | | POCO 등 정적 타입 객체로 테이블에 접근하는 방식. dynamic access(동적 접근, IIgniteTuple 등 스키마 없는 접근)와 짝을 이룬다. 같은 어근으로 "타입 지정 뷰"·"타입 지정 레코드 뷰"도 사용 |
+| untyped access | 타입 미지정 접근 | | 원문이 dynamic이 아닌 untyped를 쓰는 맥락에서 typed access(타입 지정 접근)와 짝을 이루는 표현 |
 | system view | 시스템 뷰 | 시스템 view | |
 | Deprecated (column/API status) | 지원 중단 | 폐기 예정, 사용 중단, 더 이상 지원되지 않음 | 시스템 뷰 컬럼·API의 지원 중단 표시 |
 | metric | 메트릭 | 매트릭, 지표 | |
@@ -82,9 +91,13 @@
 | leader | 리더 | 지도자 | RAFT·복제 그룹 맥락 |
 | follower | 팔로워 | 추종자, 팔로어 | RAFT·복제 그룹 맥락 |
 | predicate | 조건자 | 술어, 프레디킷 | |
+| qualified name | 정규화된 이름 | 정규 이름, 정규화 이름, 정규화된 명칭 | `QualifiedName`이 나타내는 스키마+테이블 형태의 이름. assembly-qualified name(어셈블리 정규화된 이름) 등에도 같은 어근 사용. 클래스명 `QualifiedName`은 원문 유지 |
+| Criteria (조건 빌더) | Criteria | | Criteria API 및 `Criteria` 클래스명과 일치시키기 위해 번역·음차하지 않고 원문 유지(예: "Criteria 쿼리") |
+| Condition (조건 팩토리 클래스) | Condition | | 조건 팩토리 클래스명은 원문 유지. 일반 명사로 조건을 가리킬 때는 "조건"(예: "컬럼 조건") |
 | fluent builder | 플루언트 빌더 | 유창한 빌더, 연쇄 빌더 | 메서드 체이닝으로 객체를 단계적으로 구성하는 빌더 패턴. Catalog API의 테이블 생성 빌더 등을 가리킨다 |
 | derived query | 파생 쿼리 | 유도 쿼리, 파생된 쿼리 | Spring Data에서 리포지토리 메서드명으로부터 자동 생성되는 쿼리 |
 | pagination | 페이지네이션 | 페이징, 페이지화 | 조회 결과를 페이지 단위로 나누는 기능(Spring Data 등) |
+| dialect (SQL dialect) | 방언 | 다이얼렉트 | Hibernate 등에서 정착된 DB 용어. "SQL 방언", "방언 공급자" 등으로 사용 |
 | bean | 빈 | | Spring/JMX의 bean 개념 |
 | programmatic | 프로그래밍 방식 | 프로그래매틱, 프로그램 방식 | 속성 기반 구성과 대비되는 코드 기반 구성을 가리키는 수식어 |
 | customization | 커스터마이징 | | Spring Boot 스타터의 프로그래밍 방식 설정 확장 기능을 가리키는 명사. 형용사 custom은 이 저장소에서 이미 "사용자 정의"로 쓰이고 있어(예: "사용자 정의 애노테이션") 그 표기를 금지하면 기존 번역과 충돌하므로 금지 표기를 두지 않는다(검수로 관리) |
@@ -94,6 +107,7 @@
 | low latency | 낮은 지연 | 저레이턴시 | |
 | high-throughput | 고처리량 | 높은 처리량, 하이스루풋 | throughput 단독은 "처리량" |
 | client connector | 클라이언트 커넥터 | | |
+| backlog | 백로그 | | 소켓 accept 대기열 크기를 가리키는 네트워크 설정 개념(`inbound.soBacklog` 등) |
 | typed access | 타입 지정 접근 | | POCO 등 정적 타입 객체로 테이블에 접근하는 방식. dynamic access(동적 접근, IIgniteTuple 등 스키마 없는 접근)와 짝을 이룬다 |
 | retry policy | 재시도 정책 | 리트라이 정책 | 실패한 클라이언트 작업의 재시도 여부를 결정하는 정책 |
 | embedded mode | 임베디드 모드 | 내장 모드 | |
@@ -124,6 +138,8 @@
 | query | 쿼리 | 질의 | |
 | map-reduce | 맵리듀스 | 맵-리듀스, 맵 리듀스 | 데이터 수집 단계를 여러 노드에 분산해 처리하는 연산 모델. MapReduce API 등 API·메서드명은 원문 유지 |
 | task (Compute API) | 태스크 | 맵리듀스 잡, 태스크들 | `MapReduceTask`가 여러 job을 조율하는 상위 실행 단위. job(작업)과 구분되는 Compute API 개념. `MapReduceTask`·`TaskDescriptor`·`TaskExecution` 등 코드 식별자는 원문 유지 |
+| job descriptor | 작업 디스크립터 | 잡 디스크립터, 작업 서술자, 작업 기술자 | Compute API에서 job의 실행 방식을 정의하는 `JobDescriptor` 개념. 첫 등장 시 "작업 디스크립터(job descriptor)" 병기. 클래스명 `JobDescriptor`는 원문 유지 |
+| execution handle | 실행 핸들 | 실행 핸들러 | 실행 중인 job·task를 제어·조회하는 핸들 객체(`JobExecution` 등). handler(핸들러)와 구분하기 위해 "핸들"로 옮긴다 |
 | Data receiver (compute job type) | 데이터 수신기 | | Data Streamer API 내부에서 쓰이는 `DATA_RECEIVER` 컴퓨트 작업 유형을 가리키는 이름 |
 | receiver (Data Streamer) | 수신기 | 리시버 | Data Streamer가 데이터를 변환·라우팅하도록 등록하는 서버 측 컴포넌트. `DataStreamerReceiver` 등 코드 식별자는 원문 유지 |
 | marshalling / unmarshalling | 마샬링 / 언마샬링 | | 직렬화 관련 Ignite 3 예외 카테고리(`IGN-MARSHALLING-*`)와 Compute API 인수·결과 직렬화에 쓰이는 개념어. marshaller(마샬러)가 이 과정을 수행하는 컴포넌트. `IMarshaller<T>`·`PayloadMarshaller`·`ArgumentMarshaller`·`ResultMarshaller` 등 코드 식별자는 원문 유지 |
@@ -132,6 +148,13 @@
 | parameterized statement | 매개변수화된 문 | 파라미터화된, 파라미터라이즈드, 매개변수 문 | 값 바인딩 여부보다 플레이스홀더 사용 자체를 가리키는 개념으로, prepared statement(준비된 문)와는 별개다. parameterized query(매개변수화된 쿼리)도 같은 패턴을 따른다 |
 | placeholder | 자리표시자 | 플레이스홀더 | SQL 매개변수 물음표(`?`) 자리표시자 |
 | result set | 결과 집합 | | SQL 쿼리 실행 결과로 반환되는 행의 집합 |
+| holdability | 유지성(holdability) | | 트랜잭션 커밋 이후에도 JDBC `ResultSet`이 열린 채 유지되는지를 가리키는 특성. 첫 등장 시 "유지성(holdability)" 병기 |
+| forward-only | 순방향 전용 | 포워드 온리 | 커서를 앞으로만 이동할 수 있는 JDBC/ODBC 결과 집합 접근 방식 |
+| fetch size | 페치 크기 | 가져오기 크기 | JDBC/ODBC/Python 드라이버가 한 번에 서버에서 가져오는 행 개수 단위(`setFetchSize` 등) |
+| fetch strategies | 페치 전략 | | Python DB-API의 `fetchone`/`fetchmany`/`fetchall` 등 결과 조회 방식을 가리키는 표현 |
+| iterator protocol | 이터레이터 프로토콜 | 반복자 프로토콜 | Python 커서를 순회하는 반복 프로토콜. Python 공식 한국어 문서 표기를 따른다 |
+| context manager | 컨텍스트 관리자 | 컨텍스트 매니저 | Python `with` 문이 사용하는 프로토콜. Python 공식 한국어 문서 표기를 따른다 |
+| lazy loading | 지연 로딩 | 레이지 로딩 | 필요 시점까지 데이터 로드를 미루는 방식. 기존 lazy materialization(지연 구체화)과 어근을 통일 |
 | materialization | 구체화 | 머티리얼라이제이션, 실체화 | 지연 실행된 쿼리 결과를 실제 객체·컬렉션으로 만드는 과정(LINQ 등). materialized view(구체화된 뷰) 등 기존 DB 용어 관례와 일치. lazy materialization → 지연 구체화 |
 | data definition language | 데이터 정의어 | 데이터 정의 언어, 데이터 정의언어 | DDL의 정식 명칭. 약어 DDL은 원문 유지 |
 | data manipulation language | 데이터 조작어 | 데이터 조작 언어, 데이터 조작언어 | DML의 정식 명칭. 약어 DML은 원문 유지 |
@@ -169,7 +192,7 @@
 | subquery | 서브쿼리 | 서브 쿼리, 하위 쿼리, 하위쿼리 | |
 | correlated subquery | 상관 서브쿼리 | 상관관계 서브쿼리, 연관 서브쿼리, 코릴레이티드 서브쿼리 | 외부 쿼리의 값에 의존해 매 행마다 재평가되는 서브쿼리 |
 | cartesian product | 카티션 곱 | 데카르트 곱, 카테시안 곱 | 조인 조건 없이 두 테이블의 모든 행 조합을 만드는 연산 |
-| batch, batching | 일괄 처리 | | 여러 요청을 모아 한 번에 처리하는 것. "배치"는 placement driver 등 배치(placement)와 겹쳐 혼동을 줄 수 있어 사용하지 않는다 |
+| batch, batching | 일괄 처리 | | 여러 요청을 모아 한 번에 처리하는 것을 가리키는 동사·동명사. "배치"는 placement driver 등 배치(placement)와 겹쳐 혼동을 줄 수 있어 사용하지 않는다. 개수를 세는 명사(예: "batches sent")는 "묶음"으로 옮긴다(예: "전송된 묶음 수") |
 | index | 인덱스 | 색인 | |
 | primary key | 기본 키 | 주 키, 프라이머리 키 | |
 | collation | 콜레이션 | 콜라레이션, 컬레이션 | 정렬 기본 키·인덱스의 정렬 규칙을 가리키는 SQL 개념어. EXPLAIN 연산자 속성 `collation`(정렬 연산자가 사용하는 정렬 키·순서 목록)은 이 개념과 달리 "정렬 기준"으로 옮긴다 |
@@ -199,6 +222,10 @@
 | interface | 인터페이스 | 인터훼이스 | |
 | facade | 퍼사드 | 파사드, 훼사드, 퍼싸드, 페이사드 | Ignite 클라이언트가 제공하는 진입점 인터페이스(IgniteSql, IgniteCompute, IgniteCatalog 등)를 가리키는 디자인 패턴 용어. 클래스명 자체는 원문 유지 |
 | annotation | 애노테이션 | 어노테이션, 애너테이션 | Java 클래스·필드에 붙는 메타데이터 표기. `@Table`, `@Id` 등 코드상 애노테이션 이름은 원문 유지 |
+| attribute (C#) | 특성 | 어트리뷰트 | `[Column]` 등 C# attribute. .NET 표준 용어를 따르며 property(속성)와 구분하기 위해 "특성"을 쓴다 |
+| enum (C#) | 열거형 | 이넘 | `JobStatus`·`ColumnType` 등 C# enum 타입을 가리키는 일반 명사 |
+| record (C# 타입 종류) | 레코드 | | `JobState`·`SqlStatement` 등 C# record 타입 종류를 가리킬 때 |
+| record struct (C#) | 레코드 구조체 | | `TransactionOptions` 등 C# record struct 타입 종류를 가리킬 때 |
 | best practices | 모범 사례 | 베스트 프랙티스 | |
 | prerequisites | 사전 요구 사항 | 전제 조건, 선행 조건, 사전 준비 사항 | 섹션 제목 관례 |
 | getting started | 시작하기 | | 섹션 제목 관례 |
@@ -240,6 +267,8 @@
 | dirty page | 더티 페이지 | 더러운 페이지, 오염 페이지 | 캐시에서 변경됐지만 아직 디스크에 기록되지 않은 페이지 |
 | evicted (page) | 축출된 | 추방된, 퇴거된 | 체크포인트·캐시에서 밀려난 페이지를 가리키는 표현. "제거된"은 다른 영어 원어(removed 등)의 번역과 겹쳐 오탐 위험이 있어 금지 표기에서 제외(검수로 관리) |
 | checkpoint buffer | 체크포인트 버퍼 | 체크포인팅 버퍼, 검사점 버퍼 | 체크포인트 진행 중 더티 페이지의 이전 상태를 보관하는 메모리 영역 |
+| jitter | 지터 | | 체크포인트 간격 등에 무작위로 더해지는 편차(`intervalDeviationPercent` 등) |
+| stripe | 스트라이프 | | RAFT 로그·Disruptor 등이 처리를 병렬화하기 위해 나누는 단위(`logStripesCount` 등). Disruptor는 라이브러리명으로 원문 유지 |
 | page cache | 페이지 캐시 | | 인메모리 페이지 캐시. cache는 캐시 |
 | compaction | 컴팩션 | 컴팩숀 | LSM 트리에서 SST 파일을 병합해 하위 레벨로 옮기는 백그라운드 프로세스. "압축"은 아카이브 압축(zip.md 등)과 겹쳐 금지 표기에서 제외(검수로 관리) |
 | write throttling | 쓰기 스로틀링 | 라이트 스로틀링, 쓰기 조절 | 체크포인트 버퍼 포화를 막기 위해 업데이트 속도를 늦추는 메커니즘. throttling 단독도 "스로틀링" |
@@ -254,6 +283,8 @@
 | non-heap memory | 논힙 메모리 | 비힙 메모리, 힙 외 메모리, 넌힙 메모리 | JVM 메모리 메트릭에서 heap과 대비되는 영역. off-heap memory(오프힙 메모리) 표기 관례를 따른다 |
 | volatile | 휘발성 | | 스토리지 지속성 구분(휘발성 vs 영속). non-volatile는 비휘발성 |
 | workload | 워크로드 | 작업 부하 | write-heavy workload → 쓰기 위주 워크로드 |
+| critical worker | 크리티컬 워커 | | 정지 시 노드에 장애로 간주되는 핵심 스레드(`system.criticalWorkers` 설정) |
+| liveness check | 활성 검사 | 라이브니스 체크 | critical worker(크리티컬 워커)의 생존 여부를 확인하는 절차 |
 | transaction coordinator | 트랜잭션 코디네이터 | 트랜잭션 조정자, 트랜잭션 조율자 | 트랜잭션을 시작한 노드가 맡는 역할. coordinator node(코디네이터 노드)와는 별개 표기 |
 | version storage | 버전 저장 | 버전 스토리지, 버전 저장소 | MVCC 버전 체인을 보관하는 영역. understand/core-concepts/data-partitioning.md의 "버전 저장" 절을 가리킨다 |
 | lifecycle | 라이프사이클 | 생명 주기, 생애 주기 | 클러스터·트랜잭션 등의 생성부터 종료까지의 흐름 |
@@ -301,6 +332,7 @@
 | Java, JavaScript, .NET, C++, Python, Spring Boot, Spring Data, LINQ | 언어·프레임워크명 |
 | Windows, Linux, macOS | 운영 체제명 |
 | RocksDB, aimem, aipersist | 스토리지 엔진 식별자 |
+| RAII | C++ 자원 관리 관용구 약어(Resource Acquisition Is Initialization). 음차·번역하지 않는다 |
 | Compute API, Table API, Key-Value API, Catalog API, Criteria API, Client API, Network API, Data Streamer API | API 고유 명칭. 일반 명사 맥락(예: "컴퓨트 작업")과 구분 |
 | RecordView, KeyValueView | Java `Table` API의 실제 클래스명. 코드와 동일한 표기를 프로즈에서도 유지("RecordView 패턴"). 일반 개념을 가리킬 때는 대역표의 record view(레코드 뷰)·key-value view(키-값 뷰) 사용 |
 | Query by Example, QBE | Spring Data 기능 고유명. 번역·음차하지 않는다 |
@@ -325,7 +357,7 @@
 | 당신 | (생략 또는 문맥 재구성) | 오류 | "you" 직역 |
 | 여러분 | (생략) | 오류 | "you" 직역 |
 | 우리는, 우리가, 저희 | (생략 또는 문맥 재구성) | 오류 | "we" 직역 |
-| 소비 | 사용, 사용량 | 오류 | "consume/consumption" 직역 |
+| /소비(?!자)/ | 사용, 사용량 | 오류 | "consume/consumption" 직역. "소비자"(consumer)는 예외로 허용(backpressure 등에서 사용) |
 | 방출 | 내보내기, 발생 | 오류 | "emit" 직역 |
 | 레버리지 | 활용 | 오류 | "leverage" 음차 |
 | 엔티티들, 노드들, 테이블들, 파티션들, 클러스터들, 컬럼들, 서버들, 클라이언트들 | 복수 접미사 제거 | 오류 | 복수형 "-들" 남발 |

@@ -6,17 +6,17 @@ sidebar_position: 4
 
 # Data Streamer API
 
-The Data Streamer API provides high-throughput data ingestion into Ignite tables. Applications stream data using reactive publishers that batch records for efficient network transmission and processing. This approach achieves higher performance than individual put operations.
+Data Streamer API는 Ignite 테이블에 고처리량 데이터 적재를 제공합니다. 애플리케이션은 리액티브 발행자로 데이터를 스트리밍하며, 이 발행자는 레코드를 일괄 처리해 네트워크 전송과 처리를 효율화합니다. 이 방식은 개별 put 작업보다 높은 성능을 냅니다.
 
-## Key Concepts
+## 핵심 개념 {#key-concepts}
 
-Data streaming uses the Java Flow API for backpressure-aware data delivery. Publishers produce items that contain operation types and payloads. The streamer batches items, sends them to appropriate nodes, and executes operations in parallel across partitions.
+데이터 스트리밍은 배압(backpressure)을 인식하는 데이터 전달을 위해 Java Flow API를 사용합니다. 발행자는 작업 유형과 페이로드를 담은 항목을 생성합니다. 스트리머는 항목을 일괄 처리해 적절한 노드로 보내고, 파티션 전반에서 작업을 병렬로 실행합니다.
 
-Both RecordView and KeyValueView implement DataStreamerTarget, enabling streaming to either view type. Configure streaming behavior through DataStreamerOptions to control batch sizes, parallelism, and retry behavior.
+RecordView와 KeyValueView는 모두 DataStreamerTarget을 구현하므로, 두 뷰 타입 어느 쪽으로든 스트리밍할 수 있습니다. 묶음 크기, 병렬성, 재시도 동작을 제어하려면 DataStreamerOptions로 스트리밍 동작을 구성합니다.
 
-## Basic Streaming
+## 기본 스트리밍 {#basic-streaming}
 
-Stream data using a Flow publisher:
+Flow 발행자로 데이터를 스트리밍합니다:
 
 ```java
 RecordView<Tuple> view = table.recordView();
@@ -44,11 +44,11 @@ publisher.close();
 future.join();
 ```
 
-The operation completes when all items are processed.
+모든 항목이 처리되면 작업이 완료됩니다.
 
-## Stream Options
+## 스트림 옵션 {#stream-options}
 
-Configure streaming behavior with options:
+옵션으로 스트리밍 동작을 구성합니다:
 
 ```java
 DataStreamerOptions options = DataStreamerOptions.builder()
@@ -61,11 +61,11 @@ DataStreamerOptions options = DataStreamerOptions.builder()
 CompletableFuture<Void> future = view.streamData(publisher, options);
 ```
 
-The pageSize parameter controls batch size. Higher values increase throughput but consume more memory. The perPartitionParallelOperations setting determines concurrent operations per partition.
+pageSize 매개변수는 묶음 크기를 제어합니다. 값이 클수록 처리량은 늘지만 메모리를 더 사용합니다. perPartitionParallelOperations 설정은 파티션당 동시 작업 수를 결정합니다.
 
-## Operation Types
+## 작업 유형 {#operation-types}
 
-Specify operation types for each item:
+각 항목의 작업 유형을 지정합니다:
 
 ```java
 List<DataStreamerItem<Tuple>> items = Arrays.asList(
@@ -86,13 +86,13 @@ List<DataStreamerItem<Tuple>> items = Arrays.asList(
 );
 ```
 
-Available operations:
-- PUT: Insert or update records (default when using `of()` method)
-- REMOVE: Remove records (use `removed()` method or explicit `DataStreamerOperationType.REMOVE`)
+사용 가능한 작업:
+- PUT: 레코드 삽입 또는 업데이트(`of()` 메서드 사용 시 기본값)
+- REMOVE: 레코드 제거(`removed()` 메서드 또는 명시적 `DataStreamerOperationType.REMOVE` 사용)
 
-## Custom Publishers
+## 사용자 정의 발행자 {#custom-publishers}
 
-Implement custom publishers for streaming from external sources:
+외부 소스에서 스트리밍하려면 사용자 정의 발행자를 구현합니다:
 
 ```java
 class FilePublisher implements Flow.Publisher<DataStreamerItem<Tuple>> {
@@ -146,11 +146,11 @@ class FilePublisher implements Flow.Publisher<DataStreamerItem<Tuple>> {
 }
 ```
 
-Publishers must respect backpressure signals to avoid overwhelming the system.
+발행자는 시스템에 과부하를 주지 않도록 배압 신호를 존중해야 합니다.
 
-## Receiver-Based Streaming
+## 수신기 기반 스트리밍 {#receiver-based-streaming}
 
-Execute custom processing logic on server nodes using receivers:
+수신기로 서버 노드에서 사용자 정의 처리 로직을 실행합니다:
 
 ```java
 class AggregationReceiver
@@ -185,7 +185,7 @@ class AggregationReceiver
 }
 ```
 
-Register and use the receiver:
+수신기를 등록하고 사용합니다:
 
 ```java
 DataStreamerReceiverDescriptor<Tuple, String, Integer> descriptor =
@@ -216,11 +216,11 @@ publisher.close();
 future.join();
 ```
 
-Receivers process batches on server nodes, enabling custom logic like aggregations or complex transformations.
+수신기는 서버 노드에서 묶음을 처리하므로, 집계나 복잡한 변환 같은 사용자 정의 로직을 수행할 수 있습니다.
 
-## Error Handling
+## 오류 처리 {#error-handling}
 
-Handle streaming errors through the returned future:
+반환된 future로 스트리밍 오류를 처리합니다:
 
 ```java
 CompletableFuture<Void> future = view.streamData(publisher, options);
@@ -233,11 +233,11 @@ future.exceptionally(ex -> {
 });
 ```
 
-Configure retry behavior through DataStreamerOptions.retryLimit to automatically retry failed batches.
+실패한 묶음을 자동으로 재시도하려면 DataStreamerOptions.retryLimit로 재시도 동작을 구성합니다.
 
-## Auto-Flush Interval
+## 자동 플러시 간격 {#auto-flush-interval}
 
-Configure periodic flushing for low-volume streams:
+적은 양의 스트림을 위해 주기적 플러시를 구성합니다:
 
 ```java
 DataStreamerOptions options = DataStreamerOptions.builder()
@@ -245,11 +245,11 @@ DataStreamerOptions options = DataStreamerOptions.builder()
     .build();
 ```
 
-The streamer flushes incomplete batches after the specified interval in milliseconds. This prevents data from remaining buffered indefinitely in low-throughput scenarios.
+스트리머는 지정한 간격(밀리초)이 지나면 완료되지 않은 묶음을 플러시합니다. 이렇게 하면 처리량이 적은 상황에서 데이터가 무기한 버퍼에 남아 있는 것을 막습니다.
 
-## Key-Value View Streaming
+## 키-값 뷰 스트리밍 {#key-value-view-streaming}
 
-Stream to key-value views using Entry payloads:
+Entry 페이로드로 키-값 뷰에 스트리밍합니다:
 
 ```java
 KeyValueView<Tuple, Tuple> kvView = table.keyValueView();
@@ -276,9 +276,9 @@ publisher.close();
 future.join();
 ```
 
-## Performance Considerations
+## 성능 고려 사항 {#performance-considerations}
 
-Optimize streaming throughput by tuning configuration:
+구성을 튜닝해 스트리밍 처리량을 최적화합니다:
 
 ```java
 DataStreamerOptions options = DataStreamerOptions.builder()
@@ -288,37 +288,37 @@ DataStreamerOptions options = DataStreamerOptions.builder()
     .build();
 ```
 
-Larger page sizes reduce per-batch overhead but increase memory usage. Higher parallelism improves throughput on multi-core systems but may cause resource contention.
+페이지 크기가 클수록 묶음당 오버헤드는 줄지만 메모리 사용량은 늘어납니다. 병렬성이 높으면 멀티코어 시스템에서 처리량이 향상되지만 리소스 경합이 생길 수 있습니다.
 
-## Reference
+## 참조 {#reference}
 
-- Streaming interface: `org.apache.ignite.table.DataStreamerTarget<T>`
-- Configuration: `org.apache.ignite.table.DataStreamerOptions`
-- Stream items: `org.apache.ignite.table.DataStreamerItem<T>`
-- Custom processing: `org.apache.ignite.table.DataStreamerReceiver<T, A, R>`
-- Receiver context: `org.apache.ignite.table.DataStreamerReceiverContext`
-- Receiver descriptor: `org.apache.ignite.table.DataStreamerReceiverDescriptor<T, A, R>`
+- 스트리밍 인터페이스: `org.apache.ignite.table.DataStreamerTarget<T>`
+- 구성: `org.apache.ignite.table.DataStreamerOptions`
+- 스트림 항목: `org.apache.ignite.table.DataStreamerItem<T>`
+- 사용자 정의 처리: `org.apache.ignite.table.DataStreamerReceiver<T, A, R>`
+- 수신기 컨텍스트: `org.apache.ignite.table.DataStreamerReceiverContext`
+- 수신기 디스크립터: `org.apache.ignite.table.DataStreamerReceiverDescriptor<T, A, R>`
 
-### DataStreamerTarget Methods
+### DataStreamerTarget 메서드 {#datastreamertarget-methods}
 
-- `CompletableFuture<Void> streamData(Publisher<DataStreamerItem<T>>, DataStreamerOptions)` - Stream data to table
-- `<E, V, A, R> CompletableFuture<Void> streamData(Publisher<E>, DataStreamerReceiverDescriptor<V, A, R>, Function<E, T>, Function<E, V>, A, Subscriber<R>, DataStreamerOptions)` - Stream with custom receiver
+- `CompletableFuture<Void> streamData(Publisher<DataStreamerItem<T>>, DataStreamerOptions)` - 테이블로 데이터 스트리밍
+- `<E, V, A, R> CompletableFuture<Void> streamData(Publisher<E>, DataStreamerReceiverDescriptor<V, A, R>, Function<E, T>, Function<E, V>, A, Subscriber<R>, DataStreamerOptions)` - 사용자 정의 수신기와 함께 스트리밍
 
-### DataStreamerOptions Configuration
+### DataStreamerOptions 구성 {#datastreameroptions-configuration}
 
-- `pageSize` - Number of items per batch (default: 1000)
-- `perPartitionParallelOperations` - Concurrent operations per partition (default: 1)
-- `autoFlushInterval` - Auto-flush interval in milliseconds (default: 5000)
-- `retryLimit` - Number of retry attempts for failed batches (default: 16)
+- `pageSize` - 묶음당 항목 수(기본값: 1000)
+- `perPartitionParallelOperations` - 파티션당 동시 작업 수(기본값: 1)
+- `autoFlushInterval` - 자동 플러시 간격(밀리초, 기본값: 5000)
+- `retryLimit` - 실패한 묶음의 재시도 횟수(기본값: 16)
 
-### DataStreamerItem Operations
+### DataStreamerItem 작업 {#datastreameritem-operations}
 
-- `PUT` - Insert or update record
-- `REMOVE` - Remove record
+- `PUT` - 레코드 삽입 또는 업데이트
+- `REMOVE` - 레코드 제거
 
-### DataStreamerReceiver Interface
+### DataStreamerReceiver 인터페이스 {#datastreamerreceiver-interface}
 
-- `CompletableFuture<List<R>> receive(List<T>, DataStreamerReceiverContext, A)` - Process batch on server
-- `Marshaller<T, byte[]> payloadMarshaller()` - Custom payload serialization
-- `Marshaller<A, byte[]> argumentMarshaller()` - Custom argument serialization
-- `Marshaller<R, byte[]> resultMarshaller()` - Custom result serialization
+- `CompletableFuture<List<R>> receive(List<T>, DataStreamerReceiverContext, A)` - 서버에서 묶음 처리
+- `Marshaller<T, byte[]> payloadMarshaller()` - 사용자 정의 페이로드 직렬화
+- `Marshaller<A, byte[]> argumentMarshaller()` - 사용자 정의 인수 직렬화
+- `Marshaller<R, byte[]> resultMarshaller()` - 사용자 정의 결과 직렬화

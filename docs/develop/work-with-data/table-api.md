@@ -3,45 +3,45 @@ id: table-api
 title: Table API
 ---
 
-To execute table operations on a specific table, you need to get a specific view of the table and use one of its methods. You can only create new tables by using SQL API.
+특정 테이블에서 테이블 작업을 실행하려면 해당 테이블의 특정 뷰를 가져와 그 메서드 중 하나를 사용해야 합니다. 새 테이블은 SQL API로만 생성할 수 있습니다.
 
-Apache Ignite supports mapping user objects to table tuples. This ensures that objects created in any programming language can be used for key-value operations directly.
+Apache Ignite는 사용자 객체를 테이블 튜플에 매핑하는 기능을 지원합니다. 덕분에 어떤 프로그래밍 언어로 생성한 객체든 키-값 작업에 직접 사용할 수 있습니다.
 
-## Table Views in Apache Ignite
+## Apache Ignite의 테이블 뷰 {#table-views-in-apache-ignite}
 
-### Tuple and Key-Value Views
+### 튜플 뷰와 키-값 뷰 {#tuple-and-key-value-views}
 
-When working with tables, Apache Ignite offers two approaches: directly handling the data or mapping the data to classes. The direct data handling approach handles data tuples. Alternatively, when mapping data to classes, the data is converted to and from these classes as needed for database interactions.
+테이블을 다룰 때 Apache Ignite는 두 가지 방식을 제공합니다. 데이터를 직접 다루거나, 데이터를 클래스에 매핑하는 방식입니다. 직접 다루는 방식은 데이터 튜플을 처리합니다. 클래스에 매핑하는 방식에서는 데이터베이스 상호작용에 필요할 때마다 데이터가 이 클래스로, 또는 클래스로부터 변환됩니다.
 
-### Record and Key-Value Views
+### 레코드 뷰와 키-값 뷰 {#record-and-key-value-views}
 
-When creating views, you can create a `RecordView` or `KeyValueView`. The primary difference between these view types is the API used.
+뷰를 생성할 때 `RecordView` 또는 `KeyValueView`를 만들 수 있습니다. 이 두 뷰 유형의 주요 차이는 사용하는 API입니다.
 
-In a RecordView, you create a single "record" that includes all the information about a row to be updated or retrieved from the table, and send this record to the server. This record should contain all the fields, including the primary key.
+RecordView에서는 테이블에서 수정하거나 조회할 행에 대한 모든 정보를 담은 단일 "레코드"를 만들어 서버로 보냅니다. 이 레코드에는 기본 키를 포함한 모든 필드가 들어 있어야 합니다.
 
-In a KeyValueView, you work with key-value mappings. Think of it as a dictionary where the key object contains the primary key field or fields, and the value object contains the data fields. This approach is useful when primary key is not directly related to the domain object thus you prefer not to add the primary key to it.
+KeyValueView에서는 키-값 매핑을 다룹니다. 키 객체가 기본 키 필드(하나 또는 여러 개)를 담고 값 객체가 데이터 필드를 담는 딕셔너리라고 생각하면 됩니다. 이 방식은 기본 키가 도메인 객체와 직접 관련이 없어 도메인 객체에 기본 키를 추가하지 않으려는 경우에 유용합니다.
 
-## Data Type Support
+## 데이터 타입 지원 {#data-type-support}
 
-### Time and Date Data Types
+### 시간 및 날짜 데이터 타입 {#time-and-date-data-types}
 
-Only JavaTime API is supported for working with table views. The following data types are not supported:
+테이블 뷰 작업에는 JavaTime API만 지원됩니다. 다음 데이터 타입은 지원되지 않습니다:
 
 - `java.util.Date`
 - `java.sql.Date`
 - `java.sql.Time`
 - `java.sql.Timestamp`
 
-Use the following data types instead:
+대신 다음 데이터 타입을 사용하세요:
 
 - `java.time.LocalDate`
 - `java.time.LocalTime`
 - `java.time.LocalDateTime`
 - `java.time.Instant`
 
-## Getting a Table Instance
+## 테이블 인스턴스 가져오기 {#getting-a-table-instance}
 
-First, get an instance of the table. To obtain an instance of table, use the `IgniteTables.table(String)` method. You can also use `IgniteTables.tables()` method to list all existing tables.
+먼저 테이블 인스턴스를 가져옵니다. 테이블 인스턴스를 얻으려면 `IgniteTables.table(String)` 메서드를 사용하세요. `IgniteTables.tables()` 메서드로 기존 테이블을 모두 나열할 수도 있습니다.
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -81,13 +81,13 @@ std::optional<table> my_table = table_api.get_table("MY_TABLE");
 </TabItem>
 </Tabs>
 
-By default, if the schema name is not specified, the `PUBLIC` schema is used. If a qualified name is specified, the table is taken from the specified schema.
+기본적으로 스키마 이름을 지정하지 않으면 `PUBLIC` 스키마가 사용됩니다. 정규화된 이름을 지정하면 지정한 스키마에서 테이블을 가져옵니다.
 
-### Qualified Table Name Object
+### 정규화된 테이블 이름 객체 {#qualified-table-name-object}
 
-Instead of using a string to specify table name, you can create a `QualifiedName` object to hold a fully qualified table name. Apache Ignite provides 2 methods for creating qualified names:
+테이블 이름을 문자열로 지정하는 대신, 정규화된 전체 테이블 이름을 담는 `QualifiedName` 객체를 생성할 수 있습니다. Apache Ignite는 정규화된 이름을 만드는 두 가지 메서드를 제공합니다:
 
-- You can parse the fully qualified table name with the `parse` method:
+- `parse` 메서드로 정규화된 전체 테이블 이름을 파싱할 수 있습니다:
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -100,7 +100,7 @@ Table myTable = tableApi.table(qualifiedTableName);
 </TabItem>
 </Tabs>
 
-- You can provide schema name and table name separately with the `of` method:
+- `of` 메서드로 스키마 이름과 테이블 이름을 따로 제공할 수 있습니다:
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -113,16 +113,16 @@ Table myTable = tableApi.table(qualifiedTableName);
 </TabItem>
 </Tabs>
 
-The provided names must follow SQL syntax rules for identifiers:
+제공하는 이름은 SQL의 식별자 구문 규칙을 따라야 합니다:
 
-- Identifier must start from a character in the "Lu", "Ll", "Lt", "Lm", "Lo", or "Nl" Unicode categories or `U+0331` (underscore);
-- Identifier characters (except for the first one) may be `U+00B7` (middle dot), or any character in the "Mn", "Mc", "Nd", "Pc", or "Cf" Unicode categories;
-- Identifiers that contain any other characters must be quoted with `U+2033` (double-quotes);
-- Double-quote inside the identifier must be escaped with 2 double-quote characters.
+- 식별자는 "Lu", "Ll", "Lt", "Lm", "Lo", "Nl" 유니코드 카테고리의 문자 또는 `U+0331`(밑줄)로 시작해야 합니다;
+- 식별자 문자(첫 번째 문자 제외)는 `U+00B7`(가운뎃점)이거나 "Mn", "Mc", "Nd", "Pc", "Cf" 유니코드 카테고리의 문자일 수 있습니다;
+- 그 밖의 문자를 포함하는 식별자는 `U+2033`(큰따옴표)으로 감싸야 합니다;
+- 식별자 안의 큰따옴표는 큰따옴표 2개로 이스케이프해야 합니다.
 
-Any unquoted names will be cast to upper case. In this case, `Person` and `PERSON` names are equivalent. To avoid this, add escaped quotes around the name. For example, `\"Person\"` will be encoded as a case-sensitive `Person` name. If the name contains the `U+2033` (double quote) symbol, it must be escaped as `""` (2 double quote symbols).
+따옴표로 감싸지 않은 이름은 모두 대문자로 변환됩니다. 이 경우 `Person`과 `PERSON` 이름은 동일합니다. 이를 피하려면 이름을 이스케이프한 따옴표로 감싸세요. 예를 들어 `\"Person\"`은 대소문자를 구분하는 `Person` 이름으로 인코딩됩니다. 이름에 `U+2033`(큰따옴표) 기호가 들어 있으면 `""`(큰따옴표 2개)로 이스케이프해야 합니다.
 
-For example:
+예를 들면 다음과 같습니다:
 
 ```
 // Case-insensitive table `MY_TABLE` in a case-insensitive `PUBLIC` schema.
@@ -141,13 +141,13 @@ QualifiedName.parse("\"my\"\"table\""));
 QualifiedName.parse("\"public.my_table\""));
 ```
 
-## Basic Table Operations
+## 기본 테이블 작업 {#basic-table-operations}
 
-Once you've got a table you need to get a specific view to choose how you want to operate table records.
+테이블을 가져왔다면, 테이블 레코드를 어떻게 다룰지 선택할 수 있도록 특정 뷰를 가져와야 합니다.
 
-### Tuple Record View
+### 튜플 레코드 뷰 {#tuple-record-view}
 
-A tuple record view can be used to operate on table tuples directly. When retrieving data from tuple views, you can use a wide variety of methods to retrieve type-specific data stored in tuples. A full list of methods is available in the Tuple object javadoc.
+튜플 레코드 뷰로 테이블 튜플을 직접 다룰 수 있습니다. 튜플 뷰에서 데이터를 조회할 때는 다양한 메서드를 사용해 튜플에 저장된 타입별 데이터를 가져올 수 있습니다. 전체 메서드 목록은 Tuple 객체 javadoc에 있습니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -224,11 +224,11 @@ assert(res_record->get<std::string>("name") == "John Doe");
 </TabItem>
 </Tabs>
 
-### Record View
+### 레코드 뷰 {#record-view}
 
-A record view maps to a user-defined type and enables table operations on user objects which are mapped to table tuples.
+레코드 뷰는 사용자 정의 타입에 매핑되며, 테이블 튜플에 매핑된 사용자 객체로 테이블 작업을 수행합니다.
 
-Create the type converter:
+타입 변환기를 생성하세요:
 
 ```java
 static class CityIdConverter implements TypeConverter<String, Integer> {
@@ -245,7 +245,7 @@ static class CityIdConverter implements TypeConverter<String, Integer> {
 }
 ```
 
-Then build the mapper and get the `RecordView`:
+그런 다음 매퍼를 빌드하고 `RecordView`를 가져오세요:
 
 ```java
 public static void main(String[] args) throws Exception {
@@ -270,7 +270,7 @@ public static void main(String[] args) throws Exception {
 }
 ```
 
-Perform table operations on your custom objects mapped to table tuples:
+테이블 튜플에 매핑된 사용자 정의 객체로 테이블 작업을 수행하세요:
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -336,9 +336,9 @@ assert(res->name == "John Doe");
 </TabItem>
 </Tabs>
 
-### Key-Value Tuple View
+### 키-값 튜플 뷰 {#key-value-tuple-view}
 
-A tuple key-value view. It can be used to operate table using key and value tuples separately. When retrieving data from tuple views, you can use a wide variety of methods to retrieve type-specific data stored in tuples. A full list of methods is available in the Tuple object javadoc.
+튜플 키-값 뷰입니다. 키 튜플과 값 튜플을 따로 사용해 테이블을 조작할 수 있습니다. 튜플 뷰에서 데이터를 조회할 때는 다양한 메서드를 사용해 튜플에 저장된 타입별 데이터를 가져올 수 있습니다. 전체 메서드 목록은 Tuple 객체 javadoc에 있습니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -408,9 +408,9 @@ assert(res_tuple->get<std::string>("name") == "John Doe");
 </Tabs>
 
 
-### Key-Value View
+### 키-값 뷰 {#key-value-view}
 
-A key-value view with user objects. It can be used to operate table using key and value user objects mapped to table tuples.
+사용자 객체를 사용하는 키-값 뷰입니다. 테이블 튜플에 매핑된 키·값 사용자 객체로 테이블을 조작할 수 있습니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -475,11 +475,11 @@ assert(res->name == "John Doe");
 </TabItem>
 </Tabs>
 
-## Criterion Queries
+## Criteria 쿼리 {#criterion-queries}
 
-Apache Ignite provides the criterion queries that can be used to retrieve data from tables. Criterion queries work with any type of view, returning the appropriate data to the query specified.
+Apache Ignite는 테이블에서 데이터를 조회하는 데 사용할 수 있는 Criteria 쿼리를 제공합니다. Criteria 쿼리는 모든 뷰 유형에서 동작하며, 지정한 쿼리에 맞는 데이터를 반환합니다.
 
-The example below shows how you can execute a query within an implicit transaction:
+아래 예시는 암시적 트랜잭션에서 쿼리를 실행하는 방법을 보여줍니다:
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -504,9 +504,9 @@ try (Cursor<Entry<Tuple, Tuple>> cursor = table.keyValueView().query(
 </TabItem>
 </Tabs>
 
-The comparison query are specified by using the `query()` method, and providing the comparison criteria in the `columnValue` method.
+비교 쿼리는 `query()` 메서드를 사용하고 `columnValue` 메서드에 비교 기준을 제공해 지정합니다.
 
-You can also specify the specific transaction to execute the query in to perform the query in that specific transaction.
+특정 트랜잭션을 지정해 그 트랜잭션에서 쿼리를 실행할 수도 있습니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -538,9 +538,9 @@ try (Cursor<Entry<Tuple, Tuple>> cursor = table.keyValueView().query(
 </TabItem>
 </Tabs>
 
-### Asynchronous Queries
+### 비동기 쿼리 {#asynchronous-queries}
 
-You can also perform the query asynchronously by using the `queryAsync` method. This way the query is executed without blocking the thread. For example, you can execute the above query asynchronously:
+`queryAsync` 메서드를 사용해 쿼리를 비동기로 실행할 수도 있습니다. 이렇게 하면 스레드를 차단하지 않고 쿼리가 실행됩니다. 예를 들어 위 쿼리를 비동기로 실행할 수 있습니다:
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -567,40 +567,40 @@ public static void performQueryAsync(Table table) {
 </TabItem>
 </Tabs>
 
-This operation uses the `thenCompose()` method to handle the query results asynchronously in the user-defined `fetchAllRowsInto()` method. Here is how this method may look like:
+이 작업은 `thenCompose()` 메서드를 사용해 사용자 정의 `fetchAllRowsInto()` 메서드에서 쿼리 결과를 비동기로 처리합니다. 이 메서드는 다음과 같은 형태일 수 있습니다:
 
 
-### Comparison Expressions
+### 비교 표현식 {#comparison-expressions}
 
-The following expressions are supported in criterion queries:
+Criteria 쿼리에서는 다음 표현식을 지원합니다:
 
-| Expression | Description | Example |
+| 표현식 | 설명 | 예시 |
 |------------|-------------|---------|
-| `equalTo` | Checks if the object is equal to the value. | `columnValue("City", equalTo("New York"))` |
-| `notEqualTo` | Checks if the object is not equal to the value. | `columnValue("City", notEqualTo("New York"))` |
-| `greaterThan` | Checks if the object is greater than the value. | `columnValue("Salary", greaterThan(10000))` |
-| `greaterThanOrEqualTo` | Checks if the object is greater than or equal to the value. | `columnValue("Salary", greaterThanOrEqualTo(10000))` |
-| `lessThan` | Checks if the object is less than the value. | `columnValue("Salary", lessThan(10000))` |
-| `lessThanOrEqualTo` | Checks if the object is less than or equal to the value. | `columnValue("Salary", lessThanOrEqualTo(10000))` |
-| `nullValue` | Checks if the object is null. | `columnValue("City", nullValue()` |
-| `notNullValue` | Checks if the object is not null. | `columnValue("City", notNullValue())` |
-| `in` | Checks if the object is in the collection. | `columnValue("City", in("New York", "Washington"))` |
-| `notIn` | Checks if the object is not in the collection. | `columnValue("City", notIn("New York", "Washington"))` |
+| `equalTo` | 객체가 값과 같은지 확인합니다. | `columnValue("City", equalTo("New York"))` |
+| `notEqualTo` | 객체가 값과 같지 않은지 확인합니다. | `columnValue("City", notEqualTo("New York"))` |
+| `greaterThan` | 객체가 값보다 큰지 확인합니다. | `columnValue("Salary", greaterThan(10000))` |
+| `greaterThanOrEqualTo` | 객체가 값보다 크거나 같은지 확인합니다. | `columnValue("Salary", greaterThanOrEqualTo(10000))` |
+| `lessThan` | 객체가 값보다 작은지 확인합니다. | `columnValue("Salary", lessThan(10000))` |
+| `lessThanOrEqualTo` | 객체가 값보다 작거나 같은지 확인합니다. | `columnValue("Salary", lessThanOrEqualTo(10000))` |
+| `nullValue` | 객체가 null인지 확인합니다. | `columnValue("City", nullValue()` |
+| `notNullValue` | 객체가 null이 아닌지 확인합니다. | `columnValue("City", notNullValue())` |
+| `in` | 객체가 컬렉션에 있는지 확인합니다. | `columnValue("City", in("New York", "Washington"))` |
+| `notIn` | 객체가 컬렉션에 없는지 확인합니다. | `columnValue("City", notIn("New York", "Washington"))` |
 
-### Comparison Operators
+### 비교 연산자 {#comparison-operators}
 
-The following operators are supported in criterion queries:
+Criteria 쿼리에서는 다음 연산자를 지원합니다:
 
-| Operator | Description | Example |
+| 연산자 | 설명 | 예시 |
 |----------|-------------|---------|
-| `not` | Negates the condition. | `not(columnValue("City", equalTo("New York")))` |
-| `and` | Used to evaluate multiple conditions at the same time. | `and(columnValue("City", equalTo("New York")), columnValue("Salary", greaterThan(10000)))` |
-| `or` | Used to evaluate for at least one matching condition. | `or(columnValue("City", equalTo("New York")), columnValue("Salary", greaterThan(10000)))` |
+| `not` | 조건을 부정합니다. | `not(columnValue("City", equalTo("New York")))` |
+| `and` | 여러 조건을 동시에 평가할 때 사용합니다. | `and(columnValue("City", equalTo("New York")), columnValue("Salary", greaterThan(10000)))` |
+| `or` | 하나 이상의 조건이 일치하는지 평가할 때 사용합니다. | `or(columnValue("City", equalTo("New York")), columnValue("Salary", greaterThan(10000)))` |
 
 
-## Partition API
+## 파티션 API {#partition-api}
 
-To retrieve a partition `id`, you need to pass the corresponding `key` value and use the following [method](https://ignite.apache.org/releases/ignite3/3.2.0/javadoc/org/apache/ignite/table/partition/PartitionDistribution.html#partition(org.apache.ignite.table.Tuple)):
+파티션 `id`를 가져오려면 해당 `key` 값을 전달하고 다음 [메서드](https://ignite.apache.org/releases/ignite3/3.2.0/javadoc/org/apache/ignite/table/partition/PartitionDistribution.html#partition(org.apache.ignite.table.Tuple))를 사용하세요:
 
 ```java
 Table table = client.tables().table("PUBLIC.Person");
@@ -614,11 +614,11 @@ Partition partition = table.partitionDistribution().partitionAsync(Tuple.create(
 long partitionId = partition.id();
 ```
 
-As `PartitionManager` API is now deprecated and will be removed in upcoming releases, use `PartitionDistribution` [API](https://ignite.apache.org/releases/ignite3/3.2.0/javadoc/org/apache/ignite/table/partition/PartitionDistribution.html#partition(org.apache.ignite.table.Tuple)) instead.
+`PartitionManager` API는 이제 지원 중단되었으며 향후 릴리스에서 제거될 예정이므로, 대신 `PartitionDistribution` [API](https://ignite.apache.org/releases/ignite3/3.2.0/javadoc/org/apache/ignite/table/partition/PartitionDistribution.html#partition(org.apache.ignite.table.Tuple))를 사용하세요.
 
 ```java
 Table table = client.tables().table(YOUR_TABLE_NAME);
 PartitionDistribution partDistribution = table.partitionDistribution();
 ```
 
-For more details on data partitioning, see the [data partitions article](/configure-and-operate/storage/data-partitioning).
+데이터 파티셔닝에 대한 자세한 내용은 [데이터 파티션 문서](/configure-and-operate/storage/data-partitioning)를 참고하세요.

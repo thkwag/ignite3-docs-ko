@@ -1,73 +1,73 @@
 ---
-title: JDBC Driver
+title: JDBC 드라이버
 id: jdbc
 sidebar_position: 1
 ---
 
-# JDBC Driver
+# JDBC 드라이버
 
-The Apache Ignite 3 JDBC driver implements JDBC 4.x standard for Java applications. It connects directly to cluster nodes using a thin client protocol and requires no server-side libraries.
+Apache Ignite 3 JDBC 드라이버는 Java 애플리케이션을 위해 JDBC 4.x 표준을 구현합니다. 씬 클라이언트(thin client) 프로토콜로 클러스터 노드에 직접 연결하며, 서버 측 라이브러리가 필요하지 않습니다.
 
-## Connection String Format
+## 연결 문자열 형식 {#connection-string-format}
 
 ```
 jdbc:ignite:thin://host[:port][,host[:port]][/schema][?param=value[&param=value]]
 ```
 
-The driver supports multiple host addresses for failover. When one node becomes unavailable, the driver automatically attempts to connect to the next address in the list.
+드라이버는 장애 조치(failover)를 위해 여러 호스트 주소를 지원합니다. 한 노드를 사용할 수 없게 되면 드라이버는 목록의 다음 주소로 자동으로 연결을 시도합니다.
 
-Default port: 10800
-Default schema: PUBLIC
+기본 포트: 10800
+기본 스키마: PUBLIC
 
-## Configuration Parameters
+## 구성 매개변수 {#configuration-parameters}
 
-### Connection Parameters
+### 연결 매개변수 {#connection-parameters}
 
-- `connectionTimeout` - Socket connection timeout in milliseconds (default: 0, no timeout)
-- `connectionTimeZone` - ZoneId string for timestamp conversions (default: system timezone)
-- `queryTimeout` - Default query timeout in seconds (default: no timeout)
+- `connectionTimeout` - 소켓 연결 타임아웃(밀리초 단위, 기본값: 0, 타임아웃 없음)
+- `connectionTimeZone` - 타임스탬프 변환에 사용할 ZoneId 문자열(기본값: 시스템 시간대)
+- `queryTimeout` - 기본 쿼리 타임아웃(초 단위, 기본값: 타임아웃 없음)
 
-### Authentication
+### 인증 {#authentication}
 
-Basic authentication uses username and password credentials:
+기본 인증(basic authentication)은 사용자 이름과 비밀번호 자격 증명을 사용합니다.
 
-- `username` - Authentication username
-- `password` - Authentication password
+- `username` - 인증 사용자 이름
+- `password` - 인증 비밀번호
 
-### SSL Configuration
+### SSL 구성 {#ssl-configuration}
 
-Enable SSL with certificate-based authentication:
+인증서 기반 인증으로 SSL을 활성화합니다.
 
-- `sslEnabled` - Set to `true` to enable SSL (default: `false`)
-- `trustStorePath` - Path to Java trust store file containing trusted certificates
-- `trustStorePassword` - Trust store password
-- `keyStorePath` - Path to Java key store file containing client private key and certificate
-- `keyStorePassword` - Key store password
-- `ciphers` - Comma-separated list of allowed cipher suites
+- `sslEnabled` - SSL을 활성화하려면 `true`로 설정(기본값: `false`)
+- `trustStorePath` - 신뢰할 인증서가 담긴 Java 트러스트스토어 파일 경로
+- `trustStorePassword` - 트러스트스토어 비밀번호
+- `keyStorePath` - 클라이언트 개인 키와 인증서가 담긴 Java 키스토어 파일 경로
+- `keyStorePassword` - 키스토어 비밀번호
+- `ciphers` - 허용할 암호화 방식(cipher) 목록(쉼표로 구분)
 
-### Schema Selection
+### 스키마 선택 {#schema-selection}
 
-- `schema` - Default schema for queries (default: `PUBLIC`)
+- `schema` - 쿼리에 사용할 기본 스키마(기본값: `PUBLIC`)
 
-## Parameter Precedence
+## 매개변수 우선순위 {#parameter-precedence}
 
-When the same parameter appears in multiple locations, the driver applies them in this order (highest to lowest):
+같은 매개변수가 여러 위치에 나타나면 드라이버는 다음 순서(높은 우선순위부터 낮은 순서)로 적용합니다.
 
-1. Connection object method calls (e.g., `setNetworkTimeout()`)
-2. Last occurrence in connection string
-3. Properties object passed to `DriverManager.getConnection()`
+1. Connection 객체 메서드 호출(예: `setNetworkTimeout()`)
+2. 연결 문자열의 마지막 항목
+3. `DriverManager.getConnection()`에 전달된 Properties 객체
 
-## Driver Registration
+## 드라이버 등록 {#driver-registration}
 
-The driver registers automatically using Java Service Provider Interface (SPI). Load it explicitly if needed:
+드라이버는 Java Service Provider Interface(SPI)를 사용해 자동으로 등록됩니다. 필요하면 명시적으로 로드하세요.
 
 ```java
 Class.forName("org.apache.ignite.jdbc.IgniteJdbcDriver");
 ```
 
-## Usage Examples
+## 사용 예시 {#usage-examples}
 
-### Basic Connection
+### 기본 연결 {#basic-connection}
 
 ```java
 import java.sql.Connection;
@@ -90,7 +90,7 @@ try (Connection conn = DriverManager.getConnection(url)) {
 }
 ```
 
-### Connection with Authentication
+### 인증을 사용한 연결 {#connection-with-authentication}
 
 ```java
 String url = "jdbc:ignite:thin://localhost:10800?username=admin&password=secret";
@@ -100,7 +100,7 @@ try (Connection conn = DriverManager.getConnection(url)) {
 }
 ```
 
-Alternative using Properties:
+Properties를 사용하는 대안:
 
 ```java
 String url = "jdbc:ignite:thin://localhost:10800";
@@ -113,7 +113,7 @@ try (Connection conn = DriverManager.getConnection(url, props)) {
 }
 ```
 
-### Connection with SSL
+### SSL을 사용한 연결 {#connection-with-ssl}
 
 ```java
 String url = "jdbc:ignite:thin://localhost:10800" +
@@ -128,7 +128,7 @@ try (Connection conn = DriverManager.getConnection(url)) {
 }
 ```
 
-### Multiple Node Addresses
+### 여러 노드 주소 {#multiple-node-addresses}
 
 ```java
 String url = "jdbc:ignite:thin://node1:10800,node2:10800,node3:10800/mySchema";
@@ -138,7 +138,7 @@ try (Connection conn = DriverManager.getConnection(url)) {
 }
 ```
 
-### Prepared Statements
+### 준비된 문 {#prepared-statements}
 
 ```java
 String sql = "INSERT INTO users (id, name, email) VALUES (?, ?, ?)";
@@ -154,7 +154,7 @@ try (Connection conn = DriverManager.getConnection(url);
 }
 ```
 
-### Batch Operations
+### 일괄 처리 작업 {#batch-operations}
 
 ```java
 String sql = "INSERT INTO users (id, name) VALUES (?, ?)";
@@ -175,7 +175,7 @@ try (Connection conn = DriverManager.getConnection(url);
 }
 ```
 
-### Transaction Control
+### 트랜잭션 제어 {#transaction-control}
 
 ```java
 try (Connection conn = DriverManager.getConnection(url)) {
@@ -193,7 +193,7 @@ try (Connection conn = DriverManager.getConnection(url)) {
 }
 ```
 
-### Query Timeout
+### 쿼리 타임아웃 {#query-timeout}
 
 ```java
 try (Connection conn = DriverManager.getConnection(url);
@@ -207,7 +207,7 @@ try (Connection conn = DriverManager.getConnection(url);
 }
 ```
 
-### Fetch Size Configuration
+### 페치 크기 구성 {#fetch-size-configuration}
 
 ```java
 try (Connection conn = DriverManager.getConnection(url);
@@ -223,13 +223,13 @@ try (Connection conn = DriverManager.getConnection(url);
 }
 ```
 
-## Ignite-Specific Behavior
+## Ignite 고유 동작 {#ignite-specific-behavior}
 
-### Type Mapping
+### 타입 매핑 {#type-mapping}
 
-The driver maps SQL types to Java types according to JDBC specification:
+드라이버는 JDBC 사양에 따라 SQL 타입을 Java 타입으로 매핑합니다.
 
-| SQL Type | Java Type |
+| SQL 타입 | Java 타입 |
 |----------|-----------|
 | BOOLEAN | boolean / Boolean |
 | TINYINT | byte / Byte |
@@ -249,23 +249,23 @@ The driver maps SQL types to Java types according to JDBC specification:
 | VARBINARY | byte[] |
 | UUID | java.util.UUID |
 
-### Result Set Characteristics
+### 결과 집합 특성 {#result-set-characteristics}
 
-- **Type**: `TYPE_FORWARD_ONLY` (cursor moves forward only)
-- **Concurrency**: `CONCUR_READ_ONLY` (results cannot be updated)
-- **Holdability**: Configurable via connection or statement
+- **유형**: `TYPE_FORWARD_ONLY`(커서가 앞으로만 이동)
+- **동시성**: `CONCUR_READ_ONLY`(결과를 업데이트할 수 없음)
+- **유지성(holdability)**: 연결이나 문 단위로 구성 가능
 
-### Pagination
+### 페이지네이션 {#pagination}
 
-The driver fetches results in pages (default: 1024 rows per page). For large result sets, increase fetch size to reduce network round trips:
+드라이버는 결과를 페이지 단위로 가져옵니다(기본값: 페이지당 1024행). 큰 결과 집합에서는 페치 크기를 늘려 네트워크 왕복을 줄이세요.
 
 ```java
 stmt.setFetchSize(4096);
 ```
 
-### Statement Cancellation
+### 문 취소 {#statement-cancellation}
 
-Cancel long-running queries from another thread:
+다른 스레드에서 오래 실행되는 쿼리를 취소합니다.
 
 ```java
 Statement stmt = conn.createStatement();
@@ -274,19 +274,19 @@ Statement stmt = conn.createStatement();
 stmt.cancel();
 ```
 
-The driver uses correlation tokens to identify and cancel specific queries.
+드라이버는 상관 토큰(correlation token)을 사용해 특정 쿼리를 식별하고 취소합니다.
 
-### Network Timeout
+### 네트워크 타임아웃 {#network-timeout}
 
-Set network-level timeout separately from query timeout:
+쿼리 타임아웃과 별개로 네트워크 수준 타임아웃을 설정합니다.
 
 ```java
 conn.setNetworkTimeout(executor, 5000); // 5 seconds
 ```
 
-Query timeout controls server-side execution time. Network timeout controls socket read/write operations.
+쿼리 타임아웃은 서버 측 실행 시간을 제어합니다. 네트워크 타임아웃은 소켓 읽기/쓰기 작업을 제어합니다.
 
-## Connection String Examples
+## 연결 문자열 예시 {#connection-string-examples}
 
 ```
 # Basic
@@ -308,22 +308,22 @@ jdbc:ignite:thin://node1:10800,node2:10800,node3:10800?connectionTimeout=5000&qu
 jdbc:ignite:thin://node1:10800,node2:10800/mySchema?username=admin&password=secret&sslEnabled=true&trustStorePath=/opt/certs/truststore.jks&trustStorePassword=changeit&keyStorePath=/opt/certs/keystore.jks&keyStorePassword=changeit&connectionTimeout=5000&queryTimeout=60
 ```
 
-## Reference
+## 참조 {#reference}
 
-### Driver Class
+### 드라이버 클래스 {#driver-class}
 
 `org.apache.ignite.jdbc.IgniteJdbcDriver`
 
-### JDBC Compliance
+### JDBC 준수 {#jdbc-compliance}
 
-- JDBC 4.x specification compliant
-- Supports `java.sql.Connection`, `Statement`, `PreparedStatement`, `ResultSet`
-- Implements `DatabaseMetaData` for schema discovery
-- Supports `ResultSetMetaData` for column information
+- JDBC 4.x 사양 준수
+- `java.sql.Connection`, `Statement`, `PreparedStatement`, `ResultSet` 지원
+- 스키마 검색을 위한 `DatabaseMetaData` 구현
+- 컬럼 정보를 위한 `ResultSetMetaData` 지원
 
-### Limitations
+### 제한 사항 {#limitations}
 
-- Result sets are forward-only (no scrolling)
-- Result sets are read-only (no updates via ResultSet API)
-- `CallableStatement` not supported (no stored procedures)
-- `lastRowid` always returns null (no auto-generated key tracking)
+- 결과 집합은 순방향 전용(스크롤 불가)
+- 결과 집합은 읽기 전용(ResultSet API로 업데이트 불가)
+- `CallableStatement` 미지원(저장 프로시저 없음)
+- `lastRowid`는 항상 null 반환(자동 생성 키 추적 없음)

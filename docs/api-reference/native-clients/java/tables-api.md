@@ -6,17 +6,17 @@ sidebar_position: 3
 
 # Tables API
 
-The Tables API provides structured access to data stored in Ignite tables. Applications interact with tables through views that offer different perspectives on the data: record views for full row operations and key-value views for key-based access patterns.
+Tables API는 Ignite 테이블에 저장된 데이터에 구조화된 접근을 제공합니다. 애플리케이션은 데이터를 서로 다른 관점으로 보여주는 뷰로 테이블과 상호작용합니다. 전체 행 작업에는 레코드 뷰(record view)를, 키 기반 접근 패턴에는 키-값 뷰(key-value view)를 사용합니다.
 
-## Key Concepts
+## 핵심 개념 {#key-concepts}
 
-Tables store data in rows with typed columns. The API provides three access patterns through views. RecordView treats each row as a complete record. KeyValueView separates rows into key and value portions. Both support binary Tuple access and typed object mapping.
+테이블은 타입이 지정된 컬럼을 가진 행에 데이터를 저장합니다. 이 API는 뷰로 세 가지 접근 패턴을 제공합니다. RecordView는 각 행을 완전한 레코드로 다룹니다. KeyValueView는 행을 키 부분과 값 부분으로 나눕니다. 둘 다 바이너리 Tuple 접근과 타입 지정 객체 매핑을 지원합니다.
 
-Operations execute within optional transaction contexts. Pass null for auto-commit behavior or provide a Transaction for multi-operation atomicity.
+작업은 선택적 트랜잭션 컨텍스트 안에서 실행됩니다. 자동 커밋 동작에는 null을 전달하고, 여러 작업에 걸친 원자성이 필요하면 Transaction을 전달합니다.
 
-## Table Discovery
+## 테이블 조회 {#table-discovery}
 
-Access tables through the tables manager:
+테이블 관리자로 테이블에 접근합니다:
 
 ```java
 Table users = ignite.tables().table("users");
@@ -25,13 +25,13 @@ if (users == null) {
 }
 ```
 
-For qualified names with schemas:
+스키마가 포함된 정규화된 이름(qualified name)의 경우:
 
 ```java
 Table products = ignite.tables().table(QualifiedName.of("inventory", "products"));
 ```
 
-List all tables asynchronously:
+모든 테이블을 비동기로 나열합니다:
 
 ```java
 CompletableFuture<List<Table>> tablesFuture = ignite.tables().tablesAsync();
@@ -42,9 +42,9 @@ tablesFuture.thenAccept(tables -> {
 });
 ```
 
-## Record View
+## 레코드 뷰 {#record-view}
 
-RecordView operations work with complete rows:
+RecordView 작업은 완전한 행을 다룹니다:
 
 ```java
 RecordView<Tuple> view = table.recordView();
@@ -68,11 +68,11 @@ boolean exists = view.contains(null, key);
 boolean deleted = view.delete(null, key);
 ```
 
-Pass null as the transaction parameter for operations outside transactions.
+트랜잭션 밖에서 작업하려면 트랜잭션 매개변수로 null을 전달합니다.
 
-## Typed Record View
+## 타입 지정 레코드 뷰 {#typed-record-view}
 
-Map rows to Java objects using typed views:
+타입 지정 뷰로 행을 Java 객체에 매핑합니다:
 
 ```java
 public class User {
@@ -95,11 +95,11 @@ key.id = 1;
 User retrieved = view.get(null, key);
 ```
 
-The view automatically maps between object fields and table columns.
+뷰는 객체 필드와 테이블 컬럼을 자동으로 매핑합니다.
 
-## Key-Value View
+## 키-값 뷰 {#key-value-view}
 
-KeyValueView separates key and value portions:
+KeyValueView는 키 부분과 값 부분을 분리합니다:
 
 ```java
 KeyValueView<Tuple, Tuple> view = table.keyValueView();
@@ -121,11 +121,11 @@ if (nullable != null) {
 }
 ```
 
-NullableValue distinguishes between missing entries and entries with null values.
+NullableValue는 존재하지 않는 항목과 null 값을 가진 항목을 구분합니다.
 
-## Typed Key-Value View
+## 타입 지정 키-값 뷰 {#typed-key-value-view}
 
-Map keys and values to separate types:
+키와 값을 별도의 타입에 매핑합니다:
 
 ```java
 public class ProductKey {
@@ -152,9 +152,9 @@ view.put(null, key, value);
 ProductValue retrieved = view.get(null, key);
 ```
 
-## Batch Operations
+## 일괄 처리 {#batch-operations}
 
-Process multiple records in single operations:
+여러 레코드를 한 번의 작업으로 처리합니다:
 
 ```java
 RecordView<Tuple> view = table.recordView();
@@ -175,11 +175,11 @@ List<Tuple> keys = Arrays.asList(
 List<Tuple> results = view.getAll(null, keys);
 ```
 
-Batch operations reduce network overhead for multiple operations.
+일괄 처리는 여러 작업의 네트워크 오버헤드를 줄입니다.
 
-## Key-Value Batch Operations
+## 키-값 일괄 처리 {#key-value-batch-operations}
 
-Similar batch support for key-value views:
+키-값 뷰도 비슷한 일괄 처리를 지원합니다:
 
 ```java
 KeyValueView<Tuple, Tuple> view = table.keyValueView();
@@ -204,9 +204,9 @@ Collection<Tuple> keys = Arrays.asList(
 Map<Tuple, Tuple> results = view.getAll(null, keys);
 ```
 
-## Conditional Operations
+## 조건부 작업 {#conditional-operations}
 
-Execute operations based on current values:
+현재 값을 기준으로 작업을 실행합니다:
 
 ```java
 KeyValueView<Tuple, Tuple> view = table.keyValueView();
@@ -223,11 +223,11 @@ if (replaced) {
 }
 ```
 
-Conditional operations provide atomic compare-and-set semantics.
+조건부 작업은 원자적 compare-and-set 동작을 제공합니다.
 
-## Asynchronous Operations
+## 비동기 작업 {#asynchronous-operations}
 
-All operations support asynchronous execution:
+모든 작업은 비동기 실행을 지원합니다:
 
 ```java
 RecordView<Tuple> view = table.recordView();
@@ -246,11 +246,11 @@ getFuture.thenAccept(result -> {
 });
 ```
 
-Asynchronous operations return immediately without blocking the calling thread.
+비동기 작업은 호출한 스레드를 차단하지 않고 즉시 반환됩니다.
 
-## Partition Information
+## 파티션 정보 {#partition-information}
 
-Access partition metadata through the partition manager:
+파티션 관리자로 파티션 메타데이터에 접근합니다:
 
 ```java
 PartitionManager partitions = table.partitionManager();
@@ -262,11 +262,11 @@ partition.thenAccept(p -> {
 });
 ```
 
-Partition information enables colocated compute operations.
+파티션 정보로 콜로케이션된 컴퓨트 작업이 가능합니다.
 
-## Tuple Construction
+## Tuple 생성 {#tuple-construction}
 
-Create tuples with various approaches:
+여러 방식으로 Tuple을 생성합니다:
 
 ```java
 // Empty tuple
@@ -285,7 +285,7 @@ Tuple tuple3 = Tuple.create(data);
 Tuple tuple4 = Tuple.copy(tuple3);
 ```
 
-Set values by name:
+이름으로 값을 설정합니다:
 
 ```java
 Tuple tuple = Tuple.create()
@@ -296,9 +296,9 @@ Tuple tuple = Tuple.create()
     .set("created", LocalDateTime.now());
 ```
 
-## Tuple Value Access
+## Tuple 값 접근 {#tuple-value-access}
 
-Retrieve values by column name with type-specific methods:
+타입별 메서드로 컬럼 이름을 지정해 값을 조회합니다:
 
 ```java
 int id = tuple.intValue("id");
@@ -312,57 +312,57 @@ String columnName = tuple.columnName(0);
 int columnIndex = tuple.columnIndex("name");
 ```
 
-Type-specific accessors avoid boxing for primitive types.
+타입별 접근자는 프리미티브 타입의 박싱을 피합니다.
 
-## Reference
+## 참조 {#reference}
 
-- Table management: `org.apache.ignite.table.IgniteTables`
-- Table interface: `org.apache.ignite.table.Table`
-- Record access: `org.apache.ignite.table.RecordView<R>`
-- Key-value access: `org.apache.ignite.table.KeyValueView<K, V>`
-- Binary records: `org.apache.ignite.table.Tuple`
-- Partition info: `org.apache.ignite.table.partition.PartitionManager`
+- 테이블 관리: `org.apache.ignite.table.IgniteTables`
+- 테이블 인터페이스: `org.apache.ignite.table.Table`
+- 레코드 접근: `org.apache.ignite.table.RecordView<R>`
+- 키-값 접근: `org.apache.ignite.table.KeyValueView<K, V>`
+- 바이너리 레코드: `org.apache.ignite.table.Tuple`
+- 파티션 정보: `org.apache.ignite.table.partition.PartitionManager`
 
-### IgniteTables Methods
+### IgniteTables 메서드 {#ignitetables-methods}
 
-- `List<Table> tables()` - Get all tables synchronously
-- `CompletableFuture<List<Table>> tablesAsync()` - Get all tables asynchronously
-- `Table table(String name)` - Get table by simple name
-- `Table table(QualifiedName name)` - Get table by qualified name
-- `CompletableFuture<Table> tableAsync(String name)` - Get table asynchronously
-- `CompletableFuture<Table> tableAsync(QualifiedName name)` - Get table asynchronously with qualified name
+- `List<Table> tables()` - 모든 테이블을 동기로 조회
+- `CompletableFuture<List<Table>> tablesAsync()` - 모든 테이블을 비동기로 조회
+- `Table table(String name)` - 단순 이름으로 테이블 조회
+- `Table table(QualifiedName name)` - 정규화된 이름으로 테이블 조회
+- `CompletableFuture<Table> tableAsync(String name)` - 테이블을 비동기로 조회
+- `CompletableFuture<Table> tableAsync(QualifiedName name)` - 정규화된 이름으로 테이블을 비동기로 조회
 
-### Table View Methods
+### 테이블 뷰 메서드 {#table-view-methods}
 
-- `RecordView<Tuple> recordView()` - Get binary record view
-- `RecordView<R> recordView(Class<R>)` - Get typed record view
-- `RecordView<R> recordView(Mapper<R>)` - Get record view with custom mapper
-- `KeyValueView<Tuple, Tuple> keyValueView()` - Get binary key-value view
-- `KeyValueView<K, V> keyValueView(Class<K>, Class<V>)` - Get typed key-value view
-- `KeyValueView<K, V> keyValueView(Mapper<K>, Mapper<V>)` - Get key-value view with custom mappers
+- `RecordView<Tuple> recordView()` - 바이너리 레코드 뷰 조회
+- `RecordView<R> recordView(Class<R>)` - 타입 지정 레코드 뷰 조회
+- `RecordView<R> recordView(Mapper<R>)` - 사용자 정의 매퍼로 레코드 뷰 조회
+- `KeyValueView<Tuple, Tuple> keyValueView()` - 바이너리 키-값 뷰 조회
+- `KeyValueView<K, V> keyValueView(Class<K>, Class<V>)` - 타입 지정 키-값 뷰 조회
+- `KeyValueView<K, V> keyValueView(Mapper<K>, Mapper<V>)` - 사용자 정의 매퍼로 키-값 뷰 조회
 
-### RecordView CRUD Methods
+### RecordView CRUD 메서드 {#recordview-crud-methods}
 
-- `R get(Transaction, R keyRec)` - Get record by key
-- `CompletableFuture<R> getAsync(Transaction, R keyRec)` - Async get
-- `List<R> getAll(Transaction, Collection<R>)` - Get multiple records
-- `CompletableFuture<List<R>> getAllAsync(Transaction, Collection<R>)` - Async get multiple
-- `boolean contains(Transaction, R keyRec)` - Check existence
-- `void upsert(Transaction, R rec)` - Insert or update record
-- `CompletableFuture<Void> upsertAsync(Transaction, R rec)` - Async upsert
-- `void upsertAll(Transaction, Collection<R>)` - Insert or update multiple
-- `boolean delete(Transaction, R keyRec)` - Delete record
-- `CompletableFuture<Boolean> deleteAsync(Transaction, R keyRec)` - Async delete
+- `R get(Transaction, R keyRec)` - 키로 레코드 조회
+- `CompletableFuture<R> getAsync(Transaction, R keyRec)` - 비동기 조회
+- `List<R> getAll(Transaction, Collection<R>)` - 여러 레코드 조회
+- `CompletableFuture<List<R>> getAllAsync(Transaction, Collection<R>)` - 여러 레코드를 비동기 조회
+- `boolean contains(Transaction, R keyRec)` - 존재 여부 확인
+- `void upsert(Transaction, R rec)` - 레코드 삽입 또는 업데이트
+- `CompletableFuture<Void> upsertAsync(Transaction, R rec)` - 비동기 upsert
+- `void upsertAll(Transaction, Collection<R>)` - 여러 레코드 삽입 또는 업데이트
+- `boolean delete(Transaction, R keyRec)` - 레코드 삭제
+- `CompletableFuture<Boolean> deleteAsync(Transaction, R keyRec)` - 비동기 삭제
 
-### KeyValueView Methods
+### KeyValueView 메서드 {#keyvalueview-methods}
 
-- `V get(Transaction, K key)` - Get value by key
-- `CompletableFuture<V> getAsync(Transaction, K key)` - Async get
-- `NullableValue<V> getNullable(Transaction, K key)` - Get with null distinction
-- `Map<K, V> getAll(Transaction, Collection<K>)` - Get multiple values
-- `void put(Transaction, K key, V value)` - Put key-value pair
-- `CompletableFuture<Void> putAsync(Transaction, K key, V value)` - Async put
-- `void putAll(Transaction, Map<K, V>)` - Put multiple pairs
-- `boolean replace(Transaction, K key, V old, V new)` - Conditional replace
-- `void remove(Transaction, K key)` - Remove by key
-- `void removeAll(Transaction, Collection<K>)` - Remove multiple
+- `V get(Transaction, K key)` - 키로 값 조회
+- `CompletableFuture<V> getAsync(Transaction, K key)` - 비동기 조회
+- `NullableValue<V> getNullable(Transaction, K key)` - null 구분과 함께 조회
+- `Map<K, V> getAll(Transaction, Collection<K>)` - 여러 값 조회
+- `void put(Transaction, K key, V value)` - 키-값 쌍 저장
+- `CompletableFuture<Void> putAsync(Transaction, K key, V value)` - 비동기 저장
+- `void putAll(Transaction, Map<K, V>)` - 여러 쌍 저장
+- `boolean replace(Transaction, K key, V old, V new)` - 조건부 교체
+- `void remove(Transaction, K key)` - 키로 제거
+- `void removeAll(Transaction, Collection<K>)` - 여러 항목 제거

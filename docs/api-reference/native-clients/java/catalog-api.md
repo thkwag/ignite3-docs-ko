@@ -6,17 +6,17 @@ sidebar_position: 8
 
 # Catalog API
 
-The Catalog API manages table schemas, indexes, and distribution zones. Applications define schemas using Java annotations or fluent builders, enabling programmatic DDL without writing SQL statements. This approach provides compile-time validation and type safety.
+Catalog API는 테이블 스키마, 인덱스, 분산 영역(distribution zone)을 관리합니다. 애플리케이션은 Java 애노테이션이나 플루언트 빌더(fluent builder)로 스키마를 정의하며, SQL 문을 작성하지 않고도 프로그래밍 방식으로 DDL을 수행합니다. 이 방식은 컴파일 시점 검증과 타입 안전성을 제공합니다.
 
-## Key Concepts
+## 핵심 개념 {#key-concepts}
 
-The catalog facade creates, modifies, and drops database objects. Table definitions specify columns, primary keys, indexes, and colocation strategies. Distribution zones control data placement across cluster nodes.
+카탈로그 퍼사드(facade)는 데이터베이스 객체를 생성, 수정, 삭제합니다. 테이블 정의는 컬럼, 기본 키, 인덱스, 콜로케이션(colocation) 전략을 지정합니다. 분산 영역은 클러스터 노드 전반의 데이터 배치를 제어합니다.
 
-Annotations provide declarative schema definitions. Classes annotated with @Table become table definitions. The catalog creates tables from these classes automatically. Fluent builders offer programmatic alternatives when annotations are impractical.
+애노테이션은 선언적 스키마 정의를 제공합니다. @Table이 붙은 클래스는 테이블 정의가 됩니다. 카탈로그는 이런 클래스로부터 테이블을 자동으로 생성합니다. 애노테이션이 적합하지 않을 때는 플루언트 빌더가 프로그래밍 방식 대안을 제공합니다.
 
-## Annotation-Based Tables
+## 애노테이션 기반 테이블 {#annotation-based-tables}
 
-Define tables using annotations:
+애노테이션으로 테이블을 정의합니다:
 
 ```java
 @Table("users")
@@ -35,7 +35,7 @@ public class User {
 }
 ```
 
-Create the table from the annotated class:
+애노테이션이 붙은 클래스로부터 테이블을 생성합니다:
 
 ```java
 CompletableFuture<Table> tableFuture =
@@ -44,11 +44,11 @@ CompletableFuture<Table> tableFuture =
 Table table = tableFuture.join();
 ```
 
-The catalog generates DDL from annotations.
+카탈로그는 애노테이션으로부터 DDL을 생성합니다.
 
-## Key-Value Table Definitions
+## 키-값 테이블 정의 {#key-value-table-definitions}
 
-Define tables with separate key and value classes:
+키 클래스와 값 클래스를 분리해 테이블을 정의합니다:
 
 ```java
 @Table("products")
@@ -69,7 +69,7 @@ public class ProductValue {
 }
 ```
 
-Create the table:
+테이블을 생성합니다:
 
 ```java
 CompletableFuture<Table> tableFuture =
@@ -79,9 +79,9 @@ CompletableFuture<Table> tableFuture =
     );
 ```
 
-## Column Configuration
+## 컬럼 구성 {#column-configuration}
 
-Configure column properties:
+컬럼 속성을 구성합니다:
 
 ```java
 @Table("items")
@@ -100,17 +100,17 @@ public class Item {
 }
 ```
 
-Column annotations support:
-- `value` - Column name (defaults to field name)
-- `nullable` - Allow null values (default true)
-- `length` - Maximum length for strings
-- `precision` - Numeric precision
-- `scale` - Numeric scale
-- `columnDefinition` - Full SQL type definition
+컬럼 애노테이션이 지원하는 속성:
+- `value` - 컬럼 이름(기본값은 필드 이름)
+- `nullable` - null 값 허용 여부(기본값 true)
+- `length` - 문자열의 최대 길이
+- `precision` - 숫자 정밀도
+- `scale` - 숫자 스케일
+- `columnDefinition` - 전체 SQL 타입 정의
 
-## Composite Primary Keys
+## 복합 기본 키 {#composite-primary-keys}
 
-Define multi-column primary keys:
+여러 컬럼으로 구성된 기본 키를 정의합니다:
 
 ```java
 @Table("orders")
@@ -129,11 +129,11 @@ public class Order {
 }
 ```
 
-Fields with @Id annotations form the composite primary key.
+@Id 애노테이션이 붙은 필드가 복합 기본 키를 구성합니다.
 
-## Primary Key Ordering
+## 기본 키 정렬 순서 {#primary-key-ordering}
 
-Specify sort order for primary keys:
+기본 키의 정렬 순서를 지정합니다:
 
 ```java
 @Table("events")
@@ -149,9 +149,9 @@ public class Event {
 }
 ```
 
-## Index Definitions
+## 인덱스 정의 {#index-definitions}
 
-Add indexes through table annotations:
+테이블 애노테이션으로 인덱스를 추가합니다:
 
 ```java
 @Table(
@@ -185,11 +185,11 @@ public class User {
 }
 ```
 
-Index annotations support single and composite indexes with sort orders.
+인덱스 애노테이션은 정렬 순서를 지정한 단일 인덱스와 복합 인덱스를 지원합니다.
 
-## Colocation Configuration
+## 콜로케이션 구성 {#colocation-configuration}
 
-Configure data colocation:
+데이터 콜로케이션을 구성합니다:
 
 ```java
 @Table(
@@ -210,11 +210,11 @@ public class Order {
 }
 ```
 
-Colocation ensures rows with the same colocation key values reside on the same node.
+콜로케이션은 콜로케이션 키 값이 같은 행이 같은 노드에 저장되도록 보장합니다.
 
-## Zone Configuration
+## 영역 구성 {#zone-configuration}
 
-Define distribution zones:
+분산 영역을 정의합니다:
 
 ```java
 @Table(
@@ -235,11 +235,11 @@ public class CacheRecord {
 }
 ```
 
-Zone annotations configure partitioning, replication, and storage.
+영역 애노테이션은 파티셔닝, 복제, 스토리지를 구성합니다.
 
-## Fluent Table Definitions
+## 플루언트 테이블 정의 {#fluent-table-definitions}
 
-Build tables programmatically:
+프로그래밍 방식으로 테이블을 만듭니다:
 
 ```java
 TableDefinition definition = TableDefinition.builder("products")
@@ -255,9 +255,9 @@ TableDefinition definition = TableDefinition.builder("products")
 ignite.catalog().createTableAsync(definition).join();
 ```
 
-## Index Definitions with Builders
+## 빌더를 사용한 인덱스 정의 {#index-definitions-with-builders}
 
-Add indexes to table definitions:
+테이블 정의에 인덱스를 추가합니다:
 
 ```java
 TableDefinition definition = TableDefinition.builder("users")
@@ -274,9 +274,9 @@ TableDefinition definition = TableDefinition.builder("users")
 ignite.catalog().createTableAsync(definition).join();
 ```
 
-## Conditional Table Creation
+## 조건부 테이블 생성 {#conditional-table-creation}
 
-Create tables only if they do not exist:
+테이블이 없을 때만 생성합니다:
 
 ```java
 TableDefinition definition = TableDefinition.builder("cache_data")
@@ -291,24 +291,24 @@ TableDefinition definition = TableDefinition.builder("cache_data")
 ignite.catalog().createTableAsync(definition).join();
 ```
 
-## Table Deletion
+## 테이블 삭제 {#table-deletion}
 
-Drop tables by name:
+이름으로 테이블을 삭제합니다:
 
 ```java
 ignite.catalog().dropTableAsync("products").join();
 ```
 
-Drop using qualified names:
+정규화된 이름(qualified name)으로 삭제합니다:
 
 ```java
 QualifiedName tableName = QualifiedName.of("schema", "products");
 ignite.catalog().dropTableAsync(tableName).join();
 ```
 
-## Distribution Zone Management
+## 분산 영역 관리 {#distribution-zone-management}
 
-Create distribution zones:
+분산 영역을 생성합니다:
 
 ```java
 ZoneDefinition zone = ZoneDefinition.builder("fast_zone")
@@ -322,26 +322,26 @@ ZoneDefinition zone = ZoneDefinition.builder("fast_zone")
 ignite.catalog().createZoneAsync(zone).join();
 ```
 
-Zone configuration options:
-- `partitions` - Number of partitions
-- `replicas` - Number of replicas per partition
-- `storageProfiles` - Storage profile name (comma-separated for multiple)
-- `dataNodesAutoAdjustScaleUp` - Scale-up timeout in seconds
-- `dataNodesAutoAdjustScaleDown` - Scale-down timeout in seconds
-- `filter` - Node filter expression
-- `consistencyMode` - Consistency mode
+영역 구성 옵션:
+- `partitions` - 파티션 수
+- `replicas` - 파티션당 복제본 수
+- `storageProfiles` - 스토리지 프로파일 이름(여러 개는 쉼표로 구분)
+- `dataNodesAutoAdjustScaleUp` - 확장 타임아웃(초 단위)
+- `dataNodesAutoAdjustScaleDown` - 축소 타임아웃(초 단위)
+- `filter` - 노드 필터 표현식
+- `consistencyMode` - 일관성 모드
 
-## Zone Deletion
+## 영역 삭제 {#zone-deletion}
 
-Drop distribution zones:
+분산 영역을 삭제합니다:
 
 ```java
 ignite.catalog().dropZoneAsync("fast_zone").join();
 ```
 
-## Schema Names
+## 스키마 이름 {#schema-names}
 
-Specify schemas in table annotations:
+테이블 애노테이션에서 스키마를 지정합니다:
 
 ```java
 @Table(value = "users", schemaName = "app_schema")
@@ -354,11 +354,11 @@ public class User {
 }
 ```
 
-Tables without explicit schemas default to the PUBLIC schema.
+스키마를 명시하지 않은 테이블은 기본적으로 PUBLIC 스키마를 사용합니다.
 
-## Complex Zone Configuration
+## 복합 영역 구성 {#complex-zone-configuration}
 
-Configure zones with advanced options:
+고급 옵션으로 영역을 구성합니다:
 
 ```java
 ZoneDefinition zone = ZoneDefinition.builder("replicated_zone")
@@ -374,55 +374,55 @@ ZoneDefinition zone = ZoneDefinition.builder("replicated_zone")
 ignite.catalog().createZoneAsync(zone).join();
 ```
 
-## Reference
+## 참조 {#reference}
 
-- Catalog facade: `org.apache.ignite.catalog.IgniteCatalog`
-- Table definition: `org.apache.ignite.catalog.definitions.TableDefinition`
-- Column definition: `org.apache.ignite.catalog.definitions.ColumnDefinition`
-- Index definition: `org.apache.ignite.catalog.definitions.IndexDefinition`
-- Zone definition: `org.apache.ignite.catalog.definitions.ZoneDefinition`
+- 카탈로그 퍼사드: `org.apache.ignite.catalog.IgniteCatalog`
+- 테이블 정의: `org.apache.ignite.catalog.definitions.TableDefinition`
+- 컬럼 정의: `org.apache.ignite.catalog.definitions.ColumnDefinition`
+- 인덱스 정의: `org.apache.ignite.catalog.definitions.IndexDefinition`
+- 영역 정의: `org.apache.ignite.catalog.definitions.ZoneDefinition`
 
-### Annotations
+### 애노테이션 {#annotations}
 
-- `@Table` - Mark class as table definition
-- `@Column` - Configure column properties
-- `@Id` - Mark primary key columns
-- `@Index` - Define table indexes
-- `@Zone` - Configure distribution zone
-- `@ColumnRef` - Reference columns in indexes and colocation
+- `@Table` - 클래스를 테이블 정의로 표시
+- `@Column` - 컬럼 속성 구성
+- `@Id` - 기본 키 컬럼 표시
+- `@Index` - 테이블 인덱스 정의
+- `@Zone` - 분산 영역 구성
+- `@ColumnRef` - 인덱스와 콜로케이션에서 컬럼 참조
 
-### IgniteCatalog Methods
+### IgniteCatalog 메서드 {#ignitecatalog-methods}
 
-- `CompletableFuture<Table> createTableAsync(Class<?>)` - Create from annotated class
-- `CompletableFuture<Table> createTableAsync(Class<?>, Class<?>)` - Create from key-value classes
-- `CompletableFuture<Table> createTableAsync(TableDefinition)` - Create from definition
-- `CompletableFuture<Void> dropTableAsync(String)` - Drop table by name
-- `CompletableFuture<Void> dropTableAsync(QualifiedName)` - Drop by qualified name
-- `CompletableFuture<Void> createZoneAsync(ZoneDefinition)` - Create distribution zone
-- `CompletableFuture<Void> dropZoneAsync(String)` - Drop zone
+- `CompletableFuture<Table> createTableAsync(Class<?>)` - 애노테이션이 붙은 클래스로 생성
+- `CompletableFuture<Table> createTableAsync(Class<?>, Class<?>)` - 키-값 클래스로 생성
+- `CompletableFuture<Table> createTableAsync(TableDefinition)` - 정의로 생성
+- `CompletableFuture<Void> dropTableAsync(String)` - 이름으로 테이블 삭제
+- `CompletableFuture<Void> dropTableAsync(QualifiedName)` - 정규화된 이름으로 삭제
+- `CompletableFuture<Void> createZoneAsync(ZoneDefinition)` - 분산 영역 생성
+- `CompletableFuture<Void> dropZoneAsync(String)` - 영역 삭제
 
-### TableDefinition Builder Methods
+### TableDefinition 빌더 메서드 {#tabledefinition-builder-methods}
 
-- `static Builder builder(String)` - Create builder
-- `columns(ColumnDefinition...)` - Add columns
-- `primaryKey(String...)` - Set primary key
-- `index(String...)` - Add index on specified columns (uses default index type)
-- `index(String, IndexType, ColumnSorted...)` - Add named index with type and sorted columns
-- `colocateBy(String...)` - Set colocation columns
-- `zone(String)` - Set zone name
-- `ifNotExists()` - Create only if not exists
-- `build()` - Build definition
+- `static Builder builder(String)` - 빌더 생성
+- `columns(ColumnDefinition...)` - 컬럼 추가
+- `primaryKey(String...)` - 기본 키 설정
+- `index(String...)` - 지정한 컬럼에 인덱스 추가(기본 인덱스 타입 사용)
+- `index(String, IndexType, ColumnSorted...)` - 타입과 정렬 컬럼을 지정한 이름 있는 인덱스 추가
+- `colocateBy(String...)` - 콜로케이션 컬럼 설정
+- `zone(String)` - 영역 이름 설정
+- `ifNotExists()` - 없을 때만 생성
+- `build()` - 정의 빌드
 
-### ZoneDefinition Builder Methods
+### ZoneDefinition 빌더 메서드 {#zonedefinition-builder-methods}
 
-- `static Builder builder(String)` - Create builder
-- `partitions(int)` - Set partition count
-- `replicas(int)` - Set replica count
-- `quorumSize(int)` - Set quorum size
-- `storageProfiles(String)` - Set storage profile (single string, comma-separated for multiple)
-- `distributionAlgorithm(String)` - Set distribution algorithm
-- `dataNodesAutoAdjustScaleUp(int)` - Set scale-up timeout
-- `dataNodesAutoAdjustScaleDown(int)` - Set scale-down timeout
-- `filter(String)` - Set node filter expression
-- `consistencyMode(String)` - Set consistency mode
-- `build()` - Build definition
+- `static Builder builder(String)` - 빌더 생성
+- `partitions(int)` - 파티션 수 설정
+- `replicas(int)` - 복제본 수 설정
+- `quorumSize(int)` - 정족수 크기 설정
+- `storageProfiles(String)` - 스토리지 프로파일 설정(단일 문자열, 여러 개는 쉼표로 구분)
+- `distributionAlgorithm(String)` - 분산 알고리즘 설정
+- `dataNodesAutoAdjustScaleUp(int)` - 확장 타임아웃 설정
+- `dataNodesAutoAdjustScaleDown(int)` - 축소 타임아웃 설정
+- `filter(String)` - 노드 필터 표현식 설정
+- `consistencyMode(String)` - 일관성 모드 설정
+- `build()` - 정의 빌드

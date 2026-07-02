@@ -6,27 +6,27 @@ sidebar_position: 5
 
 # Transactions API
 
-The Transactions API provides ACID transaction support for coordinating multiple operations across tables. Transactions ensure atomicity, consistency, isolation, and durability for distributed data modifications.
+Transactions API는 여러 테이블에 걸친 여러 작업을 조율하기 위한 ACID 트랜잭션 지원을 제공합니다. 트랜잭션은 분산 데이터 수정에 대해 원자성, 일관성, 격리성, 내구성을 보장합니다.
 
-## Key Concepts
+## 핵심 개념 {#key-concepts}
 
-Transactions group multiple operations into a single atomic unit. Either all operations succeed and commit together, or all operations fail and roll back together.
+트랜잭션은 여러 작업을 하나의 원자적 단위로 묶습니다. 모든 작업이 성공해 함께 커밋되거나, 모든 작업이 실패해 함께 롤백됩니다.
 
-### Transaction Lifecycle
+### 트랜잭션 라이프사이클 {#transaction-lifecycle}
 
-Begin a transaction using the Transactions API, pass the transaction object to data operations, and explicitly commit or roll back when done. The transaction must be disposed after use.
+Transactions API로 트랜잭션을 시작하고, 트랜잭션 객체를 데이터 작업에 전달한 다음, 끝나면 명시적으로 커밋하거나 롤백합니다. 트랜잭션은 사용 후 반드시 해제해야 합니다.
 
-### Auto-Commit Mode
+### 자동 커밋 모드 {#auto-commit-mode}
 
-Operations that receive null for the transaction parameter execute in auto-commit mode. Each operation commits immediately after completion. Use this for single operations that do not require coordination.
+트랜잭션 매개변수로 null을 받는 작업은 자동 커밋 모드로 실행됩니다. 각 작업은 완료 직후 즉시 커밋됩니다. 조율이 필요 없는 단일 작업에 사용합니다.
 
-### Transaction Scope
+### 트랜잭션 범위 {#transaction-scope}
 
-Pass the same transaction object to multiple operations to include them in the transaction scope. Operations can span different tables and mix key-value and SQL operations.
+여러 작업을 트랜잭션 범위에 포함하려면 같은 트랜잭션 객체를 여러 작업에 전달합니다. 작업은 서로 다른 테이블에 걸칠 수 있고 키-값 작업과 SQL 작업을 섞을 수 있습니다.
 
-## Usage Examples
+## 사용 예시 {#usage-examples}
 
-### Basic Transaction
+### 기본 트랜잭션 {#basic-transaction}
 
 ```csharp
 var transactions = client.Transactions;
@@ -65,7 +65,7 @@ finally
 }
 ```
 
-### Using Statement Pattern
+### using 문 패턴 {#using-statement-pattern}
 
 ```csharp
 var transactions = client.Transactions;
@@ -88,7 +88,7 @@ await using (var tx = await transactions.BeginAsync())
 }
 ```
 
-### Transaction with Exception Handling
+### 예외 처리가 있는 트랜잭션 {#transaction-with-exception-handling}
 
 ```csharp
 try
@@ -123,7 +123,7 @@ catch (Exception ex)
 }
 ```
 
-### RunInTransactionAsync Pattern
+### RunInTransactionAsync 패턴 {#runintransactionasync-pattern}
 
 ```csharp
 var transactions = client.Transactions;
@@ -162,9 +162,9 @@ await transactions.RunInTransactionAsync(async tx =>
 });
 ```
 
-The RunInTransactionAsync method automatically commits on success and rolls back on exception. It also handles disposal automatically.
+RunInTransactionAsync 메서드는 성공 시 자동으로 커밋하고 예외 발생 시 롤백합니다. 해제도 자동으로 처리합니다.
 
-### Mixing Key-Value and SQL Operations
+### 키-값 작업과 SQL 작업 혼합 {#mixing-key-value-and-sql-operations}
 
 ```csharp
 await using var tx = await client.Transactions.BeginAsync();
@@ -187,7 +187,7 @@ await sql.ExecuteAsync(tx, insertStmt, 1L, -100.0m, DateTime.UtcNow);
 await tx.CommitAsync();
 ```
 
-### Cross-Table Transaction
+### 여러 테이블에 걸친 트랜잭션 {#cross-table-transaction}
 
 ```csharp
 await using var tx = await client.Transactions.BeginAsync();
@@ -217,7 +217,7 @@ await inventoryView.UpsertAsync(tx, productData.Value);
 await tx.CommitAsync();
 ```
 
-### Read-Only Transaction
+### 읽기 전용 트랜잭션 {#read-only-transaction}
 
 ```csharp
 var options = new TransactionOptions(ReadOnly: true);
@@ -234,9 +234,9 @@ var product2 = await view.GetAsync(tx, new Product { Id = 2 });
 // Transaction automatically closes on dispose
 ```
 
-Read-only transactions can provide performance benefits and prevent accidental modifications.
+읽기 전용 트랜잭션은 성능 이점을 제공하고 실수로 인한 수정을 방지할 수 있습니다.
 
-### Transaction Timeout
+### 트랜잭션 타임아웃 {#transaction-timeout}
 
 ```csharp
 var options = new TransactionOptions(ReadOnly: false, TimeoutMillis: 30000);
@@ -260,62 +260,62 @@ catch (IgniteException ex)
 }
 ```
 
-## Reference
+## 참조 {#reference}
 
-### ITransactions Interface
+### ITransactions 인터페이스 {#itransactions-interface}
 
-Methods:
+메서드:
 
-- **ValueTask&lt;ITransaction&gt; BeginAsync()** - Begin new transaction with default options
-- **ValueTask&lt;ITransaction&gt; BeginAsync(TransactionOptions options)** - Begin new transaction with specified options
-- **Task&lt;T&gt; RunInTransactionAsync&lt;T&gt;(Func&lt;ITransaction, Task&lt;T&gt;&gt; func, TransactionOptions options = default)** - Execute function within transaction and return result
-- **Task RunInTransactionAsync(Func&lt;ITransaction, Task&gt; func, TransactionOptions options = default)** - Execute function within transaction (no return value)
+- **ValueTask&lt;ITransaction&gt; BeginAsync()** - 기본 옵션으로 새 트랜잭션을 시작합니다
+- **ValueTask&lt;ITransaction&gt; BeginAsync(TransactionOptions options)** - 지정한 옵션으로 새 트랜잭션을 시작합니다
+- **Task&lt;T&gt; RunInTransactionAsync&lt;T&gt;(Func&lt;ITransaction, Task&lt;T&gt;&gt; func, TransactionOptions options = default)** - 트랜잭션 안에서 함수를 실행하고 결과를 반환합니다
+- **Task RunInTransactionAsync(Func&lt;ITransaction, Task&gt; func, TransactionOptions options = default)** - 트랜잭션 안에서 함수를 실행합니다(반환값 없음)
 
-The RunInTransactionAsync methods handle transaction lifecycle automatically. They commit on successful completion and roll back on exceptions. The transaction is disposed after the function completes.
+RunInTransactionAsync 메서드는 트랜잭션 라이프사이클을 자동으로 처리합니다. 성공적으로 완료되면 커밋하고 예외가 발생하면 롤백합니다. 트랜잭션은 함수가 완료된 후 해제됩니다.
 
-### ITransaction Interface
+### ITransaction 인터페이스 {#itransaction-interface}
 
-Properties:
+속성:
 
-- **bool IsReadOnly** - Whether transaction is read-only
+- **bool IsReadOnly** - 트랜잭션이 읽기 전용인지 여부
 
-Methods:
+메서드:
 
-- **Task CommitAsync()** - Commit the transaction, making all changes permanent
-- **Task RollbackAsync()** - Roll back the transaction, discarding all changes
+- **Task CommitAsync()** - 트랜잭션을 커밋해 모든 변경을 영구적으로 반영합니다
+- **Task RollbackAsync()** - 트랜잭션을 롤백해 모든 변경을 버립니다
 
-Resource management:
+리소스 관리:
 
-- Implements **IAsyncDisposable** and **IDisposable**
-- Must be disposed after use
-- Automatic rollback occurs if disposed without explicit commit
+- **IAsyncDisposable**과 **IDisposable**을 구현합니다
+- 사용 후 반드시 해제해야 합니다
+- 명시적 커밋 없이 해제하면 자동 롤백이 발생합니다
 
-### TransactionOptions Record Struct
+### TransactionOptions 레코드 구조체 {#transactionoptions-record-struct}
 
-A readonly record struct that configures transaction behavior. Construct using named parameters:
+트랜잭션 동작을 구성하는 읽기 전용 레코드 구조체입니다. 명명된 매개변수로 생성합니다:
 
 ```csharp
 new TransactionOptions(ReadOnly: true)
 new TransactionOptions(ReadOnly: false, TimeoutMillis: 30000)
 ```
 
-Parameters:
+매개변수:
 
-- **ReadOnly** (bool) - Mark transaction as read-only (default: false). Read-only transactions provide a snapshot view of data at a certain point in time. They are lock-free and perform better than normal transactions, but do not permit data modifications.
-- **TimeoutMillis** (long) - Transaction timeout in milliseconds (default: 0). A value of 0 means use the default timeout configured via ignite.transaction.timeout configuration property.
+- **ReadOnly** (bool) - 트랜잭션을 읽기 전용으로 표시합니다(기본값: false). 읽기 전용 트랜잭션은 특정 시점의 데이터에 대한 스냅샷 뷰를 제공합니다. 락이 없어 일반 트랜잭션보다 성능이 좋지만 데이터 수정을 허용하지 않습니다.
+- **TimeoutMillis** (long) - 밀리초 단위 트랜잭션 타임아웃(기본값: 0). 값이 0이면 ignite.transaction.timeout 구성 속성으로 설정된 기본 타임아웃을 사용합니다.
 
-The timeout controls how long the transaction can remain active before automatic rollback.
+타임아웃은 트랜잭션이 자동 롤백되기 전까지 활성 상태로 유지될 수 있는 시간을 제어합니다.
 
-### Best Practices
+### 모범 사례 {#best-practices}
 
-**Always dispose transactions** using using statements or explicit disposal. Undisposed transactions hold cluster resources.
+**항상 트랜잭션을 해제하세요.** using 문이나 명시적 해제를 사용합니다. 해제되지 않은 트랜잭션은 클러스터 리소스를 붙잡고 있습니다.
 
-**Commit explicitly** before disposal. Implicit rollback on disposal can hide logic errors.
+**해제하기 전에 명시적으로 커밋하세요.** 해제 시 암묵적으로 롤백되면 로직 오류가 감춰질 수 있습니다.
 
-**Keep transactions short** to reduce lock contention and improve throughput. Long-running transactions impact cluster performance.
+**트랜잭션을 짧게 유지하세요.** 그러면 락 경합이 줄고 처리량이 향상됩니다. 오래 실행되는 트랜잭션은 클러스터 성능에 영향을 줍니다.
 
-**Handle exceptions properly** to ensure rollback occurs when operations fail. Use try-catch blocks around transaction logic.
+**예외를 올바르게 처리하세요.** 그래야 작업이 실패할 때 롤백이 확실히 일어납니다. 트랜잭션 로직을 try-catch 블록으로 감싸세요.
 
-**Use RunInTransactionAsync** for simple cases where automatic lifecycle management is sufficient. This reduces boilerplate code and ensures proper cleanup.
+**자동 라이프사이클 관리로 충분한 간단한 경우에는 RunInTransactionAsync를 사용하세요.** 이렇게 하면 상용구 코드가 줄고 정리가 확실하게 이루어집니다.
 
-**Pass transaction to all operations** that should be coordinated. Mixing null and transaction parameters within related operations breaks atomicity.
+**조율해야 하는 모든 작업에 트랜잭션을 전달하세요.** 관련된 작업에서 null과 트랜잭션 매개변수를 섞으면 원자성이 깨집니다.

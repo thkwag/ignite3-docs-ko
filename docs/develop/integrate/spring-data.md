@@ -1,26 +1,26 @@
 ---
 id: spring-data
-title: Spring Data Integration
+title: Spring Data 통합
 ---
 
-Apache Ignite 3 provides a Spring Data JDBC dialect that enables repository-based data access. Combined with Spring Boot's JDBC starter, this allows standard Spring Data repositories to work with Ignite tables through familiar patterns like `CrudRepository` and derived query methods.
+Apache Ignite 3는 저장소 기반 데이터 접근을 지원하는 Spring Data JDBC 방언(dialect)을 제공합니다. Spring Boot의 JDBC 스타터와 결합하면 `CrudRepository`나 파생 쿼리(derived query) 메서드 같은 익숙한 패턴으로 표준 Spring Data 저장소를 Ignite 테이블과 함께 사용할 수 있습니다.
 
-## Prerequisites
+## 사전 요구 사항 {#prerequisites}
 
-- Java 17 or later
-- Spring Boot 3.x with Spring Data JDBC
-- Running Ignite 3 cluster
-- Tables created in Ignite before repository operations
+- Java 17 이상
+- Spring Data JDBC가 포함된 Spring Boot 3.x
+- 실행 중인 Ignite 3 클러스터
+- 저장소 작업 전에 Ignite에 생성한 테이블
 
-## Installation
+## 설치 {#installation}
 
-Spring Data integration requires three dependencies:
+Spring Data 통합에는 세 가지 의존성이 필요합니다.
 
-- `spring-boot-starter-data-jdbc` (from Spring) provides the Spring Data JDBC framework
-- `spring-data-ignite` (from Apache Ignite) provides the SQL dialect for Ignite-compatible query generation
-- `ignite-jdbc` (from Apache Ignite) provides the JDBC driver for database connectivity
+- `spring-boot-starter-data-jdbc`(Spring 제공)는 Spring Data JDBC 프레임워크를 제공합니다.
+- `spring-data-ignite`(Apache Ignite 제공)는 Ignite 호환 쿼리를 생성하는 SQL 방언을 제공합니다.
+- `ignite-jdbc`(Apache Ignite 제공)는 데이터베이스 연결을 위한 JDBC 드라이버를 제공합니다.
 
-The Ignite artifact versions must match your Apache Ignite cluster version.
+Ignite 아티팩트 버전은 Apache Ignite 클러스터 버전과 일치해야 합니다.
 
 **Maven:**
 
@@ -67,42 +67,42 @@ implementation "org.apache.ignite:spring-data-ignite:${igniteVersion}"
 implementation "org.apache.ignite:ignite-jdbc:${igniteVersion}"
 ```
 
-:::note Version Matching
-The `spring-data-ignite` and `ignite-jdbc` artifacts are released as part of Apache Ignite, so their versions match the Ignite release version. For Ignite 3.1.0, use version `3.1.0` for both artifacts.
+:::note 버전 일치
+`spring-data-ignite`와 `ignite-jdbc` 아티팩트는 Apache Ignite의 일부로 릴리스되므로 버전이 Ignite 릴리스 버전과 일치합니다. Ignite 3.1.0에서는 두 아티팩트 모두 `3.1.0` 버전을 사용하세요.
 :::
 
-## Configuration
+## 구성 {#configuration}
 
-### Datasource Properties
+### 데이터소스 속성 {#datasource-properties}
 
-Configure the JDBC datasource in `application.properties`:
+`application.properties`에서 JDBC 데이터소스를 구성하세요:
 
 ```properties
 spring.datasource.url=jdbc:ignite:thin://localhost:10800
 spring.datasource.driver-class-name=org.apache.ignite.jdbc.IgniteJdbcDriver
 ```
 
-For multiple nodes:
+여러 노드를 사용하는 경우:
 
 ```properties
 spring.datasource.url=jdbc:ignite:thin://node1:10800,node2:10800,node3:10800
 ```
 
-### SQL Dialect Registration
+### SQL 방언 등록 {#sql-dialect-registration}
 
-Spring Data JDBC needs to generate database-specific SQL for operations like pagination, identity columns, and certain functions. The `spring-data-ignite` artifact includes an `IgniteDialectProvider` that teaches Spring Data how to generate Ignite-compatible SQL.
+Spring Data JDBC는 페이지네이션, 아이덴티티 컬럼, 특정 함수 같은 작업을 위해 데이터베이스별 SQL을 생성해야 합니다. `spring-data-ignite` 아티팩트에는 Ignite 호환 SQL을 생성하는 방법을 Spring Data에 알려주는 `IgniteDialectProvider`가 들어 있습니다.
 
-The dialect provider is registered via Spring's SPI mechanism. Create the file `src/main/resources/META-INF/spring.factories` with the following content:
+방언 공급자는 Spring의 SPI 메커니즘으로 등록됩니다. 다음 내용으로 `src/main/resources/META-INF/spring.factories` 파일을 생성하세요:
 
 ```properties
 org.springframework.data.jdbc.repository.config.DialectResolver$JdbcDialectProvider=org.apache.ignite.data.IgniteDialectProvider
 ```
 
-Without this configuration, Spring Data falls back to generic ANSI SQL, which works for basic queries but may fail for database-specific operations.
+이 구성이 없으면 Spring Data는 일반 ANSI SQL로 대체됩니다. 일반 ANSI SQL은 기본 쿼리에는 동작하지만 데이터베이스별 작업에서는 실패할 수 있습니다.
 
-## Application Setup
+## 애플리케이션 설정 {#application-setup}
 
-Enable JDBC repositories in your Spring Boot application:
+Spring Boot 애플리케이션에서 JDBC 저장소를 활성화하세요:
 
 ```java
 @EnableJdbcRepositories
@@ -115,9 +115,9 @@ public class MyApplication {
 }
 ```
 
-## Defining Entities
+## 엔티티 정의 {#defining-entities}
 
-Entities map to Ignite tables. Use Spring Data annotations to define the mapping:
+엔티티는 Ignite 테이블에 매핑됩니다. Spring Data 애노테이션으로 매핑을 정의하세요:
 
 ```java
 import org.springframework.data.annotation.Id;
@@ -156,7 +156,7 @@ public class Person {
 }
 ```
 
-Create the corresponding table in Ignite before using the repository:
+저장소를 사용하기 전에 Ignite에 해당 테이블을 생성하세요:
 
 ```sql
 CREATE TABLE PERSON (
@@ -167,15 +167,15 @@ CREATE TABLE PERSON (
 );
 ```
 
-Key annotations:
+주요 애노테이션:
 
-- `@Table` maps the class to a specific table name
-- `@Id` marks the primary key field
-- `@Column` maps a field to a column when names differ (Java's `countryCode` to SQL's `COUNTRYCODE`). Fields without `@Column` map by convention based on field name.
+- `@Table`은 클래스를 특정 테이블 이름에 매핑합니다.
+- `@Id`는 기본 키 필드를 표시합니다.
+- `@Column`은 이름이 다를 때 필드를 컬럼에 매핑합니다(Java의 `countryCode`를 SQL의 `COUNTRYCODE`에). `@Column`이 없는 필드는 필드 이름을 기준으로 관례에 따라 매핑됩니다.
 
-## Repository Definition
+## 저장소 정의 {#repository-definition}
 
-Define a repository interface extending `CrudRepository`:
+`CrudRepository`를 확장하는 저장소 인터페이스를 정의하세요:
 
 ```java
 import org.springframework.data.repository.CrudRepository;
@@ -186,9 +186,9 @@ public interface PersonRepository extends CrudRepository<Person, Long> {
 }
 ```
 
-## CRUD Operations
+## CRUD 작업 {#crud-operations}
 
-The `CrudRepository` interface provides standard data access methods:
+`CrudRepository` 인터페이스는 표준 데이터 접근 메서드를 제공합니다:
 
 ```java
 @Service
@@ -226,9 +226,9 @@ public class PersonService {
 }
 ```
 
-## Derived Query Methods
+## 파생 쿼리 메서드 {#derived-query-methods}
 
-Spring Data generates queries from method names:
+Spring Data는 메서드 이름에서 쿼리를 생성합니다:
 
 ```java
 @Repository
@@ -254,9 +254,9 @@ public interface PersonRepository extends CrudRepository<Person, Long> {
 }
 ```
 
-## Custom Queries
+## 사용자 정의 쿼리 {#custom-queries}
 
-Use `@Query` for explicit SQL:
+명시적인 SQL에는 `@Query`를 사용하세요:
 
 ```java
 import org.springframework.data.jdbc.repository.query.Query;
@@ -273,9 +273,9 @@ public interface PersonRepository extends CrudRepository<Person, Long> {
 }
 ```
 
-## Pagination
+## 페이지네이션 {#pagination}
 
-Spring Data supports paginated queries:
+Spring Data는 페이지 단위 쿼리를 지원합니다:
 
 ```java
 import org.springframework.data.domain.Page;
@@ -293,7 +293,7 @@ public interface PersonRepository extends CrudRepository<Person, Long> {
 }
 ```
 
-Usage:
+사용법:
 
 ```java
 @Service
@@ -329,7 +329,7 @@ public class PersonService {
 
 ## Query by Example
 
-For dynamic queries based on entity instances, extend `QueryByExampleExecutor`:
+엔티티 인스턴스를 기반으로 하는 동적 쿼리에는 `QueryByExampleExecutor`를 확장하세요:
 
 ```java
 import org.springframework.data.repository.query.QueryByExampleExecutor;
@@ -339,7 +339,7 @@ public interface PersonRepository extends CrudRepository<Person, Long>, QueryByE
 }
 ```
 
-Usage:
+사용법:
 
 ```java
 import org.springframework.data.domain.Example;
@@ -378,9 +378,9 @@ public class PersonService {
 }
 ```
 
-## Handling Entity State
+## 엔티티 상태 처리 {#handling-entity-state}
 
-Ignite tables do not auto-generate IDs. Implement `Persistable` to control insert vs update behavior:
+Ignite 테이블은 ID를 자동 생성하지 않습니다. `Persistable`을 구현해 INSERT와 UPDATE 중 어떤 동작을 수행할지 제어하세요:
 
 ```java
 import org.springframework.data.annotation.Id;
@@ -419,7 +419,7 @@ public class Person implements Persistable<Long> {
 }
 ```
 
-When updating an existing entity:
+기존 엔티티를 수정할 때:
 
 ```java
 Person person = repository.findById(1L).orElseThrow();
@@ -428,31 +428,31 @@ person.setNew(false);  // Prevents INSERT, performs UPDATE
 repository.save(person);
 ```
 
-## Supported Features
+## 지원 기능 {#supported-features}
 
-The Ignite dialect supports:
+Ignite 방언은 다음을 지원합니다:
 
-| Feature | Status |
+| 기능 | 상태 |
 |---------|--------|
-| CrudRepository | Supported |
-| PagingAndSortingRepository | Supported |
-| QueryByExampleExecutor | Supported |
-| Derived query methods | Supported |
-| @Query annotations | Supported |
-| Page and Slice | Supported |
-| Sort | Supported |
-| Limit | Supported |
-| Enum types | Supported |
-| Array columns | Supported |
+| CrudRepository | 지원 |
+| PagingAndSortingRepository | 지원 |
+| QueryByExampleExecutor | 지원 |
+| 파생 쿼리 메서드 | 지원 |
+| @Query 애노테이션 | 지원 |
+| Page와 Slice | 지원 |
+| Sort | 지원 |
+| Limit | 지원 |
+| Enum 타입 | 지원 |
+| 배열 컬럼 | 지원 |
 
-## Limitations
+## 제한 사항 {#limitations}
 
-- Ignite does not auto-generate primary keys. Provide ID values explicitly.
-- Locking clauses (`@Lock`) are not supported. The dialect returns empty lock clauses.
-- Single query loading for related entities is not supported. Related entities require separate queries.
+- Ignite는 기본 키를 자동 생성하지 않습니다. ID 값을 명시적으로 제공하세요.
+- 락 절(`@Lock`)은 지원되지 않습니다. 방언은 빈 락 절을 반환합니다.
+- 연관 엔티티의 단일 쿼리 로딩은 지원되지 않습니다. 연관 엔티티는 별도의 쿼리가 필요합니다.
 
-## Next Steps
+## 다음 단계 {#next-steps}
 
-- [Spring Boot Integration](./spring-boot) - Auto-configured IgniteClient
-- [JDBC Driver](../connect-to-ignite/jdbc) - JDBC connection details
-- [SQL Reference](../../sql) - SQL syntax for table creation
+- [Spring Boot 통합](./spring-boot) - 자동 구성된 IgniteClient
+- [JDBC 드라이버](../connect-to-ignite/jdbc) - JDBC 연결 세부 정보
+- [SQL 참조](../../sql) - 테이블 생성 구문

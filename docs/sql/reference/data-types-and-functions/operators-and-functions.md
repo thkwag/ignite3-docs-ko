@@ -1,14 +1,14 @@
 ---
-title: Operators and Functions
+title: 연산자와 함수
 ---
 
-# Operators and Functions
+# 연산자와 함수 {#operators-and-functions}
 
 :::note
-For more information on functions supported by Apache Calcite, see the [product documentation](https://calcite.apache.org/docs/reference.html#operators-and-functions).
+Apache Calcite가 지원하는 함수를 자세히 알아보려면 [제품 문서](https://calcite.apache.org/docs/reference.html#operators-and-functions)를 참고하세요.
 :::
 
-## Aggregate Functions
+## 집계 함수 {#aggregate-functions}
 
 ### AVG
 
@@ -16,9 +16,9 @@ For more information on functions supported by Apache Calcite, see the [product 
 AVG( [ ALL | DISTINCT ] numeric)
 ```
 
-Returns the average (arithmetic mean) of numeric across all input values. When used, the type of data will be changed in the following way:
+모든 입력 값에 대한 numeric의 평균(산술 평균)을 반환합니다. 사용 시 데이터 타입은 다음과 같이 바뀝니다:
 
-| Input type | Result type | Minimum scale |
+| 입력 타입 | 결과 타입 | 최소 스케일 |
 |---|---|---|
 | `DECIMAL`, `BIGINT`, `INTEGER`, `SMALLINT`, `TINYINT` | `DECIMAL` | 16 |
 | `DOUBLE`, `REAL` | `DOUBLE` | |
@@ -29,7 +29,7 @@ Returns the average (arithmetic mean) of numeric across all input values. When u
 COUNT( [ ALL | DISTINCT ] value [, value ]*)
 ```
 
-Returns the number of input rows for which value is not null (wholly not null if value is composite).
+value가 null이 아닌 입력 행의 개수를 반환합니다(value가 복합 값이면 전체가 null이 아니어야 합니다).
 
 ### MAX
 
@@ -37,7 +37,7 @@ Returns the number of input rows for which value is not null (wholly not null if
 MAX( [ ALL | DISTINCT ] value)
 ```
 
-Returns the maximum value across all input values.
+모든 입력 값 중 최댓값을 반환합니다.
 
 ### MIN
 
@@ -45,7 +45,7 @@ Returns the maximum value across all input values.
 MIN( [ ALL | DISTINCT ] value)
 ```
 
-Returns the minimum value across all input values.
+모든 입력 값 중 최솟값을 반환합니다.
 
 ### SUM
 
@@ -53,7 +53,7 @@ Returns the minimum value across all input values.
 SUM( [ ALL | DISTINCT ] numeric)
 ```
 
-Returns the sum of numeric across all input values.
+모든 입력 값에 대한 numeric의 합을 반환합니다.
 
 ### ANY_VALUE
 
@@ -61,7 +61,7 @@ Returns the sum of numeric across all input values.
 ANY_VALUE( [ ALL | DISTINCT ] value)
 ```
 
-Returns one of the values of value across all input values; this is NOT specified in the SQL standard.
+모든 입력 값 중 value 값 하나를 반환합니다. 이 함수는 SQL 표준에 정의되어 있지 않습니다.
 
 ### EVERY
 
@@ -69,7 +69,7 @@ Returns one of the values of value across all input values; this is NOT specifie
 EVERY(condition)
 ```
 
-Returns TRUE if all of the values of condition are TRUE.
+condition의 모든 값이 TRUE이면 TRUE를 반환합니다.
 
 ### SOME
 
@@ -77,7 +77,7 @@ Returns TRUE if all of the values of condition are TRUE.
 SOME(condition)
 ```
 
-Returns TRUE if one or more of the values of condition is TRUE.
+condition의 값 중 하나 이상이 TRUE이면 TRUE를 반환합니다.
 
 ### GROUPING
 
@@ -85,9 +85,9 @@ Returns TRUE if one or more of the values of condition is TRUE.
 GROUPING(column_reference [,column_reference])
 ```
 
-Returns a bit vector of the given grouping expressions.
+주어진 그룹화 표현식의 비트 벡터를 반환합니다.
 
-## JSON Functions
+## JSON 함수 {#json-functions}
 
 ### JSON_TYPE
 
@@ -95,11 +95,11 @@ Returns a bit vector of the given grouping expressions.
 JSON_TYPE(jsonValue)
 ```
 
-Returns a string value indicating the type of jsonValue.
+jsonValue의 타입을 나타내는 문자열 값을 반환합니다.
 
 ### FORMAT JSON
 
-Indicates that the value is formatted as JSON.
+값이 JSON 형식임을 나타냅니다.
 
 ### JSON_VALUE
 
@@ -107,7 +107,7 @@ Indicates that the value is formatted as JSON.
 JSON_VALUE(jsonValue, path [ RETURNING type ] [ { ERROR | NULL | DEFAULT expr } ON EMPTY ] [ { ERROR | NULL | DEFAULT expr } ON ERROR ] )
 ```
 
-Extract an SQL scalar from a jsonValue using JSON path expression path.
+JSON 경로 표현식 path를 사용해 jsonValue에서 SQL 스칼라 값을 추출합니다.
 
 ### JSON_QUERY
 
@@ -115,7 +115,7 @@ Extract an SQL scalar from a jsonValue using JSON path expression path.
 JSON_QUERY(jsonValue, path [ RETURNING type ] [ { WITHOUT [ ARRAY ] | WITH [ CONDITIONAL | UNCONDITIONAL ] [ ARRAY ] } WRAPPER ] [ { ERROR | NULL | EMPTY ARRAY | EMPTY OBJECT } ON EMPTY ] [ { ERROR | NULL | EMPTY ARRAY | EMPTY OBJECT } ON ERROR ] )
 ```
 
-Extract a JSON object or JSON array from jsonValue using the path JSON path expression.
+JSON 경로 표현식 path를 사용해 jsonValue에서 JSON 객체 또는 JSON 배열을 추출합니다.
 
 ### JSON_EXISTS
 
@@ -123,7 +123,7 @@ Extract a JSON object or JSON array from jsonValue using the path JSON path expr
 JSON_EXISTS(jsonValue, path [ { TRUE | FALSE | UNKNOWN | ERROR } ON ERROR ] )
 ```
 
-Whether a jsonValue satisfies a search criterion described using JSON path expression path.
+jsonValue가 JSON 경로 표현식 path로 기술한 검색 조건을 만족하는지 여부를 반환합니다.
 
 ### JSON_DEPTH
 
@@ -131,7 +131,7 @@ Whether a jsonValue satisfies a search criterion described using JSON path expre
 JSON_DEPTH(jsonValue)
 ```
 
-Returns an integer value indicating the depth of jsonValue.
+jsonValue의 깊이를 나타내는 정수 값을 반환합니다.
 
 ### JSON_KEYS
 
@@ -139,7 +139,7 @@ Returns an integer value indicating the depth of jsonValue.
 JSON_KEYS(jsonValue [, path ])
 ```
 
-Returns a string indicating the keys of a JSON jsonValue.
+JSON jsonValue의 키를 나타내는 문자열을 반환합니다.
 
 ### JSON_PRETTY
 
@@ -147,7 +147,7 @@ Returns a string indicating the keys of a JSON jsonValue.
 JSON_PRETTY(jsonValue)
 ```
 
-Returns a pretty-printing of jsonValue.
+jsonValue를 보기 좋게 정렬한 형태로 반환합니다.
 
 ### JSON_LENGTH
 
@@ -155,7 +155,7 @@ Returns a pretty-printing of jsonValue.
 JSON_LENGTH(jsonValue [, path ])
 ```
 
-Returns a integer indicating the length of jsonValue.
+jsonValue의 길이를 나타내는 정수를 반환합니다.
 
 ### JSON_REMOVE
 
@@ -163,7 +163,7 @@ Returns a integer indicating the length of jsonValue.
 JSON_REMOVE(jsonValue, path [, path ])
 ```
 
-Removes data from jsonValue using a series of path expressions and returns the result.
+일련의 path 표현식을 사용해 jsonValue에서 데이터를 제거하고 그 결과를 반환합니다.
 
 ### JSON_STORAGE_SIZE
 
@@ -171,7 +171,7 @@ Removes data from jsonValue using a series of path expressions and returns the r
 JSON_STORAGE_SIZE(jsonValue)
 ```
 
-Returns the number of bytes used to store the binary representation of jsonValue.
+jsonValue의 바이너리 표현을 저장하는 데 사용되는 바이트 수를 반환합니다.
 
 ### JSON_OBJECT
 
@@ -179,7 +179,7 @@ Returns the number of bytes used to store the binary representation of jsonValue
 JSON_OBJECT( jsonKeyVal [, jsonKeyVal ]* [ nullBehavior ] )
 ```
 
-Construct JSON object using a series of key-value pairs.
+일련의 키-값 쌍으로 JSON 객체를 생성합니다.
 
 ### JSON_ARRAY
 
@@ -187,7 +187,7 @@ Construct JSON object using a series of key-value pairs.
 JSON_ARRAY( [ jsonVal [, jsonVal ]* ] [ nullBehavior ] )
 ```
 
-Construct a JSON array using a series of values.
+일련의 값으로 JSON 배열을 생성합니다.
 
 ### IS JSON VALUE
 
@@ -195,7 +195,7 @@ Construct a JSON array using a series of values.
 jsonValue IS JSON [ VALUE ]
 ```
 
-Whether jsonValue is a JSON value.
+jsonValue가 JSON 값인지 여부를 반환합니다.
 
 ### IS JSON OBJECT
 
@@ -203,7 +203,7 @@ Whether jsonValue is a JSON value.
 jsonValue IS JSON OBJECT
 ```
 
-Whether jsonValue is a JSON object.
+jsonValue가 JSON 객체인지 여부를 반환합니다.
 
 ### IS JSON ARRAY
 
@@ -211,7 +211,7 @@ Whether jsonValue is a JSON object.
 jsonValue IS JSON ARRAY
 ```
 
-Whether jsonValue is a JSON array.
+jsonValue가 JSON 배열인지 여부를 반환합니다.
 
 ### IS JSON SCALAR
 
@@ -219,9 +219,9 @@ Whether jsonValue is a JSON array.
 jsonValue IS JSON SCALAR
 ```
 
-Whether jsonValue is a JSON scalar value.
+jsonValue가 JSON 스칼라 값인지 여부를 반환합니다.
 
-## Regular Expression Functions
+## 정규 표현식 함수 {#regular-expression-functions}
 
 ### POSIX REGEX CASE INSENSITIVE
 
@@ -229,7 +229,7 @@ Whether jsonValue is a JSON scalar value.
 value 1 POSIX REGEX CASE INSENSITIVE value 2
 ```
 
-Case-sensitive POSIX regular expression.
+대소문자를 구분하는 POSIX 정규 표현식입니다.
 
 ### POSIX REGEX CASE SENSITIVE
 
@@ -237,7 +237,7 @@ Case-sensitive POSIX regular expression.
 value 1 POSIX REGEX CASE SENSITIVE value 2
 ```
 
-Case-sensitive POSIX regular expression.
+대소문자를 구분하는 POSIX 정규 표현식입니다.
 
 ### REGEXP_REPLACE
 
@@ -245,15 +245,15 @@ Case-sensitive POSIX regular expression.
 REGEXP_REPLACE(string, regexp, rep [, pos [, occurrence [, matchType]]])
 ```
 
-Replaces all substrings of string that match regexp with rep at the starting pos in expr (if omitted, the default is 1), occurrence specifies which occurrence of a match to search for (if omitted, the default is 1), matchType specifies how to perform matching
+expr의 시작 위치 pos부터 regexp와 일치하는 string의 모든 부분 문자열을 rep로 치환합니다(pos를 생략하면 기본값은 1입니다). occurrence는 검색할 일치 항목의 순번을 지정하고(생략하면 기본값은 1입니다), matchType은 일치 방식을 지정합니다.
 
 ```sql
 REGEXP_REPLACE(string, regexp)
 ```
 
-Replaces all substrings of value that match regexp with an empty string and returns modified value.
+regexp와 일치하는 value의 모든 부분 문자열을 빈 문자열로 치환하고, 수정된 value를 반환합니다.
 
-## Numeric Functions
+## 숫자 함수 {#numeric-functions}
 
 ### MOD
 
@@ -261,7 +261,7 @@ Replaces all substrings of value that match regexp with an empty string and retu
 MOD(numeric1, numeric2)
 ```
 
-Returns the remainder (modulus) of numeric1 divided by numeric2. The result is negative only if numeric1 is negative.
+numeric1을 numeric2로 나눈 나머지(모듈러스)를 반환합니다. 결과는 numeric1이 음수일 때만 음수가 됩니다.
 
 ### EXP
 
@@ -269,7 +269,7 @@ Returns the remainder (modulus) of numeric1 divided by numeric2. The result is n
 EXP(numeric)
 ```
 
-Returns e raised to the power of numeric.
+e를 numeric 제곱한 값을 반환합니다.
 
 ### POWER
 
@@ -277,7 +277,7 @@ Returns e raised to the power of numeric.
 POWER(numeric1, numeric2)
 ```
 
-Returns numeric1 raised to the power of numeric2.
+numeric1을 numeric2 제곱한 값을 반환합니다.
 
 ### LN
 
@@ -285,7 +285,7 @@ Returns numeric1 raised to the power of numeric2.
 LN(numeric)
 ```
 
-Returns the natural logarithm (base e) of numeric.
+numeric의 자연로그(밑 e)를 반환합니다.
 
 ### LOG10
 
@@ -293,7 +293,7 @@ Returns the natural logarithm (base e) of numeric.
 LOG10(numeric)
 ```
 
-Returns the base 10 logarithm of numeric.
+numeric의 밑 10 로그를 반환합니다.
 
 ### ABS
 
@@ -301,7 +301,7 @@ Returns the base 10 logarithm of numeric.
 ABS(numeric)
 ```
 
-Returns the absolute value of numeric.
+numeric의 절댓값을 반환합니다.
 
 ### RAND
 
@@ -309,7 +309,7 @@ Returns the absolute value of numeric.
 RAND([seed])
 ```
 
-Generates a random double between 0 and 1 inclusive, optionally initializing the random number generator with seed.
+0과 1 사이(양 끝 포함)의 임의의 double 값을 생성하며, 선택적으로 seed로 난수 생성기를 초기화합니다.
 
 ### RAND_INTEGER
 
@@ -317,7 +317,7 @@ Generates a random double between 0 and 1 inclusive, optionally initializing the
 RAND_INTEGER([seed, ] numeric)
 ```
 
-Generates a random integer between 0 and numeric - 1 inclusive, optionally initializing the random number generator with seed.
+0과 numeric - 1 사이(양 끝 포함)의 임의의 정수를 생성하며, 선택적으로 seed로 난수 생성기를 초기화합니다.
 
 ### ACOS
 
@@ -325,7 +325,7 @@ Generates a random integer between 0 and numeric - 1 inclusive, optionally initi
 ACOS(numeric)
 ```
 
-Returns the arc cosine of numeric.
+numeric의 아크코사인을 반환합니다.
 
 ### ASIN
 
@@ -333,7 +333,7 @@ Returns the arc cosine of numeric.
 ASIN(numeric)
 ```
 
-Returns the arc sine of numeric.
+numeric의 아크사인을 반환합니다.
 
 ### ATAN
 
@@ -341,7 +341,7 @@ Returns the arc sine of numeric.
 ATAN(numeric)
 ```
 
-Returns the arc tangent of numeric.
+numeric의 아크탄젠트를 반환합니다.
 
 ### ATAN2
 
@@ -349,7 +349,7 @@ Returns the arc tangent of numeric.
 ATAN2(numeric, numeric)
 ```
 
-Returns the arc tangent of the numeric coordinates.
+numeric 좌표의 아크탄젠트를 반환합니다.
 
 ### SQRT
 
@@ -357,7 +357,7 @@ Returns the arc tangent of the numeric coordinates.
 SQRT(numeric)
 ```
 
-Returns the square root of numeric.
+numeric의 제곱근을 반환합니다.
 
 ### CBRT
 
@@ -365,7 +365,7 @@ Returns the square root of numeric.
 CBRT(numeric)
 ```
 
-Returns the cube root of numeric.
+numeric의 세제곱근을 반환합니다.
 
 ### COS
 
@@ -373,7 +373,7 @@ Returns the cube root of numeric.
 COS(numeric)
 ```
 
-Returns the cosine of numeric.
+numeric의 코사인을 반환합니다.
 
 ### COSH
 
@@ -381,7 +381,7 @@ Returns the cosine of numeric.
 COSH(numeric)
 ```
 
-Returns the hyperbolic cosine of numeric.
+numeric의 쌍곡코사인을 반환합니다.
 
 ### COT
 
@@ -389,7 +389,7 @@ Returns the hyperbolic cosine of numeric.
 COT(numeric)
 ```
 
-Returns the cotangent of numeric.
+numeric의 코탄젠트를 반환합니다.
 
 ### DEGREES
 
@@ -397,7 +397,7 @@ Returns the cotangent of numeric.
 DEGREES(numeric)
 ```
 
-Converts numeric from radians to degrees.
+numeric을 라디안에서 도(degree)로 변환합니다.
 
 ### RADIANS
 
@@ -405,7 +405,7 @@ Converts numeric from radians to degrees.
 RADIANS(numeric)
 ```
 
-Converts numeric from degrees to radians.
+numeric을 도에서 라디안으로 변환합니다.
 
 ### ROUND
 
@@ -413,7 +413,7 @@ Converts numeric from degrees to radians.
 ROUND(numeric1 [, integer2])
 ```
 
-Rounds numeric1 to optionally integer2 (if not specified 0) places right to the decimal point.
+numeric1을 소수점 오른쪽 integer2 자리에서 반올림합니다(integer2를 지정하지 않으면 0입니다).
 
 ### SIGN
 
@@ -421,7 +421,7 @@ Rounds numeric1 to optionally integer2 (if not specified 0) places right to the 
 SIGN(numeric)
 ```
 
-Returns the signum of numeric.
+numeric의 부호(signum)를 반환합니다.
 
 ### SIN
 
@@ -429,7 +429,7 @@ Returns the signum of numeric.
 SIN(numeric)
 ```
 
-Returns the sine of numeric.
+numeric의 사인을 반환합니다.
 
 ### SINH
 
@@ -437,7 +437,7 @@ Returns the sine of numeric.
 SINH(numeric)
 ```
 
-Returns the hyperbolic sine of numeric.
+numeric의 쌍곡사인을 반환합니다.
 
 ### TAN
 
@@ -445,7 +445,7 @@ Returns the hyperbolic sine of numeric.
 TAN(numeric)
 ```
 
-Returns the tangent of numeric.
+numeric의 탄젠트를 반환합니다.
 
 ### TANH
 
@@ -453,7 +453,7 @@ Returns the tangent of numeric.
 TANH(numeric)
 ```
 
-Returns the hyperbolic tangent of numeric.
+numeric의 쌍곡탄젠트를 반환합니다.
 
 ### TRUNCATE
 
@@ -461,7 +461,7 @@ Returns the hyperbolic tangent of numeric.
 TRUNCATE(numeric1 [, integer2])
 ```
 
-Truncates numeric1 to optionally integer2 (if not specified 0) places right to the decimal point.
+numeric1을 소수점 오른쪽 integer2 자리에서 버림합니다(integer2를 지정하지 않으면 0입니다).
 
 ### PI
 
@@ -469,9 +469,9 @@ Truncates numeric1 to optionally integer2 (if not specified 0) places right to t
 PI()
 ```
 
-Returns a value that is closer than any other value to Pi.
+다른 어떤 값보다도 원주율(Pi)에 가까운 값을 반환합니다.
 
-## String Functions
+## 문자열 함수 {#string-functions}
 
 ### UPPER
 
@@ -479,7 +479,7 @@ Returns a value that is closer than any other value to Pi.
 UPPER(string)
 ```
 
-Returns a character string converted to upper case.
+대문자로 변환한 문자열을 반환합니다.
 
 ### LOWER
 
@@ -487,7 +487,7 @@ Returns a character string converted to upper case.
 LOWER(string)
 ```
 
-Returns a character string converted to lower case.
+소문자로 변환한 문자열을 반환합니다.
 
 ### INITCAP
 
@@ -495,7 +495,7 @@ Returns a character string converted to lower case.
 INITCAP(string)
 ```
 
-Returns string with the first letter of each word converter to upper case and the rest to lower case. Words are sequences of alphanumeric characters separated by non-alphanumeric characters.
+각 단어의 첫 글자를 대문자로, 나머지를 소문자로 변환한 string을 반환합니다. 단어는 영숫자가 아닌 문자로 구분되는 영숫자 문자의 연속입니다.
 
 ### TO_BASE64
 
@@ -503,7 +503,7 @@ Returns string with the first letter of each word converter to upper case and th
 TO_BASE64(string)
 ```
 
-Converts the string to base-64 encoded form and returns an encoded string
+string을 base-64로 인코딩한 형태로 변환해 인코딩된 문자열을 반환합니다.
 
 ### FROM_BASE64
 
@@ -511,7 +511,7 @@ Converts the string to base-64 encoded form and returns an encoded string
 FROM_BASE64(string)
 ```
 
-Returns the decoded result of a base-64 string as a string.
+base-64 문자열을 디코딩한 결과를 문자열로 반환합니다.
 
 ### MD5
 
@@ -519,7 +519,7 @@ Returns the decoded result of a base-64 string as a string.
 MD5(string)
 ```
 
-Calculates an MD5 128-bit checksum of string and returns it as a hex string.
+string의 MD5 128비트 체크섬을 계산해 16진수 문자열로 반환합니다.
 
 ### SHA1
 
@@ -527,7 +527,7 @@ Calculates an MD5 128-bit checksum of string and returns it as a hex string.
 SHA1(string)
 ```
 
-Calculates a SHA-1 hash value of string and returns it as a hex string.
+string의 SHA-1 해시 값을 계산해 16진수 문자열로 반환합니다.
 
 ### SUBSTRING
 
@@ -535,25 +535,25 @@ Calculates a SHA-1 hash value of string and returns it as a hex string.
 SUBSTRING(string FROM integer)
 ```
 
-Returns a substring of a character string starting at a given point.
+지정한 위치부터 시작하는 문자열의 부분 문자열을 반환합니다.
 
 ```sql
 SUBSTRING(string FROM integer FOR integer)
 ```
 
-Returns a substring of a character string starting at a given point with a given length.
+지정한 위치부터 지정한 길이만큼의 문자열 부분 문자열을 반환합니다.
 
 ```sql
 SUBSTRING(binary FROM integer)
 ```
 
-Returns a substring of binary starting at a given point.
+지정한 위치부터 시작하는 binary의 부분 문자열을 반환합니다.
 
 ```sql
 SUBSTRING(binary FROM integer FOR integer)
 ```
 
-Returns a substring of binary starting at a given point with a given length.
+지정한 위치부터 지정한 길이만큼의 binary 부분 문자열을 반환합니다.
 
 ### LEFT
 
@@ -561,7 +561,7 @@ Returns a substring of binary starting at a given point with a given length.
 LEFT(string, length)
 ```
 
-Returns the leftmost length characters from the string.
+string의 왼쪽에서 length개 문자를 반환합니다.
 
 ### RIGHT
 
@@ -569,7 +569,7 @@ Returns the leftmost length characters from the string.
 RIGHT(string, length)
 ```
 
-Returns the rightmost length characters from the string.
+string의 오른쪽에서 length개 문자를 반환합니다.
 
 ### REPLACE
 
@@ -577,7 +577,7 @@ Returns the rightmost length characters from the string.
 REPLACE(char, search_string [, replace_string])
 ```
 
-Replaces search_string with replace_string.
+search_string을 replace_string으로 치환합니다.
 
 ### TRANSLATE
 
@@ -585,7 +585,7 @@ Replaces search_string with replace_string.
 TRANSLATE(expr, fromString, toString)
 ```
 
-Returns expr with all occurrences of each character in fromString replaced by its corresponding character in toString. Characters in expr that are not in fromString are not replaced.
+expr에서 fromString의 각 문자가 나타날 때마다 toString의 대응하는 문자로 치환한 결과를 반환합니다. expr에서 fromString에 없는 문자는 치환하지 않습니다.
 
 ### CHR
 
@@ -593,7 +593,7 @@ Returns expr with all occurrences of each character in fromString replaced by it
 CHR(integer)
 ```
 
-Returns the character whose UTF-8 code is integer.
+UTF-8 코드가 integer인 문자를 반환합니다.
 
 ### CHAR_LENGTH
 
@@ -601,7 +601,7 @@ Returns the character whose UTF-8 code is integer.
 CHAR_LENGTH(string)
 ```
 
-Returns the number of characters in a character string.
+문자열의 문자 개수를 반환합니다.
 
 ### CHARACTER_LENGTH
 
@@ -609,7 +609,7 @@ Returns the number of characters in a character string.
 CHARACTER_LENGTH(string)
 ```
 
-Returns the number of characters in a character string.
+문자열의 문자 개수를 반환합니다.
 
 ### ||
 
@@ -617,7 +617,7 @@ Returns the number of characters in a character string.
 string || string
 ```
 
-Concatenates two character strings.
+두 문자열을 연결합니다.
 
 ### CONCAT
 
@@ -625,19 +625,19 @@ Concatenates two character strings.
 CONCAT(string, string)
 ```
 
-Concatenates two strings, returns null only when both string arguments are null, otherwise treats null as empty string.
+두 문자열을 연결하며, 두 string 인수가 모두 null일 때만 null을 반환하고, 그렇지 않으면 null을 빈 문자열로 취급합니다.
 
 ```sql
 CONCAT(string [, string ]*)
 ```
 
-Concatenates one or more strings, returns null if any of the arguments is null.
+하나 이상의 문자열을 연결하며, 인수 중 하나라도 null이면 null을 반환합니다.
 
 ```sql
 CONCAT(string [, string ]*)
 ```
 
-Concatenates one or more strings, null is treated as empty string.
+하나 이상의 문자열을 연결하며, null은 빈 문자열로 취급합니다.
 
 ### OVERLAY
 
@@ -645,13 +645,13 @@ Concatenates one or more strings, null is treated as empty string.
 OVERLAY(string1 PLACING string2 FROM integer [ FOR integer2 ])
 ```
 
-Replaces a substring of string1 with string2.
+string1의 부분 문자열을 string2로 치환합니다.
 
 ```sql
 OVERLAY(binary1 PLACING binary2 FROM integer [ FOR integer2 ])
 ```
 
-Replaces a substring of binary1 with binary2.
+binary1의 부분 문자열을 binary2로 치환합니다.
 
 ### POSITION
 
@@ -659,25 +659,25 @@ Replaces a substring of binary1 with binary2.
 POSITION(substring IN string)
 ```
 
-Returns the position of the first occurrence of substring in string.
+string에서 substring이 처음 나타나는 위치를 반환합니다.
 
 ```sql
 POSITION(substring IN string FROM integer)
 ```
 
-Returns the position of the first occurrence of substring in string starting at a given point (not standard SQL).
+지정한 위치부터 시작해 string에서 substring이 처음 나타나는 위치를 반환합니다(표준 SQL 아님).
 
 ```sql
 POSITION(binary1 IN binary2)
 ```
 
-Returns the position of the first occurrence of binary1 in binary2.
+binary2에서 binary1이 처음 나타나는 위치를 반환합니다.
 
 ```sql
 POSITION(binary1 IN binary2 FROM integer)
 ```
 
-Returns the position of the first occurrence of binary1 in binary2 starting at a given point (not standard SQL).
+지정한 위치부터 시작해 binary2에서 binary1이 처음 나타나는 위치를 반환합니다(표준 SQL 아님).
 
 ### ASCII
 
@@ -685,7 +685,7 @@ Returns the position of the first occurrence of binary1 in binary2 starting at a
 ASCII(string)
 ```
 
-Returns the ASCII code of the first character of string; if the first character is a non-ASCII character, returns its Unicode code point; returns 0 if string is empty.
+string의 첫 문자의 ASCII 코드를 반환합니다. 첫 문자가 ASCII가 아닌 문자이면 해당 유니코드 코드 포인트를 반환하고, string이 비어 있으면 0을 반환합니다.
 
 ### REPEAT
 
@@ -693,7 +693,7 @@ Returns the ASCII code of the first character of string; if the first character 
 REPEAT(string, integer)
 ```
 
-Returns a string consisting of string repeated of integer times; returns an empty string if integer is less than 1.
+string을 integer번 반복한 문자열을 반환합니다. integer가 1보다 작으면 빈 문자열을 반환합니다.
 
 ### SPACE
 
@@ -701,7 +701,7 @@ Returns a string consisting of string repeated of integer times; returns an empt
 SPACE(integer)
 ```
 
-Returns a string with an integer number of spaces; returns an empty string if integer is less than 1.
+공백을 integer개 담은 문자열을 반환합니다. integer가 1보다 작으면 빈 문자열을 반환합니다.
 
 ### STRCMP
 
@@ -709,7 +709,7 @@ Returns a string with an integer number of spaces; returns an empty string if in
 STRCMP(string, string)
 ```
 
-Returns 0 if both of the strings are same and returns -1 when the first argument is smaller than the second and 1 when the second one is smaller than the first one.
+두 문자열이 같으면 0을 반환하고, 첫 번째 인수가 두 번째보다 작으면 -1을, 두 번째가 첫 번째보다 작으면 1을 반환합니다.
 
 ### SOUNDEX
 
@@ -717,8 +717,8 @@ Returns 0 if both of the strings are same and returns -1 when the first argument
 SOUNDEX(string)
 ```
 
-- Returns the phonetic representation of string; throws if string is encoded with multi-byte encoding such as UTF-8; or
-- Returns the phonetic representation of string; return original string if string is encoded with multi-byte encoding such as UTF-8
+- string의 발음 표현을 반환합니다. string이 UTF-8 같은 멀티바이트 인코딩으로 인코딩되어 있으면 예외를 던집니다. 또는
+- string의 발음 표현을 반환합니다. string이 UTF-8 같은 멀티바이트 인코딩으로 인코딩되어 있으면 원본 string을 반환합니다.
 
 ### DIFFERENCE
 
@@ -726,7 +726,7 @@ SOUNDEX(string)
 DIFFERENCE(string, string)
 ```
 
-Returns a measure of the similarity of two strings, namely the number of character positions that their SOUNDEX values have in common: 4 if the SOUNDEX values are same and 0 if the SOUNDEX values are totally different.
+두 문자열의 유사도, 즉 두 문자열의 SOUNDEX 값이 공통으로 갖는 문자 위치의 개수를 반환합니다. SOUNDEX 값이 같으면 4, 완전히 다르면 0입니다.
 
 ### REVERSE
 
@@ -734,7 +734,7 @@ Returns a measure of the similarity of two strings, namely the number of charact
 REVERSE(string)
 ```
 
-Returns string with the order of the characters reversed.
+문자 순서를 뒤집은 string을 반환합니다.
 
 ### TRIM
 
@@ -742,7 +742,7 @@ Returns string with the order of the characters reversed.
 TRIM( { BOTH | LEADING | TRAILING } string1 FROM string2)
 ```
 
-Removes the longest string containing only the characters in string1 from the start/end/both ends of string1.
+string1에 포함된 문자만으로 이루어진 가장 긴 문자열을 string1의 앞·뒤·양쪽 끝에서 제거합니다.
 
 ### LTRIM
 
@@ -750,7 +750,7 @@ Removes the longest string containing only the characters in string1 from the st
 LTRIM(string)
 ```
 
-Returns string with all blanks removed from the start.
+시작 부분의 모든 공백을 제거한 string을 반환합니다.
 
 ### RTRIM
 
@@ -758,7 +758,7 @@ Returns string with all blanks removed from the start.
 RTRIM(string)
 ```
 
-Returns string with all blanks removed from the end.
+끝 부분의 모든 공백을 제거한 string을 반환합니다.
 
 ### SUBSTR
 
@@ -766,7 +766,7 @@ Returns string with all blanks removed from the end.
 SUBSTR(string, position [, substringLength ])
 ```
 
-Returns a portion of string, beginning at character position, substringLength characters long. SUBSTR calculates lengths using characters as defined by the input character set.
+string에서 position 위치부터 substringLength 길이만큼의 부분을 반환합니다. SUBSTR은 입력 문자 집합에 정의된 문자를 기준으로 길이를 계산합니다.
 
 ### LENGTH
 
@@ -774,7 +774,7 @@ Returns a portion of string, beginning at character position, substringLength ch
 LENGTH(string)
 ```
 
-Equivalent to CHAR_LENGTH(string).
+CHAR_LENGTH(string)과 동일합니다.
 
 ### OCTET_LENGTH
 
@@ -782,7 +782,7 @@ Equivalent to CHAR_LENGTH(string).
 OCTET_LENGTH(binary)
 ```
 
-Returns the number of bytes in binary.
+binary의 바이트 수를 반환합니다.
 
 ### LIKE
 
@@ -790,7 +790,7 @@ Returns the number of bytes in binary.
 string1 LIKE string2 [ ESCAPE string3 ]
 ```
 
-Whether string1 matches pattern string2.
+string1이 패턴 string2와 일치하는지 여부를 반환합니다.
 
 ### SIMILAR TO
 
@@ -798,9 +798,9 @@ Whether string1 matches pattern string2.
 string1 SIMILAR TO string2 [ ESCAPE string3 ]
 ```
 
-Whether string1 matches regular expression string2.
+string1이 정규 표현식 string2와 일치하는지 여부를 반환합니다.
 
-## Date/Time Functions
+## 날짜/시간 함수 {#datetime-functions}
 
 ### EXTRACT
 
@@ -808,7 +808,7 @@ Whether string1 matches regular expression string2.
 EXTRACT(timeUnit FROM datetime)
 ```
 
-Extracts and returns the value of a specified datetime field from a datetime value expression.
+datetime 값 표현식에서 지정한 datetime 필드의 값을 추출해 반환합니다.
 
 ### FLOOR
 
@@ -816,7 +816,7 @@ Extracts and returns the value of a specified datetime field from a datetime val
 FLOOR(datetime TO timeUnit)
 ```
 
-Rounds datetime down to timeUnit.
+datetime을 timeUnit 단위로 내림합니다.
 
 ### CEIL
 
@@ -824,7 +824,7 @@ Rounds datetime down to timeUnit.
 CEIL(datetime TO timeUnit)
 ```
 
-Rounds datetime up to timeUnit.
+datetime을 timeUnit 단위로 올림합니다.
 
 ### TIMESTAMPDIFF
 
@@ -832,7 +832,7 @@ Rounds datetime up to timeUnit.
 TIMESTAMPDIFF(timeUnit, datetime, datetime2)
 ```
 
-Returns the (signed) number of timeUnit intervals between datetime and datetime2. Equivalent to (datetime2 - datetime) timeUnit.
+datetime과 datetime2 사이의 timeUnit 간격 개수를 (부호 있는) 값으로 반환합니다. (datetime2 - datetime) timeUnit과 동일합니다.
 
 ### LAST_DAY
 
@@ -840,7 +840,7 @@ Returns the (signed) number of timeUnit intervals between datetime and datetime2
 LAST_DAY(date)
 ```
 
-Returns the date of the last day of the month in a value of datatype DATE; For example, it returns DATE'2020-02-29' for both DATE'2020-02-10' and TIMESTAMP'2020-02-10 10:10:10'.
+해당 월의 마지막 날짜를 DATE 타입 값으로 반환합니다. 예를 들어 DATE'2020-02-10'과 TIMESTAMP'2020-02-10 10:10:10' 모두에 대해 DATE'2020-02-29'를 반환합니다.
 
 ### DAYNAME
 
@@ -848,7 +848,7 @@ Returns the date of the last day of the month in a value of datatype DATE; For e
 DAYNAME(datetime)
 ```
 
-Returns the name of the day of the week based on the datetime value.
+datetime 값을 기준으로 요일 이름을 반환합니다.
 
 ### MONTHNAME
 
@@ -856,7 +856,7 @@ Returns the name of the day of the week based on the datetime value.
 MONTHNAME(date)
 ```
 
-Returns the name, in the connection's locale, of the month in datetime; for example, it returns '二月' for both DATE '2020-02-10' and TIMESTAMP '2020-02-10 10:10:10'.
+연결의 로케일로 datetime의 월 이름을 반환합니다. 예를 들어 DATE '2020-02-10'과 TIMESTAMP '2020-02-10 10:10:10' 모두에 대해 '二月'을 반환합니다.
 
 ### DAYOFMONTH
 
@@ -864,7 +864,7 @@ Returns the name, in the connection's locale, of the month in datetime; for exam
 DAYOFMONTH(date)
 ```
 
-Equivalent to EXTRACT(DAY FROM date). Returns an integer between 1 and 31.
+EXTRACT(DAY FROM date)와 동일합니다. 1과 31 사이의 정수를 반환합니다.
 
 ### DAYOFWEEK
 
@@ -872,7 +872,7 @@ Equivalent to EXTRACT(DAY FROM date). Returns an integer between 1 and 31.
 DAYOFWEEK(date)
 ```
 
-Equivalent to EXTRACT(DOW FROM date). Returns an integer between 1 and 7.
+EXTRACT(DOW FROM date)와 동일합니다. 1과 7 사이의 정수를 반환합니다.
 
 ### DAYOFYEAR
 
@@ -880,7 +880,7 @@ Equivalent to EXTRACT(DOW FROM date). Returns an integer between 1 and 7.
 DAYOFYEAR(date)
 ```
 
-Equivalent to EXTRACT(DOY FROM date). Returns an integer between 1 and 366.
+EXTRACT(DOY FROM date)와 동일합니다. 1과 366 사이의 정수를 반환합니다.
 
 ### YEAR
 
@@ -888,7 +888,7 @@ Equivalent to EXTRACT(DOY FROM date). Returns an integer between 1 and 366.
 YEAR(date)
 ```
 
-Equivalent to EXTRACT(YEAR FROM date). Returns an integer.
+EXTRACT(YEAR FROM date)와 동일합니다. 정수를 반환합니다.
 
 ### QUARTER
 
@@ -896,7 +896,7 @@ Equivalent to EXTRACT(YEAR FROM date). Returns an integer.
 QUARTER(date)
 ```
 
-Equivalent to EXTRACT(QUARTER FROM date). Returns an integer between 1 and 4.
+EXTRACT(QUARTER FROM date)와 동일합니다. 1과 4 사이의 정수를 반환합니다.
 
 ### MONTH
 
@@ -904,7 +904,7 @@ Equivalent to EXTRACT(QUARTER FROM date). Returns an integer between 1 and 4.
 MONTH(date)
 ```
 
-Equivalent to EXTRACT(MONTH FROM date). Returns an integer between 1 and 12.
+EXTRACT(MONTH FROM date)와 동일합니다. 1과 12 사이의 정수를 반환합니다.
 
 ### WEEK
 
@@ -912,7 +912,7 @@ Equivalent to EXTRACT(MONTH FROM date). Returns an integer between 1 and 12.
 WEEK(date)
 ```
 
-Equivalent to EXTRACT(WEEK FROM date). Returns an integer between 1 and 53.
+EXTRACT(WEEK FROM date)와 동일합니다. 1과 53 사이의 정수를 반환합니다.
 
 ### HOUR
 
@@ -920,7 +920,7 @@ Equivalent to EXTRACT(WEEK FROM date). Returns an integer between 1 and 53.
 HOUR(date)
 ```
 
-Equivalent to EXTRACT(HOUR FROM date). Returns an integer between 0 and 23.
+EXTRACT(HOUR FROM date)와 동일합니다. 0과 23 사이의 정수를 반환합니다.
 
 ### MINUTE
 
@@ -928,7 +928,7 @@ Equivalent to EXTRACT(HOUR FROM date). Returns an integer between 0 and 23.
 MINUTE(date)
 ```
 
-Equivalent to EXTRACT(MINUTE FROM date). Returns an integer between 0 and 59.
+EXTRACT(MINUTE FROM date)와 동일합니다. 0과 59 사이의 정수를 반환합니다.
 
 ### SECOND
 
@@ -936,7 +936,7 @@ Equivalent to EXTRACT(MINUTE FROM date). Returns an integer between 0 and 59.
 SECOND(date)
 ```
 
-Equivalent to EXTRACT(SECOND FROM date). Returns an integer between 0 and 59.
+EXTRACT(SECOND FROM date)와 동일합니다. 0과 59 사이의 정수를 반환합니다.
 
 ### TIMESTAMP_SECONDS
 
@@ -944,7 +944,7 @@ Equivalent to EXTRACT(SECOND FROM date). Returns an integer between 0 and 59.
 TIMESTAMP_SECONDS(integer)
 ```
 
-Returns the TIMESTAMP that is integer seconds after 1970-01-01 00:00:00.
+1970-01-01 00:00:00으로부터 integer초 뒤의 TIMESTAMP를 반환합니다.
 
 ### TIMESTAMP_MILLIS
 
@@ -952,7 +952,7 @@ Returns the TIMESTAMP that is integer seconds after 1970-01-01 00:00:00.
 TIMESTAMP_MILLIS(integer)
 ```
 
-Returns the TIMESTAMP that is integer milliseconds after 1970-01-01 00:00:00.
+1970-01-01 00:00:00으로부터 integer밀리초 뒤의 TIMESTAMP를 반환합니다.
 
 ### TIMESTAMP_MICROS
 
@@ -960,7 +960,7 @@ Returns the TIMESTAMP that is integer milliseconds after 1970-01-01 00:00:00.
 TIMESTAMP_MICROS(integer)
 ```
 
-Returns the TIMESTAMP that is integer microseconds after 1970-01-01 00:00:00.
+1970-01-01 00:00:00으로부터 integer마이크로초 뒤의 TIMESTAMP를 반환합니다.
 
 ### UNIX_SECONDS
 
@@ -968,7 +968,7 @@ Returns the TIMESTAMP that is integer microseconds after 1970-01-01 00:00:00.
 UNIX_SECONDS(timestamp)
 ```
 
-Returns the number of seconds since 1970-01-01 00:00:00.
+1970-01-01 00:00:00 이후의 초 수를 반환합니다.
 
 ### UNIX_MILLIS
 
@@ -976,7 +976,7 @@ Returns the number of seconds since 1970-01-01 00:00:00.
 UNIX_MILLIS(timestamp)
 ```
 
-Returns the number of milliseconds since 1970-01-01 00:00:00.
+1970-01-01 00:00:00 이후의 밀리초 수를 반환합니다.
 
 ### UNIX_MICROS
 
@@ -984,7 +984,7 @@ Returns the number of milliseconds since 1970-01-01 00:00:00.
 UNIX_MICROS(timestamp)
 ```
 
-Returns the number of microseconds since 1970-01-01 00:00:00.
+1970-01-01 00:00:00 이후의 마이크로초 수를 반환합니다.
 
 ### UNIX_DATE
 
@@ -992,7 +992,7 @@ Returns the number of microseconds since 1970-01-01 00:00:00.
 UNIX_DATE(date)
 ```
 
-Returns the number of days since 1970-01-01
+1970-01-01 이후의 일 수를 반환합니다.
 
 ### DATE_FROM_UNIX_DATE
 
@@ -1000,7 +1000,7 @@ Returns the number of days since 1970-01-01
 DATE_FROM_UNIX_DATE(integer)
 ```
 
-Returns the DATE that is integer days after 1970-01-01.
+1970-01-01로부터 integer일 뒤의 DATE를 반환합니다.
 
 ### DATE
 
@@ -1008,31 +1008,31 @@ Returns the DATE that is integer days after 1970-01-01.
 DATE(timestamp)
 ```
 
-Extracts the DATE from a timestamp.
+timestamp에서 DATE를 추출합니다.
 
 ```sql
 DATE(timestampLtz)
 ```
 
-Extracts the DATE from timestampLtz (an instant; BigQuery's TIMESTAMP type), assuming UTC.
+UTC를 가정하고 timestampLtz(순간값; BigQuery의 TIMESTAMP 타입)에서 DATE를 추출합니다.
 
 ```sql
 DATE(timestampLtz, timeZone)
 ```
 
-Extracts the DATE from timestampLtz (an instant; BigQuery's TIMESTAMP type) in timeZone.
+timeZone 기준으로 timestampLtz(순간값; BigQuery의 TIMESTAMP 타입)에서 DATE를 추출합니다.
 
 ```sql
 DATE(string)
 ```
 
-Equivalent to CAST(string AS DATE).
+CAST(string AS DATE)와 동일합니다.
 
 ```sql
 DATE(year, month, day)
 ```
 
-Returns a DATE value for year, month, and day (all of type INTEGER).
+year, month, day(모두 INTEGER 타입)로 구성된 DATE 값을 반환합니다.
 
 ### CURRENT_TIMESTAMP
 
@@ -1040,7 +1040,7 @@ Returns a DATE value for year, month, and day (all of type INTEGER).
 CURRENT_TIMESTAMP
 ```
 
-Returns the current date and time in the session time zone, in a value of datatype TIMESTAMP WITH LOCAL TIME ZONE.
+세션 시간대 기준 현재 날짜와 시간을 TIMESTAMP WITH LOCAL TIME ZONE 타입 값으로 반환합니다.
 
 ### CURRENT_DATE
 
@@ -1048,7 +1048,7 @@ Returns the current date and time in the session time zone, in a value of dataty
 CURRENT_DATE
 ```
 
-Returns the current date in the session time zone, in a value of datatype DATE.
+세션 시간대 기준 현재 날짜를 DATE 타입 값으로 반환합니다.
 
 ### LOCALTIME
 
@@ -1056,13 +1056,13 @@ Returns the current date in the session time zone, in a value of datatype DATE.
 LOCALTIME
 ```
 
-Returns the current date and time in the session time zone in a value of datatype TIME.
+세션 시간대 기준 현재 날짜와 시간을 TIME 타입 값으로 반환합니다.
 
 ```sql
 LOCALTIME(precision)
 ```
 
-Returns the current date and time in the session time zone in a value of datatype TIME, with precision digits of precision.
+세션 시간대 기준 현재 날짜와 시간을 TIME 타입 값으로 반환하며, precision 자리의 정밀도를 갖습니다.
 
 ### LOCALTIMESTAMP
 
@@ -1070,15 +1070,15 @@ Returns the current date and time in the session time zone in a value of datatyp
 LOCALTIMESTAMP
 ```
 
-Returns the current date and time in the session time zone in a value of datatype TIMESTAMP.
+세션 시간대 기준 현재 날짜와 시간을 TIMESTAMP 타입 값으로 반환합니다.
 
 ```sql
 LOCALTIMESTAMP(precision)
 ```
 
-Returns the current date and time in the session time zone in a value of datatype TIMESTAMP, with precision digits of precision.
+세션 시간대 기준 현재 날짜와 시간을 TIMESTAMP 타입 값으로 반환하며, precision 자리의 정밀도를 갖습니다.
 
-## Other Functions
+## 기타 함수 {#other-functions}
 
 ### CAST
 
@@ -1086,7 +1086,7 @@ Returns the current date and time in the session time zone in a value of datatyp
 CAST(value AS type)
 ```
 
-Converts a value to a given type. Casts between integer types truncate towards 0.
+값을 지정한 타입으로 변환합니다. 정수 타입 간 캐스팅은 0 방향으로 버림합니다.
 
 ### COALESCE
 
@@ -1094,7 +1094,7 @@ Converts a value to a given type. Casts between integer types truncate towards 0
 COALESCE(value, value [, value ]*)
 ```
 
-Provides a value if the first value is null. For example, COALESCE(NULL, 5) returns 5.
+첫 번째 값이 null이면 다른 값을 제공합니다. 예를 들어 COALESCE(NULL, 5)는 5를 반환합니다.
 
 ### GREATEST
 
@@ -1102,7 +1102,7 @@ Provides a value if the first value is null. For example, COALESCE(NULL, 5) retu
 GREATEST(expr [, expr ]*)
 ```
 
-Returns the greatest of the expressions.
+표현식 중 가장 큰 값을 반환합니다.
 
 ### NULLIF
 
@@ -1110,7 +1110,7 @@ Returns the greatest of the expressions.
 NULLIF(value, value)
 ```
 
-Returns NULL if the values are the same. For example, NULLIF(5, 5) returns NULL; NULLIF(5, 0) returns 5.
+두 값이 같으면 NULL을 반환합니다. 예를 들어 NULLIF(5, 5)는 NULL을, NULLIF(5, 0)은 5를 반환합니다.
 
 ### NVL
 
@@ -1118,7 +1118,7 @@ Returns NULL if the values are the same. For example, NULLIF(5, 5) returns NULL;
 NVL(value1, value2)
 ```
 
-Returns value1 if value1 is not null, otherwise value2.
+value1이 null이 아니면 value1을, 그렇지 않으면 value2를 반환합니다.
 
 ### CASE
 
@@ -1130,7 +1130,7 @@ WHEN value1 [, value11 ]* THEN result1
 END
 ```
 
-Simple case.
+단순 CASE입니다.
 
 ```sql
 CASE
@@ -1140,7 +1140,7 @@ WHEN condition1 THEN result1
 END
 ```
 
-Searched case.
+검색 CASE입니다.
 
 ### DECODE
 
@@ -1148,7 +1148,7 @@ Searched case.
 DECODE(value, value1, result1 [, valueN, resultN ]* [, default ])
 ```
 
-Compares value to each valueN value one by one; if value is equal to a valueN, returns the corresponding resultN, else returns default, or NULL if default is not specified.
+value를 각 valueN 값과 하나씩 비교해, value가 어떤 valueN과 같으면 대응하는 resultN을 반환하고, 그렇지 않으면 default를 반환하며, default를 지정하지 않으면 NULL을 반환합니다.
 
 ### LEAST
 
@@ -1156,7 +1156,7 @@ Compares value to each valueN value one by one; if value is equal to a valueN, r
 LEAST(expr [, expr ]* )
 ```
 
-Returns the least of the expressions.
+표현식 중 가장 작은 값을 반환합니다.
 
 ### COMPRESS
 
@@ -1164,7 +1164,7 @@ Returns the least of the expressions.
 COMPRESS(string)
 ```
 
-Compresses a string using zlib compression and returns the result as a binary string.
+zlib 압축으로 문자열을 압축하고 그 결과를 바이너리 문자열로 반환합니다.
 
 ### TYPEOF
 
@@ -1172,7 +1172,7 @@ Compresses a string using zlib compression and returns the result as a binary st
 TYPEOF value
 ```
 
-Returns the type of the specified value.
+지정한 값의 타입을 반환합니다.
 
 ### RAND_UUID
 
@@ -1180,7 +1180,7 @@ Returns the type of the specified value.
 RAND_UUID
 ```
 
-Generates a random UUID.
+임의의 UUID를 생성합니다.
 
 ### SYSTEM_RANGE
 
@@ -1188,9 +1188,9 @@ Generates a random UUID.
 SYSTEM_RANGE(start, end[, increment])
 ```
 
-Returns a range from the table, with an optional increment.
+테이블에서 범위를 반환하며, 증가값을 선택적으로 지정할 수 있습니다.
 
-## Security Functions
+## 보안 함수 {#security-functions}
 
 ### CURRENT_USER
 
@@ -1198,4 +1198,4 @@ Returns a range from the table, with an optional increment.
 CURRENT_USER
 ```
 
-Returns the name of the current database user. When security is disabled, returns the system user name instead.
+현재 데이터베이스 사용자의 이름을 반환합니다. 보안이 비활성화되어 있으면 대신 시스템 사용자 이름을 반환합니다.
