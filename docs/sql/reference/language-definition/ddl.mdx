@@ -1,6 +1,6 @@
 ---
 id: ddl
-title: Data Definition Language (DDL)
+title: 데이터 정의어(DDL)
 ---
 
 {/*
@@ -22,14 +22,14 @@ title: Data Definition Language (DDL)
 
 import RailroadDiagram from '@site/src/components/RailroadDiagram';
 
-This section walks you through all data definition language (DDL) commands supported by Apache Ignite 3.
+이 섹션에서는 Apache Ignite 3가 지원하는 모든 DDL 명령어를 설명합니다.
 
 ## CREATE TABLE
 
-Creates a new table.
+새 테이블을 생성합니다.
 
 :::note
-This can also be done via the [Java API](../../../develop/work-with-data/java-to-tables).
+이 작업은 [Java API](../../../develop/work-with-data/java-to-tables)로도 수행할 수 있습니다.
 :::
 
 <RailroadDiagram>{`
@@ -75,16 +75,16 @@ NonTerminal('profile_name')
 )
 `}</RailroadDiagram>
 
-Keywords and parameters:
+키워드와 매개변수:
 
-* `IF NOT EXISTS` - create the table only if a table with the same name does not exist.
-* `COLOCATE BY` - colocation key. The key can be composite. Primary key must include colocation key.
-* `ZONE` - sets the [Distribution Zone](/sql/reference/language-definition/distribution-zones). Can be specified as a case-sensitive string or case-insensitive identifier. Does not need to exist at the moment of table creation, and can be created before writing data.
-* `STORAGE PROFILE` - sets the [storage profile](../../../configure-and-operate/reference/node-configuration) that will be used to store the table. Must be specified as a case-sensitive string.
+* `IF NOT EXISTS` - 같은 이름의 테이블이 없을 때만 테이블을 생성합니다.
+* `COLOCATE BY` - 콜로케이션 키입니다. 복합 키를 사용할 수 있으며, 기본 키는 반드시 콜로케이션 키를 포함해야 합니다.
+* `ZONE` - [분산 영역(distribution zone)](/sql/reference/language-definition/distribution-zones)을 설정합니다. 대소문자를 구분하는 문자열이나 대소문자를 구분하지 않는 식별자로 지정할 수 있습니다. 테이블을 생성하는 시점에 존재하지 않아도 되며, 데이터를 쓰기 전에 생성할 수 있습니다.
+* `STORAGE PROFILE` - 테이블을 저장할 [스토리지 프로파일](../../../configure-and-operate/reference/node-configuration)을 설정합니다. 대소문자를 구분하는 문자열로 지정해야 합니다.
 
-Examples:
+예시:
 
-Creates a Person table:
+Person 테이블을 생성합니다:
 
 ```sql
 CREATE TABLE IF NOT EXISTS Person (
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS Person (
 )
 ```
 
-Creates a Person table that uses distribution zone `MYZONE`:
+`MYZONE` 분산 영역을 사용하는 Person 테이블을 생성합니다:
 
 ```sql
 CREATE TABLE IF NOT EXISTS Person (
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS Person (
 ) ZONE MYZONE
 ```
 
-Creates a Person table that uses the `default` storage profile regardless of the storage profile specified in the distribution zone:
+분산 영역에 지정된 스토리지 프로파일과 관계없이 `default` 스토리지 프로파일을 사용하는 Person 테이블을 생성합니다:
 
 ```sql
 CREATE TABLE IF NOT EXISTS Person (
@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS Person (
 ) PRIMARY ZONE MYZONE STORAGE PROFILE 'default'
 ```
 
-Creates a Person table where the default value of the `city_id` column is 1:
+`city_id` 컬럼의 기본값이 1인 Person 테이블을 생성합니다:
 
 ```sql
 CREATE TABLE IF NOT EXISTS Person (
@@ -134,11 +134,11 @@ CREATE TABLE IF NOT EXISTS Person (
 
 ## ALTER TABLE
 
-Modifies the structure of an existing table.
+기존 테이블의 구조를 변경합니다.
 
 ### ALTER TABLE IF EXISTS table ADD COLUMN (column1 int, column2 int)
 
-Adds column(s) to an existing table.
+기존 테이블에 컬럼을 추가합니다.
 
 <RailroadDiagram>{`
 Diagram(
@@ -158,25 +158,25 @@ Diagram(
 )
 `}</RailroadDiagram>
 
-Keywords and parameters:
+키워드와 매개변수:
 
-* `IF EXISTS` - do not throw an error if a table with the specified table name does not exist.
+* `IF EXISTS` - 지정한 이름의 테이블이 없어도 오류를 발생시키지 않습니다.
 
-Examples:
+예시:
 
-Add a column to the table:
+테이블에 컬럼을 추가합니다:
 
 ```sql
 ALTER TABLE Person ADD COLUMN city varchar;
 ```
 
-Add a column only if the table exists:
+테이블이 있을 때만 컬럼을 추가합니다:
 
 ```sql
 ALTER TABLE IF EXISTS Person ADD number bigint;
 ```
 
-Add several columns to the table at once:
+테이블에 여러 컬럼을 한 번에 추가합니다:
 
 ```sql
 ALTER TABLE Person ADD COLUMN (code varchar, gdp double);
@@ -184,10 +184,10 @@ ALTER TABLE Person ADD COLUMN (code varchar, gdp double);
 
 ### ALTER TABLE IF EXISTS table DROP COLUMN (column1, column2 int)
 
-Removes column(s) from an existing table. Once a column is removed, it cannot be accessed within queries. This command has the following limitations:
+기존 테이블에서 컬럼을 삭제합니다. 컬럼을 삭제하면 쿼리에서 더 이상 접근할 수 없습니다. 이 명령어에는 다음과 같은 제약이 있습니다.
 
-- If the column was indexed, the index has to be dropped manually in advance by using the 'DROP INDEX' command.
-- It is not possible to remove a column if it represents the entire value stored in the cluster. The limitation is relevant for primitive values.
+- 컬럼에 인덱스가 있다면 'DROP INDEX' 명령어로 미리 수동으로 인덱스를 삭제해야 합니다.
+- 클러스터에 저장된 값 전체를 나타내는 컬럼은 삭제할 수 없습니다. 이 제약은 프리미티브 값에 해당합니다.
 
 <RailroadDiagram>{`
 Diagram(
@@ -207,25 +207,25 @@ NonTerminal('column_list', {href:'./grammar-reference#column_list'})
 )
 `}</RailroadDiagram>
 
-Keywords and parameters:
+키워드와 매개변수:
 
-* `IF EXISTS` - do not throw an error if a table with the specified table name does not exist.
+* `IF EXISTS` - 지정한 이름의 테이블이 없어도 오류를 발생시키지 않습니다.
 
-Examples:
+예시:
 
-Drop a column from the table:
+테이블에서 컬럼을 삭제합니다:
 
 ```sql
 ALTER TABLE Person DROP COLUMN city;
 ```
 
-Drop a column only if the table exists:
+테이블이 있을 때만 컬럼을 삭제합니다:
 
 ```sql
 ALTER TABLE IF EXISTS Person DROP COLUMN number;
 ```
 
-Drop several columns from the table at once:
+테이블에서 여러 컬럼을 한 번에 삭제합니다:
 
 ```sql
 ALTER TABLE Person DROP COLUMN (code, gdp);
@@ -233,7 +233,7 @@ ALTER TABLE Person DROP COLUMN (code, gdp);
 
 ### ALTER TABLE IF EXISTS table ALTER COLUMN column SET DATA TYPE
 
-Changes the data type for the column(s) in an existing table.
+기존 테이블에서 컬럼의 데이터 타입을 변경합니다.
 
 <RailroadDiagram>{`
 Diagram(
@@ -258,40 +258,40 @@ Terminal(')')
 )))
 `}</RailroadDiagram>
 
-Keywords and parameters:
+키워드와 매개변수:
 
-* `IF EXISTS` - do not throw an error if a table with the specified table name does not exist.
-* `data_type` - a valid [data type](/sql/reference/data-types-and-functions/data-types).
+* `IF EXISTS` - 지정한 이름의 테이블이 없어도 오류를 발생시키지 않습니다.
+* `data_type` - 유효한 [데이터 타입](/sql/reference/data-types-and-functions/data-types)입니다.
 
-Examples:
+예시:
 
-Alter a column in the table:
+테이블의 컬럼을 변경합니다:
 
 ```sql
 ALTER TABLE Person ALTER COLUMN city SET DATA TYPE varchar;
 ```
 
-#### Supported Transitions
+#### 지원되는 전환 {#supported-transitions}
 
-Not all data type transitions are supported. The limitations are listed below:
+모든 데이터 타입 전환이 지원되는 것은 아닙니다. 제약 사항은 다음과 같습니다.
 
-* `FLOAT` can be transitioned to `DOUBLE`
-* `INT8`, `INT16` and `INT32` can be transitioned to `INT64`
-* `TYPE SCALE` change is forbidden
-* `TYPE PRECISION` increase is allowed for DECIMAL non PK column
-* `TYPE LENGTH` increase is allowed for STRING and BYTE_ARRAY non PK column
+* `FLOAT`는 `DOUBLE`로 전환할 수 있습니다
+* `INT8`, `INT16`, `INT32`는 `INT64`로 전환할 수 있습니다
+* `TYPE SCALE` 변경은 금지됩니다
+* PK가 아닌 DECIMAL 컬럼은 `TYPE PRECISION` 증가가 허용됩니다
+* PK가 아닌 STRING·BYTE_ARRAY 컬럼은 `TYPE LENGTH` 증가가 허용됩니다
 
-Other transitions are not supported.
+그 외의 전환은 지원되지 않습니다.
 
-Examples:
+예시:
 
-Changes the possible range of IDs to BIGINT ranges:
+ID의 가능한 범위를 BIGINT 범위로 변경합니다:
 
 ```sql
 ALTER TABLE Person ALTER COLUMN age SET DATA TYPE BIGINT
 ```
 
-Sets the length of a column text to 11:
+컬럼 텍스트의 길이를 11로 설정합니다:
 
 ```sql
 ALTER TABLE Person ALTER COLUMN Name SET DATA TYPE varchar(11)
@@ -318,15 +318,15 @@ End({type:'simple'})
 )
 `}</RailroadDiagram>
 
-Keywords and parameters:
+키워드와 매개변수:
 
-* `IF EXISTS` - do not throw an error if a table with the specified table name does not exist.
+* `IF EXISTS` - 지정한 이름의 테이블이 없어도 오류를 발생시키지 않습니다.
 
-#### Supported Transitions
+#### 지원되는 전환 {#supported-transitions-1}
 
-Not all data type transitions are supported. The limitations are listed below:
+모든 데이터 타입 전환이 지원되는 것은 아닙니다. 제약 사항은 다음과 같습니다.
 
-* `NULLABLE` to `NOT NULL` transition is forbidden
+* `NULLABLE`에서 `NOT NULL`로 전환할 수 없습니다
 
 ### ALTER TABLE IF EXISTS table ALTER COLUMN column DROP NOT NULL
 
@@ -349,15 +349,15 @@ End({type:'simple'})
 )
 `}</RailroadDiagram>
 
-Keywords and parameters:
+키워드와 매개변수:
 
-* `IF EXISTS` - do not throw an error if a table with the specified table name does not exist.
+* `IF EXISTS` - 지정한 이름의 테이블이 없어도 오류를 발생시키지 않습니다.
 
-#### Supported Transitions
+#### 지원되는 전환 {#supported-transitions-2}
 
-Not all data type transitions are supported. The limitations are listed below:
+모든 데이터 타입 전환이 지원되는 것은 아닙니다. 제약 사항은 다음과 같습니다.
 
-* `NOT NULL` to `NULLABLE` transition is allowed for any non-PK column
+* PK가 아닌 컬럼은 `NOT NULL`에서 `NULLABLE`로 전환할 수 있습니다
 
 ### ALTER TABLE IF EXISTS table ALTER COLUMN column SET DEFAULT
 
@@ -389,9 +389,9 @@ NonTerminal('literal_value')
 )
 `}</RailroadDiagram>
 
-Keywords and parameters:
+키워드와 매개변수:
 
-* `IF EXISTS` - do not throw an error if a table with the specified table name does not exist.
+* `IF EXISTS` - 지정한 이름의 테이블이 없어도 오류를 발생시키지 않습니다.
 
 ### ALTER TABLE IF EXISTS table ALTER COLUMN column DROP DEFAULT
 
@@ -414,16 +414,16 @@ End({type:'simple'})
 )
 `}</RailroadDiagram>
 
-Keywords and parameters:
+키워드와 매개변수:
 
-* `IF EXISTS` - do not throw an error if a table with the specified table name does not exist.
+* `IF EXISTS` - 지정한 이름의 테이블이 없어도 오류를 발생시키지 않습니다.
 
 ## DROP TABLE
 
-The `DROP TABLE` command drops an existing table. The table will be marked for deletion and will be removed by garbage collection after the [low watermark](../../../understand/core-concepts/data-partitioning#version-storage) point is reached. Until the data is removed, it will be available to [read-only transactions](../../../develop/work-with-data/transactions#read-only-transactions) that check the time before the table was marked for deletion.
+`DROP TABLE` 명령어는 기존 테이블을 삭제합니다. 테이블은 삭제 대상으로 표시되며 [하한 워터마크](../../../understand/core-concepts/data-partitioning#version-storage) 지점에 도달한 후 가비지 컬렉션으로 제거됩니다. 데이터가 제거되기 전까지는, 테이블이 삭제 대상으로 표시되기 이전 시점을 기준으로 조회하는 [읽기 전용 트랜잭션](../../../develop/work-with-data/transactions#read-only-transactions)에서 이 데이터를 계속 사용할 수 있습니다.
 
 :::note
-This can also be done via the [Java API](../../../develop/work-with-data/java-to-tables).
+이 작업은 [Java API](../../../develop/work-with-data/java-to-tables)로도 수행할 수 있습니다.
 :::
 
 <RailroadDiagram>{`
@@ -434,13 +434,13 @@ NonTerminal('qualified_table_name', {href:'./grammar-reference#qualified_table_n
 )
 `}</RailroadDiagram>
 
-Keywords and parameters:
+키워드와 매개변수:
 
-* `IF EXISTS` - do not throw an error if a table with the same name does not exist.
+* `IF EXISTS` - 같은 이름의 테이블이 없어도 오류를 발생시키지 않습니다.
 
-Examples:
+예시:
 
-Drop Person table if the one exists:
+Person 테이블이 있으면 삭제합니다:
 
 ```sql
 DROP TABLE IF EXISTS "Person";
@@ -448,18 +448,18 @@ DROP TABLE IF EXISTS "Person";
 
 ## CREATE INDEX
 
-Creates a new index.
+새 인덱스를 생성합니다.
 
 :::note
-This can also be done via the [Java API](../../../develop/work-with-data/java-to-tables).
+이 작업은 [Java API](../../../develop/work-with-data/java-to-tables)로도 수행할 수 있습니다.
 :::
 
-When you create a new index, it will start building only after all transactions started before the index creation had been completed. Index build will not start if there are any "hung" transactions in the logical topology of the cluster.
+새 인덱스를 생성하면, 인덱스 생성 이전에 시작된 모든 트랜잭션이 완료된 후에야 인덱스 빌드가 시작됩니다. 클러스터의 논리 토폴로지에 멈춰 있는("hung") 트랜잭션이 있으면 인덱스 빌드가 시작되지 않습니다.
 
-The index status, with the status reason description (e.g., PENDING - "Waiting for transaction ABC to complete") is reflected in the system view.
+인덱스 상태는 상태 사유 설명(예: PENDING - "Waiting for transaction ABC to complete")과 함께 시스템 뷰에 반영됩니다.
 
 :::note
-The index cannot include the same column more than once.
+인덱스에는 같은 컬럼을 두 번 이상 포함할 수 없습니다.
 :::
 
 <RailroadDiagram>{`
@@ -491,29 +491,29 @@ End({type:'simple'})
 )
 `}</RailroadDiagram>
 
-Keywords and parameters:
+키워드와 매개변수:
 
-* `IF NOT EXISTS` - create the index only if an index with the same name does not exist.
-* `name` - name of the index.
-* `ON` - create index on the defined table.
-* `USING TREE` -if specified, creates a tree index.
-* `USING HASH` - if specified, creates a hash index.
+* `IF NOT EXISTS` - 같은 이름의 인덱스가 없을 때만 인덱스를 생성합니다.
+* `name` - 인덱스의 이름입니다.
+* `ON` - 지정한 테이블에 인덱스를 생성합니다.
+* `USING TREE` - 지정하면 트리 인덱스를 생성합니다.
+* `USING HASH` - 지정하면 해시 인덱스를 생성합니다.
 
-Examples:
+예시:
 
-Create an index `department_name_idx` for the Person table:
+Person 테이블에 `department_name_idx` 인덱스를 생성합니다:
 
 ```sql
 CREATE INDEX IF NOT EXISTS department_name_idx ON Person (department_id DESC, name ASC);
 ```
 
-Create a hash index `department_name_idx` for the Person table:
+Person 테이블에 해시 인덱스 `department_name_idx`를 생성합니다:
 
 ```sql
 CREATE INDEX name_surname_idx ON Person USING HASH (name, surname);
 ```
 
-Create a tree index `department_city_idx` for the Person table:
+Person 테이블에 트리 인덱스 `department_city_idx`를 생성합니다:
 
 ```sql
 CREATE INDEX department_city_idx ON Person USING TREE (department_id ASC, city_id DESC);
@@ -521,15 +521,15 @@ CREATE INDEX department_city_idx ON Person USING TREE (department_id ASC, city_i
 
 ## DROP INDEX
 
-Drops an index.
+인덱스를 삭제합니다.
 
 :::note
-This can also be done via the [Java API](../../../develop/work-with-data/java-to-tables).
+이 작업은 [Java API](../../../develop/work-with-data/java-to-tables)로도 수행할 수 있습니다.
 :::
 
-When you drop an index, it stays in the STOPPING status until all transactions started before the DROP INDEX command had been completed (even those that do not affect any of the tables for which the index is being dropped).
-Upon completion of all transactions described above, the space the dropped index had occupied is freed up only when LWM of the relevant partition becomes greater than the time when the index dropping had been activated.
-The index status, with the status reason description (e.g., PENDING - "Waiting for transaction ABC to complete") is reflected in the system view.
+인덱스를 삭제하면, `DROP INDEX` 명령 이전에 시작된 모든 트랜잭션이 완료될 때까지 인덱스는 STOPPING 상태를 유지합니다(삭제 대상 인덱스가 속한 테이블에 영향을 주지 않는 트랜잭션도 포함합니다).
+위 트랜잭션이 모두 완료된 후에도, 삭제된 인덱스가 차지하던 공간은 해당 파티션의 LWM이 인덱스 삭제가 시작된 시점보다 커져야만 회수됩니다.
+인덱스 상태는 상태 사유 설명(예: PENDING - "Waiting for transaction ABC to complete")과 함께 시스템 뷰에 반영됩니다.
 
 <RailroadDiagram>{`
 Diagram(
@@ -539,14 +539,14 @@ NonTerminal('index_name')
 )
 `}</RailroadDiagram>
 
-Keywords and parameters:
+키워드와 매개변수:
 
-* `index_name` - the name of the index.
-* `IF EXISTS` - do not throw an error if an index with the specified name does not exist.
+* `index_name` - 인덱스의 이름입니다.
+* `IF EXISTS` - 지정한 이름의 인덱스가 없어도 오류를 발생시키지 않습니다.
 
-Examples:
+예시:
 
-Drop index if the one exists:
+인덱스가 있으면 삭제합니다:
 
 ```sql
 DROP INDEX IF EXISTS department_name_idx;

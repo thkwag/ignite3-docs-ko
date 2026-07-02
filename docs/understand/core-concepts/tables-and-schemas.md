@@ -1,14 +1,14 @@
 ---
 id: tables-and-schemas
-title: Tables and Schemas
+title: 테이블과 스키마
 sidebar_position: 2
 ---
 
-Tables are the primary data structure in Ignite 3. Unlike Ignite 2's cache-based model with Binary Objects, Ignite 3 stores data in tables with SQL-compatible schemas. This unifies the SQL and Key-Value APIs under a single data model.
+테이블은 Ignite 3의 기본 데이터 구조입니다. 바이너리 객체(Binary Objects)를 사용하는 Ignite 2의 캐시 기반 모델과 달리, Ignite 3는 SQL과 호환되는 스키마를 갖춘 테이블에 데이터를 저장합니다. 이 구조는 SQL API와 Key-Value API를 하나의 데이터 모델로 통합합니다.
 
-## Architecture Overview
+## 아키텍처 개요 {#architecture-overview}
 
-The table system consists of three layers:
+테이블 시스템은 세 개의 계층으로 구성됩니다.
 
 ```mermaid
 flowchart TB
@@ -48,20 +48,20 @@ flowchart TB
     SD -.-> CTD
 ```
 
-- **Catalog Layer**: Maintains versioned metadata for schemas, tables, indexes, and distribution zones
-- **Schema Layer**: Defines column types, handles binary serialization, and manages schema evolution
-- **Storage Layer**: Manages partitioned data storage using binary row format
+- **카탈로그 계층**: 스키마, 테이블, 인덱스, 분산 영역(distribution zone)의 버전별 메타데이터를 유지합니다
+- **스키마 계층**: 컬럼 타입을 정의하고, 바이너리 직렬화를 처리하며, 스키마 진화를 관리합니다
+- **스토리지 계층**: 바이너리 행 형식을 사용해 파티셔닝된 데이터 저장을 관리합니다
 
-## Schema Structure
+## 스키마 구조 {#schema-structure}
 
-Each table has a `SchemaDescriptor` that defines its structure. The descriptor maintains multiple column orderings:
+각 테이블에는 구조를 정의하는 `SchemaDescriptor`가 있습니다. 이 디스크립터는 여러 컬럼 정렬을 유지합니다.
 
-| Ordering | Purpose |
+| 정렬 | 용도 |
 |----------|---------|
-| Row position | Full row serialization order |
-| Key position | Primary key columns only |
-| Value position | Non-key columns only |
-| Colocation position | Columns used for partition assignment |
+| 행 위치 | 전체 행 직렬화 순서 |
+| 키 위치 | 기본 키 컬럼만 |
+| 값 위치 | 키가 아닌 컬럼만 |
+| 콜로케이션 위치 | 파티션 배정에 사용되는 컬럼 |
 
 ```mermaid
 flowchart LR
@@ -78,15 +78,15 @@ flowchart LR
     end
 ```
 
-The schema tracks column positions across these orderings. A column absent from a specific ordering has position `-1`.
+스키마는 이 정렬에 걸친 컬럼 위치를 추적합니다. 특정 정렬에 없는 컬럼은 위치가 `-1`입니다.
 
-## Column Types
+## 컬럼 타입 {#column-types}
 
-Ignite 3 supports two categories of native types:
+Ignite 3는 네이티브 타입을 두 가지 범주로 지원합니다.
 
-### Fixed-Length Types
+### 고정 길이 타입 {#fixed-length-types}
 
-| Type | Size (bytes) | Java Mapping |
+| 타입 | 크기(바이트) | Java 매핑 |
 |------|--------------|--------------|
 | BOOLEAN | 1 | `boolean` |
 | INT8 | 1 | `byte` |
@@ -98,34 +98,34 @@ Ignite 3 supports two categories of native types:
 | UUID | 16 | `java.util.UUID` |
 | DATE | 3 | `java.time.LocalDate` |
 
-### Variable-Length Types
+### 가변 길이 타입 {#variable-length-types}
 
-| Type | Max Size | Java Mapping |
+| 타입 | 최대 크기 | Java 매핑 |
 |------|----------|--------------|
-| STRING | 65536 (default) | `String` |
-| BYTES | 65536 (default) | `byte[]` |
-| DECIMAL | precision/scale | `BigDecimal` |
-| TIME | precision (0-9) | `java.time.LocalTime` |
-| DATETIME | precision (0-9) | `java.time.LocalDateTime` |
-| TIMESTAMP | precision (0-9) | `java.time.Instant` |
+| STRING | 65536(기본값) | `String` |
+| BYTES | 65536(기본값) | `byte[]` |
+| DECIMAL | 정밀도/스케일 | `BigDecimal` |
+| TIME | 정밀도(0-9) | `java.time.LocalTime` |
+| DATETIME | 정밀도(0-9) | `java.time.LocalDateTime` |
+| TIMESTAMP | 정밀도(0-9) | `java.time.Instant` |
 
 :::note
-Ignite 3 requires JavaTime API for temporal types. Legacy types like `java.util.Date`, `java.sql.Date`, `java.sql.Time`, and `java.sql.Timestamp` are not supported.
+Ignite 3는 시간 관련 타입에 JavaTime API를 요구합니다. `java.util.Date`, `java.sql.Date`, `java.sql.Time`, `java.sql.Timestamp` 같은 레거시 타입은 지원되지 않습니다.
 :::
 
-## Primary Keys
+## 기본 키 {#primary-keys}
 
-Every table requires a primary key. Ignite 3 supports two primary key types:
+모든 테이블에는 기본 키가 필요합니다. Ignite 3는 두 가지 기본 키 유형을 지원합니다:
 
-- **Hash Primary Key**: Uses hash-based partitioning for data distribution
-- **Sorted Primary Key**: Uses range-based partitioning with collation ordering
+- **해시 기본 키**: 데이터 분산에 해시 기반 파티셔닝을 사용합니다
+- **정렬 기본 키**: 콜레이션 순서에 따른 범위 기반 파티셔닝을 사용합니다
 
-Primary key constraints:
+기본 키 제약 조건:
 
-- All primary key columns must be non-nullable
-- No duplicate columns allowed in key definition
-- All key columns must exist in the table schema
-- A primary key index is automatically created
+- 모든 기본 키 컬럼은 NULL을 허용하지 않아야 합니다
+- 키 정의에는 중복 컬럼을 허용하지 않습니다
+- 모든 키 컬럼은 테이블 스키마에 존재해야 합니다
+- 기본 키 인덱스는 자동으로 생성됩니다
 
 ```sql
 CREATE TABLE accounts (
@@ -135,7 +135,7 @@ CREATE TABLE accounts (
 );
 ```
 
-For composite keys:
+복합 키의 경우:
 
 ```sql
 CREATE TABLE order_items (
@@ -146,9 +146,9 @@ CREATE TABLE order_items (
 );
 ```
 
-## Schema Versioning
+## 스키마 버전 관리 {#schema-versioning}
 
-Ignite 3 uses append-only schema versioning. Each `ALTER TABLE` operation increments the catalog version and creates a new schema version for the table.
+Ignite 3는 추가 전용(append-only) 스키마 버전 관리를 사용합니다. `ALTER TABLE` 연산을 실행할 때마다 카탈로그 버전이 증가하고 테이블에 새 스키마 버전이 생성됩니다.
 
 ```mermaid
 flowchart LR
@@ -162,18 +162,18 @@ flowchart LR
     V2 -->|"ALTER TABLE<br/>ADD status"| V3
 ```
 
-Key versioning behaviors:
+주요 버전 관리 동작:
 
-- **Immutable versions**: Schema versions are never modified after creation
-- **Consecutive numbering**: Versions increment by 1 with no gaps
-- **Column mapper**: Tracks transformations between versions for automatic data migration
-- **Binary row versioning**: Each stored row carries its schema version
+- **불변 버전**: 스키마 버전은 생성된 후 절대 수정되지 않습니다
+- **연속 번호 부여**: 버전은 빈틈없이 1씩 증가합니다
+- **컬럼 매퍼**: 자동 데이터 마이그레이션을 위해 버전 간 전환을 추적합니다
+- **바이너리 행 버전 관리**: 저장된 각 행은 자신의 스키마 버전을 함께 기록합니다
 
-When reading data written with an older schema version, Ignite automatically upgrades the row using the `ColumnMapper`. New columns receive their default values.
+이전 스키마 버전으로 기록된 데이터를 읽으면, Ignite는 `ColumnMapper`를 사용해 행을 자동으로 업그레이드합니다. 새 컬럼은 기본값을 받습니다.
 
-## Table Views
+## 테이블 뷰 {#table-views}
 
-Tables expose multiple view abstractions for different access patterns:
+테이블은 다양한 접근 패턴에 맞춰 여러 뷰 추상화를 제공합니다.
 
 ```mermaid
 flowchart TB
@@ -195,7 +195,7 @@ flowchart TB
 
 ### RecordView
 
-Works with complete row records containing all fields including the primary key:
+기본 키를 포함해 모든 필드가 담긴 완전한 행 레코드를 다룹니다.
 
 ```java
 RecordView<Account> accounts = table.recordView(Account.class);
@@ -208,7 +208,7 @@ Account retrieved = accounts.get(null, new Account(123));
 
 ### KeyValueView
 
-Separates keys from values. Use this when the primary key is not logically part of the domain object:
+키와 값을 분리합니다. 기본 키가 논리적으로 도메인 객체에 속하지 않을 때 사용합니다.
 
 ```java
 KeyValueView<Long, Account> accounts = table.keyValueView(
@@ -220,9 +220,9 @@ accounts.put(null, 123L, new Account("John Doe", 1000.00));
 Account account = accounts.get(null, 123L);
 ```
 
-### Tuple Views
+### Tuple 뷰 {#tuple-views}
 
-For schema-less access without predefined classes:
+사전에 정의한 클래스 없이 스키마 없는 방식으로 접근할 때 사용합니다.
 
 ```java
 RecordView<Tuple> view = table.recordView();
@@ -235,9 +235,9 @@ Tuple record = Tuple.create()
 view.insert(null, record);
 ```
 
-## Binary Row Format
+## 바이너리 행 형식 {#binary-row-format}
 
-Data is stored in a compact binary format optimized for zero-copy reads:
+데이터는 제로카피(zero-copy) 읽기에 최적화된 간결한 바이너리 형식으로 저장됩니다.
 
 ```mermaid
 flowchart LR
@@ -252,15 +252,15 @@ flowchart LR
     SV --> NB --> FD --> VO --> VD
 ```
 
-The format supports:
+이 형식은 다음을 지원합니다:
 
-- **Null tracking**: Bitmap indicates null columns without storing placeholder data
-- **Direct access**: Fixed-length columns accessed by offset without deserialization
-- **Variable-length efficiency**: Offset table enables direct access to variable columns
+- **NULL 추적**: 비트맵으로 자리표시자 데이터 없이 NULL 컬럼을 표시합니다
+- **직접 접근**: 고정 길이 컬럼은 역직렬화 없이 오프셋으로 접근합니다
+- **가변 길이 효율성**: 오프셋 테이블로 가변 길이 컬럼에 직접 접근할 수 있습니다
 
-## Catalog Management
+## 카탈로그 관리 {#catalog-management}
 
-The `Catalog` maintains an immutable snapshot of the distributed schema at a specific version:
+`Catalog`는 특정 버전에서 분산 스키마의 불변 스냅샷을 유지합니다.
 
 ```java
 // Tables are created via SQL
@@ -276,31 +276,31 @@ client.sql().execute(null,
 Table accounts = client.tables().table("accounts");
 ```
 
-Schema operations use `CatalogCommand` implementations:
+스키마 연산은 `CatalogCommand` 구현체를 사용합니다:
 
-- `CreateTableCommand`: Creates new table with schema
-- `AlterTableAddColumnCommand`: Adds columns to existing table
-- `AlterTableDropColumnCommand`: Removes columns
-- `DropTableCommand`: Removes table
+- `CreateTableCommand`: 스키마와 함께 새 테이블을 생성합니다
+- `AlterTableAddColumnCommand`: 기존 테이블에 컬럼을 추가합니다
+- `AlterTableDropColumnCommand`: 컬럼을 제거합니다
+- `DropTableCommand`: 테이블을 제거합니다
 
-All catalog operations are atomic and version-tracked.
+모든 카탈로그 연산은 원자적이며 버전으로 추적됩니다.
 
-## Design Constraints
+## 설계 제약 조건 {#design-constraints}
 
-When working with tables:
+테이블을 다룰 때는 다음 사항이 적용됩니다:
 
-1. **Table creation requires SQL**: The Table API only provides read and write operations. Use SQL DDL to create, alter, or drop tables.
+1. **테이블 생성에는 SQL이 필요합니다**: Table API는 읽기와 쓰기 연산만 제공합니다. 테이블을 생성, 변경, 삭제하려면 SQL DDL을 사용하세요.
 
-2. **Schema version continuity**: Schema versions must increment consecutively. Early versions may be pruned but intermediate versions cannot be skipped.
+2. **스키마 버전 연속성**: 스키마 버전은 연속으로 증가해야 합니다. 오래된 버전은 정리될 수 있지만 중간 버전은 건너뛸 수 없습니다.
 
-3. **Primary key immutability**: Primary key columns cannot be modified after table creation.
+3. **기본 키 불변성**: 기본 키 컬럼은 테이블 생성 후 수정할 수 없습니다.
 
-4. **Nullable inference**: Primary key columns are automatically non-nullable. Including nullable columns in a primary key raises a validation error.
+4. **NULL 허용 여부 자동 추론**: 기본 키 컬럼은 자동으로 NULL을 허용하지 않습니다. NULL을 허용하는 컬럼을 기본 키에 포함하면 검증 오류가 발생합니다.
 
-5. **Type constraints**: Variable-length types have maximum length constraints. DECIMAL requires explicit precision and scale.
+5. **타입 제약**: 가변 길이 타입에는 최대 길이 제약이 있습니다. DECIMAL은 정밀도와 스케일을 명시적으로 지정해야 합니다.
 
-## Related Topics
+## 관련 주제 {#related-topics}
 
-- [Table API](/develop/work-with-data/table-api) for working with table views
-- [Distribution Zones](/sql/reference/language-definition/distribution-zones) for partition configuration
-- [Data Types](/sql/reference/data-types-and-functions/data-types) for SQL type mappings
+- 테이블 뷰 작업 방법은 [Table API](/develop/work-with-data/table-api)를 참고하세요
+- 파티션 구성은 [분산 영역](/sql/reference/language-definition/distribution-zones)을 참고하세요
+- SQL 타입 매핑은 [데이터 타입](/sql/reference/data-types-and-functions/data-types)을 참고하세요

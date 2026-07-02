@@ -17,9 +17,10 @@
     "typecheck": "tsc",
     "check:links": "node scripts/check-links.js",
     "check:images": "node scripts/check-images.js",
+    "check:glossary": "node scripts/check-glossary.mjs",
     "check:build": "npm run build:prod && node scripts/check-build.js",
-    "validate": "npm run check:links && npm run check:images && npm run check:build",
-    "validate:quick": "npm run typecheck && npm run check:links && npm run check:images",
+    "validate": "npm run check:glossary && npm run check:links && npm run check:images && npm run check:build",
+    "validate:quick": "npm run typecheck && npm run check:glossary && npm run check:links && npm run check:images",
     "check:upstream-sync": "node scripts/check-upstream-sync.mjs"
   },
   "dependencies": {

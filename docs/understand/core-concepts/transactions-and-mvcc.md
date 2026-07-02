@@ -1,12 +1,12 @@
 ---
 id: transactions-and-mvcc
-title: Transactions and MVCC
+title: 트랜잭션과 MVCC
 sidebar_position: 3
 ---
 
-Ignite 3 provides ACID transactions using Multi-Version Concurrency Control (MVCC) combined with Two-Phase Locking (2PL). All tables are transactional by default with serializable isolation.
+Ignite 3는 다중 버전 동시성 제어(Multi-Version Concurrency Control, MVCC)와 2단계 락킹(two-phase locking, 2PL)을 결합해 ACID 트랜잭션을 제공합니다. 모든 테이블은 기본적으로 트랜잭션을 지원하며 직렬화 가능 격리(serializable isolation)로 동작합니다.
 
-## Transaction Model Overview
+## 트랜잭션 모델 개요 {#transaction-model-overview}
 
 ```mermaid
 flowchart TB
@@ -25,20 +25,20 @@ flowchart TB
     RO --> MVCC
 ```
 
-Key characteristics:
+주요 특징:
 
-- All transactions are serializable for read-write operations
-- Read-only transactions use snapshot isolation without locking
-- WAIT_DIE algorithm prevents deadlocks
-- Two-phase commit (2PC) coordinates distributed transactions
+- 모든 트랜잭션은 읽기-쓰기 작업에서 직렬화 가능합니다
+- 읽기 전용 트랜잭션은 락 없이 스냅샷 격리(snapshot isolation)를 사용합니다
+- WAIT_DIE 알고리즘이 데드락을 방지합니다
+- 2단계 커밋(two-phase commit, 2PC)이 분산 트랜잭션을 조율합니다
 
-## Multi-Version Concurrency Control
+## 다중 버전 동시성 제어 {#multi-version-concurrency-control}
 
-MVCC maintains multiple versions of each row, allowing concurrent readers and writers without blocking.
+MVCC는 각 행의 여러 버전을 유지해, 읽기와 쓰기가 서로를 차단하지 않고 동시에 진행되도록 합니다.
 
-### Version Chains
+### 버전 체인 {#version-chains}
 
-Each row has a version chain storing all versions from newest to oldest:
+각 행에는 최신 버전부터 가장 오래된 버전까지 모두 저장하는 버전 체인(version chain)이 있습니다.
 
 ```mermaid
 flowchart LR
@@ -54,18 +54,18 @@ flowchart LR
     V1 --> Null([null])
 ```
 
-Each version contains:
+각 버전에는 다음 항목이 들어 있습니다.
 
-| Field | Description |
+| 필드 | 설명 |
 |-------|-------------|
-| Timestamp | Hybrid timestamp when committed (null if uncommitted) |
-| Transaction ID | ID of owning transaction (for uncommitted versions) |
-| Value | Binary row data (empty for tombstones/deletions) |
-| Next link | Pointer to previous version |
+| 타임스탬프 | 커밋 시점의 하이브리드 타임스탬프(hybrid timestamp), 커밋 전이면 null |
+| 트랜잭션 ID | 소유 트랜잭션의 ID(커밋되지 않은 버전에 해당) |
+| 값 | 바이너리 행 데이터(툼스톤(tombstone)이나 삭제의 경우 비어 있음) |
+| 다음 링크 | 이전 버전을 가리키는 포인터 |
 
-### Write Intents
+### 쓰기 인텐트 {#write-intents}
 
-Uncommitted changes are stored as write intents at the head of the version chain:
+커밋되지 않은 변경은 버전 체인의 맨 앞에 쓰기 인텐트(write intent)로 저장됩니다.
 
 ```mermaid
 flowchart LR
@@ -80,30 +80,30 @@ flowchart LR
     V3 --> V2
 ```
 
-Write intents track:
+쓰기 인텐트가 기록하는 정보는 다음과 같습니다.
 
-- Transaction ID of the writer
-- Commit partition ID for transaction state lookup
-- The uncommitted value
+- 쓰기를 수행한 트랜잭션의 ID
+- 트랜잭션 상태 조회에 쓰이는 커밋 파티션(commit partition) ID
+- 커밋되지 않은 값
 
-On commit, the write intent receives a timestamp and becomes a regular committed version. On abort, the write intent is removed.
+커밋되면 쓰기 인텐트는 타임스탬프를 받아 일반적인 커밋된 버전이 됩니다. 중단되면 쓰기 인텐트는 제거됩니다.
 
-### Visibility Rules
+### 가시성 규칙 {#visibility-rules}
 
-When reading a row, transactions see different versions based on their type and timestamp:
+행을 읽을 때 트랜잭션은 자신의 유형과 타임스탬프에 따라 서로 다른 버전을 봅니다.
 
-| Scenario | Read-Write Transaction | Read-Only Transaction |
+| 시나리오 | 읽기-쓰기 트랜잭션 | 읽기 전용 트랜잭션 |
 |----------|----------------------|---------------------|
-| Only write intent exists | Sees write intent (if own tx) | Blocks or sees nothing |
-| Write intent + older commit | Sees write intent (if own tx) or waits | Sees older commit |
-| Committed version newer than read timestamp | Sees it | Sees older version |
-| All commits older than read timestamp | Sees newest | Sees version at timestamp |
+| 쓰기 인텐트만 존재 | 쓰기 인텐트를 봄(자신의 트랜잭션인 경우) | 차단되거나 아무것도 보지 못함 |
+| 쓰기 인텐트 + 더 오래된 커밋 | 쓰기 인텐트를 봄(자신의 트랜잭션인 경우) 또는 대기 | 더 오래된 커밋을 봄 |
+| 읽기 타임스탬프보다 최신인 커밋된 버전 | 해당 버전을 봄 | 더 오래된 버전을 봄 |
+| 모든 커밋이 읽기 타임스탬프보다 오래됨 | 가장 최신 버전을 봄 | 해당 타임스탬프 시점의 버전을 봄 |
 
-Read-only transactions always read at their creation timestamp, providing a consistent snapshot.
+읽기 전용 트랜잭션은 항상 생성 시점의 타임스탬프로 읽으므로 일관된 스냅샷을 제공합니다.
 
-## Hybrid Timestamps
+## 하이브리드 타임스탬프 {#hybrid-timestamps}
 
-Ignite uses hybrid logical clocks combining physical time with logical counters:
+Ignite는 물리 시간과 논리 카운터를 결합한 하이브리드 논리 시계(hybrid logical clock, HLC)를 사용합니다.
 
 ```mermaid
 flowchart LR
@@ -115,22 +115,22 @@ flowchart LR
     P --- L
 ```
 
-Hybrid timestamps provide:
+하이브리드 타임스탬프는 다음을 제공합니다.
 
-- **Causality**: Events on the same node are ordered correctly
-- **Approximate wall-clock**: Physical component enables time-based queries
-- **Coordination-free generation**: Nodes generate timestamps locally
+- **인과성**: 같은 노드에서 발생한 이벤트가 올바른 순서로 정렬됩니다
+- **근사 실제 시각**: 물리 구성 요소로 시간 기반 쿼리를 수행할 수 있습니다
+- **조율 없는 생성**: 각 노드가 로컬에서 타임스탬프를 생성합니다
 
-The epoch starts at January 1, 2021. The logical counter ensures ordering when multiple events occur within the same millisecond.
+에포크(epoch)는 2021년 1월 1일부터 시작합니다. 논리 카운터는 같은 밀리초 안에서 여러 이벤트가 발생할 때 순서를 보장합니다.
 
-## Transaction Isolation
+## 트랜잭션 격리 {#transaction-isolation}
 
-### Read-Write Transactions
+### 읽기-쓰기 트랜잭션 {#read-write-transactions}
 
-Read-write transactions use serializable isolation through Two-Phase Locking:
+읽기-쓰기 트랜잭션은 2단계 락킹으로 직렬화 가능 격리를 사용합니다.
 
-1. **Growing phase**: Acquire locks before accessing data
-2. **Shrinking phase**: Release all locks at commit/abort
+1. **확장 단계**: 데이터에 접근하기 전에 락을 획득합니다
+2. **수축 단계**: 커밋 또는 중단 시 모든 락을 해제합니다
 
 ```mermaid
 sequenceDiagram
@@ -147,30 +147,30 @@ sequenceDiagram
     TX->>LM: Release all locks
 ```
 
-Lock modes form a compatibility matrix:
+락 모드는 다음과 같은 호환성 행렬을 이룹니다.
 
-| Lock | IS | IX | S | SIX | X |
+| 락 | IS | IX | S | SIX | X |
 |------|----|----|---|-----|---|
-| **IS** | Yes | Yes | Yes | Yes | No |
-| **IX** | Yes | Yes | No | No | No |
-| **S** | Yes | No | Yes | No | No |
-| **SIX** | Yes | No | No | No | No |
-| **X** | No | No | No | No | No |
+| **IS** | 예 | 예 | 예 | 예 | 아니오 |
+| **IX** | 예 | 예 | 아니오 | 아니오 | 아니오 |
+| **S** | 예 | 아니오 | 예 | 아니오 | 아니오 |
+| **SIX** | 예 | 아니오 | 아니오 | 아니오 | 아니오 |
+| **X** | 아니오 | 아니오 | 아니오 | 아니오 | 아니오 |
 
-- **IS** (Intention Shared): Intent to read descendants
-- **IX** (Intention Exclusive): Intent to write descendants
-- **S** (Shared): Read lock
-- **SIX** (Shared Intention Exclusive): Read lock with intent to write descendants
-- **X** (Exclusive): Write lock
+- **IS**(Intention Shared): 하위 항목을 읽으려는 의도
+- **IX**(Intention Exclusive): 하위 항목을 쓰려는 의도
+- **S**(Shared): 읽기 락
+- **SIX**(Shared Intention Exclusive): 읽기 락이면서 하위 항목을 쓰려는 의도
+- **X**(Exclusive): 쓰기 락
 
-### Read-Only Transactions
+### 읽기 전용 트랜잭션 {#read-only-transactions}
 
-Read-only transactions bypass locking entirely:
+읽기 전용 트랜잭션은 락을 전혀 사용하지 않습니다.
 
-- Fixed read timestamp assigned at creation
-- Read from any replica (not just primary)
-- No partition enlistment or coordination
-- Cannot modify data
+- 생성 시점에 고정된 읽기 타임스탬프가 부여됩니다
+- 프라이머리 복제본뿐 아니라 어떤 복제본에서도 읽습니다
+- 파티션 참여나 조율이 필요 없습니다
+- 데이터를 수정할 수 없습니다
 
 ```java
 var tx = client.transactions().begin(
@@ -183,9 +183,9 @@ Account account = accounts.get(tx, 42);
 tx.commit(); // No-op for read-only
 ```
 
-## Deadlock Prevention
+## 데드락 방지 {#deadlock-prevention}
 
-Ignite uses the WAIT_DIE algorithm to prevent deadlocks without detection cycles:
+Ignite는 WAIT_DIE 알고리즘으로 데드락을 방지하며, 별도의 탐지 과정을 두지 않습니다.
 
 ```mermaid
 flowchart TB
@@ -199,18 +199,18 @@ flowchart TB
     Check -->|No| Die
 ```
 
-When a transaction requests a lock held by another:
+한 트랜잭션이 다른 트랜잭션이 보유한 락을 요청하면 다음과 같이 처리됩니다.
 
-| Requester Age | Action |
+| 요청 트랜잭션의 나이 | 동작 |
 |---------------|--------|
-| Older than holder | Wait for lock release |
-| Younger than holder | Abort immediately, retry with same timestamp |
+| 보유 트랜잭션보다 오래됨 | 락이 해제될 때까지 대기 |
+| 보유 트랜잭션보다 최근 | 즉시 중단하고 같은 타임스탬프로 재시도 |
 
-This prevents circular waits because younger transactions always yield to older ones. Retrying with the same timestamp ensures the transaction eventually becomes the oldest and succeeds.
+최근 트랜잭션이 항상 오래된 트랜잭션에 양보하므로 순환 대기가 발생하지 않습니다. 같은 타임스탬프로 재시도하면 해당 트랜잭션이 결국 가장 오래된 트랜잭션이 되어 성공합니다.
 
-## Transaction Lifecycle
+## 트랜잭션 수명 주기 {#transaction-lifecycle}
 
-### Read-Write Transaction Flow
+### 읽기-쓰기 트랜잭션 흐름 {#read-write-transaction-flow}
 
 ```mermaid
 stateDiagram-v2
@@ -224,19 +224,19 @@ stateDiagram-v2
     ABORTED --> [*]
 ```
 
-State descriptions:
+상태 설명:
 
-| State | Description |
+| 상태 | 설명 |
 |-------|-------------|
-| PENDING | Active transaction, operations in progress |
-| FINISHING | Coordinator initiated commit/rollback |
-| COMMITTED | Successfully committed, changes visible |
-| ABORTED | Rolled back, changes discarded |
-| ABANDONED | Coordinator lost, awaiting recovery |
+| PENDING | 활성 트랜잭션, 작업 진행 중 |
+| FINISHING | 코디네이터가 커밋 또는 롤백을 시작함 |
+| COMMITTED | 정상적으로 커밋됨, 변경 사항이 보임 |
+| ABORTED | 롤백됨, 변경 사항 폐기 |
+| ABANDONED | 코디네이터 소실, 복구 대기 중 |
 
-### Two-Phase Commit Protocol
+### 2단계 커밋 프로토콜 {#two-phase-commit-protocol}
 
-Distributed transactions use 2PC for atomic commitment:
+분산 트랜잭션은 원자적 커밋을 위해 2PC를 사용합니다.
 
 ```mermaid
 sequenceDiagram
@@ -261,27 +261,27 @@ sequenceDiagram
     C->>P2: Release locks
 ```
 
-If any partition fails to prepare, the coordinator aborts all participants.
+어느 한 파티션이라도 준비(prepare)에 실패하면 코디네이터는 모든 참여자를 중단시킵니다.
 
-### Transaction Coordinator
+### 트랜잭션 코디네이터 {#transaction-coordinator}
 
-The node that begins the transaction becomes its coordinator, responsible for:
+트랜잭션을 시작한 노드가 코디네이터가 되며, 다음을 담당합니다.
 
-- Tracking enlisted partitions
-- Assigning a commit partition for state storage
-- Orchestrating 2PC protocol
-- Handling failures and timeouts
+- 참여한 파티션 추적
+- 상태 저장을 위한 커밋 파티션 지정
+- 2PC 프로토콜 조율
+- 장애와 시간 초과 처리
 
-If the coordinator fails:
+코디네이터가 실패하면 다음 순서로 진행됩니다.
 
-1. Transaction enters ABANDONED state
-2. Orphan detection triggers after timeout
-3. Write intents are resolved based on commit partition state
-4. Locks are released
+1. 트랜잭션이 ABANDONED 상태로 진입합니다
+2. 시간 초과 후 고아 트랜잭션 탐지가 작동합니다
+3. 커밋 파티션 상태를 기준으로 쓰기 인텐트가 해소됩니다
+4. 락이 해제됩니다
 
-## Version Garbage Collection
+## 버전 가비지 컬렉션 {#version-garbage-collection}
 
-Old versions accumulate in version chains. The garbage collector removes versions older than the low watermark:
+버전 체인에는 오래된 버전이 쌓입니다. 가비지 컬렉터(garbage collector)는 하한 워터마크(low watermark)보다 오래된 버전을 제거합니다.
 
 ```mermaid
 flowchart LR
@@ -301,16 +301,16 @@ flowchart LR
     V4a --> V3a
 ```
 
-Low watermark considerations:
+하한 워터마크를 정할 때 고려할 점은 다음과 같습니다.
 
-- Default: 600,000 ms (10 minutes)
-- Increasing allows longer-running read-only transactions
-- Higher values require more storage for old versions
-- Active transactions prevent GC of versions they might need
+- 기본값: 600,000 ms(10분)
+- 값을 늘리면 읽기 전용 트랜잭션을 더 오래 실행할 수 있습니다
+- 값이 클수록 오래된 버전을 저장하는 데 더 많은 스토리지가 필요합니다
+- 활성 트랜잭션은 자신이 필요로 할 수 있는 버전의 GC를 막습니다
 
-## Transaction Options
+## 트랜잭션 옵션 {#transaction-options}
 
-Configure transactions at creation:
+생성 시점에 트랜잭션을 구성합니다.
 
 ```java
 // Read-write with timeout
@@ -326,26 +326,26 @@ var roTx = client.transactions().begin(
 );
 ```
 
-| Option | Default | Description |
+| 옵션 | 기본값 | 설명 |
 |--------|---------|-------------|
-| `readOnly` | false | Enable read-only mode |
-| `timeoutMillis` | 0 (none) | Auto-rollback after timeout |
+| `readOnly` | false | 읽기 전용 모드 활성화 |
+| `timeoutMillis` | 0(없음) | 시간 초과 후 자동 롤백 |
 
-## Design Constraints
+## 설계 제약 {#design-constraints}
 
-1. **Primary replica writes**: All read-write operations go through the partition's primary replica
+1. **프라이머리 복제본 쓰기**: 모든 읽기-쓰기 작업은 파티션의 프라이머리 복제본을 거칩니다
 
-2. **Lock granularity**: Locks are per-key, not per-row or per-table
+2. **락 단위**: 락은 행 단위나 테이블 단위가 아니라 키 단위입니다
 
-3. **No savepoints**: Partial rollback within a transaction is not supported
+3. **세이브포인트(savepoint) 없음**: 트랜잭션 내 부분 롤백은 지원하지 않습니다
 
-4. **Clock synchronization**: Nodes must have synchronized clocks (within `schemaSync.maxClockSkewMillis`)
+4. **시계 동기화**: 노드의 시계는 서로 동기화되어 있어야 합니다(`schemaSync.maxClockSkewMillis` 이내)
 
-5. **Single commit partition**: Each transaction uses one partition for state, creating a coordination point
+5. **단일 커밋 파티션**: 각 트랜잭션은 상태 저장에 파티션 하나를 사용하며, 이는 조율 지점이 됩니다
 
-6. **Write intent resolution**: Encountering another transaction's write intent may require waiting or aborting
+6. **쓰기 인텐트 해소**: 다른 트랜잭션의 쓰기 인텐트를 만나면 대기하거나 중단해야 할 수 있습니다
 
-## Related Topics
+## 관련 주제 {#related-topics}
 
-- [Performing Transactions](/develop/work-with-data/transactions) for API usage
-- [Data Partitioning](/understand/core-concepts/data-partitioning) for version storage details
+- API 사용법은 [트랜잭션 수행](/develop/work-with-data/transactions)을 참고하세요
+- 버전 저장 세부 사항은 [데이터 파티셔닝](/understand/core-concepts/data-partitioning)을 참고하세요

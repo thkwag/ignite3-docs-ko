@@ -17,7 +17,7 @@ const sidebars: SidebarsConfig = {
     // Getting Started (8 pages)
     {
       type: "category",
-      label: "Getting Started",
+      label: "시작하기",
       link: { type: "doc", id: "getting-started/index" },
       items: [
         "getting-started/intro",
@@ -35,7 +35,7 @@ const sidebars: SidebarsConfig = {
     // Develop (28 pages)
     {
       type: "category",
-      label: "Develop and Build",
+      label: "개발 및 빌드",
       link: { type: "doc", id: "develop/index" },
       items: [
         {
@@ -68,7 +68,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: "category",
-          label: "Work with Data",
+          label: "데이터 다루기",
           link: { type: "doc", id: "develop/work-with-data/index" },
           items: [
             "develop/work-with-data/table-api",
@@ -98,7 +98,7 @@ const sidebars: SidebarsConfig = {
     // SQL (15 pages)
     {
       type: "category",
-      label: "Work with SQL",
+      label: "SQL 다루기",
       link: { type: "doc", id: "sql/index" },
       items: [
         {
@@ -118,12 +118,12 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: "category",
-          label: "SQL Reference",
+          label: "SQL 참조",
           link: { type: "doc", id: "sql/reference/index" },
           items: [
             {
               type: "category",
-              label: "Language Definition",
+              label: "언어 정의",
               link: { type: "doc", id: "sql/reference/language-definition/index" },
               items: [
                 "sql/reference/language-definition/ddl",
@@ -268,12 +268,12 @@ const sidebars: SidebarsConfig = {
     // Understand (15 pages)
     {
       type: "category",
-      label: "Concepts and Architecture",
+      label: "개념과 아키텍처",
       link: { type: "doc", id: "understand/index" },
       items: [
         {
           type: "category",
-          label: "Core Concepts",
+          label: "핵심 개념",
           link: { type: "doc", id: "understand/core-concepts/index" },
           items: [
             "understand/core-concepts/what-is-ignite",
@@ -286,7 +286,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: "category",
-          label: "Architecture",
+          label: "아키텍처",
           link: { type: "doc", id: "understand/architecture/index" },
           items: [
             "understand/architecture/architecture-overview",
@@ -319,17 +319,17 @@ const sidebars: SidebarsConfig = {
     // API Reference (33 pages)
     {
       type: "category",
-      label: "Client and API Reference",
+      label: "클라이언트 및 API 참조",
       link: { type: "doc", id: "api-reference/index" },
       items: [
         {
           type: "category",
-          label: "Native Client APIs",
+          label: "네이티브 클라이언트 API",
           link: { type: "doc", id: "api-reference/native-clients/index" },
           items: [
             {
               type: "category",
-              label: "Java API (PRIMARY)",
+              label: "Java API (기본)",
               link: {
                 type: "doc",
                 id: "api-reference/native-clients/java/java-index",

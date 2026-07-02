@@ -1,32 +1,32 @@
 ---
 id: transactions
-title: Performing Transactions
+title: 트랜잭션 수행
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-All queries in Apache Ignite are transactional. You can provide an explicit transaction as a first argument of any Table and SQL API call. If you do not provide an explicit transaction, an implicit one will be created for every call.
+Apache Ignite의 모든 쿼리는 트랜잭션으로 처리됩니다. Table API와 SQL API를 호출할 때 첫 번째 인수로 명시적 트랜잭션을 전달할 수 있습니다. 명시적 트랜잭션을 지정하지 않으면 호출마다 암묵적 트랜잭션이 생성됩니다.
 
-## Transaction Lifecycle
+## 트랜잭션 라이프사이클 {#transaction-lifecycle}
 
-When the transaction is created, the node that the transaction was started from is chosen as **transaction coordinator**. The coordinator finds the required [partitions](/understand/core-concepts/data-partitioning) and sends the read or write requests to the nodes holding primary partitions. For correct transaction operation, all nodes in cluster must have similar time, that can be different by no more than `schemaSync.maxClockSkewMillis`.
+트랜잭션이 생성되면 트랜잭션을 시작한 노드가 **트랜잭션 코디네이터**로 선택됩니다. 코디네이터는 필요한 [파티션](/understand/core-concepts/data-partitioning)을 찾아 프라이머리 파티션을 보유한 노드로 읽기 또는 쓰기 요청을 보냅니다. 트랜잭션이 올바르게 동작하려면 클러스터의 모든 노드가 비슷한 시각을 유지해야 하며, 그 차이는 `schemaSync.maxClockSkewMillis`를 넘을 수 없습니다.
 
-If the key is not locked by a different transaction, the node gets the locks on the involved keys, and attempts to apply the changes in the transaction. When the operation finishes, the lock is removed. This way, several transactions can work on the same partition, while changing separate keys. Additionally, some operations may perform **short-term** locks on the keys in advance, to ensure operations proceed correctly.
+다른 트랜잭션이 해당 키를 잠그지 않았다면 노드는 관련 키에 락을 걸고 트랜잭션의 변경 사항 적용을 시도합니다. 작업이 끝나면 락이 해제됩니다. 이런 방식으로 여러 트랜잭션이 서로 다른 키를 변경하면서 같은 파티션에서 동시에 동작할 수 있습니다. 또한 일부 작업은 올바르게 처리되도록 미리 키에 **단기** 락을 걸기도 합니다.
 
-If the node with the primary replica of a partition involved in the transaction fails, the transaction is eventually automatically rolled back. Apache Ignite will return `TransactionException` on commit attempt.
+트랜잭션에 관련된 파티션의 프라이머리 복제본을 가진 노드에 장애가 발생하면 트랜잭션은 결국 자동으로 롤백됩니다. 이때 Apache Ignite는 커밋을 시도할 때 `TransactionException`을 반환합니다.
 
-## Transaction Isolation and Concurrency
+## 트랜잭션 격리와 동시성 {#transaction-isolation-and-concurrency}
 
-All read-write transactions in Apache Ignite acquire locks during the first read or write access, and hold the lock until the transaction is committed or rolled back. All read-write transactions are `SERIALIZABLE`, so as long as the lock persists, no other transaction can make changes to locked data, however data can still be read by [Read-Only Transactions](#read-only-transactions).
+Apache Ignite의 모든 읽기-쓰기 트랜잭션은 첫 읽기 또는 쓰기 접근 시 락을 획득하고, 트랜잭션이 커밋되거나 롤백될 때까지 락을 유지합니다. 모든 읽기-쓰기 트랜잭션은 `SERIALIZABLE` 수준으로 동작하므로, 락이 유지되는 동안에는 다른 트랜잭션이 잠긴 데이터를 변경할 수 없습니다. 다만 [읽기 전용 트랜잭션](#read-only-transactions)으로는 데이터를 읽을 수 있습니다.
 
-### Deadlock Prevention
+### 데드락 방지 {#deadlock-prevention}
 
-Apache Ignite uses the `WAIT_DIE` deadlock prevention algorithm. When a newer transaction requests data that is already locked by a different transaction, it is cancelled and the transaction operation is retried with the same timestamp. If the transaction is older, it is not cancelled and is allowed to wait for the lock to be freed.
+Apache Ignite는 `WAIT_DIE` 데드락 방지 알고리즘을 사용합니다. 더 최근에 시작된 트랜잭션이 다른 트랜잭션이 이미 잠근 데이터를 요청하면 해당 트랜잭션은 취소되고 같은 타임스탬프로 재시도됩니다. 반대로 더 오래된 트랜잭션은 취소되지 않고 락이 풀릴 때까지 대기합니다.
 
-## Executing Transactions
+## 트랜잭션 실행 {#executing-transactions}
 
-Here is how you  can provide a transaction explicitly:
+다음은 트랜잭션을 명시적으로 지정하는 방법입니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -98,17 +98,17 @@ assert(accounts.get(&tx, {42})->balance == 16'000);
 </TabItem>
 </Tabs>
 
-## Transaction Management
+## 트랜잭션 관리 {#transaction-management}
 
-You can also manage transactions by using the `runInTransaction` method. When using it, the following will be done automatically:
+`runInTransaction` 메서드로도 트랜잭션을 관리할 수 있습니다. 이 메서드를 사용하면 다음이 자동으로 처리됩니다.
 
-- The transaction is started and substituted to the closure.
-- The transaction is committed if no exceptions were thrown during the closure.
-- The transaction will be retried in case of recoverable error. Closure must be purely functional, not causing side effects.
+- 트랜잭션이 시작되고 클로저에 전달됩니다.
+- 클로저 실행 중 예외가 발생하지 않으면 트랜잭션이 커밋됩니다.
+- 복구 가능한 오류가 발생하면 트랜잭션이 재시도됩니다. 클로저는 부작용이 없는 순수 함수형이어야 합니다.
 
-You can run transactions both synchronously and asynchronously.
+트랜잭션은 동기 방식과 비동기 방식 모두로 실행할 수 있습니다.
 
-This example shows how to update an account's balance synchronously:
+다음 예시는 계좌 잔액을 동기 방식으로 갱신하는 방법을 보여줍니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -127,7 +127,7 @@ client.transactions().runInTransaction(tx -> {
 </TabItem>
 </Tabs>
 
-And this example performs the same logic in an asynchronous manner:
+다음 예시는 같은 로직을 비동기 방식으로 수행합니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -146,11 +146,11 @@ future.join();
 </TabItem>
 </Tabs>
 
-## Read-Only Transactions
+## 읽기 전용 트랜잭션 {#read-only-transactions}
 
-When starting a transaction, you can configure the transaction as a **read-only** transaction. In these transactions, no data modification can be performed, but they also do not secure locks and can be performed on non-primary [partitions](/understand/core-concepts/data-partitioning), further improving their performance. Read-only transactions always check the data for the moment they were started, even if new data was written to the database.
+트랜잭션을 시작할 때 **읽기 전용** 트랜잭션으로 구성할 수 있습니다. 읽기 전용 트랜잭션에서는 데이터를 수정할 수 없지만, 락을 확보하지 않고 프라이머리가 아닌 [파티션](/understand/core-concepts/data-partitioning)에서도 실행할 수 있어 성능이 더 좋습니다. 읽기 전용 트랜잭션은 이후 데이터베이스에 새 데이터가 기록되더라도 항상 트랜잭션을 시작한 시점의 데이터를 확인합니다.
 
-Here is how you can make a read-only transaction:
+다음은 읽기 전용 트랜잭션을 만드는 방법입니다.
 
 <Tabs>
 <TabItem value="java" label="Java">
@@ -190,14 +190,14 @@ tx.commit();
 </Tabs>
 
 :::note
-Read-only transactions read data at a specific time. If new data was written since, old data will still be stored in [Version Storage](/understand/core-concepts/data-partitioning#version-storage) and will be available until low watermark. If low watermark is reached during the transaction, data will be kept available until it is over.
+읽기 전용 트랜잭션은 특정 시점의 데이터를 읽습니다. 그 이후 새 데이터가 기록되더라도 이전 데이터는 [버전 저장](/understand/core-concepts/data-partitioning#version-storage)에 남아 있으며 하한 워터마크에 도달할 때까지 사용할 수 있습니다. 트랜잭션이 진행되는 동안 하한 워터마크에 도달하면 트랜잭션이 끝날 때까지 데이터를 계속 사용할 수 있습니다.
 :::
 
-## Transaction Timeout
+## 트랜잭션 타임아웃 {#transaction-timeout}
 
-In certain scenarios, it is preferable to drop the transaction if it is taking too long. When the timeout is reached, the transaction is automatically rolled back.
+특정 상황에서는 트랜잭션이 너무 오래 걸리면 중단하는 것이 좋습니다. 타임아웃에 도달하면 트랜잭션이 자동으로 롤백됩니다.
 
-Here is how you can configure transaction timeout:
+다음은 트랜잭션 타임아웃을 구성하는 방법입니다.
 
 <Tabs>
 <TabItem value="java" label="Java">

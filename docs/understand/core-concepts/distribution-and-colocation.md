@@ -1,19 +1,19 @@
 ---
 id: distribution-and-colocation
-title: Distribution and Colocation
+title: 분산과 콜로케이션
 sidebar_position: 4
 ---
 
-Data distribution determines how Ignite spreads data across cluster nodes. Colocation ensures related data resides on the same nodes, enabling efficient joins and transactions without cross-node data movement.
+데이터 분산은 Ignite가 클러스터 노드 전체에 데이터를 퍼뜨리는 방식을 결정합니다. 콜로케이션은 연관된 데이터가 같은 노드에 위치하도록 보장해 노드 간 데이터 이동 없이 효율적으로 조인하고 트랜잭션을 처리합니다.
 
-## Distribution Zones
+## 분산 영역 {#distribution-zones}
 
-A distribution zone defines the rules for data placement across the cluster. Each table belongs to exactly one distribution zone that controls:
+분산 영역(distribution zone)은 클러스터 전체에서 데이터를 배치하는 규칙을 정의합니다. 각 테이블은 정확히 하나의 분산 영역에 속하며, 이 영역은 다음을 제어합니다.
 
-- Number of partitions
-- Replication factor
-- Which nodes can store data
-- Scale-up and scale-down behavior
+- 파티션 수
+- 복제 계수
+- 데이터를 저장할 수 있는 노드
+- 노드 확장(scale-up)과 축소(scale-down) 시 동작
 
 ```mermaid
 flowchart TB
@@ -38,7 +38,7 @@ flowchart TB
     Nodes --> T1 & T2 & T3
 ```
 
-Create a distribution zone:
+다음 예시는 분산 영역을 생성합니다.
 
 ```sql
 CREATE ZONE my_zone WITH
@@ -50,9 +50,9 @@ CREATE ZONE my_zone WITH
     STORAGE_PROFILES = 'default';
 ```
 
-## Partitioning
+## 파티셔닝 {#partitioning}
 
-When a table is created, its data is divided into partitions based on the zone configuration. Each partition is identified by a number from 0 to `PARTITIONS - 1`.
+테이블을 만들면 영역 구성에 따라 데이터가 파티션으로 나뉩니다. 각 파티션은 0부터 `PARTITIONS - 1`까지의 번호로 식별됩니다.
 
 ```mermaid
 flowchart LR
@@ -70,38 +70,38 @@ flowchart LR
     D -->|"hash(key) mod N"| P0 & P1 & P2 & PN
 ```
 
-### Rendezvous Hashing
+### 랑데부 해싱 {#rendezvous-hashing}
 
-Ignite uses rendezvous hashing (Highest Random Weight) to assign partitions to nodes. For each partition, the algorithm:
+Ignite는 파티션을 노드에 배정할 때 랑데부 해싱(rendezvous hashing, Highest Random Weight라고도 함)을 사용합니다. 각 파티션에 대해 알고리즘은 다음을 수행합니다.
 
-1. Computes a hash combining each node's ID with the partition number
-2. Sorts nodes by their hash value in descending order
-3. Assigns the partition to nodes with the highest scores
+1. 각 노드의 ID와 파티션 번호를 결합해 해시를 계산합니다
+2. 해시 값을 기준으로 노드를 내림차순 정렬합니다
+3. 점수가 가장 높은 노드에 파티션을 배정합니다
 
-This approach provides:
+이 방식은 다음을 제공합니다.
 
-- **Deterministic placement**: The same partition always maps to the same nodes given the same cluster topology
-- **Minimal rebalancing**: Adding or removing nodes affects only partitions that must move
-- **Stable ordering**: Consistent replica orderings across all nodes
+- **결정적 배치**: 클러스터 토폴로지가 같으면 같은 파티션은 항상 같은 노드로 매핑됩니다
+- **최소 리밸런싱**: 노드를 추가하거나 제거해도 이동이 필요한 파티션에만 영향을 줍니다
+- **안정적 순서**: 모든 노드에서 일관된 복제본 순서를 유지합니다
 
-### Partition Count Guidelines
+### 파티션 수 가이드라인 {#partition-count-guidelines}
 
-Set partition count based on cluster size and available cores:
+클러스터 크기와 사용 가능한 코어 수를 기준으로 파티션 수를 설정합니다.
 
 ```text
 recommended_partitions = (node_count * cores_per_node * 2) / replica_count
 ```
 
-Examples:
+예시:
 
-- 3 nodes, 8 cores each, 3 replicas: 16 to 32 partitions
-- 7 nodes, 16 cores each, 3 replicas: 75 to 150 partitions
+- 노드 3개, 코어 각 8개, 복제본 3개: 파티션 16~32개
+- 노드 7개, 코어 각 16개, 복제본 3개: 파티션 75~150개
 
-The maximum partition count is 65,000 per table. Using significantly more partitions than recommended creates overhead from partition management and distribution tracking.
+테이블당 최대 파티션 수는 65,000개입니다. 권장치보다 훨씬 많은 파티션을 사용하면 파티션 관리와 분산 추적에서 오버헤드가 발생합니다.
 
-## Replication
+## 복제 {#replication}
 
-Each partition is replicated across multiple nodes for fault tolerance. The `REPLICAS` parameter controls how many copies exist.
+각 파티션은 장애 허용성을 위해 여러 노드에 복제됩니다. `REPLICAS` 매개변수는 사본 수를 제어합니다.
 
 ```mermaid
 flowchart TB
@@ -122,38 +122,38 @@ flowchart TB
     R2 <-->|"Raft<br/>Consensus"| R3
 ```
 
-### Consensus Groups
+### 합의 그룹 {#consensus-groups}
 
-Replicas form a Raft consensus group. The group has two member types:
+복제본은 RAFT 합의(consensus) 그룹을 형성합니다. 그룹에는 두 가지 구성원 유형이 있습니다.
 
-| Type | Role |
+| 유형 | 역할 |
 |------|------|
-| **Peers** | Vote on writes, contribute to quorum, can become primary |
-| **Learners** | Receive data asynchronously, cannot vote, used for read scaling |
+| **피어(peer)** | 쓰기에 투표하고 정족수(quorum)에 기여하며, 프라이머리가 될 수 있음 |
+| **러너(learner)** | 데이터를 비동기로 수신하며 투표에 참여하지 않고, 읽기 확장에 사용됨 |
 
-The consensus group size determines how many peers participate in voting:
+합의 그룹 크기는 투표에 참여하는 피어 수를 결정합니다.
 
 ```text
 consensus_group_size = (quorum_size * 2) - 1
 ```
 
-For 5 replicas with quorum size 2: 3 peers and 2 learners.
+복제본 5개, 정족수 크기 2인 경우: 피어 3개와 러너 2개입니다.
 
-### Quorum Requirements
+### 정족수 요구 사항 {#quorum-requirements}
 
-Writes require acknowledgment from a quorum of peers before completion. Losing the majority of the consensus group puts the partition in read-only state.
+쓰기가 완료되려면 피어 정족수의 확인이 필요합니다. 합의 그룹의 과반을 잃으면 파티션은 읽기 전용 상태가 됩니다.
 
-| Replicas | Default Quorum | Consensus Peers |
+| 복제본 | 기본 정족수 | 합의 피어 |
 |----------|----------------|-----------------|
-| 1 | 1 | 1 |
-| 2-4 | 2 | 3 |
-| 5+ | 3 | 5 |
+| 1개 | 1 | 1 |
+| 2~4개 | 2 | 3 |
+| 5개 이상 | 3 | 5 |
 
-For high availability, use an odd number of replicas (3 or 5) to handle node failures without losing quorum.
+고가용성을 위해 복제본을 홀수 개(3개 또는 5개)로 사용해 정족수를 잃지 않고 노드 장애를 처리하세요.
 
-## Primary Replicas and Leases
+## 프라이머리 복제본과 리스 {#primary-replicas-and-leases}
 
-Each partition has one primary replica that handles all read-write transactions. The primary is determined through a lease mechanism managed by the placement driver.
+각 파티션에는 모든 읽기-쓰기 트랜잭션을 처리하는 프라이머리 복제본이 하나 있습니다. 프라이머리는 배치 드라이버(placement driver)가 관리하는 리스(lease) 메커니즘으로 결정됩니다.
 
 ```mermaid
 sequenceDiagram
@@ -176,27 +176,27 @@ sequenceDiagram
     Note over N2: New Primary
 ```
 
-Lease properties:
+리스 속성:
 
-- **Short-lived**: Leases expire after a few seconds if not renewed
-- **Non-revocable**: A lease cannot be revoked before expiration
-- **Single holder**: Only one node holds the lease for a partition at any time
-- **Negotiated**: The candidate must accept the lease before becoming primary
+- **짧은 수명**: 갱신하지 않으면 몇 초 뒤 리스가 만료됩니다
+- **철회 불가**: 만료 전에는 리스를 철회할 수 없습니다
+- **단일 보유자**: 특정 시점에 파티션의 리스는 노드 하나만 보유합니다
+- **협상 필요**: 후보 노드는 프라이머리가 되기 전에 리스를 수락해야 합니다
 
-## Data Colocation
+## 데이터 콜로케이션 {#data-colocation}
 
-Colocation ensures that related data from different tables is stored on the same partition. This enables:
+콜로케이션은 서로 다른 테이블의 연관된 데이터가 같은 파티션에 저장되도록 보장하며, 다음과 같은 이점을 제공합니다.
 
-- Joins without cross-node data transfer
-- Transactions touching related data without distributed coordination
-- Colocated compute jobs that access all needed data locally
+- 노드 간 데이터 전송 없는 조인
+- 분산 조율 없이 연관된 데이터에 접근하는 트랜잭션
+- 필요한 데이터를 모두 로컬에서 접근하는 콜로케이션된 컴퓨트 작업
 
-### Colocation Keys
+### 콜로케이션 키 {#colocation-keys}
 
-Tables colocate when they share the same:
+테이블은 다음 조건이 같으면 함께 배치됩니다.
 
-- Distribution zone
-- Colocation key column(s) with matching values
+- 분산 영역
+- 값이 일치하는 콜로케이션 키 컬럼
 
 ```mermaid
 flowchart TB
@@ -214,7 +214,7 @@ flowchart TB
     O2 <-.->|"Colocated"| OI2
 ```
 
-Define colocation when creating tables:
+테이블을 만들 때 다음과 같이 콜로케이션을 정의합니다.
 
 ```sql
 -- Parent table
@@ -244,18 +244,18 @@ CREATE TABLE order_items (
   WITH PRIMARY_ZONE = 'my_zone';
 ```
 
-### Colocation Requirements
+### 콜로케이션 요구 사항 {#colocation-requirements}
 
-For colocation to work:
+콜로케이션이 동작하려면 다음 조건을 만족해야 합니다.
 
-1. **Same zone**: Tables must use the same distribution zone
-2. **Matching columns**: Colocation key columns must have compatible types
-3. **Primary key inclusion**: Colocation columns must be part of the primary key
-4. **Consistent hashing**: All colocated tables use the same hash function on colocation keys
+1. **같은 영역**: 테이블은 같은 분산 영역을 사용해야 합니다
+2. **일치하는 컬럼**: 콜로케이션 키 컬럼은 호환되는 타입이어야 합니다
+3. **기본 키 포함**: 콜로케이션 컬럼은 기본 키의 일부여야 합니다
+4. **일관된 해싱**: 콜로케이션된 모든 테이블은 콜로케이션 키에 같은 해시 함수를 사용합니다
 
-### Query Optimization
+### 쿼리 최적화 {#query-optimization}
 
-The SQL engine detects colocated tables and optimizes join execution:
+SQL 엔진은 콜로케이션된 테이블을 감지해 조인 실행을 최적화합니다.
 
 ```sql
 -- This join executes locally on each node without data shuffling
@@ -265,11 +265,11 @@ JOIN customers c ON o.customer_id = c.customer_id
 WHERE o.customer_id = 100;
 ```
 
-Without colocation, the same query would require transferring data between nodes.
+콜로케이션이 없으면 같은 쿼리라도 노드 간 데이터 전송이 필요합니다.
 
-## Partition Rebalancing
+## 파티션 리밸런싱 {#partition-rebalancing}
 
-When cluster topology changes, Ignite redistributes partitions to maintain balanced data distribution.
+클러스터 토폴로지가 변경되면 Ignite는 균형 잡힌 데이터 분산을 유지하기 위해 파티션을 재분배합니다.
 
 ```mermaid
 flowchart LR
@@ -291,16 +291,16 @@ flowchart LR
     C1 -->|"Rebalance"| C2
 ```
 
-Rebalancing is controlled by scale timers:
+리밸런싱은 확장/축소 타이머로 제어됩니다.
 
-- `DATA_NODES_AUTO_ADJUST_SCALE_UP`: Delay before adding new node to data distribution (default: immediate)
-- `DATA_NODES_AUTO_ADJUST_SCALE_DOWN`: Delay before removing departed node from distribution (default: immediate)
+- `DATA_NODES_AUTO_ADJUST_SCALE_UP`: 새 노드를 데이터 분산에 추가하기 전 지연 시간(기본값: 즉시)
+- `DATA_NODES_AUTO_ADJUST_SCALE_DOWN`: 이탈한 노드를 분산에서 제거하기 전 지연 시간(기본값: 즉시)
 
-Setting delays prevents unnecessary rebalancing during rolling restarts or brief network issues.
+지연 시간을 설정하면 롤링 재시작이나 일시적인 네트워크 문제로 발생하는 불필요한 리밸런싱을 방지합니다.
 
-## Node Filtering
+## 노드 필터링 {#node-filtering}
 
-The `DATA_NODES_FILTER` parameter selects which nodes participate in the zone using JSONPath expressions against node attributes:
+`DATA_NODES_FILTER` 매개변수는 노드 속성에 대한 JSONPath 표현식을 사용해 영역에 참여할 노드를 선택합니다.
 
 ```sql
 -- Only nodes in us-east region
@@ -314,18 +314,18 @@ CREATE ZONE high_performance WITH
     STORAGE_PROFILES = 'default';
 ```
 
-Node attributes are configured in each node's configuration file.
+노드 속성은 각 노드의 구성 파일에서 설정합니다.
 
-## Design Constraints
+## 설계 제약 {#design-constraints}
 
-1. **Zone immutability**: Once a table is assigned to a zone, it cannot be moved to a different zone
-2. **Partition count fixed**: The number of partitions cannot be changed after zone creation
-3. **Colocation at creation**: Colocation must be specified when creating the table
-4. **Single leaseholder**: Only one node can be the primary for a partition at any time
-5. **Consensus majority**: Losing the majority of consensus peers makes the partition read-only
+1. **영역 불변성**: 테이블이 한 번 영역에 할당되면 다른 영역으로 옮길 수 없습니다
+2. **고정된 파티션 수**: 영역을 생성한 뒤에는 파티션 수를 변경할 수 없습니다
+3. **생성 시 콜로케이션 지정**: 콜로케이션은 테이블을 생성할 때 지정해야 합니다
+4. **단일 리스홀더**: 특정 시점에 파티션의 프라이머리가 될 수 있는 노드는 하나뿐입니다
+5. **합의 과반**: 합의 피어의 과반을 잃으면 파티션이 읽기 전용이 됩니다
 
-## Related Topics
+## 관련 주제 {#related-topics}
 
-- [Distribution Zones SQL Reference](/sql/reference/language-definition/distribution-zones) for zone DDL syntax
-- [Data Partitioning](/understand/core-concepts/data-partitioning) for partition internals
-- [Disaster Recovery](/configure-and-operate/operations/disaster-recovery-partitions) for handling partition failures
+- 영역 DDL 구문은 [분산 영역 SQL 참조](/sql/reference/language-definition/distribution-zones)를 참고하세요
+- 파티션 내부 구조는 [데이터 파티셔닝](/understand/core-concepts/data-partitioning)을 참고하세요
+- 파티션 장애 처리는 [재해 복구](/configure-and-operate/operations/disaster-recovery-partitions)를 참고하세요

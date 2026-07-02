@@ -1,26 +1,26 @@
 ---
 id: what-is-ignite
-title: What is Apache Ignite 3?
+title: Apache Ignite 3란?
 sidebar_position: 1
 ---
 
-Apache Ignite is a distributed database designed for high-performance transactional and analytical workloads. It combines in-memory speed with disk persistence, providing both SQL and key-value access to the same data with full ACID transaction support.
+Apache Ignite는 고성능 트랜잭션 및 분석 워크로드에 맞게 설계된 분산 데이터베이스입니다. 인메모리의 속도와 디스크 영속성을 함께 제공하며, ACID 트랜잭션을 완전히 지원하면서 같은 데이터에 SQL과 키-값 두 방식으로 접근할 수 있습니다.
 
-## When to Use Ignite
+## Ignite가 적합한 경우 {#when-to-use-ignite}
 
-Ignite fits workloads that require low-latency data access at scale:
+Ignite는 대규모 환경에서 낮은 지연으로 데이터에 접근해야 하는 워크로드에 적합합니다:
 
-| Workload | How Ignite Helps |
+| 워크로드 | Ignite의 역할 |
 |----------|------------------|
-| **High-throughput OLTP** | In-memory processing with persistent storage handles millions of transactions per second |
-| **Real-time analytics** | Distributed SQL queries execute across partitioned data without ETL |
-| **Caching layer** | Replace external caches with a transactional, SQL-queryable data layer |
-| **Microservices data** | Shared distributed state with strong consistency guarantees |
-| **Event processing** | Colocated compute executes business logic where data resides |
+| **고처리량 OLTP** | 인메모리 처리와 영속 스토리지로 초당 수백만 건의 트랜잭션을 처리합니다 |
+| **실시간 분석** | 분산 SQL 쿼리가 ETL 없이 파티셔닝된 데이터 전반에서 실행됩니다 |
+| **캐싱 계층** | 외부 캐시를 트랜잭션을 지원하고 SQL로 쿼리할 수 있는 데이터 계층으로 대체합니다 |
+| **마이크로서비스 데이터** | 강한 일관성(strong consistency)을 보장하는 분산 상태를 공유합니다 |
+| **이벤트 처리** | 컴퓨트를 데이터가 있는 곳에 함께 배치해 비즈니스 로직을 실행합니다 |
 
-## Architecture
+## 아키텍처 {#architecture}
 
-Ignite clusters consist of server nodes that store partitioned data and execute distributed queries and compute jobs. Clients connect through a lightweight protocol without joining the cluster topology.
+Ignite 클러스터는 파티셔닝된 데이터를 저장하고 분산 쿼리와 컴퓨트 작업을 실행하는 서버 노드로 구성됩니다. 클라이언트는 클러스터 토폴로지에 합류하지 않고 경량 프로토콜로 연결합니다.
 
 ```mermaid
 flowchart TB
@@ -50,7 +50,7 @@ flowchart TB
     SQL -->|"JDBC/ODBC"| P1 & P2 & P3
 ```
 
-### Component Layers
+### 구성 요소 계층 {#component-layers}
 
 ```mermaid
 flowchart TB
@@ -92,11 +92,11 @@ flowchart TB
     Raft --> Memory & Disk
 ```
 
-## Core Features
+## 핵심 기능 {#core-features}
 
-### Unified Data Model
+### 통합 데이터 모델 {#unified-data-model}
 
-Tables provide a single data structure for both SQL and key-value operations. The same schema serves distributed queries and low-latency key lookups.
+테이블은 SQL과 키-값 연산 모두에 하나의 데이터 구조를 제공합니다. 같은 스키마가 분산 쿼리와 낮은 지연 키 조회를 모두 지원합니다.
 
 ```mermaid
 flowchart LR
@@ -113,7 +113,7 @@ flowchart LR
     Schema --> SQL & KV & Compute
 ```
 
-Create tables with SQL, then access them through any API:
+SQL로 테이블을 만든 뒤, 어떤 API로든 접근할 수 있습니다:
 
 ```sql
 CREATE TABLE accounts (
@@ -134,9 +134,9 @@ ResultSet rs = client.sql().execute(null,
     "SELECT * FROM accounts WHERE balance > ?", 1000);
 ```
 
-### ACID Transactions
+### ACID 트랜잭션 {#acid-transactions}
 
-All tables support transactions by default using Multi-Version Concurrency Control (MVCC). Read-write transactions execute with serializable isolation. Read-only transactions provide snapshot isolation without acquiring locks.
+모든 테이블은 기본적으로 다중 버전 동시성 제어(MVCC)를 사용해 트랜잭션을 지원합니다. 읽기-쓰기 트랜잭션은 직렬화 가능 격리(serializable isolation)로 실행됩니다. 읽기 전용 트랜잭션은 락을 획득하지 않고 스냅샷 격리(snapshot isolation)를 제공합니다.
 
 ```mermaid
 flowchart TB
@@ -161,7 +161,7 @@ flowchart TB
     Snapshot --> LockFree --> AnyReplica
 ```
 
-Transactions work across SQL and key-value operations:
+트랜잭션은 SQL 연산과 키-값 연산에 걸쳐 동작합니다:
 
 ```java
 var tx = client.transactions().begin();
@@ -175,9 +175,9 @@ try {
 }
 ```
 
-### Distribution Zones
+### 분산 영역 {#distribution-zones}
 
-Distribution zones control how data is partitioned and replicated across the cluster. Each zone defines partition count, replication factor, and node placement rules.
+분산 영역(distribution zone)은 클러스터 전반에서 데이터를 어떻게 파티셔닝하고 복제할지 제어합니다. 각 영역은 파티션 수, 복제 계수, 노드 배치 규칙을 정의합니다.
 
 ```mermaid
 flowchart TB
@@ -201,11 +201,11 @@ flowchart TB
     Part --> T1 & T2 & T3
 ```
 
-Tables in the same zone with matching colocation keys store related data on the same partitions, enabling efficient joins without network transfers.
+같은 영역에 있으면서 콜로케이션(colocation) 키가 일치하는 테이블은 관련 데이터를 같은 파티션에 저장하므로, 네트워크 전송 없이 효율적으로 조인할 수 있습니다.
 
-### Distributed Compute
+### 분산 컴퓨트 {#distributed-compute}
 
-Execute code where data resides to minimize network overhead. Jobs can target specific nodes, colocate with data partitions, or broadcast across the cluster.
+데이터가 있는 위치에서 코드를 실행해 네트워크 오버헤드를 최소화합니다. 작업은 특정 노드를 지정하거나, 데이터 파티션에 함께 배치하거나, 클러스터 전체에 브로드캐스트할 수 있습니다.
 
 ```mermaid
 flowchart LR
@@ -226,7 +226,7 @@ flowchart LR
     Bcast --> N1 & N2 & N3
 ```
 
-Colocated execution processes data without network transfer:
+콜로케이션 실행은 네트워크 전송 없이 데이터를 처리합니다:
 
 ```java
 // Execute on node holding account 42's partition
@@ -238,9 +238,9 @@ JobExecution<Double> execution = client.compute().submit(
 Double interest = execution.resultAsync().join();
 ```
 
-### Distributed SQL
+### 분산 SQL {#distributed-sql}
 
-The SQL engine executes ANSI SQL queries across partitioned data. Query plans push predicates to partitions, aggregate results, and handle distributed joins.
+SQL 엔진은 파티셔닝된 데이터 전반에 걸쳐 ANSI SQL 쿼리를 실행합니다. 쿼리 계획은 조건자를 파티션으로 내려보내고, 결과를 집계하며, 분산 조인을 처리합니다.
 
 ```mermaid
 flowchart TB
@@ -262,7 +262,7 @@ flowchart TB
     Join --> Agg
 ```
 
-Standard JDBC connectivity works with existing SQL tools:
+표준 JDBC 연결로 기존 SQL 도구를 그대로 사용할 수 있습니다:
 
 ```java
 try (Connection conn = DriverManager.getConnection("jdbc:ignite:thin://localhost:10800")) {
@@ -272,17 +272,17 @@ try (Connection conn = DriverManager.getConnection("jdbc:ignite:thin://localhost
 }
 ```
 
-### Storage Options
+### 스토리지 옵션 {#storage-options}
 
-Ignite supports multiple storage engines optimized for different workloads:
+Ignite는 다양한 워크로드에 최적화된 여러 스토리지 엔진을 지원합니다:
 
-| Engine | Characteristics | Use Case |
+| 엔진 | 특성 | 사용 사례 |
 |--------|----------------|----------|
-| **aimem** | In-memory only, volatile | Caching, session data |
-| **aipersist** | In-memory with disk persistence | Primary data storage |
-| **rocksdb** | Disk-based with memory cache | Large datasets exceeding RAM |
+| **aimem** | 인메모리 전용, 휘발성 | 캐싱, 세션 데이터 |
+| **aipersist** | 디스크 영속성을 갖춘 인메모리 | 주 데이터 저장소 |
+| **rocksdb** | 디스크 기반, 메모리 캐시 사용 | RAM을 초과하는 대용량 데이터셋 |
 
-Storage profiles assign engines to distribution zones:
+스토리지 프로파일(storage profile)은 스토리지 엔진을 분산 영역에 할당합니다:
 
 ```sql
 CREATE ZONE large_data WITH
@@ -291,19 +291,19 @@ CREATE ZONE large_data WITH
     REPLICAS = 3;
 ```
 
-## Clients and Connectivity
+## 클라이언트와 연결 {#clients-and-connectivity}
 
-Ignite provides native thin clients and standard database connectivity:
+Ignite는 네이티브 씬 클라이언트(thin client)와 표준 데이터베이스 연결을 제공합니다:
 
-| Client | Language | Protocol |
+| 클라이언트 | 언어 | 프로토콜 |
 |--------|----------|----------|
-| Java Client | Java 11+ | Binary |
-| .NET Client | .NET 6+ | Binary |
-| C++ Client | C++17 | Binary |
-| JDBC Driver | Any JVM | JDBC |
-| ODBC Driver | Any | ODBC |
+| Java 클라이언트 | Java 11+ | 바이너리 |
+| .NET 클라이언트 | .NET 6+ | 바이너리 |
+| C++ 클라이언트 | C++17 | 바이너리 |
+| JDBC 드라이버 | 모든 JVM 언어 | JDBC |
+| ODBC 드라이버 | 모든 언어 | ODBC |
 
-Thin clients connect directly to cluster nodes without joining the topology:
+씬 클라이언트는 토폴로지에 합류하지 않고 클러스터 노드에 직접 연결합니다:
 
 ```java
 IgniteClient client = IgniteClient.builder()
@@ -311,9 +311,9 @@ IgniteClient client = IgniteClient.builder()
     .build();
 ```
 
-## Management
+## 관리 {#management}
 
-The `ignite3` CLI provides cluster administration, configuration, and disaster recovery operations. Configuration uses HOCON format split between cluster-wide and node-specific settings.
+`ignite3` CLI는 클러스터 관리, 구성, 재해 복구 작업을 제공합니다. 구성은 HOCON 형식을 사용하며, 클러스터 전역 설정과 노드별 설정으로 나뉩니다.
 
 ```mermaid
 flowchart LR
@@ -331,13 +331,13 @@ flowchart LR
     Tool --> Init & Config & Status & Recovery
 ```
 
-## Changes from Ignite 2
+## Ignite 2에서 달라진 점 {#changes-from-ignite-2}
 
-For teams migrating from Ignite 2, the following section summarizes architectural changes.
+Ignite 2에서 마이그레이션하는 팀을 위해, 다음 섹션에서 아키텍처 변경 사항을 정리합니다.
 
-### Data Model
+### 데이터 모델 {#data-model}
 
-Ignite 2 stored data in caches using Binary Object format. SQL and key-value APIs operated on different representations. Ignite 3 replaces caches with tables that provide a unified schema for all access patterns.
+Ignite 2는 바이너리 객체(binary object) 형식을 사용해 캐시에 데이터를 저장했습니다. SQL API와 키-값 API는 서로 다른 표현 방식으로 동작했습니다. Ignite 3는 캐시를 테이블로 대체하며, 이 테이블은 모든 접근 패턴에 통합 스키마를 제공합니다.
 
 ```mermaid
 flowchart LR
@@ -364,30 +364,30 @@ flowchart LR
     end
 ```
 
-### Transactions
+### 트랜잭션 {#transactions}
 
-Ignite 2 transactions required cache atomicity configuration and had performance implications. Ignite 3 makes all tables transactional by default with MVCC-based concurrency control. The WAIT_DIE algorithm prevents deadlocks without detection overhead.
+Ignite 2 트랜잭션은 캐시 원자성 구성이 필요했고 성능에 영향을 미쳤습니다. Ignite 3는 MVCC 기반 동시성 제어로 모든 테이블이 기본적으로 트랜잭션을 지원하도록 합니다. WAIT_DIE 알고리즘은 별도의 탐지 오버헤드 없이 데드락을 방지합니다.
 
-### Distribution Configuration
+### 분산 구성 {#distribution-configuration}
 
-Ignite 2 spread distribution settings across affinity functions, backup configuration, and baseline topology. Ignite 3 consolidates these into distribution zones with explicit partition counts, replica factors, and node filters. Custom affinity functions are replaced by deterministic rendezvous hashing.
+Ignite 2는 분산 설정을 어피니티 함수, 백업 구성, 베이스라인 토폴로지(baseline topology)에 나누어 두었습니다. Ignite 3는 이를 분산 영역으로 통합하고, 파티션 수, 복제 계수, 노드 필터를 명시적으로 지정합니다. 사용자 정의 어피니티 함수는 결정적 랑데부 해싱(rendezvous hashing)으로 대체됩니다.
 
-### Client Model
+### 클라이언트 모델 {#client-model}
 
-Ignite 2 thick clients joined the cluster as nodes, requiring full protocol participation. Ignite 3 uses thin clients exclusively for standard operations. Embedded mode remains available for specialized use cases.
+Ignite 2 씩 클라이언트(thick client)는 노드로서 클러스터에 합류했으며, 전체 프로토콜 참여가 필요했습니다. Ignite 3는 표준 작업에 씬 클라이언트만 사용합니다. 임베디드 모드는 특수한 용도로 여전히 사용할 수 있습니다.
 
 ### Compute API
 
-Ignite 3 extends Ignite 2's compute capabilities with job state tracking, priority-based queuing, and automatic failover on node departure. All compute operations return `CompletableFuture` for non-blocking execution.
+Ignite 3는 작업 상태 추적, 우선순위 기반 큐잉, 노드 이탈 시 자동 장애 조치를 더해 Ignite 2의 컴퓨트 기능을 확장합니다. 모든 컴퓨트 연산은 논블로킹 실행을 위해 `CompletableFuture`를 반환합니다.
 
-### Management Tools
+### 관리 도구 {#management-tools}
 
-Ignite 2 used multiple CLI scripts with overlapping functionality. Ignite 3 provides a single `ignite3` CLI with interactive mode and command autocomplete. Configuration moved from XML to HOCON format.
+Ignite 2는 기능이 중복되는 여러 CLI 스크립트를 사용했습니다. Ignite 3는 대화형 모드와 명령어 자동 완성을 갖춘 단일 `ignite3` CLI를 제공합니다. 구성은 XML에서 HOCON 형식으로 바뀌었습니다.
 
-## Next Steps
+## 다음 단계 {#next-steps}
 
-- [Tables and Schemas](./tables-and-schemas) for data modeling
-- [Distribution and Colocation](./distribution-and-colocation) for partitioning
-- [Transactions and MVCC](./transactions-and-mvcc) for concurrency control
-- [Compute and Events](./compute-and-events) for distributed processing
-- [Getting Started](/getting-started/) to deploy your first cluster
+- 데이터 모델링은 [테이블과 스키마](./tables-and-schemas)를 참고하세요
+- 파티셔닝은 [분산과 콜로케이션](./distribution-and-colocation)을 참고하세요
+- 동시성 제어는 [트랜잭션과 MVCC](./transactions-and-mvcc)를 참고하세요
+- 분산 처리는 [컴퓨트와 이벤트](./compute-and-events)를 참고하세요
+- 첫 클러스터를 배포하려면 [시작하기](/getting-started/)로 이동하세요

@@ -1,49 +1,49 @@
 ---
-title: Introduction
+title: 소개
 ---
 
-Apache Ignite 3 is a distributed database for high-performance computing. This section will help you get started quickly.
+Apache Ignite 3는 고성능 컴퓨팅을 위한 분산 데이터베이스입니다. 이 섹션에서는 빠르게 시작하는 방법을 안내합니다.
 
-## What is Apache Ignite 3?
+## Apache Ignite 3란? {#what-is-apache-ignite-3}
 
-Apache Ignite 3 is a distributed database that provides:
+Apache Ignite 3는 다음을 제공하는 분산 데이터베이스입니다:
 
-* High-performance data storage and processing
-* SQL support with ACID transactions
-* Horizontal scalability across multiple nodes
-* Strong consistency guarantees
-* Built-in support for compute and analytics
+* 고성능 데이터 저장 및 처리
+* ACID 트랜잭션을 지원하는 SQL
+* 여러 노드에 걸친 수평 확장성
+* 강한 일관성(strong consistency) 보장
+* 컴퓨트와 분석 기능 기본 제공
 
-## Getting Started Path
+## 시작하기 경로 {#getting-started-path}
 
-Follow these guides to begin working with Apache Ignite 3:
+다음 가이드를 따라 Apache Ignite 3 사용을 시작하세요:
 
-1. **[Quick Start](/getting-started/quick-start)** - Install and run your first cluster
-2. **[Start a Cluster in Docker](/getting-started/start-cluster)** - Set up a multi-node cluster using Docker
-3. **[Working with SQL](/getting-started/work-with-sql)** - Learn SQL capabilities and data operations
-4. **[Using Java API](/getting-started/key-value-api)** - Build applications with the Java client
-5. **[Embedded Mode](/getting-started/embedded-mode)** - Run Ignite from your Java application
-6. **[Configuration Tips](/getting-started/best-practices)** - Configure storage, memory, and logging
-7. **[Migrating from Ignite 2](/getting-started/migrate-from-ignite-2)** - Upgrade from Apache Ignite 2
+1. **[빠른 시작](/getting-started/quick-start)** - 설치하고 첫 클러스터를 실행합니다
+2. **[Docker에서 클러스터 시작하기](/getting-started/start-cluster)** - Docker로 다중 노드 클러스터를 구성합니다
+3. **[SQL 다루기](/getting-started/work-with-sql)** - SQL 기능과 데이터 작업을 익힙니다
+4. **[Java API 사용하기](/getting-started/key-value-api)** - Java 클라이언트로 애플리케이션을 만듭니다
+5. **[임베디드 모드](/getting-started/embedded-mode)** - Java 애플리케이션에서 Ignite를 실행합니다
+6. **[구성 팁](/getting-started/best-practices)** - 스토리지, 메모리, 로깅을 구성합니다
+7. **[Ignite 2에서 마이그레이션하기](/getting-started/migrate-from-ignite-2)** - Apache Ignite 2에서 업그레이드합니다
 
-## Prerequisites
+## 사전 요구 사항 {#prerequisites}
 
-Before you begin, ensure you have:
+시작하기 전에 다음을 준비하세요:
 
-* JDK 11 or later
-* Operating System: Linux (Debian and Red Hat flavours), Windows 10 or 11
-* ISA: x86 or x64
+* JDK 11 이상
+* 운영 체제: Linux(Debian 및 Red Hat 계열), Windows 10 또는 11
+* ISA: x86 또는 x64
 
-For Docker-based setups, you'll also need:
+Docker 기반 설정에는 다음도 필요합니다:
 
-* Docker and Docker Compose installed
-* 8GB+ of available RAM recommended
+* Docker 및 Docker Compose 설치
+* 사용 가능한 RAM 8GB 이상 권장
 
-## Next Steps
+## 다음 단계 {#next-steps}
 
-Choose your path based on your needs:
+필요에 맞는 경로를 선택하세요:
 
-* **Quick evaluation**: Start with [Quick Start](/getting-started/quick-start)
-* **Development setup**: Use [Start a Cluster in Docker](/getting-started/start-cluster)
-* **Learning SQL**: Go to [Working with SQL](/getting-started/work-with-sql)
-* **Java development**: Begin with [Using Java API](/getting-started/key-value-api)
+* **빠른 평가**: [빠른 시작](/getting-started/quick-start)으로 시작하세요
+* **개발 환경 구성**: [Docker에서 클러스터 시작하기](/getting-started/start-cluster)를 사용하세요
+* **SQL 학습**: [SQL 다루기](/getting-started/work-with-sql)로 이동하세요
+* **Java 개발**: [Java API 사용하기](/getting-started/key-value-api)로 시작하세요

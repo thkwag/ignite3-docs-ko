@@ -99,8 +99,9 @@
       "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
     },
     "api-reference/native-clients/java/client-api.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T03:21:54.638Z"
     },
     "api-reference/native-clients/java/compute-api.md": {
       "status": "pending",
@@ -391,8 +392,9 @@
       "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
     },
     "develop/work-with-data/transactions.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T02:53:12.271Z"
     },
     "getting-started/best-practices.md": {
       "status": "pending",
@@ -407,8 +409,9 @@
       "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
     },
     "getting-started/intro.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T03:32:16.537Z"
     },
     "getting-started/key-value-api.md": {
       "status": "pending",
@@ -483,8 +486,9 @@
       "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
     },
     "sql/reference/language-definition/ddl.mdx": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T02:57:06.674Z"
     },
     "sql/reference/language-definition/distribution-zones.mdx": {
       "status": "pending",
@@ -555,12 +559,14 @@
       "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
     },
     "understand/architecture/security.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "4b2a44e5ecb58a884e783dc82031ec3ce688415c",
+      "translatedAt": "2026-07-02T02:54:26.522Z"
     },
     "understand/architecture/storage-architecture.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T02:12:41.990Z"
     },
     "understand/architecture/storage-engines/aimem.md": {
       "status": "pending",
@@ -583,28 +589,33 @@
       "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
     },
     "understand/core-concepts/data-partitioning.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T02:03:16.942Z"
     },
     "understand/core-concepts/distribution-and-colocation.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T02:32:43.943Z"
     },
     "understand/core-concepts/index.mdx": {
       "status": "pending",
       "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
     },
     "understand/core-concepts/tables-and-schemas.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T02:33:51.642Z"
     },
     "understand/core-concepts/transactions-and-mvcc.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T01:53:29.949Z"
     },
     "understand/core-concepts/what-is-ignite.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T01:36:35.061Z"
     },
     "understand/index.mdx": {
       "status": "pending",
