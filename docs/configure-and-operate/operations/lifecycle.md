@@ -1,97 +1,97 @@
 ---
 id: lifecycle
-title: Cluster Lifecycle
-sidebar_label: Lifecycle
+title: 클러스터 라이프사이클
+sidebar_label: 라이프사이클
 ---
 
-This topic covers the information covering Ignite 3 cluster initialization and lifecycle.
+이 항목에서는 Ignite 3 클러스터 초기화와 라이프사이클에 관한 정보를 다룹니다.
 
-## Node Start Without a Running Cluster
+## 실행 중인 클러스터가 없는 상태에서 노드 시작 {#node-start-without-a-running-cluster}
 
-When nodes start, they check all addresses listed in the node finder configuration (`network.nodeFinder`).
+노드가 시작되면 노드 파인더 구성(`network.nodeFinder`)에 나열된 모든 주소를 확인합니다.
 
-All nodes found are added to the *physical topology*, the nodes that know each other. All nodes also share information about other nodes, so the topology will include all nodes whose address is listed in at least one other node. If there are nodes that are completely separated (for example, nodes A and B only know about each other, same with C and D), they will form separate physical topologies (in this example, you would have cluster with A and B, and another cluster with C and D).
+발견된 모든 노드는 서로를 아는 노드 집합인 *물리 토폴로지*에 추가됩니다. 모든 노드는 다른 노드에 관한 정보도 공유하므로, 토폴로지에는 자신의 주소가 다른 노드 중 최소 하나에 나열되어 있는 모든 노드가 포함됩니다. 완전히 분리된 노드가 있다면(예를 들어 노드 A와 B는 서로만 알고, C와 D도 마찬가지라면) 각각 별도의 물리 토폴로지를 형성합니다(이 예시에서는 A와 B로 이루어진 클러스터 하나와 C와 D로 이루어진 클러스터 하나가 생깁니다).
 
-If there is no running cluster, the nodes exchange information about the network, but do not start any processes until the cluster initialization command is received, nor do they form a *logical topology*, the nodes that are verified and form a cluster.
+실행 중인 클러스터가 없으면 노드는 네트워크 정보를 교환하지만, 클러스터 초기화 명령을 받기 전까지는 어떤 프로세스도 시작하지 않으며, 검증을 거쳐 클러스터를 구성하는 노드 집합인 *논리 토폴로지*도 형성하지 않습니다.
 
-### Node Requirements
+### 노드 요구 사항 {#node-requirements}
 
-All nodes in cluster must have similar time, that can be different by no more than `schemaSync.maxClockSkewMillis`. This is necessary for correct transaction operation.
+클러스터의 모든 노드는 시간이 비슷해야 하며, 그 차이는 `schemaSync.maxClockSkewMillis`를 넘지 않아야 합니다. 이는 트랜잭션이 올바르게 동작하는 데 필요합니다.
 
-As network latency can be unpredictable, some requests may take so long to arrive that the time will be different on the receiving node by the time request arrives. To account for the delay, set the `schemaSync.delayDurationMillis` property to the time that is long enough for the schema updates to be delivered to all nodes in the cluster. However, this delay also affects how long it takes for DDL to be executed, as all nodes need to wait for the delay to pass before applying the update.
+네트워크 지연 시간은 예측하기 어려우므로, 일부 요청은 도착하는 데 시간이 오래 걸려 요청이 도착할 때쯤에는 수신 노드의 시간이 달라져 있을 수 있습니다. 이 지연을 반영하려면 `schemaSync.delayDurationMillis` 속성을 클러스터의 모든 노드에 스키마 업데이트가 전달되기에 충분한 시간으로 설정하세요. 다만 이 지연은 DDL 실행에 걸리는 시간에도 영향을 줍니다. 모든 노드가 업데이트를 적용하기 전에 이 지연이 지나기를 기다려야 하기 때문입니다.
 
-## Cluster Initialization
+## 클러스터 초기화 {#cluster-initialization}
 
-When the `cluster init` command is received by any node in the cluster, it starts the initialization process.
+클러스터의 어느 노드든 `cluster init` 명령을 받으면 초기화 프로세스를 시작합니다.
 
-First, the nodes specified in the `--cluster-management-group` argument form a RAFT group and take on the role of the *cluster management group* (CMG), a group responsible for managing cluster operations.
+먼저 `--cluster-management-group` 인수에 지정된 노드가 RAFT 그룹을 구성해, 클러스터 운영을 관리하는 그룹인 *클러스터 관리 그룹*(cluster management group, CMG) 역할을 맡습니다.
 
 ![Cluster initialization](/img/lifecycle1.png)
 
-Next, the nodes specified in the `--metastorage-group` argument form a RAFT group and assume the role of the *metastorage group*. These nodes store the authoritative copy of the cluster's metadata.
+다음으로 `--metastorage-group` 인수에 지정된 노드가 RAFT 그룹을 구성해 *메타스토리지 그룹* 역할을 맡습니다. 이 노드는 클러스터 메타데이터의 정본을 저장합니다.
 
-If only one of `--cluster-management-group` or `--metastorage-group` is specified, the specified value is used for both. If neither is specified, a set of nodes is automatically selected for both CMG and the metastorage group in alphabetical order. The number of selected nodes is determined as follows:
+`--cluster-management-group`과 `--metastorage-group` 중 하나만 지정하면 그 값이 두 그룹 모두에 사용됩니다. 둘 다 지정하지 않으면 CMG와 메타스토리지 그룹에 사용할 노드 집합이 알파벳 순으로 자동 선택됩니다. 선택되는 노드 수는 다음과 같이 결정됩니다:
 
-- If the cluster size is 3 or fewer, all nodes are used for the metastorage group (CMG and metastorage).
-- If the cluster size is 4, three nodes are used to maintain an odd number, improving consensus efficiency.
-- If the cluster size is 5 or more, five nodes are used to balance fault tolerance and overhead.
+- 클러스터 크기가 3 이하이면 모든 노드가 메타스토리지 그룹(CMG와 메타스토리지)에 사용됩니다.
+- 클러스터 크기가 4이면 홀수를 유지해 합의 효율을 높이기 위해 노드 3개가 사용됩니다.
+- 클러스터 크기가 5 이상이면 장애 허용성과 오버헤드의 균형을 맞추기 위해 노드 5개가 사용됩니다.
 
-Once the 2 raft groups are started and elect their leaders, all other nodes in the topology are notified that the cluster is started, and they can join it. At this point, the cluster is considered *initialized* and can start receiving requests.
+두 RAFT 그룹이 시작되어 각각 리더를 선출하고 나면, 토폴로지의 다른 모든 노드에 클러스터가 시작됐다는 알림이 전달되고 클러스터에 합류할 수 있게 됩니다. 이 시점에서 클러스터는 *초기화됨* 상태로 간주되며 요청을 받기 시작할 수 있습니다.
 
-Each non-leader node receives the invitation from the CMG to join the cluster and forms a validation request. Then, the request is sent to the CMG, and, after validation, the node receives cluster meta information from the metastorage group and joins the cluster.
+리더가 아닌 각 노드는 CMG로부터 클러스터 합류 초대를 받아 검증 요청을 구성합니다. 이 요청은 CMG로 전송되고, 검증을 마치면 노드는 메타스토리지 그룹으로부터 클러스터 메타 정보를 받아 클러스터에 합류합니다.
 
-The nodes are also added to the cluster *logical topology*, the nodes that are verified and accepted by CMG as part of the cluster. When nodes shut down or leave the physical topology for any other reason, the cluster logical topology is immediately adjusted.
+이 노드는 CMG가 검증해 클러스터의 일원으로 받아들인 노드 집합인 클러스터 *논리 토폴로지*에도 추가됩니다. 노드가 종료되거나 다른 이유로 물리 토폴로지를 벗어나면 클러스터 논리 토폴로지가 즉시 조정됩니다.
 
 ![Cluster initialized](/img/lifecycle2.png)
 
-### Cluster Management Group
+### 클러스터 관리 그룹 {#cluster-management-group}
 
-Cluster management group stores information about the cluster, the list of nodes that are in the cluster, and handles all cluster logical topology changes. Due to using RAFT consensus algorithm, the CMG improves the protection from split-brain (as any cluster group losing the CMG majority will no longer be fully functional).
+클러스터 관리 그룹은 클러스터에 관한 정보와 클러스터에 속한 노드 목록을 저장하며, 클러스터 논리 토폴로지의 모든 변경을 처리합니다. RAFT 합의 알고리즘을 사용하므로 CMG는 스플릿 브레인 보호를 강화합니다(CMG 과반수를 잃은 클러스터 그룹은 더 이상 완전하게 동작하지 않기 때문입니다).
 
-It is recommended to have the CMG of 3, 5 or 7 nodes. Larger management group improves stability, as it reduces the odds of losing the majority of CMG nodes, but may cause a minor performance hit.
+CMG는 노드 3개, 5개 또는 7개로 구성하는 것이 좋습니다. 관리 그룹이 클수록 CMG 노드의 과반수를 잃을 확률이 줄어들어 안정성이 높아지지만, 성능에 약간의 영향을 줄 수 있습니다.
 
-Losing the majority of CMG nodes leaves the cluster mostly functional. The cluster without the CMG majority can still handle transactions and user requests, but cannot:
+CMG 노드의 과반수를 잃어도 클러스터는 대부분 정상 동작합니다. CMG 과반수가 없는 클러스터는 여전히 트랜잭션과 사용자 요청을 처리할 수 있지만, 다음 작업은 할 수 없습니다:
 
-- Add new nodes to logical topology.
-- Re-add nodes that left the cluster to logical topology.
-- Create new table indexes. In this scenario, `CREATE INDEX` DDL operation will never be fully resolved and will hang the application.
+- 논리 토폴로지에 새 노드를 추가합니다.
+- 클러스터를 떠난 노드를 논리 토폴로지에 다시 추가합니다.
+- 새 테이블 인덱스를 생성합니다. 이 상황에서는 `CREATE INDEX` DDL 작업이 절대 완전히 완료되지 않아 애플리케이션이 멈춥니다.
 
-To restore full cluster functionality, bring the offline members of CMG back online.
+클러스터 기능을 완전히 복원하려면 오프라인 상태인 CMG 구성원을 다시 온라인으로 전환하세요.
 
-The CMG stores the following information:
+CMG는 다음 정보를 저장합니다:
 
-- Current cluster state, including what nodes are in CMG and metastorage groups, what Ignite version is used and cluster tag. The cluster name can be changed after initialization.
-- Consistent IDs of all nodes in the logical topology.
-- Node validation status.
+- 현재 클러스터 상태. CMG와 메타스토리지 그룹에 속한 노드, 사용 중인 Ignite 버전, 클러스터 태그를 포함합니다. 클러스터 이름은 초기화 후에도 변경할 수 있습니다.
+- 논리 토폴로지에 속한 모든 노드의 일관된 ID(consistent ID).
+- 노드 검증 상태.
 
-By default, the information is stored in the `work` folder, but it can be configured on each CMG node by setting the `ignite.system.cmgPath` property.
+기본적으로 이 정보는 `work` 폴더에 저장되지만, 각 CMG 노드에서 `ignite.system.cmgPath` 속성을 설정해 구성할 수 있습니다.
 
-### Cluster Metastorage Group
+### 클러스터 메타스토리지 그룹 {#cluster-metastorage-group}
 
-Cluster metastorage group stores information about the data stored in the cluster, and handles data distribution.
+클러스터 메타스토리지 그룹은 클러스터에 저장된 데이터에 관한 정보를 저장하고, 데이터 분산을 처리합니다.
 
-It is recommended to have the metastorage of 3, 5 or 7 nodes. Larger metastorage group improves stability, as it reduces the odds of losing the majority of metastorage nodes, but may cause a minor performance hit.
+메타스토리지는 노드 3개, 5개 또는 7개로 구성하는 것이 좋습니다. 메타스토리지 그룹이 클수록 메타스토리지 노드의 과반수를 잃을 확률이 줄어들어 안정성이 높아지지만, 성능에 약간의 영향을 줄 수 있습니다.
 
-Losing the majority of metastorage nodes will turn the cluster inoperable and may lead to data loss.
+메타스토리지 노드의 과반수를 잃으면 클러스터를 사용할 수 없게 되며 데이터 손실로 이어질 수 있습니다.
 
-The metastorage contains the following information:
+메타스토리지에는 다음 정보가 담겨 있습니다:
 
-- Cluster catalog: the single storage of all meta information about the cluster, including table schemas, indexes, views, distribution zone information, etc.
-- Logical topology history.
-- Other data required for cluster operation.
+- 클러스터 카탈로그: 테이블 스키마, 인덱스, 뷰, 분산 영역 정보 등 클러스터에 관한 모든 메타 정보를 담는 단일 저장소입니다.
+- 논리 토폴로지 이력.
+- 클러스터 운영에 필요한 기타 데이터.
 
-By default, the information is stored in the `work` folder, but it can be configured on each node by setting the `ignite.system.metastoragePath` property.
+기본적으로 이 정보는 `work` 폴더에 저장되지만, 각 노드에서 `ignite.system.metastoragePath` 속성을 설정해 구성할 수 있습니다.
 
-## Node Join Scenarios
+## 노드 합류 시나리오 {#node-join-scenarios}
 
-### New Nodes Joining the Cluster
+### 클러스터에 합류하는 새 노드 {#new-nodes-joining-the-cluster}
 
-When a new node is started, it adds itself to the physical topology. Then, the CMG receives the event that a new node has joined the topology, and sends it an invitation to join the cluster. Once the node receives it, it sends the validation request with node information, which the CMG verifies and adds the node to the logical topology.
+새 노드가 시작되면 스스로 물리 토폴로지에 추가됩니다. 이후 CMG는 새 노드가 토폴로지에 합류했다는 이벤트를 받아 그 노드에 클러스터 합류 초대를 보냅니다. 노드가 초대를 받으면 노드 정보를 담은 검증 요청을 보내고, CMG는 이를 검증한 뒤 해당 노드를 논리 토폴로지에 추가합니다.
 
-### Node Rejoins the Cluster
+### 클러스터에 재합류하는 노드 {#node-rejoins-the-cluster}
 
-If the node leaves the physical topology (for example, because the machine with the node is unreachable), the cluster logical topology is immediately adjusted, and the node is excluded from it. It can no longer rejoin the cluster with the same node ID.
+노드가 물리 토폴로지를 벗어나면(예를 들어 노드가 있는 머신에 접근할 수 없게 되면) 클러스터 논리 토폴로지가 즉시 조정되어 그 노드가 제외됩니다. 이 노드는 같은 노드 ID로는 더 이상 클러스터에 재합류할 수 없습니다.
 
-To rejoin the cluster, the node must be restarted. During the restart, a new ID will be generated and the node will be able to join the physical and logical topology.
+클러스터에 재합류하려면 노드를 재시작해야 합니다. 재시작하는 동안 새 ID가 생성되고, 노드는 물리 토폴로지와 논리 토폴로지에 합류할 수 있게 됩니다.
 
-When a node reappears in the physical topology, the CMG sends it an invitation to join. The node then asks the CMG to validate itself, and, if this is successful, it starts its components (doing local recovery on the way), after which it tells the CMG that it's ready to join. The CMG then adds it to the logical topology. This is the same process as the first join of a blank node.
+노드가 물리 토폴로지에 다시 나타나면 CMG는 그 노드에 합류 초대를 보냅니다. 그러면 노드는 CMG에 자신을 검증해 달라고 요청하고, 검증에 성공하면(그 과정에서 로컬 복구를 수행하며) 컴포넌트를 시작한 뒤 CMG에 합류 준비가 됐다고 알립니다. 이어서 CMG는 그 노드를 논리 토폴로지에 추가합니다. 이는 새 노드가 처음 합류할 때와 같은 과정입니다.

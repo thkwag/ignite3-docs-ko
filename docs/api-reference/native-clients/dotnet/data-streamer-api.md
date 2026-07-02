@@ -6,27 +6,27 @@ sidebar_position: 3
 
 # Data Streamer API
 
-The Data Streamer API provides high-throughput bulk data loading into Ignite tables. It automatically batches data into pages, distributes them across cluster nodes, and optionally processes them server-side through custom receivers.
+Data Streamer API는 Ignite 테이블에 고처리량 대량 데이터 적재 기능을 제공합니다. 데이터를 자동으로 페이지 단위로 묶어 클러스터 노드에 분산하며, 필요하면 커스텀 수신기로 서버 측에서 처리합니다.
 
-## Key Concepts
+## 핵심 개념 {#key-concepts}
 
-Data streaming optimizes bulk loading by grouping records into pages and sending them to the cluster in batches. This reduces network round-trips and enables parallel processing across partitions.
+데이터 스트리밍은 레코드를 페이지 단위로 묶어 클러스터에 일괄 전송함으로써 대량 적재를 최적화합니다. 이렇게 하면 네트워크 왕복 횟수가 줄고 파티션 간 병렬 처리가 가능해집니다.
 
-### Streaming Targets
+### 스트리밍 대상 {#streaming-targets}
 
-Both IRecordView and IKeyValueView implement IDataStreamerTarget, allowing you to stream data directly to any table view. The streamer automatically routes data to the correct partition nodes.
+IRecordView와 IKeyValueView는 모두 IDataStreamerTarget을 구현하므로 모든 테이블 뷰에 데이터를 직접 스트리밍할 수 있습니다. 스트리머는 데이터를 올바른 파티션 노드로 자동 라우팅합니다.
 
-### Server-Side Receivers
+### 서버 측 수신기 {#server-side-receivers}
 
-Receivers execute custom logic on the server for each page of streamed data. Use receivers to transform data, perform aggregations, or implement custom merge logic during loading. Receivers run colocated with the data for maximum performance.
+수신기는 스트리밍되는 데이터의 각 페이지에 대해 서버에서 커스텀 로직을 실행합니다. 수신기를 사용하면 적재 중에 데이터를 변환하거나 집계를 수행하거나 커스텀 병합 로직을 구현할 수 있습니다. 수신기는 최고의 성능을 위해 데이터와 함께 배치되어 실행됩니다.
 
-### Page-Based Processing
+### 페이지 기반 처리 {#page-based-processing}
 
-The streamer divides input data into pages based on DataStreamerOptions.PageSize. Each page is sent to the appropriate cluster node where a receiver processes all items in the page together. This batching reduces overhead and enables efficient bulk operations.
+스트리머는 DataStreamerOptions.PageSize를 기준으로 입력 데이터를 페이지로 나눕니다. 각 페이지는 적절한 클러스터 노드로 전송되며, 그 노드에서 수신기가 페이지 안의 모든 항목을 함께 처리합니다. 이러한 일괄 처리로 오버헤드가 줄고 효율적인 대량 작업이 가능해집니다.
 
-## Usage Examples
+## 사용 예시 {#usage-examples}
 
-### Basic Streaming
+### 기본 스트리밍 {#basic-streaming}
 
 ```csharp
 var table = await client.Tables.GetTableAsync("events");
@@ -51,7 +51,7 @@ async IAsyncEnumerable<Event> GenerateEvents()
 await view.StreamDataAsync(GenerateEvents());
 ```
 
-### Streaming with Options
+### 옵션을 사용한 스트리밍 {#streaming-with-options}
 
 ```csharp
 var options = new DataStreamerOptions
@@ -64,7 +64,7 @@ var options = new DataStreamerOptions
 await view.StreamDataAsync(GenerateEvents(), options);
 ```
 
-### Streaming to Key-Value View
+### 키-값 뷰로 스트리밍 {#streaming-to-key-value-view}
 
 ```csharp
 var table = await client.Tables.GetTableAsync("metrics");
@@ -87,7 +87,7 @@ async IAsyncEnumerable<KeyValuePair<MetricKey, MetricValue>> GenerateMetrics()
 await kvView.StreamDataAsync(GenerateMetrics());
 ```
 
-### Custom Server-Side Receiver
+### 커스텀 서버 측 수신기 {#custom-server-side-receiver}
 
 ```csharp
 // Define receiver that processes data on the server
@@ -142,7 +142,7 @@ await foreach (var sum in results)
 }
 ```
 
-### Error Handling
+### 오류 처리 {#error-handling}
 
 ```csharp
 var options = new DataStreamerOptions
@@ -163,7 +163,7 @@ catch (Exception ex)
 }
 ```
 
-### Streaming with Cancellation
+### 취소를 사용한 스트리밍 {#streaming-with-cancellation}
 
 ```csharp
 using var cts = new CancellationTokenSource();
@@ -182,7 +182,7 @@ catch (OperationCanceledException)
 }
 ```
 
-### Streaming with Transformations
+### 변환을 사용한 스트리밍 {#streaming-with-transformations}
 
 ```csharp
 async IAsyncEnumerable<Event> GenerateAndTransform()
@@ -203,75 +203,75 @@ async IAsyncEnumerable<Event> GenerateAndTransform()
 await view.StreamDataAsync(GenerateAndTransform());
 ```
 
-## Reference
+## 참조 {#reference}
 
-### IDataStreamerTarget&lt;T&gt; Interface
+### IDataStreamerTarget&lt;T&gt; 인터페이스 {#idatastreamertargett-interface}
 
-Basic streaming methods:
+기본 스트리밍 메서드:
 
-- **StreamDataAsync(IAsyncEnumerable&lt;T&gt; data, DataStreamerOptions?, CancellationToken)** - Stream raw data items
-- **StreamDataAsync(IAsyncEnumerable&lt;DataStreamerItem&lt;T&gt;&gt; data, DataStreamerOptions?, CancellationToken)** - Stream with operation types
+- **StreamDataAsync(IAsyncEnumerable&lt;T&gt; data, DataStreamerOptions?, CancellationToken)** - 원시 데이터 항목을 스트리밍합니다
+- **StreamDataAsync(IAsyncEnumerable&lt;DataStreamerItem&lt;T&gt;&gt; data, DataStreamerOptions?, CancellationToken)** - 연산 타입과 함께 스트리밍합니다
 
-Receiver-based streaming:
+수신기 기반 스트리밍:
 
-- **StreamDataAsync&lt;TSource, TPayload, TArg, TResult&gt;** - Stream with receiver that returns results per page
-- **StreamDataAsync&lt;TSource, TPayload, TArg&gt;** - Stream with receiver (void results)
+- **StreamDataAsync&lt;TSource, TPayload, TArg, TResult&gt;** - 페이지마다 결과를 반환하는 수신기로 스트리밍합니다
+- **StreamDataAsync&lt;TSource, TPayload, TArg&gt;** - 결과가 없는 수신기로 스트리밍합니다
 
-Parameters:
-- **data** - Async sequence of items to stream
-- **receiver** - Server-side receiver descriptor
-- **keySelector** - Function to extract key from source items
-- **payloadSelector** - Function to extract payload from source items
-- **receiverArg** - Argument passed to receiver
-- **options** - Streaming configuration
-- **cancellationToken** - Cancellation support
+매개변수:
+- **data** - 스트리밍할 항목의 비동기 시퀀스
+- **receiver** - 서버 측 수신기 디스크립터
+- **keySelector** - 소스 항목에서 키를 추출하는 함수
+- **payloadSelector** - 소스 항목에서 페이로드를 추출하는 함수
+- **receiverArg** - 수신기에 전달되는 인수
+- **options** - 스트리밍 구성
+- **cancellationToken** - 취소 지원
 
-### DataStreamerOptions Class
+### DataStreamerOptions 클래스 {#datastreameroptions-class}
 
-Configuration properties:
+구성 속성:
 
-- **PageSize** - Number of items per page (default: 1000)
-- **RetryLimit** - Maximum retry attempts for failed pages (default: 16)
-- **AutoFlushInterval** - Time interval for automatic page flushing
+- **PageSize** - 페이지당 항목 수(기본값: 1000)
+- **RetryLimit** - 실패한 페이지에 대한 최대 재시도 횟수(기본값: 16)
+- **AutoFlushInterval** - 페이지를 자동으로 플러시하는 시간 간격
 
-The page size controls the granularity of batching. Larger pages reduce network overhead but increase memory usage and reduce parallelism across partitions.
+페이지 크기는 일괄 처리의 세분성을 제어합니다. 페이지가 클수록 네트워크 오버헤드는 줄지만 메모리 사용량이 늘고 파티션 간 병렬성이 떨어집니다.
 
-### IDataStreamerReceiver&lt;TItem, TArg, TResult&gt; Interface
+### IDataStreamerReceiver&lt;TItem, TArg, TResult&gt; 인터페이스 {#idatastreamerreceivertitem-targ-tresult-interface}
 
-Properties:
+속성:
 
-- **PayloadMarshaller** - Optional custom marshaller for payload items
-- **ArgumentMarshaller** - Optional custom marshaller for arguments
-- **ResultMarshaller** - Optional custom marshaller for results
+- **PayloadMarshaller** - 페이로드 항목용 선택적 커스텀 마샬러
+- **ArgumentMarshaller** - 인수용 선택적 커스텀 마샬러
+- **ResultMarshaller** - 결과용 선택적 커스텀 마샬러
 
-Methods:
+메서드:
 
-- **ReceiveAsync(IList&lt;TItem&gt; page, TArg arg, IDataStreamerReceiverContext context, CancellationToken)** - Process a page of items on the server
+- **ReceiveAsync(IList&lt;TItem&gt; page, TArg arg, IDataStreamerReceiverContext context, CancellationToken)** - 서버에서 페이지 단위 항목을 처리합니다
 
-The receiver executes on the server node that owns the partition. It receives a page of items (controlled by PageSize), processes them with access to the full Ignite API through the context, and optionally returns results.
+수신기는 파티션을 소유한 서버 노드에서 실행됩니다. PageSize로 제어되는 페이지 단위 항목을 전달받아 컨텍스트로 전체 Ignite API에 접근하면서 처리하며, 필요하면 결과를 반환합니다.
 
-### IDataStreamerReceiverContext Interface
+### IDataStreamerReceiverContext 인터페이스 {#idatastreamerreceivercontext-interface}
 
-Properties:
+속성:
 
-- **Ignite** - Access to full Ignite client API for server-side operations
+- **Ignite** - 서버 측 작업을 위한 전체 Ignite 클라이언트 API 접근
 
-Use the context to access tables, execute SQL, or perform other operations during data processing. The context operates within the server environment.
+컨텍스트를 사용해 데이터 처리 중에 테이블에 접근하거나 SQL을 실행하거나 다른 작업을 수행할 수 있습니다. 컨텍스트는 서버 환경 안에서 동작합니다.
 
-### ReceiverDescriptor Class
+### ReceiverDescriptor 클래스 {#receiverdescriptor-class}
 
-Describes a server-side receiver:
+서버 측 수신기를 설명합니다:
 
-- **ReceiverDescriptor&lt;TPayload, TArg, TResult&gt;(string className)** - Create descriptor with class name
-- **ReceiverDescriptor&lt;TArg&gt;(string className)** - Create descriptor for receivers with no result
+- **ReceiverDescriptor&lt;TPayload, TArg, TResult&gt;(string className)** - 클래스 이름으로 디스크립터를 생성합니다
+- **ReceiverDescriptor&lt;TArg&gt;(string className)** - 결과가 없는 수신기용 디스크립터를 생성합니다
 
-The receiver must be deployed to the server before streaming. The class name identifies the receiver implementation on the server.
+수신기는 스트리밍 전에 서버에 배포되어 있어야 합니다. 클래스 이름은 서버에서 수신기 구현을 식별합니다.
 
-### DataStreamerItem&lt;T&gt; Type
+### DataStreamerItem&lt;T&gt; 타입 {#datastreameritemt-type}
 
-Wraps streamed items with operation type:
+스트리밍된 항목을 연산 타입과 함께 감쌉니다:
 
-- **Data** - The data item
-- **OperationType** - Operation to perform (Put, Remove)
+- **Data** - 데이터 항목
+- **OperationType** - 수행할 연산(Put, Remove)
 
-Use this when you need to stream mixed operations (inserts, updates, deletes) in a single stream.
+단일 스트림에서 삽입, 갱신, 삭제가 섞인 연산을 스트리밍해야 할 때 사용합니다.

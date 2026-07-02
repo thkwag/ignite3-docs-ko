@@ -15,6 +15,7 @@
 | ---- | ------ | --------- | ---- |
 | cluster | 클러스터 | | |
 | node | 노드 | | |
+| consistent ID | 일관된 ID | 컨시스턴트 ID | 노드가 재시작해도 유지되는 영구 식별자. 재시작마다 바뀌는 노드 ID와 대비된다. 첫 등장 시 "일관된 ID(consistent ID)" 병기. CLI 출력 필드 `consistent id`는 코드로 원문 유지 |
 | table | 테이블 | | |
 | transaction | 트랜잭션 | 트랜젝션 | |
 | partition | 파티션 | | partitioning(동명사)은 "파티셔닝" |
@@ -24,6 +25,9 @@
 | replication | 복제 | 레플리케이션 | |
 | replication factor | 복제 계수 | 복제 팩터, 리플리케이션 팩터, 복제 인수 | 분산 영역의 복제본 수 |
 | rebalancing | 리밸런싱 | 재균형, 리밸런스 | data rebalance → 데이터 리밸런싱 |
+| assignment (partition) | 배정 | | 파티션에 배정되는 복제본 집합을 가리키는 리밸런싱 개념어. "할당"은 메모리·리소스 할당(allocation) 등 다른 맥락에서 널리 쓰여 오탐 위험이 있어 금지 표기에서 제외(검수로 관리) |
+| pending assignment | 보류 배정 | | 리밸런싱 중 파티션에 새로 배정됐지만 아직 안정화되지 않은 복제본 집합 |
+| stable assignment | 안정 배정 | | 리밸런싱이 끝나 안정된, 파티션의 현재 복제본 집합 |
 | scale-up | 확장 | 스케일 업, 스케일업 | 분산 영역에 노드가 추가될 때의 자동 조정 동작. `DATA_NODES_AUTO_ADJUST_SCALE_UP` 등 코드 요소는 원문 유지 |
 | scale-down | 축소 | 스케일 다운, 스케일다운 | 분산 영역에서 노드가 제거될 때의 자동 조정 동작. `DATA_NODES_AUTO_ADJUST_SCALE_DOWN` 등 코드 요소는 원문 유지 |
 | distribution zone | 분산 영역 | 배포 영역, 분산 존, 배포 존 | 첫 등장 시 "분산 영역(distribution zone)" 병기. SQL의 `ZONE` 등 코드 요소는 원문 유지 |
@@ -41,14 +45,17 @@
 | cluster management group | 클러스터 관리 그룹 | 클러스터 매니지먼트 그룹, 클러스터 운영 그룹 | 클러스터 초기화·노드 승인·논리 토폴로지를 관리하는 전용 RAFT 그룹. 약어 CMG는 원문 유지 |
 | node membership | 노드 구성원 | 노드 멤버십, 노드 소속 | 클러스터 관리 그룹(CMG)이 관리하는, 클러스터에 소속된 노드 집합 |
 | metastorage | 메타스토리지 | 메타 스토리지, 메타저장소 | 클러스터 메타데이터를 저장하는 컴포넌트. 코드 `Metastorage`·설정 키는 원문 유지 |
+| revision | 리비전 | | 메타스토리지·컴팩션 맥락에서 쓰이는 버전 번호 |
 | storage engine | 스토리지 엔진 | 저장소 엔진, 저장 엔진 | |
 | storage profile | 스토리지 프로파일 | 스토리지 프로필, 저장소 프로파일 | |
+| primary storage profile | 주 스토리지 프로파일 | /기본 스토리지 프로파일(?!\s*\{#default-storage-profile\})/ | 테이블에 지정되는 단일 스토리지 프로파일을 가리키는 일반 표현. 실제 이름이 `default`인 프로파일을 다루는 "기본 스토리지 프로파일(Default Storage Profile)" 절과 다른 개념이라 "기본"으로 옮기지 않는다(primary replica를 "기본 복제본"으로 옮기지 않는 것과 같은 이유). 금지 표기는 해당 절 제목(앵커 `{#default-storage-profile}`)만 예외로 둔다 |
 | data region | 데이터 영역 | 데이터 리전 | |
 | compute job | 컴퓨트 작업 | 계산 작업, 컴퓨트 잡 | Compute API 등 API 명칭은 원문 유지 |
 | distributed computing | 분산 컴퓨트 | 디스트리뷰티드 컴퓨팅, 분산 컴퓨팅 | Ignite의 컴퓨트 서브시스템을 가리키는 소개문·링크 텍스트·섹션 제목. compute job(컴퓨트 작업)과 같은 맥락에서 "컴퓨트"를 유지한다 |
 | broadcast | 브로드캐스트 | 브로드 캐스트, 방송 | 작업을 여러 노드에 동시에 전송하는 컴퓨트 실행 방식. `BroadcastJobTarget` 등 코드 식별자는 원문 유지 |
 | coordinator node | 코디네이터 노드 | 조정자 노드 | |
 | deployment unit | 배포 단위 | 배포 유닛 | |
+| semantic version | 시맨틱 버전 | | semver.org 버전 규칙. 배포 단위 버전 디렉터리명 등에 쓰인다. 공식 semver.org 한국어판의 "유의적 버전" 대신 개발자에게 더 익숙한 "시맨틱 버전"을 표준으로 쓴다 |
 | data streamer | 데이터 스트리머 | | |
 | streaming | 스트리밍 | | |
 | bulk loading | 대량 적재 | 벌크 로딩, 일괄 로딩 | Data Streamer API 등으로 대량 데이터를 한 번에 테이블에 적재하는 작업 |
@@ -58,6 +65,7 @@
 | record view | 레코드 뷰 | | |
 | key-value view | 키-값 뷰 | | |
 | system view | 시스템 뷰 | 시스템 view | |
+| Deprecated (column/API status) | 지원 중단 | 폐기 예정, 사용 중단, 더 이상 지원되지 않음 | 시스템 뷰 컬럼·API의 지원 중단 표시 |
 | metric | 메트릭 | 매트릭, 지표 | |
 | metric source | 메트릭 소스 | 메트릭 원본, 메트릭 출처 | 관련 메트릭을 묶은 논리 그룹(JVM, 스토리지, SQL 등) |
 | metric exporter | 메트릭 익스포터 | 메트릭 익스포터기, 메트릭 내보내기 도구, 메트릭 엑스포터 | 수집된 메트릭을 JMX·OpenTelemetry·로그 등 모니터링 도구로 노출하는 컴포넌트 |
@@ -77,16 +85,24 @@
 | fluent builder | 플루언트 빌더 | 유창한 빌더, 연쇄 빌더 | 메서드 체이닝으로 객체를 단계적으로 구성하는 빌더 패턴. Catalog API의 테이블 생성 빌더 등을 가리킨다 |
 | derived query | 파생 쿼리 | 유도 쿼리, 파생된 쿼리 | Spring Data에서 리포지토리 메서드명으로부터 자동 생성되는 쿼리 |
 | pagination | 페이지네이션 | 페이징, 페이지화 | 조회 결과를 페이지 단위로 나누는 기능(Spring Data 등) |
+| bean | 빈 | | Spring/JMX의 bean 개념 |
+| programmatic | 프로그래밍 방식 | 프로그래매틱, 프로그램 방식 | 속성 기반 구성과 대비되는 코드 기반 구성을 가리키는 수식어 |
+| customization | 커스터마이징 | | Spring Boot 스타터의 프로그래밍 방식 설정 확장 기능을 가리키는 명사. 형용사 custom은 이 저장소에서 이미 "사용자 정의"로 쓰이고 있어(예: "사용자 정의 애노테이션") 그 표기를 금지하면 기존 번역과 충돌하므로 금지 표기를 두지 않는다(검수로 관리) |
 | partitioned | 파티셔닝된 | 파티션된 | |
 | configuration | 구성 | | settings는 "설정", configure(동사)는 "구성하다" |
 | command | 명령어 | 커맨드 | CLI 명령어 |
 | low latency | 낮은 지연 | 저레이턴시 | |
 | high-throughput | 고처리량 | 높은 처리량, 하이스루풋 | throughput 단독은 "처리량" |
 | client connector | 클라이언트 커넥터 | | |
+| typed access | 타입 지정 접근 | | POCO 등 정적 타입 객체로 테이블에 접근하는 방식. dynamic access(동적 접근, IIgniteTuple 등 스키마 없는 접근)와 짝을 이룬다 |
+| retry policy | 재시도 정책 | 리트라이 정책 | 실패한 클라이언트 작업의 재시도 여부를 결정하는 정책 |
 | embedded mode | 임베디드 모드 | 내장 모드 | |
 | logical topology | 논리 토폴로지 | 논리 위상 | |
 | physical topology | 물리 토폴로지 | 물리 위상 | |
 | topology | 토폴로지 | 위상 | 단독 topology도 "토폴로지". 논리/물리 topology는 별도 항목 |
+| node finder | 노드 파인더 | | `network.nodeFinder` 설정을 가리키는 개념어. 노드가 클러스터의 다른 노드 주소를 찾는 방식(STATIC/MULTICAST 등) |
+| node discovery | 노드 검색 | 노드 디스커버리, 노드 탐색 | 클러스터 노드가 서로를 찾는 메커니즘 |
+| partition awareness | 파티션 인식 | 파티션 어웨어니스, 파티션 인지 | 클라이언트가 파티션을 소유한 노드로 요청을 직접 라우팅하는 Ignite 클라이언트 기능. 첫 등장 시 "파티션 인식(partition awareness)" 병기 |
 | failover | 장애 조치 | 페일오버, 절체 | |
 | disaster recovery | 재해 복구 | 재난 복구 | |
 | restore | 복원 | | 백업에서 데이터를 되살리는 동작. "복구"는 disaster recovery(재해 복구)·error recovery(오류 복구) 등 recovery 번역과 겹쳐 오탐 위험이 있어 금지 표기에서 제외(검수로 관리) |
@@ -108,20 +124,36 @@
 | query | 쿼리 | 질의 | |
 | map-reduce | 맵리듀스 | 맵-리듀스, 맵 리듀스 | 데이터 수집 단계를 여러 노드에 분산해 처리하는 연산 모델. MapReduce API 등 API·메서드명은 원문 유지 |
 | task (Compute API) | 태스크 | 맵리듀스 잡, 태스크들 | `MapReduceTask`가 여러 job을 조율하는 상위 실행 단위. job(작업)과 구분되는 Compute API 개념. `MapReduceTask`·`TaskDescriptor`·`TaskExecution` 등 코드 식별자는 원문 유지 |
+| Data receiver (compute job type) | 데이터 수신기 | | Data Streamer API 내부에서 쓰이는 `DATA_RECEIVER` 컴퓨트 작업 유형을 가리키는 이름 |
+| receiver (Data Streamer) | 수신기 | 리시버 | Data Streamer가 데이터를 변환·라우팅하도록 등록하는 서버 측 컴포넌트. `DataStreamerReceiver` 등 코드 식별자는 원문 유지 |
+| marshalling / unmarshalling | 마샬링 / 언마샬링 | | 직렬화 관련 Ignite 3 예외 카테고리(`IGN-MARSHALLING-*`)와 Compute API 인수·결과 직렬화에 쓰이는 개념어. marshaller(마샬러)가 이 과정을 수행하는 컴포넌트. `IMarshaller<T>`·`PayloadMarshaller`·`ArgumentMarshaller`·`ResultMarshaller` 등 코드 식별자는 원문 유지 |
 | SQL statement | SQL 문 | SQL 구문, SQL 스테이트먼트 | "구문"은 syntax 번역에 예약 |
 | prepared statement | 준비된 문 | 프리페어드 스테이트먼트, 준비된 구문, 준비 구문 | 매개변수를 바인딩해 재실행하는 미리 컴파일된 SQL 문. "구문"은 syntax 번역에 예약 |
+| parameterized statement | 매개변수화된 문 | 파라미터화된, 파라미터라이즈드, 매개변수 문 | 값 바인딩 여부보다 플레이스홀더 사용 자체를 가리키는 개념으로, prepared statement(준비된 문)와는 별개다. parameterized query(매개변수화된 쿼리)도 같은 패턴을 따른다 |
+| placeholder | 자리표시자 | 플레이스홀더 | SQL 매개변수 물음표(`?`) 자리표시자 |
+| result set | 결과 집합 | | SQL 쿼리 실행 결과로 반환되는 행의 집합 |
+| materialization | 구체화 | 머티리얼라이제이션, 실체화 | 지연 실행된 쿼리 결과를 실제 객체·컬렉션으로 만드는 과정(LINQ 등). materialized view(구체화된 뷰) 등 기존 DB 용어 관례와 일치. lazy materialization → 지연 구체화 |
 | data definition language | 데이터 정의어 | 데이터 정의 언어, 데이터 정의언어 | DDL의 정식 명칭. 약어 DDL은 원문 유지 |
 | data manipulation language | 데이터 조작어 | 데이터 조작 언어, 데이터 조작언어 | DML의 정식 명칭. 약어 DML은 원문 유지 |
 | railroad diagram | 레일로드 다이어그램 | 철도 다이어그램, 레일로드 다이아그램 | SQL 문법 구조를 시각적으로 보여주는 다이어그램. `RailroadDiagram` 컴포넌트명은 원문 유지 |
 | keyword | 키워드 | | DDL/DML 등 SQL 참조 문서의 "Keywords and parameters" 섹션에 반복 등장 |
 | parameter | 매개변수 | 파라미터 | SQL 참조 문서의 "Keywords and parameters" 섹션 |
 | argument (CLI) | 인수 | 인자, 아규먼트 | CLI 명령어의 위치 인수(옵션·플래그와 구분되는 매개변수 유형). CLI 참조 문서의 Parameters 표 Type 열에 반복 등장 |
+| constraint | 제약 조건 | | NOT NULL constraint, PRIMARY KEY constraint 등 DDL 전반에 반복되는 도메인 개념어 |
+| alias (SQL) | 별칭 | 에일리어스, 별명 | 테이블·컬럼·표현식에 붙이는 SQL 별칭 |
+| correlation name | 상관 이름 | | FROM 절에서 테이블에 붙이는 별칭(alias)을 가리키는 SQL 표준 공식 용어 |
+| quantifier | 한정자 | 정량자, 수량자, 퀀티파이어 | ALL/DISTINCT 등 SQL 한정자(예: ALL quantifier → ALL 한정자) |
+| quantified comparison predicate | 한정 비교 조건자 | 정량 비교 조건자 | ALL/ANY/SOME 등을 사용하는 비교 조건자. quantifier(한정자)와 같은 어근을 살려 옮긴다 |
+| set function | 집합 함수 | | AVG/COUNT/MAX/MIN/SUM 등을 가리키는 SQL 표준 공식 용어. aggregation(집계)과는 별개 개념 |
+| table operator | 테이블 연산자 | | UNION/INTERSECT/EXCEPT 등 두 테이블을 결합하는 SQL 표준 연산 |
+| boolean | 불리언 | 부울 | SQL 표현식이 반환하는 불리언 값. "불린"은 "~라고 불린다" 등 일반 서술어와 겹쳐 오탐 위험이 있어 금지 표기에서 제외(검수로 관리) |
 | data type | 데이터 타입 | 자료형, 데이타 타입 | |
 | transition | 전환 | 트랜지션 | ALTER COLUMN의 데이터 타입·NULL 허용 여부 전환 맥락. "변환"은 일반 명사라 오탐 위험이 있어 금지 표기에서 제외(검수로 관리) |
 | example | 예시 | 예제 | "Examples:" 섹션 제목 |
 | execution plan | 실행 계획 | 수행 계획 | |
 | query plan | 쿼리 계획 | 쿼리 플랜, 질의 계획 | execution plan(실행 계획)과 구분되는 개념. `SQL_CACHED_QUERY_PLANS` 시스템 뷰 등에 등장 |
 | operator (EXPLAIN) | 연산자 | /(?<!Kubernetes )오퍼레이터/ | `EXPLAIN` 출력에서 쿼리 실행 계획을 구성하는 단위(TableScan, HashJoin 등). understand/performance/explain-operators.md 참고. Kubernetes operator(Kubernetes 오퍼레이터)와는 다른 개념 |
+| relational operator | 관계형 연산자 | 관계 연산자 | EXPLAIN 출력 트리를 구성하는 연산자를 가리키는 일반 용어. operator (EXPLAIN)와 같은 개념을 가리키되 "relational"을 포함한 전체 어구의 표기를 고정한다 |
 | Kubernetes operator | Kubernetes 오퍼레이터 | | 커스텀 리소스로 애플리케이션 운영을 자동화하는 Kubernetes 확장 패턴. operator (EXPLAIN)의 SQL 연산자와는 다른 개념 |
 | aggregation | 집계 | 애그리게이션, 애그리게이트 | GROUP BY 등 그룹화 연산. aggregate function → 집계 함수, aggregate operator → 집계 연산자 |
 | accumulator | 누산기 | 어큐뮬레이터, 누적기 | 집계 연산에서 그룹별 중간 상태를 유지하는 객체 |
@@ -153,6 +185,7 @@
 | endpoint | 엔드포인트 | 종단점, 엔드 포인트 | |
 | connection | 연결 | 커넥션 | connection pool → 연결 풀 |
 | connection string | 연결 문자열 | 커넥션 스트링, 접속 문자열 | JDBC/ODBC 연결 URL 형식을 가리키는 용어 |
+| thread-safe / thread safety | 스레드 안전 / 스레드 안전성 | 스레드 세이프, 쓰레드 세이프, 쓰레드 안전, 쓰레드 세이프티 | 형용사형은 "스레드 안전"(예: "스레드 안전합니다"), 명사형은 "스레드 안전성"(예: "### 스레드 안전성") |
 | heartbeat | 하트비트 | 하트 비트, 헛비트 | 클라이언트-서버 간 생존 확인 메시지. heartbeat message → 하트비트 메시지 |
 | handshake | 핸드셰이크 | 핸드 셰이크, 악수 | 클라이언트-서버 연결 수립 시 초기 협상 과정 |
 | directory | 디렉터리 | 디렉토리 | 외래어 표기법 준수 |
@@ -189,6 +222,7 @@
 | hybrid logical clock | 하이브리드 논리 시계 | 혼합 논리 시계, 하이브리드 로지컬 클록 | 첫 등장 시 "하이브리드 논리 시계(hybrid logical clock, HLC)" 병기 |
 | hybrid timestamp | 하이브리드 타임스탬프 | 혼합 타임스탬프 | HLC가 생성하는 타임스탬프 |
 | timestamp | 타임스탬프 | 타임스템프, 타임 스탬프, 시각소인 | commit/read timestamp = 커밋/읽기 타임스탬프 |
+| clock skew | 클록 스큐 | | 노드 간 물리 시계 차이를 가리키는 분산 시스템 용어. 첫 등장 시 "클록 스큐(clock skew)" 병기 |
 | commit | 커밋 | 커밋트, 컴밋 | 동사·명사 모두. commit()은 코드로 원문 유지 |
 | rollback | 롤백 | 롤 백 | rollback()은 코드로 원문 유지 |
 | read-only | 읽기 전용 | 읽기전용, 리드온리, 읽기 온리 | read-only transaction = 읽기 전용 트랜잭션 |
@@ -196,6 +230,7 @@
 | commit partition | 커밋 파티션 | 확정 파티션 | 트랜잭션 상태를 저장하는 파티션 |
 | low watermark | 하한 워터마크 | 낮은 워터마크, 저수위, 로우 워터마크 | 이보다 오래된 버전을 GC로 제거. row와 겹치는 "로우" 음차 금지 |
 | garbage collection | 가비지 컬렉션 | 쓰레기 수집, 가비지 콜렉션 | garbage collector = 가비지 컬렉터. 약어 GC는 원문 유지 |
+| vacuum (MVCC cleanup) | 정리 | 베큠, 진공, 배큠 | 낮은 워터마크 이하의 오래된 트랜잭션 메타데이터를 제거하는 백그라운드 프로세스(`resource.vacuum` 메트릭 그룹). 첫 등장 시 "정리(vacuum)" 병기. 이 프로세스를 수행하는 컴포넌트는 vacuumizer → 정리기(vacuumizer) |
 | tombstone | 툼스톤 | 묘비 | 삭제를 나타내는 빈 버전 |
 | savepoint | 세이브포인트 | 저장점, 세이브 포인트 | 부분 롤백 지점 |
 | B+ tree | B+ 트리 | B+트리, B플러스 트리, B 플러스 트리 | 데이터 구조명. mermaid 다이어그램 내 라벨은 원문 유지 |
@@ -203,6 +238,7 @@
 | write-ahead log | 미리 쓰기 로그 | 라이트 어헤드 로그, 선행 기입 로그, 선행 기록 로그, 쓰기 전 로그 | 첫 등장 시 "미리 쓰기 로그(write-ahead log, WAL)". 약어 WAL 병기 |
 | append-only | 추가 전용 | 어펜드 온리 | 기존 데이터를 수정하지 않고 새 항목만 뒤에 추가하는 저장 방식 |
 | dirty page | 더티 페이지 | 더러운 페이지, 오염 페이지 | 캐시에서 변경됐지만 아직 디스크에 기록되지 않은 페이지 |
+| evicted (page) | 축출된 | 추방된, 퇴거된 | 체크포인트·캐시에서 밀려난 페이지를 가리키는 표현. "제거된"은 다른 영어 원어(removed 등)의 번역과 겹쳐 오탐 위험이 있어 금지 표기에서 제외(검수로 관리) |
 | checkpoint buffer | 체크포인트 버퍼 | 체크포인팅 버퍼, 검사점 버퍼 | 체크포인트 진행 중 더티 페이지의 이전 상태를 보관하는 메모리 영역 |
 | page cache | 페이지 캐시 | | 인메모리 페이지 캐시. cache는 캐시 |
 | compaction | 컴팩션 | 컴팩숀 | LSM 트리에서 SST 파일을 병합해 하위 레벨로 옮기는 백그라운드 프로세스. "압축"은 아카이브 압축(zip.md 등)과 겹쳐 금지 표기에서 제외(검수로 관리) |
@@ -215,6 +251,7 @@
 | point lookup | 포인트 조회 | 포인트 룩업, 지점 조회 | 기본 키 하나로 단일 행을 조회하는 읽기 패턴 |
 | zero-copy | 제로카피 | 제로 카피, 무복사 | 데이터를 복사하지 않고 읽고 쓰는 최적화 기법 |
 | off-heap memory | 오프힙 메모리 | 힙 외부 메모리, 오프 힙, 오프-힙 | JVM 힙 밖에 할당하는 메모리 |
+| non-heap memory | 논힙 메모리 | 비힙 메모리, 힙 외 메모리, 넌힙 메모리 | JVM 메모리 메트릭에서 heap과 대비되는 영역. off-heap memory(오프힙 메모리) 표기 관례를 따른다 |
 | volatile | 휘발성 | | 스토리지 지속성 구분(휘발성 vs 영속). non-volatile는 비휘발성 |
 | workload | 워크로드 | 작업 부하 | write-heavy workload → 쓰기 위주 워크로드 |
 | transaction coordinator | 트랜잭션 코디네이터 | 트랜잭션 조정자, 트랜잭션 조율자 | 트랜잭션을 시작한 노드가 맡는 역할. coordinator node(코디네이터 노드)와는 별개 표기 |
@@ -225,13 +262,21 @@
 | authenticator | 인증기 | 인증자, 오센티케이터 | 인증 방식을 수행하는 서버 측 컴포넌트(예: basic authenticator) |
 | provider | 공급자 | 프로바이더, 제공자 | 인증 공급자(authentication provider), ID 공급자(identity provider) 등 인증 방식을 제공하는 컴포넌트를 가리키는 개념어 |
 | credential | 자격 증명 | 크리덴셜 | 사용자 인증에 쓰이는 비밀 정보(사용자 이름, 비밀번호 등) |
+| identity (authenticator) | 신원 | | 인증기(`IgniteClientAuthenticator`)가 반환하는 신원 데이터(사용자 이름, 토큰 등). secret(비밀 정보)과 짝을 이룬다. "신원 정보"·"신원 데이터" 두 표기 모두 허용 |
+| secret (authenticator) | 비밀 정보 | | 인증기가 반환하는 비밀 데이터(비밀번호, 키 등). identity(신원)와 짝을 이룬다. "비밀 정보"·"비밀 데이터" 두 표기 모두 허용 |
 | authorization | 인가 | 권한 부여, 어쏘라이제이션 | authentication(인증)과 구분되는 접근 권한 판단 |
 | role-based access control | 역할 기반 접근 제어 | 롤 기반 접근 제어, 역할기반 접근제어 | 첫 등장 시 "역할 기반 접근 제어(role-based access control, RBAC)" 병기. 약어 RBAC는 원문 유지 |
+| private key | 개인 키 | 프라이빗 키, 비공개 키 | SSL/TLS 등 보안 관련 API의 개인 키 |
 | keystore | 키스토어 | 키 스토어, 키스토아 | 서버 인증서를 저장하는 SSL/TLS 저장소. 코드 속성 `keyStore`는 원문 유지 |
 | truststore | 트러스트스토어 | 트러스트 스토어, 트러스트스토아 | 신뢰할 CA 인증서를 저장하는 SSL/TLS 저장소. 코드 속성 `trustStore`는 원문 유지 |
 | cipher | 암호화 방식 | 사이퍼, 싸이퍼 | TLS cipher 목록 등에서 사용하는 암호화 알고리즘을 가리키는 보안 용어 |
 | mutual TLS | 상호 TLS | 뮤추얼 TLS, 뮤추얼티엘에스 | 첫 등장 시 "상호 TLS(mutual TLS, mTLS)" 병기. 약어 mTLS는 원문 유지 |
 | transport encryption | 전송 암호화 | 트랜스포트 암호화 | 클라이언트-서버·노드 간 통신을 암호화하는 보안 계층. authentication(인증)과 대비되는 개념 |
+| volume (Docker) | 볼륨 | | Docker/Kubernetes에서 데이터를 영속화하는 저장 단위 |
+| mount | 마운트 | 탑재, 장착 | 볼륨·설정 파일을 컨테이너에 연결하는 동작 |
+| pod (Kubernetes) | 파드 | 팟, 포드 | Kubernetes 파드를 가리키는 일반 명사 |
+| Service (Kubernetes) | 서비스 | | Kubernetes Service 리소스를 가리키는 일반 명사. ConfigMap/StatefulSet/Job과 달리 흔히 쓰이는 단어라 번역한다 |
+| headless service | 헤드리스 서비스 | | `clusterIP`를 `None`으로 설정해 각 파드의 IP를 직접 노출하는 Kubernetes 서비스 유형 |
 | SQL Fundamentals | SQL 기초 | | 섹션 제목 관례. sql/fundamentals 카테고리 라벨 겸 링크 텍스트 |
 | SQL Operations | SQL 작업 | | 섹션 제목 관례. sql/working-with-sql 카테고리 라벨 겸 링크 텍스트 |
 | SQL Reference | SQL 참조 | SQL 레퍼런스 | 섹션 제목 관례. sql/reference 카테고리 라벨 겸 링크 텍스트 |
@@ -256,9 +301,11 @@
 | Java, JavaScript, .NET, C++, Python, Spring Boot, Spring Data, LINQ | 언어·프레임워크명 |
 | Windows, Linux, macOS | 운영 체제명 |
 | RocksDB, aimem, aipersist | 스토리지 엔진 식별자 |
-| Compute API, Table API, Key-Value API, Catalog API, Criteria API, Client API | API 고유 명칭. 일반 명사 맥락(예: "컴퓨트 작업")과 구분 |
+| Compute API, Table API, Key-Value API, Catalog API, Criteria API, Client API, Network API, Data Streamer API | API 고유 명칭. 일반 명사 맥락(예: "컴퓨트 작업")과 구분 |
 | RecordView, KeyValueView | Java `Table` API의 실제 클래스명. 코드와 동일한 표기를 프로즈에서도 유지("RecordView 패턴"). 일반 개념을 가리킬 때는 대역표의 record view(레코드 뷰)·key-value view(키-값 뷰) 사용 |
 | Query by Example, QBE | Spring Data 기능 고유명. 번역·음차하지 않는다 |
+| Safe Time | 메타스토리지·파티션의 안전 읽기 시점을 가리키는 내부 개념어. "파티션 Safe Time"처럼 조합 사용 |
+| ConfigMap, StatefulSet, Job (Kubernetes) | Kubernetes API 리소스 Kind 이름. `kubectl` 명령·YAML의 `kind:` 표기와 프로즈를 일치시키기 위해 원문 유지. Job은 Compute API의 job/task(컴퓨트 작업/태스크)와 혼동을 피하기 위해서도 원문 유지 |
 | 코드 식별자·설정 키·CLI 명령·SQL 키워드 | `ignite3-db`, `CREATE ZONE`, `storageProfiles` 등 코드로 표기되는 모든 것 |
 
 ## 금지 표현

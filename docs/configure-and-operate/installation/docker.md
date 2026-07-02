@@ -1,98 +1,98 @@
 ---
 id: install-docker
-title: Install Using Docker
+title: Docker로 설치
 sidebar_label: Docker
 ---
 
-## Prerequisites
+## 사전 요구 사항 {#prerequisites}
 
-### Recommended Docker Version
+### 권장 Docker 버전 {#recommended-docker-version}
 
-Apache Ignite 3 requires Docker 20.10 or later.
+Apache Ignite 3는 Docker 20.10 이상이 필요합니다.
 
-### Recommended Operating System
+### 권장 운영 체제 {#recommended-operating-system}
 
-Apache Ignite supports Linux, macOS, and Windows operating systems.
+Apache Ignite는 Linux, macOS, Windows 운영 체제를 지원합니다.
 
-### Recommended Java Version
+### 권장 Java 버전 {#recommended-java-version}
 
-Apache Ignite 3 requires Java 11 or later.
+Apache Ignite 3는 Java 11 이상이 필요합니다.
 
-## Running a Node
+## 노드 실행 {#running-a-node}
 
-Run Apache Ignite in a docker container using the `docker run` command. Docker will automatically pull the appropriate Apache Ignite version:
+`docker run` 명령어로 Docker 컨테이너에서 Apache Ignite를 실행합니다. Docker가 적절한 Apache Ignite 버전을 자동으로 내려받습니다:
 
 ```shell
 docker run -d -p 10300:10300 -p 10800:10800 -p 3344:3344 ignite/ignite3:latest
 ```
 
 :::note
-If you plan to store persistent data, it is recommended to mount a volume for it. Otherwise, data will be deleted when the container is removed.
+영속 데이터를 저장할 계획이라면 볼륨을 마운트하는 것을 권장합니다. 마운트하지 않으면 컨테이너를 제거할 때 데이터가 삭제됩니다.
 
-Consider storing the `/opt/ignite/work` folder to keep application data and persistent data.
+애플리케이션 데이터와 영속 데이터를 유지하려면 `/opt/ignite/work` 폴더를 저장하는 것이 좋습니다.
 :::
 
-This command launches a single Apache Ignite node. After you run the command, you can check if Apache Ignite is running in the container logs.
+이 명령어는 단일 Apache Ignite 노드를 실행합니다. 명령어를 실행한 후 컨테이너 로그에서 Apache Ignite가 실행 중인지 확인할 수 있습니다.
 
-## Running a Cluster
+## 클러스터 실행 {#running-a-cluster}
 
-You can use the docker-compose file to start an entire cluster in docker. You can download a sample docker-compose file and run a 3-node cluster:
+docker-compose 파일로 Docker에서 클러스터 전체를 시작할 수 있습니다. 샘플 docker-compose 파일을 다운로드해 3개 노드로 구성된 클러스터를 실행할 수 있습니다:
 
-- Download the docker-compose (file not available in docs) file.
+- docker-compose 파일을 다운로드합니다(문서에서 파일을 제공하지 않음).
 
 :::note
-Docker compose version 2.23.1 or later is required to use the provided compose file.
+제공된 compose 파일을 사용하려면 Docker Compose 2.23.1 이상이 필요합니다.
 :::
 
-- Download the docker image:
+- Docker 이미지를 다운로드합니다:
 
 ```shell
 docker pull apache/ignite3:{version}
 ```
 
-- Run the docker compose command:
+- Docker Compose 명령어를 실행합니다:
 
 ```shell
 docker compose -f docker-compose.yml up -d
 ```
 
-3 nodes will start in Docker and will be available from the CLI tool that can be run locally. Remember to initialise the cluster from the command line tool before working with it.
+Docker에서 노드 3개가 시작되며, 로컬에서 실행하는 CLI 도구로 접근할 수 있습니다. 클러스터를 사용하기 전에 CLI 도구로 반드시 클러스터를 초기화하세요.
 
-## Running CLI Tool in Docker
+## Docker에서 CLI 도구 실행 {#running-cli-tool-in-docker}
 
 :::note
-It is not recommended to run the CLI tool in docker. Instead, we recommend to [download and install](/configure-and-operate/installation/install-zip) CLI tool locally.
+Docker에서 CLI 도구를 실행하는 것은 권장하지 않습니다. 대신 CLI 도구를 로컬에 [다운로드해 설치](/configure-and-operate/installation/install-zip)하는 것을 권장합니다.
 :::
 
-CLI tool is used to manage Apache Ignite nodes. By default, docker nodes are isolated and run on different networks, so CLI tool will not be able to connect to the target container from another container. To fix that, you need to create a network and add all containers running the nodes to it.
+CLI 도구는 Apache Ignite 노드를 관리하는 데 사용합니다. Docker 노드는 기본적으로 격리되어 서로 다른 네트워크에서 실행되므로, CLI 도구는 다른 컨테이너에서 대상 컨테이너로 연결할 수 없습니다. 이를 해결하려면 네트워크를 생성하고 노드를 실행하는 모든 컨테이너를 여기에 추가해야 합니다.
 
-- Create a new network with the `network create` command:
+- `network create` 명령어로 새 네트워크를 생성합니다:
 
 ```shell
 docker network create ignite-network
 ```
 
-- Add any containers with nodes that are already running to the network:
+- 이미 실행 중인 노드가 있는 컨테이너를 네트워크에 추가합니다:
 
 ```shell
 docker network connect ignite-network {container-id}
 ```
 
-- Start the container with the Apache Ignite CLI tool on the same network:
+- 같은 네트워크에서 Apache Ignite CLI 도구가 포함된 컨테이너를 시작합니다:
 
 ```shell
 docker run -p 10301:10300 -p 10801:10800 -p 3345:3344 -it --network=ignite-network apache/ignite3:{version} cli
 ```
 
 :::tip
-You may need to mount configuration or data files. To provide them, mount the files you will use, for example:
+구성 파일이나 데이터 파일을 마운트해야 할 수도 있습니다. 이런 파일을 제공하려면 사용할 파일을 마운트하세요. 예:
 
 ```shell
 docker run --rm -it --network=host -v /opt/etc/config.conf:/opt/ignite/etc/ignite-config.conf apache/ignite3:{version} cli
 ```
 :::
 
-The CLI will be able to connect to the IP address of the node. If you are not sure what the address is, use the `container inspect` command to check it:
+CLI는 노드의 IP 주소로 연결할 수 있습니다. 주소가 확실하지 않다면 `container inspect` 명령어로 확인하세요:
 
 ```shell
 docker container inspect {container-id}

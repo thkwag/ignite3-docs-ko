@@ -1,19 +1,19 @@
 ---
 id: spring-boot
-title: Spring Boot Integration
+title: Spring Boot 통합
 ---
 
-Apache Ignite 3 provides a Spring Boot starter that auto-configures an `IgniteClient` bean. The starter handles connection lifecycle, supports property-based configuration, and allows programmatic customization.
+Apache Ignite 3는 `IgniteClient` 빈을 자동으로 구성하는 Spring Boot 스타터를 제공합니다. 이 스타터는 연결 라이프사이클을 관리하고, 속성 기반 구성과 프로그래밍 방식 커스터마이징을 모두 지원합니다.
 
-## Prerequisites
+## 사전 요구 사항 {#prerequisites}
 
-- Java 17 or later
+- Java 17 이상
 - Spring Boot 3.x
-- Running Ignite 3 cluster
+- 실행 중인 Ignite 3 클러스터
 
-## Installation
+## 설치 {#installation}
 
-Add the starter dependency to your project. The starter version must match your Apache Ignite cluster version.
+프로젝트에 스타터 의존성을 추가하세요. 스타터 버전은 사용하는 Apache Ignite 클러스터 버전과 일치해야 합니다.
 
 **Maven:**
 
@@ -39,19 +39,19 @@ ext {
 implementation "org.apache.ignite:spring-boot-starter-ignite-client:${igniteVersion}"
 ```
 
-:::note Version Matching
-The `spring-boot-starter-ignite-client` artifact is released as part of Apache Ignite, so its version matches the Ignite release version. For Ignite 3.1.0, use `spring-boot-starter-ignite-client:3.1.0`.
+:::note 버전 일치
+`spring-boot-starter-ignite-client` 아티팩트는 Apache Ignite의 일부로 릴리스되므로 버전이 Ignite 릴리스 버전과 일치합니다. Ignite 3.1.0에서는 `spring-boot-starter-ignite-client:3.1.0`을 사용하세요.
 :::
 
-## Basic Configuration
+## 기본 구성 {#basic-configuration}
 
-Configure the Ignite client connection in `application.properties`:
+`application.properties`에서 Ignite 클라이언트 연결을 구성하세요:
 
 ```properties
 ignite.client.addresses=127.0.0.1:10800
 ```
 
-The `IgniteClient` bean is automatically created and available for injection:
+`IgniteClient` 빈은 자동으로 생성되어 주입에 사용할 수 있습니다:
 
 ```java
 @SpringBootApplication
@@ -71,23 +71,23 @@ public class MyApplication {
 }
 ```
 
-## Configuration Properties
+## 구성 속성 {#configuration-properties}
 
-All properties use the `ignite.client` prefix.
+모든 속성은 `ignite.client` 접두사를 사용합니다.
 
-### Connection Properties
+### 연결 속성 {#connection-properties}
 
-| Property | Type | Description |
+| 속성 | 타입 | 설명 |
 |----------|------|-------------|
-| `addresses` | String[] | Cluster node addresses in `host:port` format |
-| `connectTimeout` | Long | Connection timeout in milliseconds |
-| `operationTimeout` | Long | Operation timeout in milliseconds |
-| `heartbeatInterval` | Long | Heartbeat message interval in milliseconds |
-| `heartbeatTimeout` | Long | Heartbeat message timeout in milliseconds |
-| `backgroundReconnectInterval` | Long | Background reconnect interval in milliseconds |
-| `metricsEnabled` | Boolean | Enable client metrics |
+| `addresses` | String[] | `host:port` 형식의 클러스터 노드 주소 |
+| `connectTimeout` | Long | 연결 타임아웃(밀리초) |
+| `operationTimeout` | Long | 작업 타임아웃(밀리초) |
+| `heartbeatInterval` | Long | 하트비트 메시지 간격(밀리초) |
+| `heartbeatTimeout` | Long | 하트비트 메시지 타임아웃(밀리초) |
+| `backgroundReconnectInterval` | Long | 백그라운드 재연결 간격(밀리초) |
+| `metricsEnabled` | Boolean | 클라이언트 메트릭 활성화 |
 
-**Example:**
+**예시:**
 
 ```properties
 ignite.client.addresses=node1:10800,node2:10800,node3:10800
@@ -99,16 +99,16 @@ ignite.client.backgroundReconnectInterval=30000
 ignite.client.metricsEnabled=true
 ```
 
-### Authentication Properties
+### 인증 속성 {#authentication-properties}
 
-Configure basic authentication via properties:
+속성으로 기본 인증을 구성하세요:
 
-| Property | Type | Description |
+| 속성 | 타입 | 설명 |
 |----------|------|-------------|
-| `auth.basic.username` | String | Authentication username |
-| `auth.basic.password` | String | Authentication password |
+| `auth.basic.username` | String | 인증 사용자 이름 |
+| `auth.basic.password` | String | 인증 비밀번호 |
 
-**Example:**
+**예시:**
 
 ```properties
 ignite.client.addresses=127.0.0.1:10800
@@ -116,20 +116,20 @@ ignite.client.auth.basic.username=ignite
 ignite.client.auth.basic.password=ignite
 ```
 
-### SSL/TLS Properties
+### SSL/TLS 속성 {#ssltls-properties}
 
-Configure SSL/TLS via the `sslConfiguration` nested property:
+`sslConfiguration` 중첩 속성으로 SSL/TLS를 구성하세요:
 
-| Property | Type | Description |
+| 속성 | 타입 | 설명 |
 |----------|------|-------------|
-| `sslConfiguration.enabled` | Boolean | Enable SSL/TLS |
-| `sslConfiguration.keyStorePath` | String | Path to key store file |
-| `sslConfiguration.keyStorePassword` | String | Key store password |
-| `sslConfiguration.trustStorePath` | String | Path to trust store file |
-| `sslConfiguration.trustStorePassword` | String | Trust store password |
-| `sslConfiguration.ciphers` | List | Allowed cipher suites |
+| `sslConfiguration.enabled` | Boolean | SSL/TLS 활성화 |
+| `sslConfiguration.keyStorePath` | String | 키스토어 파일 경로 |
+| `sslConfiguration.keyStorePassword` | String | 키스토어 비밀번호 |
+| `sslConfiguration.trustStorePath` | String | 트러스트스토어 파일 경로 |
+| `sslConfiguration.trustStorePassword` | String | 트러스트스토어 비밀번호 |
+| `sslConfiguration.ciphers` | List | 허용된 암호화 방식 목록 |
 
-**Example:**
+**예시:**
 
 ```properties
 ignite.client.addresses=127.0.0.1:10800
@@ -140,9 +140,9 @@ ignite.client.sslConfiguration.trustStorePath=/path/to/truststore.jks
 ignite.client.sslConfiguration.trustStorePassword=changeit
 ```
 
-## Programmatic Customization
+## 프로그래밍 방식 커스터마이징 {#programmatic-customization}
 
-For configuration that cannot be expressed via properties, implement `IgniteClientPropertiesCustomizer`:
+속성으로 표현할 수 없는 구성은 `IgniteClientPropertiesCustomizer`를 구현하세요:
 
 ```java
 @SpringBootApplication
@@ -162,9 +162,9 @@ public class MyApplication {
 }
 ```
 
-### Custom Authenticator
+### 사용자 지정 인증기 {#custom-authenticator}
 
-Override the default authentication by providing a custom authenticator:
+사용자 지정 인증기를 제공해 기본 인증을 재정의하세요:
 
 ```java
 @Bean
@@ -178,24 +178,24 @@ public IgniteClientPropertiesCustomizer customizeClient() {
 }
 ```
 
-When both property-based authentication (`auth.basic.*`) and a programmatic authenticator are configured, the programmatic authenticator takes precedence.
+속성 기반 인증(`auth.basic.*`)과 프로그래밍 방식 인증기가 모두 구성되면, 프로그래밍 방식 인증기가 우선 적용됩니다.
 
-## Available Customization Options
+## 사용 가능한 커스터마이징 옵션 {#available-customization-options}
 
-The `IgniteClientPropertiesCustomizer` provides access to all `IgniteClientProperties` setters:
+`IgniteClientPropertiesCustomizer`를 사용하면 모든 `IgniteClientProperties` 세터에 접근할 수 있습니다:
 
-| Method | Description |
+| 메서드 | 설명 |
 |--------|-------------|
-| `setAddresses(String[])` | Cluster node addresses |
-| `setRetryPolicy(RetryPolicy)` | Request retry policy |
-| `setLoggerFactory(LoggerFactory)` | Custom logger factory |
-| `setAddressFinder(IgniteClientAddressFinder)` | Dynamic address discovery |
-| `setAuthenticator(IgniteClientAuthenticator)` | Custom authenticator |
-| `setAsyncContinuationExecutor(Executor)` | Executor for async continuations |
+| `setAddresses(String[])` | 클러스터 노드 주소 |
+| `setRetryPolicy(RetryPolicy)` | 요청 재시도 정책 |
+| `setLoggerFactory(LoggerFactory)` | 사용자 지정 로거 팩토리 |
+| `setAddressFinder(IgniteClientAddressFinder)` | 동적 주소 검색 |
+| `setAuthenticator(IgniteClientAuthenticator)` | 사용자 지정 인증기 |
+| `setAsyncContinuationExecutor(Executor)` | 비동기 연속 작업용 실행기 |
 
-## Using the Client
+## 클라이언트 사용 {#using-the-client}
 
-Inject `IgniteClient` anywhere in your application:
+애플리케이션 어디서든 `IgniteClient`를 주입하세요:
 
 ```java
 @Service
@@ -228,8 +228,8 @@ public class PersonService {
 }
 ```
 
-## Next Steps
+## 다음 단계 {#next-steps}
 
-- [Spring Data Integration](./spring-data) - Repository-based data access
-- [Java Client](../ignite-clients/java-client) - Client API reference
-- [Transactions](../work-with-data/transactions) - Transaction management
+- [Spring Data 통합](./spring-data) - 저장소 기반 데이터 접근
+- [Java 클라이언트](../ignite-clients/java-client) - 클라이언트 API 참조
+- [트랜잭션](../work-with-data/transactions) - 트랜잭션 관리

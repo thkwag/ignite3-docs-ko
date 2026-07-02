@@ -1,62 +1,62 @@
 ---
 id: python
-title: Python Database API Driver
+title: Python Database API 드라이버
 sidebar_position: 5
 ---
 
-Apache Ignite 3 clients connect to the cluster via a standard socket connection. Clients do not become a part of the cluster topology, never hold any data, and are not used as a destination for compute calculations.
+Apache Ignite 3 클라이언트는 표준 소켓 연결로 클러스터에 연결합니다. 클라이언트는 클러스터 토폴로지에 합류하지 않고, 데이터를 전혀 보유하지 않으며, 컴퓨트 연산의 대상으로도 사용되지 않습니다.
 
-Apache Ignite DB API driver uses the [Python Database API](https://peps.python.org/pep-0249/).
+Apache Ignite DB API 드라이버는 [Python Database API](https://peps.python.org/pep-0249/)를 사용합니다.
 
-## Getting Started
+## 시작하기 {#getting-started}
 
-### Prerequisites
+### 사전 요구 사항 {#prerequisites}
 
-To run the Python driver, the following is required:
+Python 드라이버를 실행하려면 다음이 필요합니다:
 
-- CMake 3.18 or newer to build the driver
-- Python 3.9 or newer (3.9, 3.10, 3.11 and 3.12 are tested)
-- Access to a running Ignite 3 node
+- 드라이버 빌드용 CMake 3.18 이상
+- Python 3.9 이상(3.9, 3.10, 3.11, 3.12에서 테스트함)
+- 실행 중인 Ignite 3 노드에 접근할 수 있는 권한
 
-### Limitations
+### 제한 사항 {#limitations}
 
-Script execution of SQL statements is not supported in current release.
+현재 릴리스에서는 SQL 문의 스크립트 실행을 지원하지 않습니다.
 
-### Installation
+### 설치 {#installation}
 
-To install Python DB API driver, download it from pip.
+Python DB API 드라이버를 설치하려면 pip에서 다운로드하세요.
 
 ```
 pip install pyignite3_dbapi
 ```
 
-After this, you can import `pyignite3_dbapi` into your project and use it.
+이후 프로젝트에서 `pyignite3_dbapi`를 가져와 사용할 수 있습니다.
 
-## Connecting to Cluster
+## 클러스터에 연결 {#connecting-to-cluster}
 
-To connect to the cluster, use the `connect()` method:
+클러스터에 연결하려면 `connect()` 메서드를 사용하세요:
 
 ```python
 addr = ['127.0.0.1:10800']
 return pyignite_dbapi.connect(address=addr, timeout=10)
 ```
 
-After you are done working with the cluster, remember to always close the connection to it.
+클러스터 작업을 마쳤다면 연결을 반드시 닫으세요.
 
 ```python
 conn.close()
 ```
 
-Alternatively, you can use the `with` statement to automatically close the connection when no longer necessary:
+또는 `with` 문을 사용하면 더 이상 필요하지 않을 때 연결을 자동으로 닫을 수 있습니다:
 
 ```python
 with pyignite_dbapi.connect(address=addr, timeout=10) as conn:
     conn.cursor()
 ```
 
-### Configuring SSL for Connection
+### 연결에 SSL 구성하기 {#configuring-ssl-for-connection}
 
-To ensure secure connection to the cluster, you can enable SSL for it by providing the key file and certificate, for example:
+클러스터에 안전하게 연결하려면 키 파일과 인증서를 제공해 SSL을 활성화할 수 있습니다. 예:
 
 ```python
 def create_ssl_connection():
@@ -73,12 +73,12 @@ def create_ssl_connection():
 ```
 
 :::note
-All paths to certificate file and keys should be provided in string format appropriate for the system.
+인증서 파일과 키 경로는 모두 시스템에 맞는 문자열 형식으로 제공해야 합니다.
 :::
 
-### Configuring Authorization
+### 인증 구성하기 {#configuring-authorization}
 
-If the cluster uses [basic authorization](/configure-and-operate/configuration/config-authentication), you need to provide user `identity` and `secret` to authorize on it, for example:
+클러스터가 [기본 인증](/configure-and-operate/configuration/config-authentication)을 사용하는 경우, 인증을 받으려면 사용자 `identity`와 `secret`을 제공해야 합니다. 예:
 
 ```python
 def create_authenticated_connection():
@@ -92,16 +92,16 @@ def create_authenticated_connection():
   )
 ```
 
-### Configuring Data Access
+### 데이터 접근 구성하기 {#configuring-data-access}
 
-You can configure optional properties to fine-tune how data is accessed.
+데이터 접근 방식을 세밀하게 조정하려면 선택적 속성을 구성할 수 있습니다.
 
-| Configuration name | Description |
+| 구성 이름 | 설명 |
 |--------------------|-------------|
-| schema | A schema name to be used by default. Default value: 'PUBLIC'. |
-| page_size | Maximum number of rows that can be received or sent in a single request. Default value: 1024 |
+| schema | 기본으로 사용할 스키마 이름입니다. 기본값: 'PUBLIC'. |
+| page_size | 단일 요청으로 주고받을 수 있는 최대 행 수입니다. 기본값: 1024 |
 
-The example below shows how to set these properties:
+다음 예시는 이 속성들을 설정하는 방법을 보여줍니다:
 
 ```python
 def create_configured_connection():
@@ -115,23 +115,23 @@ def create_configured_connection():
   )
 ```
 
-## Getting Cursor Object
+## 커서 객체 가져오기 {#getting-cursor-object}
 
-To work with tables from Python client, you use the `cursor` object that can be retrieved from the connection object:
+Python 클라이언트에서 테이블을 다루려면 연결 객체에서 가져올 수 있는 `cursor` 객체를 사용합니다:
 
 ```python
 conn.cursor()
 ```
 
-Similar to the connection, you can use the `with` statement when getting the cursor:
+연결과 마찬가지로 커서를 가져올 때도 `with` 문을 사용할 수 있습니다:
 
 ```python
 with conn.cursor() as cursor:
 ```
 
-## Executing Single Query
+## 단일 쿼리 실행 {#executing-single-query}
 
-The cursor object can be used to execute SQL statements with the `execute` command:
+커서 객체로 `execute` 명령을 사용해 SQL 문을 실행할 수 있습니다:
 
 ```python
 # Create table
@@ -144,9 +144,9 @@ cursor.execute('''
       ''')
 ```
 
-## Executing a Batched Query
+## 일괄 쿼리 실행 {#executing-a-batched-query}
 
-You can use the `executemany` command to execute SQL queries with a batch of parameters. This kind of operation offers much higher performance than executing individual queries. The example below inserts two rows into the Person table:
+`executemany` 명령을 사용하면 매개변수 묶음으로 SQL 쿼리를 실행할 수 있습니다. 이 방식은 쿼리를 하나씩 실행하는 것보다 성능이 훨씬 뛰어납니다. 아래 예시는 Person 테이블에 두 행을 삽입합니다:
 
 ```python
 # Sample data
@@ -160,9 +160,9 @@ sample_data = [
 cursor.executemany('INSERT INTO Person VALUES(?, ?, ?)', sample_data)
 ```
 
-## Getting Query Results
+## 쿼리 결과 가져오기 {#getting-query-results}
 
-The cursor retains a reference to the operation. If the operation returns results (for example, a `SELECT`), they will also be stored in the cursor. You can then use the `fetchone()` method to retrieve query results from the cursor:
+커서는 실행한 작업에 대한 참조를 유지합니다. 작업이 결과를 반환하면(예: `SELECT`) 그 결과도 커서에 저장됩니다. 이후 `fetchone()` 메서드로 커서에서 쿼리 결과를 가져올 수 있습니다:
 
 ```python
 # Query data
@@ -174,17 +174,17 @@ for row in results:
   print(f"ID: {row[0]}, Name: {row[1]}, Age: {row[2]}")
 ```
 
-## Working with Transactions
+## 트랜잭션 다루기 {#working-with-transactions}
 
-By default, transactions required for database operations are handled implicitly. However, you can disable automatic transaction handling and manually handle commits.
+기본적으로 데이터베이스 작업에 필요한 트랜잭션은 암시적으로 처리됩니다. 하지만 자동 트랜잭션 처리를 비활성화하고 커밋을 수동으로 처리할 수도 있습니다.
 
-To do this, first, disable autocommit:
+이렇게 하려면 먼저 자동 커밋을 비활성화하세요:
 
 ```python
 conn.autocommit = False
 ```
 
-Once autocommit is disabled, you need to commit your operations manually:
+자동 커밋을 비활성화한 후에는 작업을 수동으로 커밋해야 합니다:
 
 ```python
 # Insert valid records
@@ -197,7 +197,7 @@ conn.commit()
 print("Transaction committed successfully")
 ```
 
-Operations that are not committed are sent to the cluster, but not yet written to the table. The table is only updated when the `commit` method is called. You can roll back all uncommitted operations with the `rollback` command:
+커밋하지 않은 작업은 클러스터로 전송되지만 아직 테이블에 기록되지는 않습니다. 테이블은 `commit` 메서드를 호출할 때만 갱신됩니다. 커밋하지 않은 모든 작업은 `rollback` 명령으로 롤백할 수 있습니다:
 
 ```python
 with conn.cursor() as cursor:
@@ -218,5 +218,5 @@ with conn.cursor() as cursor:
 ```
 
 :::note
-The `rollback` command rolls back all uncommitted data.
+`rollback` 명령은 커밋하지 않은 모든 데이터를 롤백합니다.
 :::

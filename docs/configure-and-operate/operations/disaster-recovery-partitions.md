@@ -1,106 +1,106 @@
 ---
 id: disaster-recovery-partitions
-title: Disaster Recovery for Data Partitions
-sidebar_label: Data Partitions Recovery
+title: 데이터 파티션 재해 복구
+sidebar_label: 데이터 파티션 복구
 ---
 
-You perform _disaster recovery_ operations to recover from situation when data operations on your Apache Ignite cluster nodes become unfeasible because Apache Ignite cannot guarantee data consistency. In such cases, you need to either return data to a consistent state or declare the current state consistent.
+Apache Ignite가 데이터 일관성을 보장할 수 없어 클러스터 노드에서 데이터 작업을 수행할 수 없게 된 상황을 복구하려면 *재해 복구*(disaster recovery) 작업을 수행합니다. 이런 경우에는 데이터를 다시 일관된 상태로 되돌리거나 현재 상태를 일관된 것으로 선언해야 합니다.
 
 :::note
-Disaster recovery for system groups, [Cluster Management Group](/configure-and-operate/operations/disaster-recovery-system-groups#cluster-management-group) and [Metastorage Group](/configure-and-operate/operations/disaster-recovery-system-groups#metastorage-group), is described in a separate page.
+시스템 그룹([클러스터 관리 그룹](/configure-and-operate/operations/disaster-recovery-system-groups#cluster-management-group), [메타스토리지 그룹](/configure-and-operate/operations/disaster-recovery-system-groups#metastorage-group))의 재해 복구는 별도 페이지에서 설명합니다.
 :::
 
-## Disaster Scenarios and Recovery Instructions
+## 재해 시나리오와 복구 절차 {#disaster-scenarios-and-recovery-instructions}
 
-### Minority Offline
+### 소수 오프라인 {#minority-offline}
 
-_Minority_ refers to less than half of the number of _replicas_ configured for a distribution zone (DZ). For example, of DZ1 is configured with 2 replicas and DZ2 with 3 replicas, losing a single Apache Ignite node is a majority loss for DZ1 and a minority loss for DZ2.
+*소수*(minority)는 분산 영역(distribution zone, DZ)에 구성된 *복제본*(replica) 수의 절반 미만을 뜻합니다. 예를 들어 DZ1에 복제본 2개, DZ2에 복제본 3개가 구성되어 있다면, Apache Ignite 노드 하나를 잃는 것은 DZ1에는 과반수 손실이지만 DZ2에는 소수 손실입니다.
 
-You may discover that one or more of your cluster nodes are offline in a number of ways, including the `recovery partition states` [CLI command](/tools/cli-commands) with the `--global` option, which would show `Read-only partition`, `Degraded partition`, or `Unavailable partition` for offline nodes.
+클러스터 노드 하나 이상이 오프라인 상태인지는 여러 방법으로 확인할 수 있습니다. 예를 들어 `--global` 옵션을 지정한 `recovery partition states` [CLI 명령어](/tools/cli-commands)를 실행하면, 오프라인 노드에 대해 `Read-only partition`, `Degraded partition`, `Unavailable partition` 중 하나가 표시됩니다.
 
-Once a minority offline status has been discovered:
+소수 오프라인 상태를 발견했다면 다음 절차를 따르세요:
 
-1. Command the system to bring the offline node(s) online.
+1. 시스템에 오프라인 노드를 온라인 상태로 전환하도록 명령합니다.
 
-The system attempts to bring the indicated nodes online. Possible outcomes are:
+시스템은 지정된 노드를 온라인 상태로 전환하려고 시도합니다. 가능한 결과는 다음과 같습니다.
 
-- Nodes return online in time (before scale-down timeout) with valid data. The system replicates the missing data (if any) using either log replication or the full state transfer procedure.
-- Nodes return online in time but without data. The system replicates the data using the full state transfer procedure.
-- A node does not return online before scale-down timeout. The system distributes a replica to a new node and starts the rebalance procedure.
-- Node return online with inconsistent data - see steps 4 and 5.
+- 노드가 (축소 타임아웃 전에) 제때 온라인 상태로 복귀하고 유효한 데이터를 갖고 있습니다. 시스템은 로그 복제 또는 전체 상태 전송 절차 중 하나를 사용해 누락된 데이터(있는 경우)를 복제합니다.
+- 노드가 제때 온라인 상태로 복귀했지만 데이터가 없습니다. 시스템은 전체 상태 전송 절차를 사용해 데이터를 복제합니다.
+- 노드가 축소 타임아웃 전에 온라인 상태로 복귀하지 못합니다. 시스템은 새 노드에 복제본을 배치하고 리밸런싱 절차를 시작합니다.
+- 노드가 일관되지 않은 데이터를 가진 채 온라인 상태로 복귀합니다 - 4단계와 5단계를 참고하세요.
 
 :::note
-Full state transfer and rebalancing might take a long time (tens of minutes). We suggest that you recover nodes as soon as you discover they are offline.
+전체 상태 전송과 리밸런싱은 오랜 시간(수십 분)이 걸릴 수 있습니다. 노드가 오프라인 상태임을 발견하는 즉시 복구하는 것을 권장합니다.
 :::
 
-2. Run the `recovery partition states` command on the relevant zones/nodes/partitions to verify [Partition States](#partition-states).
-3. If the state is `Healthy` or `Available partition`, consider the recovery completed.
-4. If the state is `Broken`:
-   1. Restart your Apache Ignite node or the relevant partitions using the `recovery partitions restart` command.
-   2. Rerun the `recovery partition states` command.
-   3. If the partition state remains `Broken`, reset the partitions with deletion by using the `recovery partitions restart --with-cleanup` command. Local partition data will be deleted and restored from the cluster.
-5. If the partition state is `Read-only partition`, `Degraded partition`, or `Unavailable partition`, reset the relevant partitions using the `recovery reset partitions` command.
+2. 해당하는 영역/노드/파티션에서 `recovery partition states` 명령어를 실행해 [파티션 상태](#partition-states)를 확인합니다.
+3. 상태가 `Healthy` 또는 `Available partition`이면 복구가 완료된 것으로 간주합니다.
+4. 상태가 `Broken`이면:
+   1. `recovery partitions restart` 명령어를 사용해 Apache Ignite 노드 또는 해당 파티션을 재시작합니다.
+   2. `recovery partition states` 명령어를 다시 실행합니다.
+   3. 파티션 상태가 여전히 `Broken`이면, `recovery partitions restart --with-cleanup` 명령어를 사용해 삭제와 함께 파티션을 재설정합니다. 로컬 파티션 데이터가 삭제되고 클러스터에서 복원됩니다.
+5. 파티션 상태가 `Read-only partition`, `Degraded partition`, `Unavailable partition` 중 하나이면, `recovery reset partitions` 명령어를 사용해 해당 파티션을 재설정합니다.
 
-### Majority Offline
+### 과반수 오프라인 {#majority-offline}
 
-_Majority_ refers to half (or more) of the number of _replicas_ configured for a distribution zone (DZ). For example, of DZ1 is configured with 2 replicas and DZ2 with 3 replicas, losing a single Apache Ignite node is a majority loss for DZ1 and a minority loss for DZ2.
+*과반수*(majority)는 분산 영역(DZ)에 구성된 복제본 수의 절반 이상을 뜻합니다. 예를 들어 DZ1에 복제본 2개, DZ2에 복제본 3개가 구성되어 있다면, Apache Ignite 노드 하나를 잃는 것은 DZ1에는 과반수 손실이지만 DZ2에는 소수 손실입니다.
 
-You may discover that one or more of your cluster nodes are offline in a number of ways, including the `recovery partition states` CLI command with the `--global` option, which would show `Read-only partition`, `Degraded partition`, or `Unavailable partition` for offline nodes.
+클러스터 노드 하나 이상이 오프라인 상태인지는 여러 방법으로 확인할 수 있습니다. 예를 들어 `--global` 옵션을 지정한 `recovery partition states` CLI 명령어를 실행하면, 오프라인 노드에 대해 `Read-only partition`, `Degraded partition`, `Unavailable partition` 중 하나가 표시됩니다.
 
-If the node(s) that remain(s) online include the primary replica, the partition becomes `Read-only partition` (see [Global Partition States](#global-partition-states)); all the data is available for reading until lease expires. If the node(s) that remain(s) online do _not_ include the primary replica, the partition becomes `Unavailable partition`.
+온라인 상태로 남은 노드에 프라이머리 복제본이 포함되어 있으면 파티션은 `Read-only partition`이 됩니다([전역 파티션 상태](#global-partition-states) 참고). 리스가 만료될 때까지는 모든 데이터를 읽을 수 있습니다. 온라인 상태로 남은 노드에 프라이머리 복제본이 *포함되어 있지 않으면* 파티션은 `Unavailable partition`이 됩니다.
 
-Once a majority offline status has been discovered:
+과반수 오프라인 상태를 발견했다면 다음 절차를 따르세요:
 
-1. Command the system to bring the offline nodes online.
+1. 시스템에 오프라인 노드를 온라인 상태로 전환하도록 명령합니다.
 
-The system attempts to bring the indicated nodes online. Possible outcomes are:
+시스템은 지정된 노드를 온라인 상태로 전환하려고 시도합니다. 가능한 결과는 다음과 같습니다.
 
-- Nodes return online in time (before scale-down timeout) with valid data. A leader is elected, the system replicates the missing data (if any) using either log replication or the full state transfer procedure, and a leaseholder is elected
-- Nodes return online with inconsistent data - see steps 4 and 5.
+- 노드가 (축소 타임아웃 전에) 제때 온라인 상태로 복귀하고 유효한 데이터를 갖고 있습니다. 리더가 선출되고, 시스템은 로그 복제 또는 전체 상태 전송 절차 중 하나를 사용해 누락된 데이터(있는 경우)를 복제하며, 리스홀더가 선출됩니다.
+- 노드가 일관되지 않은 데이터를 가진 채 온라인 상태로 복귀합니다 - 4단계와 5단계를 참고하세요.
 
 :::note
-Full state transfer and rebalancing might take a long time (tens of minutes). We suggest that you recover nodes as soon as you discover they are offline.
+전체 상태 전송과 리밸런싱은 오랜 시간(수십 분)이 걸릴 수 있습니다. 노드가 오프라인 상태임을 발견하는 즉시 복구하는 것을 권장합니다.
 :::
 
-2. Run the `recovery partition states` command on the relevant zones/nodes/partitions to verify [Partition States](#partition-states).
-3. If the state is `Healthy` or `Available partition`, consider the recovery completed.
-4. If the state is `Broken`:
-   1. Restart your Apache Ignite nodes or the relevant partitions using the `recovery partitions restart` command.
-   2. Rerun the `recovery partition states` command.
-   3. If the partition state remains `Broken`, reset the partitions with deletion by using the `recovery partitions restart --with-cleanup` command. Local partition data will be deleted and restored from the cluster.
-5. If the partition state is `Read-only partition`, `Degraded partition`, or `Unavailable partition`, reset the relevant partitions using the `recovery partitions reset` CLI command.
+2. 해당하는 영역/노드/파티션에서 `recovery partition states` 명령어를 실행해 [파티션 상태](#partition-states)를 확인합니다.
+3. 상태가 `Healthy` 또는 `Available partition`이면 복구가 완료된 것으로 간주합니다.
+4. 상태가 `Broken`이면:
+   1. `recovery partitions restart` 명령어를 사용해 Apache Ignite 노드 또는 해당 파티션을 재시작합니다.
+   2. `recovery partition states` 명령어를 다시 실행합니다.
+   3. 파티션 상태가 여전히 `Broken`이면, `recovery partitions restart --with-cleanup` 명령어를 사용해 삭제와 함께 파티션을 재설정합니다. 로컬 파티션 데이터가 삭제되고 클러스터에서 복원됩니다.
+5. 파티션 상태가 `Read-only partition`, `Degraded partition`, `Unavailable partition` 중 하나이면, `recovery partitions reset` CLI 명령어를 사용해 해당 파티션을 재설정합니다.
 
-In the Majority Offline scenario, you would typically lose part of the data. For example, if you reset partition A while partition B was in the `Available partition` state, you would lose:
+과반수 오프라인 시나리오에서는 일반적으로 데이터 일부를 잃게 됩니다. 예를 들어 파티션 B가 `Available partition` 상태인 동안 파티션 A를 재설정하면 다음을 잃게 됩니다:
 
-- The latest data from A that has been restored using `recovery partitions reset`
-- Some of the latest data from B, which had been inserted into it in a transaction that had also inserted data into A
+- `recovery partitions reset`으로 복원한 파티션 A의 최신 데이터
+- 파티션 A에도 데이터를 삽입한 트랜잭션에서 파티션 B에 삽입되었던 최신 데이터 일부
 
-### Partition Loss
+### 파티션 손실 {#partition-loss}
 
-In this scenario, in addition to having [Majority Offline](#majority-offline), you lose all replicas of a partition, e.g., partition A. This causes a loss of _all_ the data from partition A once you run the `recovery partitions reset` CLI command, as well possibly a loss of some of the recent updates in other partitions.
+이 시나리오에서는 [과반수 오프라인](#majority-offline) 상태에 더해 파티션(예: 파티션 A)의 복제본을 모두 잃습니다. `recovery partitions reset` CLI 명령어를 실행하면 파티션 A의 데이터를 *전부* 잃게 되며, 다른 파티션의 최근 업데이트 일부도 함께 잃을 수 있습니다.
 
-Try bringing the nodes back online as described in the [Majority Offline](#majority-offline) scenario.
+[과반수 오프라인](#majority-offline) 시나리오에서 설명한 대로 노드를 다시 온라인 상태로 되돌려 보세요.
 
-## Partition States
+## 파티션 상태 {#partition-states}
 
-This section describes the data partition states that define the partition availability and readiness for utilization.
+이 섹션에서는 파티션의 가용성과 사용 준비 상태를 정의하는 데이터 파티션 상태를 설명합니다.
 
-### Local Partition States
+### 로컬 파티션 상태 {#local-partition-states}
 
-_Local partition state_ is a local property of a replica, storage, state machine, etc., associated with the partition.
+*로컬 파티션 상태*(local partition state)는 파티션과 연관된 복제본, 스토리지, 상태 머신 등의 로컬 속성입니다.
 
-- `Healthy` - a state machine is running with no issues.
-- `Initializing` - a node is online, but the corresponding RAFT group has not completed its initialization yet.
-- `Snapshot installation` - a full state transfer is taking place. Once it has finished, the partition will become `healthy` or `catching-up`. Before that, data cannot be read, and log replication is on pause.
-- `Catching-up` - a node is in the process of replicating data from the leader, and its data is slightly in the past. More specifically, node has not replicated the tail of the log that corresponds to 100 log entries.
-- `Broken` - the state machine experiences issues (likely as a result of an exception). Some data might be unavailable for reading, and the log cannot be replicated. This state will not be changed automatically, it requires intervention.
-- `Unavailable` - state of the partition is currently unknown. It may happen when partition is not yet started or is already stopping.
+- `Healthy` - 상태 머신이 문제없이 실행되고 있습니다.
+- `Initializing` - 노드는 온라인 상태이지만 해당 RAFT 그룹의 초기화가 아직 완료되지 않았습니다.
+- `Snapshot installation` - 전체 상태 전송이 진행 중입니다. 전송이 끝나면 파티션은 `healthy` 또는 `catching-up` 상태가 됩니다. 그 전까지는 데이터를 읽을 수 없으며 로그 복제도 일시 중지됩니다.
+- `Catching-up` - 노드가 리더로부터 데이터를 복제하는 중이며, 데이터가 약간 과거 시점입니다. 구체적으로는 노드가 로그 항목 100개에 해당하는 로그의 꼬리 부분을 아직 복제하지 않은 상태입니다.
+- `Broken` - 상태 머신에 문제가 발생했습니다(대개 예외의 결과입니다). 일부 데이터를 읽지 못할 수 있으며 로그를 복제할 수 없습니다. 이 상태는 자동으로 바뀌지 않으며 개입이 필요합니다.
+- `Unavailable` - 파티션 상태를 현재 알 수 없습니다. 파티션이 아직 시작되지 않았거나 이미 중지되는 중일 때 발생할 수 있습니다.
 
-### Global Partition States
+### 전역 파티션 상태 {#global-partition-states}
 
-_Global partition state_ is a global property of a partition that specifies its apparent functionality from user's point of view.
+*전역 파티션 상태*(global partition state)는 사용자 관점에서 드러나는 기능을 나타내는, 파티션의 전역 속성입니다.
 
-- `Available` - a healthy partition that can process read and write requests. Implies that all peers are healthy at the moment.
-- `Read-only` - a partition that can process read requests but not the write requests. There is no healthy majority. However, there is at least one alive (healthy/catch-up) peer that can process historical read-only queries.
-- `Unavailable` - a partition that cannot process any requests.
-- `Degraded` - a partition that is available to the user, but is at a higher risk of having issues than other partitions. For example, one of the group's peers is offline. There is still a majority, but the backup factor is low.
+- `Available` - 읽기 요청과 쓰기 요청을 모두 처리할 수 있는 정상 파티션입니다. 현재 모든 피어가 정상 상태임을 뜻합니다.
+- `Read-only` - 읽기 요청은 처리할 수 있지만 쓰기 요청은 처리할 수 없는 파티션입니다. 정상 상태인 과반수가 없습니다. 다만 과거 시점 데이터를 조회하는 읽기 전용 쿼리를 처리할 수 있는, 살아 있는(정상/캐치업) 피어가 최소 하나는 있습니다.
+- `Unavailable` - 어떤 요청도 처리할 수 없는 파티션입니다.
+- `Degraded` - 사용자가 사용할 수 있는 파티션이지만 다른 파티션보다 문제가 발생할 위험이 높습니다. 예를 들어 그룹의 피어 중 하나가 오프라인 상태인 경우입니다. 과반수는 여전히 유지되지만 백업 계수가 낮습니다.

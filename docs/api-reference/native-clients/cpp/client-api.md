@@ -6,33 +6,33 @@ sidebar_position: 1
 
 # Client API
 
-The C++ client provides a thin client connection to Apache Ignite clusters. It manages network connections, handles authentication, and provides access to all Ignite APIs through a single entry point.
+C++ 클라이언트는 Apache Ignite 클러스터에 씬 클라이언트 연결을 제공합니다. 네트워크 연결을 관리하고 인증을 처리하며, 단일 진입점에서 모든 Ignite API에 접근할 수 있게 합니다.
 
-## Key Concepts
+## 핵심 개념 {#key-concepts}
 
-### Client Lifecycle
+### 클라이언트 라이프사이클 {#client-lifecycle}
 
-The client uses static factory methods to establish connections. Start methods block until the connection succeeds or times out. The client maintains active connections through configurable heartbeat intervals.
+클라이언트는 정적 팩터리 메서드로 연결을 맺습니다. 시작 메서드는 연결이 성공하거나 타임아웃될 때까지 블로킹됩니다. 클라이언트는 구성 가능한 하트비트 간격으로 활성 연결을 유지합니다.
 
-### Configuration
+### 구성 {#configuration}
 
-Client configuration specifies connection endpoints, authentication, SSL/TLS settings, and connection parameters. Endpoints use `host:port` format with a default port of 10800. The client maintains a connection pool with configurable limits.
+클라이언트 구성은 연결 엔드포인트, 인증, SSL/TLS 설정, 연결 매개변수를 지정합니다. 엔드포인트는 `host:port` 형식을 사용하며 기본 포트는 10800입니다. 클라이언트는 구성 가능한 한도로 연결 풀을 유지합니다.
 
-### API Access
+### API 접근 {#api-access}
 
-The client provides access to all Ignite APIs through dedicated getters:
+클라이언트는 전용 getter로 모든 Ignite API에 접근할 수 있게 합니다:
 
-- `get_tables()` - Table operations
-- `get_sql()` - SQL execution
-- `get_transactions()` - Transaction management
-- `get_compute()` - Distributed computing
-- `get_cluster_nodes()` - Cluster topology
+- `get_tables()` - 테이블 작업
+- `get_sql()` - SQL 실행
+- `get_transactions()` - 트랜잭션 관리
+- `get_compute()` - 분산 컴퓨트
+- `get_cluster_nodes()` - 클러스터 토폴로지
 
-## Basic Usage
+## 기본 사용법 {#basic-usage}
 
-### Starting a Client
+### 클라이언트 시작 {#starting-a-client}
 
-Start a client with default configuration:
+기본 구성으로 클라이언트를 시작합니다:
 
 ```cpp
 using namespace ignite;
@@ -41,7 +41,7 @@ ignite_client_configuration cfg{{"localhost:10800"}};
 ignite_client client = ignite_client::start(cfg, std::chrono::seconds(30));
 ```
 
-Configure connection parameters:
+연결 매개변수를 구성합니다:
 
 ```cpp
 ignite_client_configuration cfg{{"host1:10800", "host2:10800"}};
@@ -51,9 +51,9 @@ cfg.set_heartbeat_interval(std::chrono::seconds(30));
 ignite_client client = ignite_client::start(cfg, std::chrono::seconds(30));
 ```
 
-### Asynchronous Startup
+### 비동기 시작 {#asynchronous-startup}
 
-Start the client without blocking:
+블로킹 없이 클라이언트를 시작합니다:
 
 ```cpp
 ignite_client_configuration cfg{{"localhost:10800"}};
@@ -67,9 +67,9 @@ ignite_client::start_async(cfg, std::chrono::seconds(30),
     });
 ```
 
-### Authentication
+### 인증 {#authentication}
 
-Configure basic authentication:
+기본 인증을 구성합니다:
 
 ```cpp
 ignite_client_configuration cfg{{"localhost:10800"}};
@@ -78,9 +78,9 @@ cfg.set_authenticator(std::make_shared<basic_authenticator>("username", "passwor
 ignite_client client = ignite_client::start(cfg, std::chrono::seconds(30));
 ```
 
-### SSL/TLS Configuration
+### SSL/TLS 구성 {#ssltls-configuration}
 
-Enable SSL with certificates:
+인증서로 SSL을 활성화합니다:
 
 ```cpp
 ignite_client_configuration cfg{{"localhost:10800"}};
@@ -92,23 +92,23 @@ cfg.set_ssl_ca_file("/path/to/ca.pem");
 ignite_client client = ignite_client::start(cfg, std::chrono::seconds(30));
 ```
 
-### Accessing APIs
+### API 접근하기 {#accessing-apis}
 
-Access table operations:
+테이블 작업에 접근합니다:
 
 ```cpp
 auto tables = client.get_tables();
 auto table = tables.get_table("my_table");
 ```
 
-Access SQL:
+SQL에 접근합니다:
 
 ```cpp
 auto sql = client.get_sql();
 auto result = sql.execute(nullptr, nullptr, sql_statement("SELECT * FROM t"), {});
 ```
 
-Access transactions:
+트랜잭션에 접근합니다:
 
 ```cpp
 auto transactions = client.get_transactions();
@@ -117,16 +117,16 @@ auto tx = transactions.begin();
 tx.commit();
 ```
 
-Access compute:
+컴퓨트에 접근합니다:
 
 ```cpp
 auto compute = client.get_compute();
 auto nodes = client.get_cluster_nodes();
 ```
 
-### Configuration Retrieval
+### 구성 조회 {#configuration-retrieval}
 
-Retrieve the active configuration:
+활성 구성을 조회합니다:
 
 ```cpp
 const ignite_client_configuration& config = client.configuration();
@@ -134,29 +134,29 @@ auto endpoints = config.get_endpoints();
 auto connection_limit = config.get_connection_limit();
 ```
 
-## Configuration Options
+## 구성 옵션 {#configuration-options}
 
-### Connection Settings
+### 연결 설정 {#connection-settings}
 
-- `set_endpoints(std::vector<std::string>)` - Server endpoints (required, non-empty)
-- `set_connection_limit(uint32_t)` - Maximum active connections
-- `set_heartbeat_interval(std::chrono::microseconds)` - Heartbeat interval (0 disables heartbeat)
+- `set_endpoints(std::vector<std::string>)` - 서버 엔드포인트(필수, 비어 있으면 안 됨)
+- `set_connection_limit(uint32_t)` - 최대 활성 연결 수
+- `set_heartbeat_interval(std::chrono::microseconds)` - 하트비트 간격(0이면 하트비트 비활성화)
 
-### Security Settings
+### 보안 설정 {#security-settings}
 
-- `set_authenticator(std::shared_ptr<ignite_client_authenticator>)` - Authentication provider
-- `set_ssl_mode(ssl_mode)` - SSL/TLS mode (DISABLE, REQUIRE)
-- `set_ssl_cert_file(std::string)` - Client certificate path
-- `set_ssl_key_file(std::string)` - Private key path
-- `set_ssl_ca_file(std::string)` - CA certificate path
+- `set_authenticator(std::shared_ptr<ignite_client_authenticator>)` - 인증 공급자
+- `set_ssl_mode(ssl_mode)` - SSL/TLS 모드(DISABLE, REQUIRE)
+- `set_ssl_cert_file(std::string)` - 클라이언트 인증서 경로
+- `set_ssl_key_file(std::string)` - 개인 키 경로
+- `set_ssl_ca_file(std::string)` - CA 인증서 경로
 
-### Logging
+### 로깅 {#logging}
 
-- `set_logger(std::shared_ptr<ignite_logger>)` - Custom logger implementation
+- `set_logger(std::shared_ptr<ignite_logger>)` - 사용자 지정 로거 구현
 
-## Error Handling
+## 오류 처리 {#error-handling}
 
-Client operations throw `ignite_error` on failure. Async operations deliver errors through the callback result:
+클라이언트 작업은 실패 시 `ignite_error`를 던집니다. 비동기 작업은 콜백 결과로 오류를 전달합니다:
 
 ```cpp
 ignite_client::start_async(cfg, timeout, [](ignite_result<ignite_client> result) {
@@ -170,31 +170,31 @@ ignite_client::start_async(cfg, timeout, [](ignite_result<ignite_client> result)
 });
 ```
 
-## Connection Management
+## 연결 관리 {#connection-management}
 
-### Heartbeat
+### 하트비트 {#heartbeat}
 
-Heartbeat keeps connections alive during idle periods. The default interval is 30 seconds. Set to zero to disable:
+하트비트는 유휴 기간 동안 연결을 유지합니다. 기본 간격은 30초입니다. 비활성화하려면 0으로 설정하세요:
 
 ```cpp
 cfg.set_heartbeat_interval(std::chrono::seconds(0)); // Disable heartbeat
 ```
 
-Disabling heartbeat may cause the server to close idle connections.
+하트비트를 비활성화하면 서버가 유휴 연결을 닫을 수 있습니다.
 
-### Connection Pooling
+### 연결 풀링 {#connection-pooling}
 
-The client maintains a pool of connections to cluster nodes. Configure the maximum pool size:
+클라이언트는 클러스터 노드와의 연결 풀을 유지합니다. 최대 풀 크기를 구성합니다:
 
 ```cpp
 cfg.set_connection_limit(20); // Allow up to 20 active connections
 ```
 
-Connection management happens automatically based on operation distribution.
+연결 관리는 작업 분산에 따라 자동으로 이루어집니다.
 
-## Reference
+## 참조 {#reference}
 
-- [C++ API Documentation](https://ignite.apache.org/releases/ignite3/cppdoc/)
+- [C++ API 문서](https://ignite.apache.org/releases/ignite3/cppdoc/)
 - [Tables API](./tables-api)
 - [SQL API](./sql-api)
 - [Transactions API](./transactions-api)

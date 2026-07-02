@@ -1,26 +1,26 @@
 ---
 id: install-kubernetes
-title: Install on Kubernetes
+title: Kubernetes에 설치
 sidebar_label: Kubernetes
 ---
 
-You can install Apache Ignite 3 and run an Apache Ignite cluster on Kubernetes cluster. This section describes all the necessary steps, as well as provides the configurations and manifests that you can copy and paste into your environment.
+Kubernetes 클러스터에 Apache Ignite 3를 설치하고 Apache Ignite 클러스터를 실행할 수 있습니다. 이 섹션에서는 필요한 모든 단계를 설명하며, 환경에 복사해 붙여넣을 수 있는 구성과 매니페스트도 함께 제공합니다.
 
 :::note
-Using a Helm chart is recommended for production deployments, however, if you choose not to use Helm, this guide will walk you through installing Apache Ignite on Kubernetes manually.
+프로덕션 배포에는 Helm 차트 사용을 권장합니다. 다만 Helm을 사용하지 않기로 했다면, 이 가이드에서 Apache Ignite를 Kubernetes에 수동으로 설치하는 방법을 안내합니다.
 :::
 
-## Prerequisites
+## 사전 요구 사항 {#prerequisites}
 
-### Recommended Kubernetes Version
+### 권장 Kubernetes 버전 {#recommended-kubernetes-version}
 
-Apache Ignite 3 requires Kubernetes 1.20 or later.
+Apache Ignite 3는 Kubernetes 1.20 이상이 필요합니다.
 
-## Installation Steps
+## 설치 단계 {#installation-steps}
 
-### Create ConfigMaps
+### ConfigMap 생성 {#create-configmaps}
 
-1. Create the Apache Ignite configuration file. The minimum node configuration is as follows:
+1. Apache Ignite 구성 파일을 생성합니다. 최소 노드 구성은 다음과 같습니다:
 
 ```json title="ignite-config.conf"
 ignite: {
@@ -49,39 +49,39 @@ ignite: {
 }
 ```
 
-2. Create the ConfigMap object for Apache Ignite configuration:
+2. Apache Ignite 구성을 위한 ConfigMap 객체를 생성합니다:
 
 ```shell
 kubectl create configmap ignite-config -n <namespace> --from-file=ignite-config.conf
 ```
 
-Replace `<namespace>` with the name of the namespace where you want to deploy Apache Ignite.
+`<namespace>`를 Apache Ignite를 배포할 네임스페이스 이름으로 바꿉니다.
 
 :::note
-In Kubernetes deployments, the `ignite-config.conf` file is mounted as a read-only ConfigMap, so any attempt to update it with the `node config update` command will fail.
+Kubernetes 배포에서 `ignite-config.conf` 파일은 읽기 전용 ConfigMap으로 마운트되므로, `node config update` 명령어로 업데이트를 시도하면 실패합니다.
 
-To update Apache Ignite node configuration, modify the existing ConfigMap and restart all Apache Ignite pods.
+Apache Ignite 노드 구성을 업데이트하려면 기존 ConfigMap을 수정하고 모든 Apache Ignite 파드를 재시작하세요.
 :::
 
-- Modify previously configured ConfigMap object:
+- 이전에 구성한 ConfigMap 객체를 수정합니다:
 
 ```bash
 kubectl edit configmap ignite-config -n <namespace>
 ```
 
-- Restart Apache Ignite pod, repeat for every pod:
+- Apache Ignite 파드를 재시작합니다. 모든 파드에 대해 반복하세요:
 
 ```bash
 kubectl delete pod <Apache Ignite pod name> -n <namespace>
 ```
 
-### Create and Deploy the Service
+### 서비스 생성 및 배포 {#create-and-deploy-the-service}
 
-Depending on your requirements, define and deploy a Kubernetes service. Apache Ignite 3 use two types of services: one for internal cluster discovery, and the other for external client access.
+요구 사항에 따라 Kubernetes 서비스를 정의하고 배포합니다. Apache Ignite 3는 두 가지 유형의 서비스를 사용합니다. 하나는 내부 클러스터 검색용이고, 다른 하나는 외부 클라이언트 접근용입니다.
 
-1. First, choose a type of service you need and prepare the `service.yaml` file.
+1. 먼저 필요한 서비스 유형을 선택하고 `service.yaml` 파일을 준비합니다.
 
-- For communication inside the Kubernetes cluster, Use a headless service by setting the `clusterIP` parameter to `None`. This will expose each pod's IP, enabling Apache Ignite to be partition-aware: clients discover every node's address, determine which partition resides on which node, and send requests directly where the data is located.
+- Kubernetes 클러스터 내부 통신에는 `clusterIP` 매개변수를 `None`으로 설정해 헤드리스 서비스를 사용하세요. 이렇게 하면 각 파드의 IP가 노출되어 Apache Ignite가 파티션 인식(partition awareness)이 가능해집니다. 즉 클라이언트가 모든 노드의 주소를 파악하고, 어느 파티션이 어느 노드에 있는지 확인해, 데이터가 있는 곳으로 요청을 직접 전송합니다.
 
 ```yaml title="service.yaml"
 apiVersion: v1
@@ -119,9 +119,9 @@ spec:
   type: ClusterIP
 ```
 
-- Use a `LoadBalancer` service to allow external clients to connect. Keep in mind, that with this option you giving up partition awareness.
+- 외부 클라이언트 연결을 허용하려면 `LoadBalancer` 서비스를 사용하세요. 단, 이 옵션을 사용하면 파티션 인식을 포기하게 된다는 점에 유의하세요.
 
-If your environments does not support `LoadBalancer`, you can use `type: NodePort` instead. Refer to the Kubernetes [documentation](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/) for details.
+환경에서 `LoadBalancer`를 지원하지 않는다면 대신 `type: NodePort`를 사용할 수 있습니다. 자세한 내용은 Kubernetes [문서](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/)를 참고하세요.
 
 ```yaml
 apiVersion: v1
@@ -145,15 +145,15 @@ spec:
       targetPort: 10300
 ```
 
-2. Then apply the `service.yaml` file to set up this service:
+2. 그런 다음 `service.yaml` 파일을 적용해 이 서비스를 설정합니다:
 
 ```shell
 kubectl apply -f service.yaml
 ```
 
-### Deploy the StatefulSet
+### StatefulSet 배포 {#deploy-the-statefulset}
 
-1. Prepare the `statefulset.yaml` file for StatefulSet deployment:
+1. StatefulSet 배포를 위해 `statefulset.yaml` 파일을 준비합니다:
 
 ```yaml title="statefulset.yaml"
 apiVersion: apps/v1
@@ -229,25 +229,25 @@ spec:
       volumeMode: Filesystem
 ```
 
-2. Apply the `statefulset.yaml` file to deploy the main components of Apache Ignite 3:
+2. `statefulset.yaml` 파일을 적용해 Apache Ignite 3의 주요 구성 요소를 배포합니다:
 
 ```shell
 kubectl apply -f statefulset.yaml
 ```
 
-### Wait for Pods to Start
+### 파드 시작 대기 {#wait-for-pods-to-start}
 
-1. Monitor the status of the pods:
+1. 파드 상태를 모니터링합니다:
 
 ```shell
 kubectl get pods -n <namespace> -w
 ```
 
-2. Ensure that all pods' `STATUS` is `Running` before proceeding.
+2. 계속 진행하기 전에 모든 파드의 `STATUS`가 `Running`인지 확인하세요.
 
-### Deploy the Job
+### Job 배포 {#deploy-the-job}
 
-1. Prepare the `job.yaml` file for deploying the job:
+1. Job 배포를 위해 `job.yaml` 파일을 준비합니다:
 
 ```yaml title="job.yaml"
 apiVersion: batch/v1
@@ -278,41 +278,41 @@ spec:
       terminationGracePeriodSeconds: 120
 ```
 
-2. Apply the `job.yaml` file to complete installation:
+2. `job.yaml` 파일을 적용해 설치를 완료합니다:
 
 ```shell
 kubectl apply -f job.yaml
 ```
 
-## Installation Verification
+## 설치 확인 {#installation-verification}
 
-1. Check the status of all resources in your namespace:
+1. 네임스페이스의 모든 리소스 상태를 확인합니다:
 
 ```shell
 kubectl get all -n <namespace>
 ```
 
-2. Ensure that all components are running as expected, without errors, and that the initialization job is in the `Completed` status.
-3. Verify that your cluster is initialized and running:
+2. 모든 구성 요소가 오류 없이 예상대로 실행 중이고, 초기화 Job이 `Completed` 상태인지 확인하세요.
+3. 클러스터가 초기화되어 실행 중인지 확인합니다:
 
 ```shell
 kubectl exec -it ignite-cluster-0 bash -n <namespace>
 /opt/ignite3cli/bin/ignite3 cluster status
 ```
 
-The command output must include the name of your cluster and the number of nodes. The status must be `ACTIVE`.
+명령어 출력에는 클러스터 이름과 노드 수가 포함되어야 합니다. 상태는 `ACTIVE`여야 합니다.
 
-## Installation Troubleshooting
+## 설치 문제 해결 {#installation-troubleshooting}
 
-If any issues occur during the installation:
+설치 도중 문제가 발생하면 다음을 확인하세요:
 
-- Check the logs of specific pods:
+- 특정 파드의 로그를 확인합니다:
 
 ```shell
 kubectl logs <pod-name> -n <namespace>
 ```
 
-- Review events in the namespace:
+- 네임스페이스의 이벤트를 검토합니다:
 
 ```shell
 kubectl get events -n <namespace>

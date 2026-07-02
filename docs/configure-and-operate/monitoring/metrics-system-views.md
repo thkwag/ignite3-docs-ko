@@ -1,20 +1,20 @@
 ---
 id: metrics-system-views
-title: System Views
-sidebar_label: System Views
+title: 시스템 뷰
+sidebar_label: 시스템 뷰
 ---
 
-Ignite provides a number of built-in SQL views that provide information on the cluster's state and provide real-time insight into the status of its components. These views are available in the SYSTEM schema.
+Ignite는 클러스터 상태 정보와 각 구성 요소의 상태를 실시간으로 파악할 수 있는 여러 내장 SQL 뷰를 제공합니다. 이러한 뷰는 SYSTEM 스키마에서 사용할 수 있습니다.
 
-## Getting Data
+## 데이터 가져오기 {#getting-data}
 
-You access system views in Ignite by using SQL and selecting data from the system view like you would from any other table. For example, you can get a list of all available system views in the following way:
+Ignite에서 시스템 뷰에 접근할 때는 다른 테이블에서와 마찬가지로 SQL로 시스템 뷰에서 데이터를 조회합니다. 예를 들어 사용 가능한 모든 시스템 뷰 목록은 다음과 같이 가져올 수 있습니다.
 
 ```sql
 SELECT * FROM system.system_views
 ```
 
-You can also use joins to combine data from multiple views. The example below returns all columns of a view that was found in the `SYSTEM_VIEWS` view:
+조인을 사용해 여러 뷰의 데이터를 결합할 수도 있습니다. 아래 예시는 `SYSTEM_VIEWS` 뷰에서 찾은 뷰의 모든 컬럼을 반환합니다.
 
 ```sql
 SELECT svc.*
@@ -23,286 +23,286 @@ SELECT svc.*
  WHERE sv.name = 'SYSTEM_VIEWS'
 ```
 
-## Available Views
+## 사용 가능한 뷰 {#available-views}
 
 ### COMPUTE_TASKS
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |---|---|---|
-| COORDINATOR_NODE_ID | STRING | The task's coordinator node ID. |
-| COMPUTE_TASK_ID | STRING | The compute task ID. |
-| COMPUTE_TASK_STATUS | STRING | The task status. |
-| COMPUTE_TASK_CREATE_TIME | TIMESTAMP WITH LOCAL TIME ZONE | The task creation timestamp. |
-| COMPUTE_TASK_START_TIME | TIMESTAMP WITH LOCAL TIME ZONE | The task start timestamp. |
-| COMPUTE_TASK_FINISH_TIME | TIMESTAMP WITH LOCAL TIME ZONE | The task finish timestamp. |
-| ID | STRING | *Deprecated*. The compute task ID. |
-| STATUS | STRING | *Deprecated*. The task status. |
-| CREATE_TIME | TIMESTAMP WITH LOCAL TIME ZONE | *Deprecated*. The task creation timestamp. |
-| START_TIME | TIMESTAMP WITH LOCAL TIME ZONE | *Deprecated*. The task start timestamp. |
-| FINISH_TIME | TIMESTAMP WITH LOCAL TIME ZONE | *Deprecated*. The task finish timestamp. |
+| COORDINATOR_NODE_ID | STRING | 태스크의 코디네이터 노드 ID. |
+| COMPUTE_TASK_ID | STRING | 컴퓨트 태스크 ID. |
+| COMPUTE_TASK_STATUS | STRING | 태스크 상태. |
+| COMPUTE_TASK_CREATE_TIME | TIMESTAMP WITH LOCAL TIME ZONE | 태스크 생성 타임스탬프. |
+| COMPUTE_TASK_START_TIME | TIMESTAMP WITH LOCAL TIME ZONE | 태스크 시작 타임스탬프. |
+| COMPUTE_TASK_FINISH_TIME | TIMESTAMP WITH LOCAL TIME ZONE | 태스크 종료 타임스탬프. |
+| ID | STRING | *지원 중단*. 컴퓨트 태스크 ID. |
+| STATUS | STRING | *지원 중단*. 태스크 상태. |
+| CREATE_TIME | TIMESTAMP WITH LOCAL TIME ZONE | *지원 중단*. 태스크 생성 타임스탬프. |
+| START_TIME | TIMESTAMP WITH LOCAL TIME ZONE | *지원 중단*. 태스크 시작 타임스탬프. |
+| FINISH_TIME | TIMESTAMP WITH LOCAL TIME ZONE | *지원 중단*. 태스크 종료 타임스탬프. |
 
 ### GLOBAL_PARTITION_STATES
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |---|---|---|
-| ZONE_NAME | STRING | The name of the distribution zone the partition belongs to. |
-| TABLE_ID | INT32 | The ID of the table stored in the partition. |
-| SCHEMA_NAME | STRING | The name of the schema the table belongs to. |
-| TABLE_NAME | STRING | The name of the table stored in the partition. |
-| PARTITION_ID | INT32 | The unique identifier of the partition. |
-| PARTITION_STATE | STRING | Partition status. Possible values: `AVAILABLE`, `DEGRADED`, `READ_ONLY`, `UNAVAILABLE`. See [Disaster Recovery](/configure-and-operate/operations/disaster-recovery-partitions) documentation for more information. |
-| ZONE_ID | INT32 | Unique zone identifier. |
-| SCHEMA_ID | INT32 | Unique schema identifier. |
-| STATE | STRING | *Deprecated*. Partition status. Possible values: `AVAILABLE`, `DEGRADED`, `READ_ONLY`, `UNAVAILABLE`. |
+| ZONE_NAME | STRING | 파티션이 속한 분산 영역(distribution zone)의 이름. |
+| TABLE_ID | INT32 | 파티션에 저장된 테이블의 ID. |
+| SCHEMA_NAME | STRING | 테이블이 속한 스키마의 이름. |
+| TABLE_NAME | STRING | 파티션에 저장된 테이블의 이름. |
+| PARTITION_ID | INT32 | 파티션의 고유 식별자. |
+| PARTITION_STATE | STRING | 파티션 상태. 가능한 값: `AVAILABLE`, `DEGRADED`, `READ_ONLY`, `UNAVAILABLE`. 자세한 내용은 [재해 복구](/configure-and-operate/operations/disaster-recovery-partitions) 문서를 참고하세요. |
+| ZONE_ID | INT32 | 영역의 고유 식별자. |
+| SCHEMA_ID | INT32 | 스키마의 고유 식별자. |
+| STATE | STRING | *지원 중단*. 파티션 상태. 가능한 값: `AVAILABLE`, `DEGRADED`, `READ_ONLY`, `UNAVAILABLE`. |
 
 ### GLOBAL_ZONE_PARTITION_STATES
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |---|---|---|
-| ZONE_NAME | STRING | Name of the zone. |
-| ZONE_ID | INT32 | Internal identifier of the zone. |
-| PARTITION_ID | INT32 | Identifier of the partition. |
-| PARTITION_STATE | STRING | Current state of the partition. Possible values: `AVAILABLE` (All replicas are healthy), `DEGRADED` (There are healthy replicas, and they form a majority), `READ_ONLY` (There are healthy replicas, but they don't form a majority), `UNAVAILABLE` (There are no healthy replicas). |
+| ZONE_NAME | STRING | 영역의 이름. |
+| ZONE_ID | INT32 | 영역의 내부 식별자. |
+| PARTITION_ID | INT32 | 파티션의 식별자. |
+| PARTITION_STATE | STRING | 파티션의 현재 상태. 가능한 값: `AVAILABLE`(모든 복제본이 정상), `DEGRADED`(정상 복제본이 있고 과반수를 이룸), `READ_ONLY`(정상 복제본이 있지만 과반수를 이루지 못함), `UNAVAILABLE`(정상 복제본이 없음). |
 
 ### INDEXES
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |---|---|---|
-| INDEX_ID | INT32 | Unique index identifier. |
-| INDEX_NAME | STRING | The name of the index. |
-| TABLE_ID | INT32 | Unique table identifier. |
-| TABLE_NAME | STRING | The name of the table. |
-| SCHEMA_ID | INT32 | Unique schema identifier. |
-| SCHEMA_NAME | STRING | The name of the schema. |
-| INDEX_TYPE | STRING | The type of the index. Possible values: `HASH`, `SORTED`. |
-| IS_UNIQUE_INDEX | BOOLEAN | If the index is unique. |
-| INDEX_COLUMNS | STRING | The list of indexed columns. |
-| INDEX_STATE | STRING | Current status of the index. Possible values: `REGISTERED` (Index has been registered and is awaiting the start of building), `BUILDING` (Index is being built), `AVAILABLE` (Index is built and is ready to use), `STOPPING` (DROP INDEX command has been executed, index is waiting for running transactions to finish). |
-| TYPE | STRING | *Deprecated*. The type of the index. Possible values: `HASH`, `SORTED`. |
-| IS_UNIQUE | BOOLEAN | *Deprecated*. If the index is unique. |
-| COLUMNS | STRING | *Deprecated*. The list of indexed columns. |
-| STATUS | STRING | *Deprecated*. Current status of the index. |
+| INDEX_ID | INT32 | 인덱스의 고유 식별자. |
+| INDEX_NAME | STRING | 인덱스의 이름. |
+| TABLE_ID | INT32 | 테이블의 고유 식별자. |
+| TABLE_NAME | STRING | 테이블의 이름. |
+| SCHEMA_ID | INT32 | 스키마의 고유 식별자. |
+| SCHEMA_NAME | STRING | 스키마의 이름. |
+| INDEX_TYPE | STRING | 인덱스의 유형. 가능한 값: `HASH`, `SORTED`. |
+| IS_UNIQUE_INDEX | BOOLEAN | 인덱스가 고유한지 여부. |
+| INDEX_COLUMNS | STRING | 인덱싱된 컬럼 목록. |
+| INDEX_STATE | STRING | 인덱스의 현재 상태. 가능한 값: `REGISTERED`(인덱스가 등록되어 빌드 시작을 기다리는 중), `BUILDING`(인덱스를 빌드하는 중), `AVAILABLE`(인덱스 빌드가 끝나 사용할 준비가 됨), `STOPPING`(DROP INDEX 명령이 실행되어 인덱스가 실행 중인 트랜잭션이 끝나기를 기다리는 중). |
+| TYPE | STRING | *지원 중단*. 인덱스의 유형. 가능한 값: `HASH`, `SORTED`. |
+| IS_UNIQUE | BOOLEAN | *지원 중단*. 인덱스가 고유한지 여부. |
+| COLUMNS | STRING | *지원 중단*. 인덱싱된 컬럼 목록. |
+| STATUS | STRING | *지원 중단*. 인덱스의 현재 상태. |
 
 ### INDEX_COLUMNS
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |---|---|---|
-| SCHEMA_ID | INT32 | Unique schema identifier. |
-| SCHEMA_NAME | STRING | The name of the schema. |
-| TABLE_ID | INT32 | Unique table identifier. |
-| TABLE_NAME | STRING | The name of the table. |
-| INDEX_ID | INT32 | Unique index identifier. |
-| INDEX_NAME | STRING | The name of the index. |
-| COLUMN_NAME | STRING | Column name. |
-| COLUMN_ORDINAL | INT32 | The ordinal number of the column in the index definition. |
-| COLUMN_COLLATION | STRING | Collation rules for the column. |
+| SCHEMA_ID | INT32 | 스키마의 고유 식별자. |
+| SCHEMA_NAME | STRING | 스키마의 이름. |
+| TABLE_ID | INT32 | 테이블의 고유 식별자. |
+| TABLE_NAME | STRING | 테이블의 이름. |
+| INDEX_ID | INT32 | 인덱스의 고유 식별자. |
+| INDEX_NAME | STRING | 인덱스의 이름. |
+| COLUMN_NAME | STRING | 컬럼 이름. |
+| COLUMN_ORDINAL | INT32 | 인덱스 정의에서 컬럼의 순번. |
+| COLUMN_COLLATION | STRING | 컬럼의 콜레이션 규칙. |
 
 ### LOCAL_ZONE_PARTITION_STATES
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |---|---|---|
-| NODE_NAME | STRING | Name of the node reporting the partition state. |
-| ZONE_NAME | STRING | Name of the zone. |
-| ZONE_ID | INT32 | Internal identifier of the zone. |
-| ESTIMATED_ROWS | INT64 | Approximate number of rows stored in this partition on the local node. |
-| PARTITION_ID | INT32 | Identifier of the partition. |
-| PARTITION_STATE | STRING | Current state of the local partition. Possible values: `UNAVAILABLE` (Partition is not yet started or is stopping), `HEALTHY` (Alive partition with a healthy state machine), `INITIALIZING` (Partition is starting right now), `INSTALLING_SNAPSHOT` (Partition is installing a Raft snapshot from the leader), `CATCHING_UP` (Partition is catching up, meaning that it's not replicated part of the log yet), `BROKEN` (Partition is in broken state, usually it means that its state machine threw an exception). |
+| NODE_NAME | STRING | 파티션 상태를 보고하는 노드의 이름. |
+| ZONE_NAME | STRING | 영역의 이름. |
+| ZONE_ID | INT32 | 영역의 내부 식별자. |
+| ESTIMATED_ROWS | INT64 | 로컬 노드의 이 파티션에 저장된 대략적인 행 수. |
+| PARTITION_ID | INT32 | 파티션의 식별자. |
+| PARTITION_STATE | STRING | 로컬 파티션의 현재 상태. 가능한 값: `UNAVAILABLE`(파티션이 아직 시작되지 않았거나 중지되는 중), `HEALTHY`(상태 머신이 정상인, 살아 있는 파티션), `INITIALIZING`(파티션이 지금 시작되는 중), `INSTALLING_SNAPSHOT`(파티션이 리더로부터 RAFT 스냅샷을 설치하는 중), `CATCHING_UP`(파티션이 따라잡는 중이며, 아직 로그의 일부가 복제되지 않았음을 뜻함), `BROKEN`(파티션이 손상된 상태이며, 대개 상태 머신에서 예외가 발생했음을 뜻함). |
 
 ### LOCKS
 
-A node system view that lists the currently active locks.
+현재 활성 상태인 락을 나열하는 노드 시스템 뷰입니다.
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |---|---|---|
-| OWNING_NODE_ID | STRING | The ID of the node that owns the lock. |
-| TRANSACTION_ID | STRING | The ID of the transaction that created the lock. |
-| OBJECT_ID | STRING | The ID of the locked object. |
-| LOCK_MODE | STRING | The [lock mode](https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=211885498#IEP91:Transactionprotocol-Lockingmodel). Possible values are: IS (intention shared lock), S (shared lock), IX (intention exclusive lock), SIX (shared intention exclusive lock), X (exclusive lock). |
-| TX_ID | STRING | *Deprecated*. The ID of the transaction that created the lock. |
-| MODE | STRING | *Deprecated*. The lock mode. |
+| OWNING_NODE_ID | STRING | 락을 소유한 노드의 ID. |
+| TRANSACTION_ID | STRING | 락을 생성한 트랜잭션의 ID. |
+| OBJECT_ID | STRING | 락이 걸린 객체의 ID. |
+| LOCK_MODE | STRING | [락 모드](https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=211885498#IEP91:Transactionprotocol-Lockingmodel). 가능한 값: IS(의도 공유 락), S(공유 락), IX(의도 배타 락), SIX(공유 의도 배타 락), X(배타 락). |
+| TX_ID | STRING | *지원 중단*. 락을 생성한 트랜잭션의 ID. |
+| MODE | STRING | *지원 중단*. 락 모드. |
 
 ### LOCAL_PARTITION_STATES
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |---|---|---|
-| NODE_NAME | STRING | The name of the node the partition is stored on. |
-| ZONE_NAME | STRING | The name of the distribution zone the partition belongs to. |
-| TABLE_ID | INT32 | The ID of the table stored in the partition. |
-| SCHEMA_NAME | STRING | The name of the schema the table belongs to. |
-| TABLE_NAME | STRING | The name of the table stored in the partition. |
-| PARTITION_ID | INT32 | The unique identifier of the partition. |
-| PARTITION_STATE | STRING | Partition status. Possible values: `HEALTHY`, `INITIALIZING`, `INSTALLING_SNAPSHOT`, `CATCHING_UP`, `UNAVAILABLE`, `BROKEN`. See [Disaster Recovery](/configure-and-operate/operations/disaster-recovery-partitions#local-partition-states) documentation for more information. |
-| ESTIMATED_ROWS | INT64 | The estimated number of rows in a partition. |
-| ZONE_ID | INT32 | Unique zone identifier. |
-| SCHEMA_ID | INT32 | Unique schema identifier. |
-| STATE | STRING | *Deprecated*. Partition status. |
+| NODE_NAME | STRING | 파티션이 저장된 노드의 이름. |
+| ZONE_NAME | STRING | 파티션이 속한 분산 영역의 이름. |
+| TABLE_ID | INT32 | 파티션에 저장된 테이블의 ID. |
+| SCHEMA_NAME | STRING | 테이블이 속한 스키마의 이름. |
+| TABLE_NAME | STRING | 파티션에 저장된 테이블의 이름. |
+| PARTITION_ID | INT32 | 파티션의 고유 식별자. |
+| PARTITION_STATE | STRING | 파티션 상태. 가능한 값: `HEALTHY`, `INITIALIZING`, `INSTALLING_SNAPSHOT`, `CATCHING_UP`, `UNAVAILABLE`, `BROKEN`. 자세한 내용은 [재해 복구](/configure-and-operate/operations/disaster-recovery-partitions#local-partition-states) 문서를 참고하세요. |
+| ESTIMATED_ROWS | INT64 | 파티션의 추정 행 수. |
+| ZONE_ID | INT32 | 영역의 고유 식별자. |
+| SCHEMA_ID | INT32 | 스키마의 고유 식별자. |
+| STATE | STRING | *지원 중단*. 파티션 상태. |
 
 ### SCHEMAS
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |---|---|---|
-| SCHEMA_ID | INT32 | Unique schema identifier. |
-| SCHEMA_NAME | STRING | The name of the schema. |
+| SCHEMA_ID | INT32 | 스키마의 고유 식별자. |
+| SCHEMA_NAME | STRING | 스키마의 이름. |
 
 ### SQL_QUERIES
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |---|---|---|
-| INITIATOR_NODE | STRING | The name of the node that initiated the query. |
-| QUERY_ID | STRING | The query ID. |
-| USERNAME | STRING | The name of the user who started the query. |
-| QUERY_PHASE | STRING | The query phase: INITIALIZATION (query registration and parsing), OPTIMIZATION (query validation and plan optimization), EXECUTION (query plan execution). |
-| QUERY_TYPE | STRING | The query type: DDL, DML, QUERY, or SCRIPT. |
-| QUERY_DEFAULT_SCHEMA | STRING | The name of the default schema that was used to execute the query. |
-| SQL | STRING | The SQL query's expression. |
-| QUERY_START_TIME | TIMESTAMP | The date/time the query started. |
-| TRANSACTION_ID | STRING | The ID of the transaction in which the query was executed. |
-| PARENT_QUERY_ID | STRING | ID of the script that initiated the query (NULL if the query was not initiated by a script). |
-| QUERY_STATEMENT_ORDINAL | INT32 | The ordinal number of the query. |
-| ID | STRING | *Deprecated*. The query ID. |
-| PHASE | STRING | *Deprecated*. The query phase. |
-| TYPE | STRING | *Deprecated*. The query type. |
-| SCHEMA | STRING | *Deprecated*. The name of the default schema that was used to execute the query. |
-| START_TIME | TIMESTAMP | *Deprecated*. The date/time the query started. |
-| PARENT_ID | STRING | *Deprecated*. ID of the script that initiated the query. |
-| STATEMENT_NUM | INT32 | *Deprecated*. The ordinal number of the query. |
+| INITIATOR_NODE | STRING | 쿼리를 시작한 노드의 이름. |
+| QUERY_ID | STRING | 쿼리 ID. |
+| USERNAME | STRING | 쿼리를 시작한 사용자의 이름. |
+| QUERY_PHASE | STRING | 쿼리 단계: INITIALIZATION(쿼리 등록과 파싱), OPTIMIZATION(쿼리 검증과 계획 최적화), EXECUTION(쿼리 계획 실행). |
+| QUERY_TYPE | STRING | 쿼리 유형: DDL, DML, QUERY, SCRIPT 중 하나. |
+| QUERY_DEFAULT_SCHEMA | STRING | 쿼리 실행에 사용된 기본 스키마의 이름. |
+| SQL | STRING | SQL 쿼리의 표현식. |
+| QUERY_START_TIME | TIMESTAMP | 쿼리가 시작된 날짜와 시각. |
+| TRANSACTION_ID | STRING | 쿼리가 실행된 트랜잭션의 ID. |
+| PARENT_QUERY_ID | STRING | 쿼리를 시작한 스크립트의 ID(쿼리가 스크립트로 시작되지 않았다면 NULL). |
+| QUERY_STATEMENT_ORDINAL | INT32 | 쿼리의 순번. |
+| ID | STRING | *지원 중단*. 쿼리 ID. |
+| PHASE | STRING | *지원 중단*. 쿼리 단계. |
+| TYPE | STRING | *지원 중단*. 쿼리 유형. |
+| SCHEMA | STRING | *지원 중단*. 쿼리 실행에 사용된 기본 스키마의 이름. |
+| START_TIME | TIMESTAMP | *지원 중단*. 쿼리가 시작된 날짜와 시각. |
+| PARENT_ID | STRING | *지원 중단*. 쿼리를 시작한 스크립트의 ID. |
+| STATEMENT_NUM | INT32 | *지원 중단*. 쿼리의 순번. |
 
 ### SQL_CACHED_QUERY_PLANS
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |---|---|---|
-| NODE_ID | STRING | ID of the node where the plan is cached. |
-| PLAN_ID | STRING | Internal identifier of the prepared plan. |
-| CATALOG_VERSION | INT32 | Catalog version used when the query was prepared. |
-| QUERY_DEFAULT_SCHEMA | STRING | Default schema applied during query preparation. |
-| SQL | STRING | Normalized SQL text of the query. |
-| QUERY_TYPE | STRING | Query type. |
-| QUERY_PLAN | STRING | Serialized or explain representation of the chosen query plan. |
-| QUERY_PREPARE_TIME | TIMESTAMP WITH LOCAL TIME ZONE | Time the plan was prepared on the node. |
+| NODE_ID | STRING | 계획이 캐시된 노드의 ID. |
+| PLAN_ID | STRING | 준비된 계획의 내부 식별자. |
+| CATALOG_VERSION | INT32 | 쿼리를 준비할 때 사용된 카탈로그 버전. |
+| QUERY_DEFAULT_SCHEMA | STRING | 쿼리 준비 중에 적용된 기본 스키마. |
+| SQL | STRING | 쿼리의 정규화된 SQL 텍스트. |
+| QUERY_TYPE | STRING | 쿼리 유형. |
+| QUERY_PLAN | STRING | 선택된 쿼리 계획의 직렬화 표현 또는 EXPLAIN 표현. |
+| QUERY_PREPARE_TIME | TIMESTAMP WITH LOCAL TIME ZONE | 노드에서 계획이 준비된 시각. |
 
 ### SYSTEM_VIEWS
 
-Describes available system views.
+사용 가능한 시스템 뷰를 설명합니다.
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |---|---|---|
-| VIEW_ID | INT32 | System view ID. |
-| SCHEMA_NAME | STRING | Name of the schema used. Default is `SYSTEM`. |
-| VIEW_NAME | STRING | System view name. |
-| VIEW_TYPE | STRING | System view type. Possible values: NODE (The view provides node-specific information. Data will be collected from all nodes, and represented in the view.), CLUSTER (The view provides cluster-wide information. Data will be collected from one node, chosen to represent the cluster.). |
-| ID | INT32 | *Deprecated*. System view ID. |
-| SCHEMA | STRING | *Deprecated*. Name of the schema used. Default is `SYSTEM`. |
-| NAME | STRING | *Deprecated*. System view name. |
-| TYPE | STRING | *Deprecated*. System view type. |
+| VIEW_ID | INT32 | 시스템 뷰 ID. |
+| SCHEMA_NAME | STRING | 사용되는 스키마 이름. 기본값은 `SYSTEM`입니다. |
+| VIEW_NAME | STRING | 시스템 뷰 이름. |
+| VIEW_TYPE | STRING | 시스템 뷰 유형. 가능한 값: NODE(노드별 정보를 제공하는 뷰. 모든 노드에서 데이터를 수집해 뷰에 나타냅니다), CLUSTER(클러스터 전체 정보를 제공하는 뷰. 클러스터를 대표하도록 선택된 한 노드에서 데이터를 수집합니다). |
+| ID | INT32 | *지원 중단*. 시스템 뷰 ID. |
+| SCHEMA | STRING | *지원 중단*. 사용되는 스키마 이름. 기본값은 `SYSTEM`입니다. |
+| NAME | STRING | *지원 중단*. 시스템 뷰 이름. |
+| TYPE | STRING | *지원 중단*. 시스템 뷰 유형. |
 
 ### SYSTEM_VIEW_COLUMNS
 
-Describes available system view columns.
+사용 가능한 시스템 뷰 컬럼을 설명합니다.
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |---|---|---|
-| VIEW_ID | INT32 | System view ID. |
-| VIEW_NAME | STRING | Column name. |
-| COLUMN_TYPE | STRING | Column type. Can be any of the [supported types](/sql/reference/data-types-and-functions/data-types). |
-| IS_NULLABLE_COLUMN | BOOLEAN | Defines if the column can be empty. |
-| COLUMN_PRECISION | INT32 | Maximum number of digits. |
-| COLUMN_SCALE | INT32 | Maximum number of decimal places. |
-| COLUMN_LENGTH | INT32 | Maximum length of the value. Symbols for string values or bytes for binary values. |
-| NAME | STRING | *Deprecated*. Column name. |
-| TYPE | STRING | *Deprecated*. Column type. |
-| NULLABLE | BOOLEAN | *Deprecated*. Defines if the column can be empty. |
-| PRECISION | INT32 | *Deprecated*. Maximum number of digits. |
-| SCALE | INT32 | *Deprecated*. Maximum number of decimal places. |
-| LENGTH | INT32 | *Deprecated*. Maximum length of the value. |
+| VIEW_ID | INT32 | 시스템 뷰 ID. |
+| VIEW_NAME | STRING | 컬럼 이름. |
+| COLUMN_TYPE | STRING | 컬럼 타입. [지원되는 타입](/sql/reference/data-types-and-functions/data-types) 중 하나일 수 있습니다. |
+| IS_NULLABLE_COLUMN | BOOLEAN | 컬럼이 비어 있을 수 있는지 정의합니다. |
+| COLUMN_PRECISION | INT32 | 최대 자릿수. |
+| COLUMN_SCALE | INT32 | 최대 소수 자릿수. |
+| COLUMN_LENGTH | INT32 | 값의 최대 길이. 문자열 값은 문자 수, 바이너리 값은 바이트 수입니다. |
+| NAME | STRING | *지원 중단*. 컬럼 이름. |
+| TYPE | STRING | *지원 중단*. 컬럼 타입. |
+| NULLABLE | BOOLEAN | *지원 중단*. 컬럼이 비어 있을 수 있는지 정의합니다. |
+| PRECISION | INT32 | *지원 중단*. 최대 자릿수. |
+| SCALE | INT32 | *지원 중단*. 최대 소수 자릿수. |
+| LENGTH | INT32 | *지원 중단*. 값의 최대 길이. |
 
 ### TABLES
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |---|---|---|
-| SCHEMA_NAME | STRING | The schema used by the table. |
-| TABLE_NAME | STRING | Table name. |
-| TABLE_ID | INT32 | Unique table identifier. |
-| TABLE_PK_INDEX_ID | INT32 | The identifier of the primary key index. |
-| ZONE_NAME | STRING | The distribution zone the table belongs to. |
-| STORAGE_PROFILE | STRING | The storage profile the table uses. |
-| TABLE_COLOCATION_COLUMNS | STRING | The name of the column that is used to colocate data. |
-| SCHEMA_ID | STRING | The identifier of the schema used by the table. |
-| ZONE_ID | STRING | The identifier of the zone the table belongs to. |
-| IS_CACHE | BOOLEAN | Defines if it is a cache. |
-| SCHEMA | STRING | *Deprecated*. The schema used by the table. |
-| NAME | STRING | *Deprecated*. Table name. |
-| ID | INT32 | *Deprecated*. Unique table identifier. |
-| PK_INDEX_ID | INT32 | *Deprecated*. The identifier of the primary key index. |
-| COLOCATION_KEY_INDEX | STRING | *Deprecated*. The name of the column that is used to colocate data. |
-| ZONE | STRING | *Deprecated*. The distribution zone the table belongs to. |
+| SCHEMA_NAME | STRING | 테이블이 사용하는 스키마. |
+| TABLE_NAME | STRING | 테이블 이름. |
+| TABLE_ID | INT32 | 테이블의 고유 식별자. |
+| TABLE_PK_INDEX_ID | INT32 | 기본 키 인덱스의 식별자. |
+| ZONE_NAME | STRING | 테이블이 속한 분산 영역. |
+| STORAGE_PROFILE | STRING | 테이블이 사용하는 스토리지 프로파일. |
+| TABLE_COLOCATION_COLUMNS | STRING | 데이터를 함께 배치하는 데 사용되는 컬럼의 이름. |
+| SCHEMA_ID | STRING | 테이블이 사용하는 스키마의 식별자. |
+| ZONE_ID | STRING | 테이블이 속한 영역의 식별자. |
+| IS_CACHE | BOOLEAN | 캐시인지 정의합니다. |
+| SCHEMA | STRING | *지원 중단*. 테이블이 사용하는 스키마. |
+| NAME | STRING | *지원 중단*. 테이블 이름. |
+| ID | INT32 | *지원 중단*. 테이블의 고유 식별자. |
+| PK_INDEX_ID | INT32 | *지원 중단*. 기본 키 인덱스의 식별자. |
+| COLOCATION_KEY_INDEX | STRING | *지원 중단*. 데이터를 함께 배치하는 데 사용되는 컬럼의 이름. |
+| ZONE | STRING | *지원 중단*. 테이블이 속한 분산 영역. |
 
 ### TABLE_COLUMNS
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |---|---|---|
-| SCHEMA_NAME | STRING | The schema used by the table. |
-| TABLE_NAME | STRING | Table name. |
-| TABLE_ID | INT32 | Unique table identifier. |
-| COLUMN_NAME | STRING | Column name. |
-| COLUMN_TYPE | STRING | Column data type. |
-| IS_NULLABLE_COLUMN | BOOLEAN | If the column can be `NULL`. |
-| COLUMN_PRECISION | INT32 | Value precision. 0 if not applicable to data type. |
-| COLUMN_SCALE | INT32 | Value scale. 0 if not applicable to data type. |
-| COLUMN_LENGTH | INT32 | Value length, in bytes. |
-| COLUMN_ORDINAL | INT32 | The ordinal number of the column. |
-| SCHEMA_ID | INT32 | The id of the schema used by the sequence. |
-| PK_COLUMN_ORDINAL | INT32 | Zero-based position of the column in the primary key. `NULL` if the column is not part of the primary key. |
-| COLOCATION_COLUMN_ORDINAL | INT32 | Zero-based position of the column in the colocation key. `NULL` if the column is not part of the primary key. |
-| SCHEMA | STRING | *Deprecated*. The schema used by the table. |
-| TYPE | STRING | *Deprecated*. Column data type. |
-| NULLABLE | BOOLEAN | *Deprecated*. If the column can be `NULL`. |
-| PREC | INT32 | *Deprecated*. Value precision. |
-| SCALE | INT32 | *Deprecated*. Value scale. |
-| LENGTH | INT32 | *Deprecated*. Value length, in bytes. |
+| SCHEMA_NAME | STRING | 테이블이 사용하는 스키마. |
+| TABLE_NAME | STRING | 테이블 이름. |
+| TABLE_ID | INT32 | 테이블의 고유 식별자. |
+| COLUMN_NAME | STRING | 컬럼 이름. |
+| COLUMN_TYPE | STRING | 컬럼 데이터 타입. |
+| IS_NULLABLE_COLUMN | BOOLEAN | 컬럼이 `NULL`일 수 있는지 여부. |
+| COLUMN_PRECISION | INT32 | 값의 정밀도. 데이터 타입에 해당하지 않으면 0. |
+| COLUMN_SCALE | INT32 | 값의 스케일. 데이터 타입에 해당하지 않으면 0. |
+| COLUMN_LENGTH | INT32 | 값의 길이(바이트 단위). |
+| COLUMN_ORDINAL | INT32 | 컬럼의 순번. |
+| SCHEMA_ID | INT32 | 시퀀스가 사용하는 스키마의 ID. |
+| PK_COLUMN_ORDINAL | INT32 | 기본 키에서 컬럼의 0부터 시작하는 위치. 컬럼이 기본 키에 속하지 않으면 `NULL`. |
+| COLOCATION_COLUMN_ORDINAL | INT32 | 콜로케이션 키에서 컬럼의 0부터 시작하는 위치. 컬럼이 기본 키에 속하지 않으면 `NULL`. |
+| SCHEMA | STRING | *지원 중단*. 테이블이 사용하는 스키마. |
+| TYPE | STRING | *지원 중단*. 컬럼 데이터 타입. |
+| NULLABLE | BOOLEAN | *지원 중단*. 컬럼이 `NULL`일 수 있는지 여부. |
+| PREC | INT32 | *지원 중단*. 값의 정밀도. |
+| SCALE | INT32 | *지원 중단*. 값의 스케일. |
+| LENGTH | INT32 | *지원 중단*. 값의 길이(바이트 단위). |
 
 ### TRANSACTIONS
 
 :::note
-This view shows only the currently active transactions.
+이 뷰는 현재 활성 상태인 트랜잭션만 보여줍니다.
 :::
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |---|---|---|
-| COORDINATOR_NODE_ID | STRING | The name of the transaction's coordinator node. |
-| TRANSACTION_STATE | STRING | The transaction state. For read-only transactions, the value is always null (empty). For read-write transactions, the possible values are PENDING (the transaction is in progress) and FINISHING (the transaction is in the process of being finished). |
-| TRANSACTION_ID | STRING | The transaction ID. |
-| TRANSACTION_START_TIME | TIMESTAMP | The transaction's start time. |
-| TRANSACTION_TYPE | STRING | The transaction type: READ_ONLY or READ_WRITE. |
-| TRANSACTION_PRIORITY | STRING | The transaction priority, which is used to resolve conflicts between transactions. Currently, this value cannot be explicitly set by the user. Possible values are LOW and NORMAL (default). |
-| STATE | STRING | *Deprecated*. The transaction state. |
-| ID | STRING | *Deprecated*. The transaction ID. |
-| START_TIME | TIMESTAMP | *Deprecated*. The transaction's start time. |
-| TYPE | STRING | *Deprecated*. The transaction type. |
-| PRIORITY | STRING | *Deprecated*. The transaction priority. |
+| COORDINATOR_NODE_ID | STRING | 트랜잭션의 코디네이터 노드 이름. |
+| TRANSACTION_STATE | STRING | 트랜잭션 상태. 읽기 전용 트랜잭션의 경우 값이 항상 null(비어 있음)입니다. 읽기-쓰기 트랜잭션의 경우 가능한 값은 PENDING(트랜잭션 진행 중)과 FINISHING(트랜잭션 종료 처리 중)입니다. |
+| TRANSACTION_ID | STRING | 트랜잭션 ID. |
+| TRANSACTION_START_TIME | TIMESTAMP | 트랜잭션의 시작 시각. |
+| TRANSACTION_TYPE | STRING | 트랜잭션 유형: READ_ONLY 또는 READ_WRITE. |
+| TRANSACTION_PRIORITY | STRING | 트랜잭션 간 충돌을 해소하는 데 사용되는 트랜잭션 우선순위. 현재 이 값은 사용자가 직접 설정할 수 없습니다. 가능한 값은 LOW와 NORMAL(기본값)입니다. |
+| STATE | STRING | *지원 중단*. 트랜잭션 상태. |
+| ID | STRING | *지원 중단*. 트랜잭션 ID. |
+| START_TIME | TIMESTAMP | *지원 중단*. 트랜잭션의 시작 시각. |
+| TYPE | STRING | *지원 중단*. 트랜잭션 유형. |
+| PRIORITY | STRING | *지원 중단*. 트랜잭션 우선순위. |
 
 ### ZONES
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |---|---|---|
-| ZONE_NAME | STRING | The name of the distribution zone. |
-| ZONE_PARTITIONS | INT32 | The number of partitions in the distribution zone. |
-| ZONE_REPLICAS | STRING | The number of copies of each partition in the distribution zone. |
-| DATA_NODES_AUTO_ADJUST_SCALE_UP | INT32 | The delay in seconds between the new node joining and the start of data zone adjustment. |
-| DATA_NODES_AUTO_ADJUST_SCALE_DOWN | INT32 | The delay in seconds between the node leaving the cluster and the start of data zone adjustment. |
-| DATA_NODES_FILTER | STRING | The filter that specifies what nodes will be used by the distribution zone. |
-| IS_DEFAULT_ZONE | BOOLEAN | If the data zone is used by default. |
-| ZONE_CONSISTENCY_MODE | STRING | The zone's consistency mode. Possible values: `STRONG_CONSISTENCY`, `HIGH_AVAILABILITY`. |
-| ZONE_ID | INT32 | Unique zone identifier. |
-| NAME | STRING | *Deprecated*. The name of the distribution zone. |
-| PARTITIONS | INT32 | *Deprecated*. The number of partitions in the distribution zone. |
-| REPLICAS | STRING | *Deprecated*. The number of copies of each partition in the distribution zone. |
-| CONSISTENCY_MODE | STRING | *Deprecated*. The zone's consistency mode. |
+| ZONE_NAME | STRING | 분산 영역의 이름. |
+| ZONE_PARTITIONS | INT32 | 분산 영역의 파티션 수. |
+| ZONE_REPLICAS | STRING | 분산 영역에서 각 파티션의 복제본 수. |
+| DATA_NODES_AUTO_ADJUST_SCALE_UP | INT32 | 새 노드가 합류한 시점과 분산 영역 조정이 시작되는 시점 사이의 지연 시간(초). |
+| DATA_NODES_AUTO_ADJUST_SCALE_DOWN | INT32 | 노드가 클러스터에서 이탈한 시점과 분산 영역 조정이 시작되는 시점 사이의 지연 시간(초). |
+| DATA_NODES_FILTER | STRING | 분산 영역이 사용할 노드를 지정하는 필터. |
+| IS_DEFAULT_ZONE | BOOLEAN | 이 분산 영역이 기본으로 사용되는지 정의합니다. |
+| ZONE_CONSISTENCY_MODE | STRING | 영역의 일관성 모드. 가능한 값: `STRONG_CONSISTENCY`, `HIGH_AVAILABILITY`. |
+| ZONE_ID | INT32 | 영역의 고유 식별자. |
+| NAME | STRING | *지원 중단*. 분산 영역의 이름. |
+| PARTITIONS | INT32 | *지원 중단*. 분산 영역의 파티션 수. |
+| REPLICAS | STRING | *지원 중단*. 분산 영역에서 각 파티션의 복제본 수. |
+| CONSISTENCY_MODE | STRING | *지원 중단*. 영역의 일관성 모드. |
 
 ### ZONE_STORAGE_PROFILES
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |---|---|---|
-| ZONE_NAME | STRING | The name of the distribution zone. |
-| STORAGE_PROFILE | STRING | The name of the storage profile used by the distribution zone. |
-| IS_DEFAULT_PROFILE | BOOLEAN | If the storage profile is used by default. |
-| ZONE_ID | INT32 | Unique zone identifier. |
+| ZONE_NAME | STRING | 분산 영역의 이름. |
+| STORAGE_PROFILE | STRING | 분산 영역이 사용하는 스토리지 프로파일의 이름. |
+| IS_DEFAULT_PROFILE | BOOLEAN | 이 스토리지 프로파일이 기본으로 사용되는지 정의합니다. |
+| ZONE_ID | INT32 | 영역의 고유 식별자. |

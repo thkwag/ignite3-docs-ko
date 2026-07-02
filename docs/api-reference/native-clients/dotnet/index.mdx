@@ -6,15 +6,15 @@ sidebar_position: 2
 
 # .NET API
 
-Native .NET client for C# and F# applications with async-first design and LINQ integration.
+C#·F# 애플리케이션용 네이티브 .NET 클라이언트로, 비동기 우선 설계와 LINQ 통합을 지원합니다.
 
-## Overview
+## 개요 {#overview}
 
-The .NET API provides thin client access to Apache Ignite 3 clusters. All operations use async patterns with Task and ValueTask for non-blocking execution.
+.NET API는 Apache Ignite 3 클러스터에 씬 클라이언트로 접근합니다. 모든 연산은 Task와 ValueTask 기반 비동기 패턴을 사용해 논블로킹으로 실행됩니다.
 
-The API supports both strongly typed operations with POCOs and dynamic access with IIgniteTuple. LINQ queries convert to server-side execution where possible.
+API는 POCO를 사용하는 타입이 지정된 연산과 IIgniteTuple을 사용하는 동적 접근을 모두 지원합니다. LINQ 쿼리는 가능하면 서버 측 실행으로 변환됩니다.
 
-## API Categories
+## API 분류 {#api-categories}
 
 <div className="card-container">
   <div className="card">
@@ -22,10 +22,10 @@ The API supports both strongly typed operations with POCOs and dynamic access wi
       <h3><IIcon icon="mdi:connection" height="24" /> Client API</h3>
     </div>
     <div className="card__body">
-      <p>IIgniteClient configuration, connection management, and resource lifecycle with async patterns.</p>
+      <p>IIgniteClient 구성, 연결 관리, 비동기 패턴 기반 리소스 라이프사이클을 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./dotnet/client-api">Learn more →</a>
+      <a href="./dotnet/client-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -34,10 +34,10 @@ The API supports both strongly typed operations with POCOs and dynamic access wi
       <h3><IIcon icon="mdi:table" height="24" /> Tables API</h3>
     </div>
     <div className="card__body">
-      <p>Record and key-value views with typed and tuple access patterns for table operations.</p>
+      <p>타입 지정 접근과 튜플 접근 패턴을 사용하는 테이블 연산용 레코드 뷰와 키-값 뷰를 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./dotnet/tables-api">Learn more →</a>
+      <a href="./dotnet/tables-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -46,10 +46,10 @@ The API supports both strongly typed operations with POCOs and dynamic access wi
       <h3><IIcon icon="mdi:code-array" height="24" /> LINQ API</h3>
     </div>
     <div className="card__body">
-      <p>Language-integrated queries with strongly-typed expressions and server-side execution.</p>
+      <p>타입이 지정된 표현식과 서버 측 실행을 사용하는 언어 통합 쿼리를 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./dotnet/linq-api">Learn more →</a>
+      <a href="./dotnet/linq-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -58,10 +58,10 @@ The API supports both strongly typed operations with POCOs and dynamic access wi
       <h3><IIcon icon="mdi:upload-network-outline" height="24" /> Data Streamer API</h3>
     </div>
     <div className="card__body">
-      <p>Bulk loading with custom server-side receivers and error handling for high-throughput scenarios.</p>
+      <p>커스텀 서버 측 수신기와 오류 처리를 사용하는 고처리량 시나리오용 대량 적재를 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./dotnet/data-streamer-api">Learn more →</a>
+      <a href="./dotnet/data-streamer-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -70,10 +70,10 @@ The API supports both strongly typed operations with POCOs and dynamic access wi
       <h3><IIcon icon="mdi:console-line" height="24" /> SQL API</h3>
     </div>
     <div className="card__body">
-      <p>Query execution with parameterized statements and lazy materialization for efficient data processing.</p>
+      <p>효율적인 데이터 처리를 위해 매개변수화된 문과 지연 구체화로 쿼리를 실행합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./dotnet/sql-api">Learn more →</a>
+      <a href="./dotnet/sql-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -82,10 +82,10 @@ The API supports both strongly typed operations with POCOs and dynamic access wi
       <h3><IIcon icon="mdi:database-sync" height="24" /> ADO.NET API</h3>
     </div>
     <div className="card__body">
-      <p>Standard ADO.NET database connectivity with DbConnection, DbCommand, and DataReader interfaces.</p>
+      <p>DbConnection, DbCommand, DataReader 인터페이스를 사용하는 표준 ADO.NET 데이터베이스 연결을 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./dotnet/ado-net-api">Learn more →</a>
+      <a href="./dotnet/ado-net-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -94,10 +94,10 @@ The API supports both strongly typed operations with POCOs and dynamic access wi
       <h3><IIcon icon="mdi:shield-check-outline" height="24" /> Transactions API</h3>
     </div>
     <div className="card__body">
-      <p>ACID transactions with explicit control and automatic closure-based patterns.</p>
+      <p>명시적 제어와 자동 클로저 기반 패턴으로 ACID 트랜잭션을 관리합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./dotnet/transactions-api">Learn more →</a>
+      <a href="./dotnet/transactions-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -106,10 +106,10 @@ The API supports both strongly typed operations with POCOs and dynamic access wi
       <h3><IIcon icon="mdi:server-network" height="24" /> Compute API</h3>
     </div>
     <div className="card__body">
-      <p>Distributed job execution with serialization, colocated processing, and job monitoring.</p>
+      <p>직렬화, 콜로케이션 처리, 작업 모니터링으로 분산 작업을 실행합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./dotnet/compute-api">Learn more →</a>
+      <a href="./dotnet/compute-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -118,18 +118,18 @@ The API supports both strongly typed operations with POCOs and dynamic access wi
       <h3><IIcon icon="carbon:network-3" height="24" /> Network API</h3>
     </div>
     <div className="card__body">
-      <p>Cluster topology, node discovery, and connection inspection for distributed coordination.</p>
+      <p>분산 조정을 위한 클러스터 토폴로지, 노드 검색, 연결 검사를 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./dotnet/network-api">Learn more →</a>
+      <a href="./dotnet/network-api">자세히 보기 →</a>
     </div>
   </div>
 </div>
 
-## Reference
+## 참조 {#reference}
 
-- [.NET API Documentation](https://ignite.apache.org/releases/ignite3/dotnetdoc/)
+- [.NET API 문서](https://ignite.apache.org/releases/ignite3/dotnetdoc/)
 
-## Next Steps
+## 다음 단계 {#next-steps}
 
-- [.NET Client Guide](../../develop/ignite-clients/dotnet-client) - Client setup and usage
+- [.NET 클라이언트 가이드](../../develop/ignite-clients/dotnet-client) - 클라이언트 설정과 사용법

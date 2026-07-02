@@ -6,15 +6,15 @@ sidebar_position: 3
 
 # C++ API
 
-High-performance C++ client with modern C++17 features and zero-copy operations.
+최신 C++17 기능과 제로카피 연산을 갖춘 고성능 C++ 클라이언트입니다.
 
-## Overview
+## 개요 {#overview}
 
-The C++ API provides thin client access to Apache Ignite 3 clusters. Operations use callbacks for async execution and support timeout configuration.
+C++ API는 Apache Ignite 3 클러스터에 씬 클라이언트로 접근합니다. 연산은 비동기 실행에 콜백을 사용하며, 타임아웃 구성을 지원합니다.
 
-The API offers both typed views with template specialization and binary views with ignite_tuple for schema-free operations. Memory management uses shared_ptr for automatic resource cleanup.
+API는 템플릿 특수화를 사용하는 타입이 지정된 뷰와, 스키마 없는 연산을 위한 ignite_tuple 기반 바이너리 뷰를 모두 제공합니다. 메모리 관리는 shared_ptr로 자동 리소스 정리를 수행합니다.
 
-## API Categories
+## API 분류 {#api-categories}
 
 <div className="card-container">
   <div className="card">
@@ -22,10 +22,10 @@ The API offers both typed views with template specialization and binary views wi
       <h3><IIcon icon="mdi:connection" height="24" /> Client API</h3>
     </div>
     <div className="card__body">
-      <p>ignite_client configuration, connection lifecycle management, and API access patterns.</p>
+      <p>ignite_client 구성, 연결 라이프사이클 관리, API 접근 패턴을 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./cpp/client-api">Learn more →</a>
+      <a href="./cpp/client-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -34,10 +34,10 @@ The API offers both typed views with template specialization and binary views wi
       <h3><IIcon icon="mdi:table" height="24" /> Tables API</h3>
     </div>
     <div className="card__body">
-      <p>Record and key-value views with typed and binary tuple access for table operations.</p>
+      <p>테이블 연산에 타입 지정 접근과 바이너리 튜플 접근을 모두 지원하는 레코드 뷰와 키-값 뷰를 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./cpp/tables-api">Learn more →</a>
+      <a href="./cpp/tables-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -46,10 +46,10 @@ The API offers both typed views with template specialization and binary views wi
       <h3><IIcon icon="mdi:console-line" height="24" /> SQL API</h3>
     </div>
     <div className="card__body">
-      <p>Query execution with parameterized statements, pagination, and cancellation support.</p>
+      <p>매개변수화된 문, 페이지네이션, 취소 지원으로 쿼리를 실행합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./cpp/sql-api">Learn more →</a>
+      <a href="./cpp/sql-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -58,10 +58,10 @@ The API offers both typed views with template specialization and binary views wi
       <h3><IIcon icon="mdi:shield-check-outline" height="24" /> Transactions API</h3>
     </div>
     <div className="card__body">
-      <p>Transaction control with explicit commit and rollback operations for ACID guarantees.</p>
+      <p>ACID 보장을 위한 명시적 커밋·롤백 연산으로 트랜잭션을 제어합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./cpp/transactions-api">Learn more →</a>
+      <a href="./cpp/transactions-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -70,10 +70,10 @@ The API offers both typed views with template specialization and binary views wi
       <h3><IIcon icon="mdi:server-network" height="24" /> Compute API</h3>
     </div>
     <div className="card__body">
-      <p>Distributed job execution with targeting strategies and priority management.</p>
+      <p>대상 지정 전략과 우선순위 관리로 분산 작업을 실행합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./cpp/compute-api">Learn more →</a>
+      <a href="./cpp/compute-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -82,19 +82,19 @@ The API offers both typed views with template specialization and binary views wi
       <h3><IIcon icon="carbon:network-3" height="24" /> Network API</h3>
     </div>
     <div className="card__body">
-      <p>Cluster node information and topology filtering for distributed coordination.</p>
+      <p>분산 조정을 위한 클러스터 노드 정보와 토폴로지 필터링을 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./cpp/network-api">Learn more →</a>
+      <a href="./cpp/network-api">자세히 보기 →</a>
     </div>
   </div>
 </div>
 
-## Reference
+## 참조 {#reference}
 
-- [C++ API Documentation](https://ignite.apache.org/releases/ignite3/cppdoc/)
+- [C++ API 문서](https://ignite.apache.org/releases/ignite3/cppdoc/)
 
-## Next Steps
+## 다음 단계 {#next-steps}
 
-- [C++ Client Guide](../../develop/ignite-clients/cpp-client) - Client setup and build configuration
-- [Getting Started](../../getting-started) - Quick start tutorials
+- [C++ 클라이언트 가이드](../../develop/ignite-clients/cpp-client) - 클라이언트 설정과 빌드 구성
+- [시작하기](../../getting-started) - 빠른 시작 튜토리얼

@@ -1,22 +1,22 @@
 ---
-title: Java API Reference
+title: Java API 참조
 id: java-api-reference
 sidebar_position: 1
 ---
 
-# Java API Reference
+# Java API 참조
 
-Complete reference documentation for the Apache Ignite 3 Java API.
+Apache Ignite 3 Java API의 전체 참조 문서입니다.
 
-## Overview
+## 개요 {#overview}
 
-The Java API provides interfaces and classes for all Apache Ignite 3 features. This reference documents public APIs for application development.
+Java API는 Apache Ignite 3의 모든 기능을 다루는 인터페이스와 클래스를 제공합니다. 이 참조 문서는 애플리케이션 개발에 쓰는 공개 API를 설명합니다.
 
-## API Documentation
+## API 문서 {#api-documentation}
 
-JavaDoc documentation is generated from source code annotations and comments.
+JavaDoc 문서는 소스 코드의 애노테이션과 주석에서 생성됩니다.
 
-### Access the Documentation
+### 문서 확인 {#access-the-documentation}
 
 <a href="https://ignite.apache.org/releases/ignite3/javadoc/index.html" target="_blank" rel="noopener noreferrer" style={{
   display: 'inline-block',
@@ -27,67 +27,67 @@ JavaDoc documentation is generated from source code annotations and comments.
   borderRadius: '4px',
   fontWeight: 'bold',
   marginBottom: '20px'
-}}>Open Java API Reference →</a>
+}}>Java API 참조 문서 열기 →</a>
 
-The locally generated JavaDoc includes all public APIs, with detailed documentation for classes, interfaces, methods, and fields.
+로컬에서 생성한 JavaDoc은 모든 공개 API를 포함하며, 클래스, 인터페이스, 메서드, 필드를 상세히 설명합니다.
 
-### Online Documentation
+### 온라인 문서 {#online-documentation}
 
-The latest JavaDoc is published with each release:
+최신 JavaDoc은 릴리스마다 게시됩니다:
 
-- [Latest Release JavaDoc](https://ignite.apache.org/releases/ignite3/javadoc/)
+- [최신 릴리스 JavaDoc](https://ignite.apache.org/releases/ignite3/javadoc/)
 
-### Generating Local Documentation
+### 로컬 문서 생성 {#generating-local-documentation}
 
-Generate JavaDoc locally from the source code:
+소스 코드에서 로컬로 JavaDoc을 생성합니다:
 
 ```bash
 ./gradlew aggregateJavadoc
 ```
 
-Generated documentation appears in `build/docs/aggregateJavadoc/`.
+생성된 문서는 `build/docs/aggregateJavadoc/`에 나타납니다.
 
-## Core Packages
+## 핵심 패키지 {#core-packages}
 
-### Client and Server
+### 클라이언트와 서버 {#client-and-server}
 
-- `org.apache.ignite` - Entry point interfaces (Ignite, IgniteClient)
-- `org.apache.ignite.client` - Thin client implementation
+- `org.apache.ignite` - 진입점 인터페이스(Ignite, IgniteClient)
+- `org.apache.ignite.client` - 씬 클라이언트 구현
 
-### Data Access
+### 데이터 접근 {#data-access}
 
-- `org.apache.ignite.table` - Table, RecordView, KeyValueView interfaces
-- `org.apache.ignite.table.partition` - Partition management and data streaming
-- `org.apache.ignite.sql` - SQL execution and result processing
+- `org.apache.ignite.table` - Table, RecordView, KeyValueView 인터페이스
+- `org.apache.ignite.table.partition` - 파티션 관리와 데이터 스트리밍
+- `org.apache.ignite.sql` - SQL 실행과 결과 처리
 
-### Transactions and Compute
+### 트랜잭션과 컴퓨트 {#transactions-and-compute}
 
-- `org.apache.ignite.tx` - Transaction management
-- `org.apache.ignite.compute` - Distributed compute jobs and tasks
+- `org.apache.ignite.tx` - 트랜잭션 관리
+- `org.apache.ignite.compute` - 분산 컴퓨트 작업과 태스크
 
-### Schema Management
+### 스키마 관리 {#schema-management}
 
-- `org.apache.ignite.catalog` - Schema definition with fluent builders
-- `org.apache.ignite.table.mapper` - Annotation-based mapping (@Table, @Column, @Id)
+- `org.apache.ignite.catalog` - 플루언트 빌더를 사용한 스키마 정의
+- `org.apache.ignite.table.mapper` - 애노테이션 기반 매핑(@Table, @Column, @Id)
 
-### Infrastructure
+### 인프라 {#infrastructure}
 
-- `org.apache.ignite.network` - Cluster nodes and network addressing
-- `org.apache.ignite.security` - Authentication configuration
+- `org.apache.ignite.network` - 클러스터 노드와 네트워크 주소 지정
+- `org.apache.ignite.security` - 인증 구성
 
-## Module Structure
+## 모듈 구조 {#module-structure}
 
-Ignite 3 uses a modular architecture. Key modules include:
+Ignite 3는 모듈형 아키텍처를 사용합니다. 주요 모듈은 다음과 같습니다:
 
-- `ignite-api` - Public API interfaces
-- `ignite-client` - Thin client implementation
-- `ignite-runner` - Embedded node implementation
-- `ignite-table` - Table operations
-- `ignite-sql-engine` - SQL processing
-- `ignite-compute` - Compute engine
+- `ignite-api` - 공개 API 인터페이스
+- `ignite-client` - 씬 클라이언트 구현
+- `ignite-runner` - 임베디드 노드 구현
+- `ignite-table` - 테이블 작업
+- `ignite-sql-engine` - SQL 처리
+- `ignite-compute` - 컴퓨트 엔진
 
-## Next Steps
+## 다음 단계 {#next-steps}
 
-- [Java API Documentation](../native-clients/java) - Usage guides for each API area
-- [Java Client Guide](../../develop/ignite-clients/java-client) - Client setup and configuration
-- [Getting Started](../../getting-started) - Tutorials and examples
+- [Java API 문서](../native-clients/java) - API 영역별 사용 가이드
+- [Java 클라이언트 가이드](../../develop/ignite-clients/java-client) - 클라이언트 설정과 구성
+- [시작하기](../../getting-started) - 튜토리얼과 예시

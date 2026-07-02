@@ -6,23 +6,23 @@ sidebar_position: 7
 
 # Network API
 
-The Network API provides information about cluster topology and active client connections. Use this API to discover cluster nodes, inspect connection status, and understand cluster composition.
+Network API는 클러스터 토폴로지와 활성 클라이언트 연결 정보를 제공합니다. 이 API로 클러스터 노드를 검색하고 연결 상태를 확인하며 클러스터 구성을 파악할 수 있습니다.
 
-## Key Concepts
+## 핵심 개념 {#key-concepts}
 
-Cluster nodes represent individual server instances in the Ignite cluster. Each node has a unique identifier and network address. The client maintains connections to cluster nodes and distributes operations across them.
+클러스터 노드는 Ignite 클러스터에 속한 개별 서버 인스턴스를 나타냅니다. 각 노드는 고유 식별자와 네트워크 주소를 가집니다. 클라이언트는 클러스터 노드와의 연결을 유지하며 여러 노드에 작업을 분산합니다.
 
-### Node Identity
+### 노드 식별 {#node-identity}
 
-Nodes have two identifiers. The node ID changes after restart and uniquely identifies the current node instance. The node name (consistent ID) persists across restarts and identifies the node permanently.
+노드는 두 가지 식별자를 가집니다. 노드 ID는 재시작 후 바뀌며 현재 노드 인스턴스를 고유하게 식별합니다. 노드 이름(일관된 ID, consistent ID)은 재시작 후에도 유지되며 노드를 영구적으로 식별합니다.
 
-### Connection Management
+### 연결 관리 {#connection-management}
 
-The client automatically manages connections to cluster nodes. Query active connections to understand which nodes the client is currently connected to and inspect connection properties like SSL configuration.
+클라이언트는 클러스터 노드와의 연결을 자동으로 관리합니다. 활성 연결을 조회하면 클라이언트가 현재 어떤 노드에 연결되어 있는지 확인하고 SSL 구성 같은 연결 속성을 점검할 수 있습니다.
 
-## Usage Examples
+## 사용 예시 {#usage-examples}
 
-### Getting Cluster Nodes
+### 클러스터 노드 조회 {#getting-cluster-nodes}
 
 ```csharp
 var client = await IgniteClient.StartAsync(configuration);
@@ -38,7 +38,7 @@ foreach (var node in nodes)
 }
 ```
 
-### Inspecting Active Connections
+### 활성 연결 확인 {#inspecting-active-connections}
 
 ```csharp
 var connections = client.GetConnections();
@@ -60,7 +60,7 @@ foreach (var conn in connections)
 }
 ```
 
-### Finding Specific Nodes
+### 특정 노드 찾기 {#finding-specific-nodes}
 
 ```csharp
 var nodes = await client.GetClusterNodesAsync();
@@ -77,7 +77,7 @@ var nodeId = Guid.Parse("550e8400-e29b-41d4-a716-446655440000");
 var nodeById = nodes.FirstOrDefault(n => n.Id == nodeId);
 ```
 
-### Monitoring Connection Health
+### 연결 상태 모니터링 {#monitoring-connection-health}
 
 ```csharp
 var checkInterval = TimeSpan.FromSeconds(30);
@@ -103,7 +103,7 @@ while (true)
 }
 ```
 
-### Using Node Information for Job Targeting
+### 작업 대상 지정에 노드 정보 사용 {#using-node-information-for-job-targeting}
 
 ```csharp
 var nodes = await client.GetClusterNodesAsync();
@@ -124,7 +124,7 @@ var nodeIndex = DateTime.UtcNow.Ticks % nodes.Count;
 var selectedNode = nodes[(int)nodeIndex];
 ```
 
-### Connection Status Check
+### 연결 상태 확인 {#connection-status-check}
 
 ```csharp
 public async Task<bool> IsConnectedToCluster(IIgniteClient client)
@@ -143,7 +143,7 @@ public async Task<bool> IsConnectedToCluster(IIgniteClient client)
 }
 ```
 
-### SSL Connection Information
+### SSL 연결 정보 {#ssl-connection-information}
 
 ```csharp
 var connections = client.GetConnections();
@@ -179,7 +179,7 @@ foreach (var conn in connections)
 }
 ```
 
-### Cluster Size Monitoring
+### 클러스터 크기 모니터링 {#cluster-size-monitoring}
 
 ```csharp
 public class ClusterMonitor
@@ -222,7 +222,7 @@ public class ClusterMonitor
 }
 ```
 
-### Node Address Parsing
+### 노드 주소 파싱 {#node-address-parsing}
 
 ```csharp
 var nodes = await client.GetClusterNodesAsync();
@@ -246,60 +246,60 @@ foreach (var node in nodes)
 }
 ```
 
-## Reference
+## 참조 {#reference}
 
-### IClusterNode Interface
+### IClusterNode 인터페이스 {#iclusternode-interface}
 
-Properties:
+속성:
 
-- **Id** - Unique node identifier (Guid) that changes after node restart
-- **Name** - Consistent node name that persists across restarts
-- **Address** - Network endpoint (IPEndPoint or DnsEndPoint)
+- **Id** - 노드 재시작 후 바뀌는 고유 노드 식별자(Guid)
+- **Name** - 재시작 후에도 유지되는 일관된 노드 이름
+- **Address** - 네트워크 엔드포인트(IPEndPoint 또는 DnsEndPoint)
 
-The node ID is unique to the current node instance and changes when the node restarts. The node name remains consistent across restarts and serves as a stable identifier for the node.
+노드 ID는 현재 노드 인스턴스에 고유하며 노드가 재시작되면 바뀝니다. 노드 이름은 재시작 후에도 일관되게 유지되며 노드의 안정적인 식별자 역할을 합니다.
 
-### IConnectionInfo Interface
+### IConnectionInfo 인터페이스 {#iconnectioninfo-interface}
 
-Properties:
+속성:
 
-- **Node** - The cluster node this connection targets
-- **SslInfo** - SSL connection details (null if SSL not enabled)
+- **Node** - 이 연결이 대상으로 하는 클러스터 노드
+- **SslInfo** - SSL 연결 세부 정보(SSL이 활성화되지 않은 경우 null)
 
-Connection info describes an active client connection to a cluster node. The client may maintain multiple connections to different nodes simultaneously.
+연결 정보는 클러스터 노드에 대한 활성 클라이언트 연결을 나타냅니다. 클라이언트는 서로 다른 노드에 여러 연결을 동시에 유지할 수 있습니다.
 
-### ISslInfo Interface
+### ISslInfo 인터페이스 {#isslinfo-interface}
 
-Properties:
+속성:
 
-- **SslProtocol** - SSL/TLS protocol version (e.g., Tls12, Tls13)
-- **NegotiatedCipherSuiteName** - Cipher suite negotiated for the connection
-- **TargetHostName** - Server hostname used for certificate validation
-- **IsMutuallyAuthenticated** - Whether both client and server are authenticated
-- **LocalCertificate** - Client certificate (if provided)
-- **RemoteCertificate** - Server certificate
+- **SslProtocol** - SSL/TLS 프로토콜 버전(예: Tls12, Tls13)
+- **NegotiatedCipherSuiteName** - 연결에 협상된 암호화 방식
+- **TargetHostName** - 인증서 검증에 사용되는 서버 호스트 이름
+- **IsMutuallyAuthenticated** - 클라이언트와 서버가 모두 인증되었는지 여부
+- **LocalCertificate** - 클라이언트 인증서(제공된 경우)
+- **RemoteCertificate** - 서버 인증서
 
-SSL information is only available when SSL is configured through IgniteClientConfiguration.SslStreamFactory. When SSL is not enabled, IConnectionInfo.SslInfo returns null.
+SSL 정보는 IgniteClientConfiguration.SslStreamFactory로 SSL을 구성한 경우에만 제공됩니다. SSL이 활성화되지 않으면 IConnectionInfo.SslInfo는 null을 반환합니다.
 
-### IIgniteClient Methods
+### IIgniteClient 메서드 {#iigniteclient-methods}
 
-Node discovery:
+노드 검색:
 
-- **GetClusterNodesAsync()** - Get all cluster nodes
+- **GetClusterNodesAsync()** - 모든 클러스터 노드 조회
 
-Connection inspection:
+연결 확인:
 
-- **GetConnections()** - Get active client connections to cluster nodes
+- **GetConnections()** - 클러스터 노드에 대한 활성 클라이언트 연결 조회
 
-### Best Practices
+### 모범 사례 {#best-practices}
 
-**Cache node lists** when possible. Cluster topology changes infrequently, so repeated calls to GetClusterNodesAsync may be unnecessary.
+**가능하면 노드 목록을 캐시하세요.** 클러스터 토폴로지는 자주 바뀌지 않으므로 GetClusterNodesAsync를 반복 호출할 필요가 없을 수 있습니다.
 
-**Use node names for stable targeting**. Node IDs change on restart, but node names persist. Use names when you need consistent targeting across node restarts.
+**안정적인 대상 지정에는 노드 이름을 사용하세요.** 노드 ID는 재시작 시 바뀌지만 노드 이름은 유지됩니다. 노드 재시작 후에도 일관된 대상 지정이 필요하다면 이름을 사용하세요.
 
-**Monitor connection count** to detect connectivity issues. A sudden drop in active connections may indicate network problems or node failures.
+**연결 수를 모니터링해 연결 문제를 감지하세요.** 활성 연결 수가 급격히 줄어들면 네트워크 문제나 노드 장애를 나타낼 수 있습니다.
 
-**Check SSL configuration** in production. Verify SSL is properly configured by inspecting ISslInfo properties to ensure connections are encrypted.
+**운영 환경에서는 SSL 구성을 확인하세요.** ISslInfo 속성을 점검해 SSL이 올바르게 구성되었는지 확인하고 연결이 암호화되는지 검증하세요.
 
-**Handle node changes gracefully**. Cluster topology can change as nodes join or leave. Design applications to adapt to topology changes without manual intervention.
+**노드 변경에 유연하게 대응하세요.** 노드가 클러스터에 참여하거나 떠나면서 클러스터 토폴로지가 바뀔 수 있습니다. 수동 개입 없이도 토폴로지 변경에 적응하도록 애플리케이션을 설계하세요.
 
-**Use connection info for diagnostics**. Connection details help troubleshoot network issues, SSL problems, and load distribution across nodes.
+**진단에 연결 정보를 활용하세요.** 연결 세부 정보는 네트워크 문제, SSL 문제, 노드 간 부하 분산 문제를 해결하는 데 도움이 됩니다.

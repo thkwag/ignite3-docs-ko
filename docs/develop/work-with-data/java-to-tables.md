@@ -1,15 +1,15 @@
 ---
 id: java-to-tables
-title: Creating Tables from Java Classes
+title: Java 클래스로 테이블 생성하기
 ---
 
-## Overview
+## 개요 {#overview}
 
-While [SQL DDL](/sql/reference/language-definition/ddl) supports a full set of table manipulation commands, you can also create tables and build indexes directly from a POJO using a simple Java API.
+[SQL DDL](/sql/reference/language-definition/ddl)이 테이블 조작 명령어를 모두 지원하지만, 간단한 Java API를 사용하면 POJO에서 직접 테이블을 생성하고 인덱스를 구축할 수도 있습니다.
 
-This API supports custom annotations and simple builders; it works seamlessly with the Mapper interface, thus facilitating [KeyValueView and RecordView](/develop/work-with-data/table-api).
+이 API는 사용자 정의 애노테이션과 간단한 빌더를 지원하며, Mapper 인터페이스와 매끄럽게 동작해 [KeyValueView와 RecordView](/develop/work-with-data/table-api) 사용을 돕습니다.
 
-The Java API lets you perform the following operations:
+Java API를 사용하면 다음 작업을 수행할 수 있습니다.
 
 * CREATE ZONE
 * CREATE TABLE
@@ -20,13 +20,13 @@ The Java API lets you perform the following operations:
 * CREATE SCHEMA
 * DROP SCHEMA
 
-Use the @Table and other annotations located in the `org.apache.ignite.catalog.annotations` package.
+`org.apache.ignite.catalog.annotations` 패키지에 있는 @Table 등의 애노테이션을 사용하세요.
 
-## Examples
+## 예시 {#examples}
 
-### Key-Value POJO Compatible with KeyValueView
+### KeyValueView와 호환되는 키-값 POJO {#key-value-pojo-compatible-with-keyvalueview}
 
-The example below creates a table called `kv_pojo` by using the POJO compatible with `KeyValueView`:
+아래 예시는 `KeyValueView`와 호환되는 POJO를 사용해 `kv_pojo`라는 테이블을 생성합니다.
 
 ```java
 @Table(value = "kv_pojo",
@@ -90,10 +90,10 @@ public static void main(String[] args) {
 ```
 
 :::note
-You need to create a [storage profile](/configure-and-operate/configuration/config-storage-overview) in node configuration by using the CLI tool.
+CLI 도구를 사용해 노드 구성에 [스토리지 프로파일](/configure-and-operate/configuration/config-storage-overview)을 생성해야 합니다.
 :::
 
-The result is equivalent to the following SQL multi-statement:
+이 결과는 다음과 같은 여러 SQL 문을 실행한 것과 동일합니다.
 
 ```sql
 CREATE ZONE IF NOT EXISTS zone_test WITH PARTITIONS=2, STORAGE_PROFILES='default';
@@ -112,9 +112,9 @@ WITH PRIMARY_ZONE='ZONE';
 CREATE INDEX ix (f_name, l_name desc nulls last);
 ```
 
-### Single POJO Compatible with RecordView
+### RecordView와 호환되는 단일 POJO {#single-pojo-compatible-with-recordview}
 
-The example below creates the `pojo_sample` table by using the POJO compatible with `RecordView`:
+아래 예시는 `RecordView`와 호환되는 POJO를 사용해 `pojo_sample` 테이블을 생성합니다.
 
 ```java
 @Table(value = "pojo_sample",
@@ -167,12 +167,12 @@ public static void main(String[] args) {
 }
 ```
 
-### The Builder Alternative to the @Table Annotation
+### @Table 애노테이션의 대안인 빌더 {#the-builder-alternative-to-the-table-annotation}
 
-The example below uses a builder to create a table instead on creating it from a Java class:
+아래 예시는 Java 클래스로 테이블을 생성하는 대신 빌더를 사용해 테이블을 생성합니다.
 
 :::note
-When using builders, only the `@Id` and `@Column` annotations on fields are supported.
+빌더를 사용할 때는 필드에 `@Id`와 `@Column` 애노테이션만 사용할 수 있습니다.
 :::
 
 ```java
@@ -198,6 +198,6 @@ System.out.println(
 );
 ```
 
-## Next Steps
+## 다음 단계 {#next-steps}
 
-Once you have created a table using the Java API, you can manipulate it using the [SQL commands](/sql/reference/language-definition/ddl).
+Java API로 테이블을 생성했다면, [SQL 명령어](/sql/reference/language-definition/ddl)로 테이블을 조작할 수 있습니다.

@@ -1,22 +1,22 @@
 ---
-title: .NET API Reference
+title: .NET API 참조
 id: dotnet-api-reference
 sidebar_position: 2
 ---
 
-# .NET API Reference
+# .NET API 참조
 
-Complete reference documentation for the Apache Ignite 3 .NET API.
+Apache Ignite 3 .NET API의 전체 참조 문서입니다.
 
-## Overview
+## 개요 {#overview}
 
-The .NET API provides interfaces and classes for Apache Ignite 3 thin client operations. All APIs use async patterns and support both typed and dynamic access.
+.NET API는 Apache Ignite 3 씬 클라이언트 작업을 위한 인터페이스와 클래스를 제공합니다. 모든 API는 비동기 패턴을 사용하며, 타입 지정 접근과 동적 접근을 모두 지원합니다.
 
-## API Documentation
+## API 문서 {#api-documentation}
 
-API documentation is generated from XML comments in source code.
+API 문서는 소스 코드의 XML 주석에서 생성됩니다.
 
-### Access the Documentation
+### 문서 접근 {#access-the-documentation}
 
 <a href="https://ignite.apache.org/releases/ignite3/dotnetdoc/api/" target="_blank" rel="noopener noreferrer" style={{
   display: 'inline-block',
@@ -27,19 +27,19 @@ API documentation is generated from XML comments in source code.
   borderRadius: '4px',
   fontWeight: 'bold',
   marginBottom: '20px'
-}}>Open .NET API Reference →</a>
+}}>.NET API 참조 문서 열기 →</a>
 
-The locally generated DocFX documentation includes all public APIs, with detailed documentation for interfaces, classes, methods, and properties.
+로컬에서 생성한 DocFX 문서는 모든 공개 API를 포함하며, 인터페이스, 클래스, 메서드, 속성의 상세한 설명을 제공합니다.
 
-### Online Documentation
+### 온라인 문서 {#online-documentation}
 
-The latest API reference is published with each release:
+최신 API 참조 문서는 릴리스마다 게시됩니다:
 
-- [Latest Release .NET API](https://ignite.apache.org/releases/ignite3/dotnetdoc/)
+- [최신 릴리스 .NET API](https://ignite.apache.org/releases/ignite3/dotnetdoc/)
 
-### Generating Local Documentation
+### 로컬 문서 생성 {#generating-local-documentation}
 
-Generate API documentation locally using DocFX:
+DocFX를 사용해 API 문서를 로컬에서 생성합니다:
 
 ```bash
 cd modules/platforms/dotnet
@@ -48,54 +48,54 @@ dotnet tool restore
 dotnet docfx docs/docfx.json
 ```
 
-Generated documentation appears in `modules/platforms/dotnet/docs/_site/`.
+생성된 문서는 `modules/platforms/dotnet/docs/_site/`에 나타납니다.
 
-## Core Namespaces
+## 핵심 네임스페이스 {#core-namespaces}
 
-### Client
+### 클라이언트 {#client}
 
-- `Apache.Ignite` - IIgniteClient interface and configuration
+- `Apache.Ignite` - IIgniteClient 인터페이스와 구성
 
-### Data Access
+### 데이터 접근 {#data-access}
 
-- `Apache.Ignite.Table` - ITable, IRecordView, IKeyValueView interfaces
-- `Apache.Ignite.Table.DataStreamer` - Bulk loading with streaming
-- `Apache.Ignite.Sql` - Query execution and result sets
+- `Apache.Ignite.Table` - ITable, IRecordView, IKeyValueView 인터페이스
+- `Apache.Ignite.Table.DataStreamer` - 스트리밍을 사용한 대량 적재
+- `Apache.Ignite.Sql` - 쿼리 실행과 결과 집합
 
-### Transactions and Compute
+### 트랜잭션과 컴퓨트 {#transactions-and-compute}
 
-- `Apache.Ignite.Transactions` - ITransactions and ITransaction interfaces
-- `Apache.Ignite.Compute` - Distributed job execution
+- `Apache.Ignite.Transactions` - ITransactions, ITransaction 인터페이스
+- `Apache.Ignite.Compute` - 분산 작업 실행
 
-### Infrastructure
+### 인프라 {#infrastructure}
 
-- `Apache.Ignite.Network` - Cluster node information
+- `Apache.Ignite.Network` - 클러스터 노드 정보
 
-## NuGet Package
+## NuGet 패키지 {#nuget-package}
 
-Install the client package from NuGet:
+NuGet에서 클라이언트 패키지를 설치합니다:
 
 ```bash
 dotnet add package Apache.Ignite
 ```
 
-The package includes:
+이 패키지는 다음을 포함합니다:
 
-- Client implementation
-- API interfaces
-- Type serialization
-- Connection management
+- 클라이언트 구현
+- API 인터페이스
+- 타입 직렬화
+- 연결 관리
 
-## Framework Support
+## 프레임워크 지원 {#framework-support}
 
-The .NET client supports:
+.NET 클라이언트는 다음을 지원합니다:
 
-- .NET 6.0 and later
-- .NET Standard 2.1 (with limitations)
+- .NET 6.0 이상
+- .NET Standard 2.1(제한적으로 지원)
 
-Async APIs use `Task<T>`, `ValueTask<T>`, and `IAsyncEnumerable<T>` for modern async patterns.
+비동기 API는 최신 비동기 패턴을 위해 `Task<T>`, `ValueTask<T>`, `IAsyncEnumerable<T>`를 사용합니다.
 
-## Next Steps
+## 다음 단계 {#next-steps}
 
-- [.NET API Documentation](../native-clients/dotnet) - Usage guides for each API area
-- [.NET Client Guide](../../develop/ignite-clients/dotnet-client) - Client setup and configuration
+- [.NET API 문서](../native-clients/dotnet) - 각 API 영역의 사용 가이드
+- [.NET 클라이언트 가이드](../../develop/ignite-clients/dotnet-client) - 클라이언트 설정과 구성

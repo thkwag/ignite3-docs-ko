@@ -6,17 +6,17 @@ sidebar_position: 10
 
 # Network API
 
-The Network API provides access to cluster topology information. Applications use this API to discover nodes, inspect network addresses, and access node metadata. This information supports compute job targeting, monitoring, and cluster awareness.
+Network API는 클러스터 토폴로지 정보에 접근하는 기능을 제공합니다. 애플리케이션은 이 API로 노드를 검색하고, 네트워크 주소를 확인하고, 노드 메타데이터에 접근합니다. 이 정보는 컴퓨트 작업 대상 지정, 모니터링, 클러스터 인식에 쓰입니다.
 
-## Key Concepts
+## 핵심 개념 {#key-concepts}
 
-ClusterNode represents individual nodes in the cluster. Each node has a unique identifier, consistent name, network address, and metadata. The IgniteCluster facade provides access to topology information including all cluster members and the local node.
+ClusterNode는 클러스터의 개별 노드를 나타냅니다. 각 노드는 고유 식별자, 일관된 이름, 네트워크 주소, 메타데이터를 가집니다. IgniteCluster 퍼사드는 모든 클러스터 구성원과 로컬 노드를 포함한 토폴로지 정보에 접근하는 기능을 제공합니다.
 
-Network addresses identify node endpoints using host and port combinations. Applications parse addresses from strings or construct them programmatically.
+네트워크 주소는 호스트와 포트 조합으로 노드 엔드포인트를 식별합니다. 애플리케이션은 문자열에서 주소를 파싱하거나 프로그래밍 방식으로 직접 생성합니다.
 
-## Cluster Access
+## 클러스터 접근 {#cluster-access}
 
-Access cluster topology through the cluster facade:
+클러스터 퍼사드로 클러스터 토폴로지에 접근합니다:
 
 ```java
 IgniteCluster cluster = ignite.cluster();
@@ -29,9 +29,9 @@ for (ClusterNode node : nodes) {
 }
 ```
 
-## Asynchronous Node Discovery
+## 비동기 노드 검색 {#asynchronous-node-discovery}
 
-Retrieve nodes asynchronously:
+노드를 비동기로 조회합니다:
 
 ```java
 CompletableFuture<Collection<ClusterNode>> nodesFuture = cluster.nodesAsync();
@@ -43,11 +43,11 @@ nodesFuture.thenAccept(nodes -> {
 });
 ```
 
-Asynchronous access avoids blocking when topology information requires network calls.
+비동기 접근은 토폴로지 정보 조회에 네트워크 호출이 필요한 경우 블로킹을 피합니다.
 
-## Local Node Information
+## 로컬 노드 정보 {#local-node-information}
 
-Access the local node:
+로컬 노드에 접근합니다:
 
 ```java
 ClusterNode local = ignite.cluster().localNode();
@@ -57,11 +57,11 @@ System.out.println("Local node name: " + local.name());
 System.out.println("Local address: " + local.address());
 ```
 
-The local node represents the current Ignite instance within the cluster.
+로컬 노드는 클러스터 내에서 현재 Ignite 인스턴스를 나타냅니다.
 
-## Node Identification
+## 노드 식별 {#node-identification}
 
-Access node identifiers:
+노드 식별자에 접근합니다:
 
 ```java
 ClusterNode node = cluster.localNode();
@@ -73,11 +73,11 @@ System.out.println("Node ID: " + nodeId);
 System.out.println("Node name: " + nodeName);
 ```
 
-The node ID uniquely identifies the node. The node name provides a human-readable consistent identifier.
+노드 ID는 노드를 고유하게 식별합니다. 노드 이름은 사람이 읽을 수 있는 일관된 식별자를 제공합니다.
 
-## Network Addresses
+## 네트워크 주소 {#network-addresses}
 
-Access node network endpoints:
+노드 네트워크 엔드포인트에 접근합니다:
 
 ```java
 ClusterNode node = cluster.localNode();
@@ -90,11 +90,11 @@ System.out.println("Host: " + host);
 System.out.println("Port: " + port);
 ```
 
-NetworkAddress identifies the node endpoint for client connections.
+NetworkAddress는 클라이언트 연결을 위한 노드 엔드포인트를 식별합니다.
 
-## Address Construction
+## 주소 생성 {#address-construction}
 
-Create network addresses programmatically:
+네트워크 주소를 프로그래밍 방식으로 생성합니다:
 
 ```java
 NetworkAddress address1 = new NetworkAddress("localhost", 10800);
@@ -105,11 +105,11 @@ InetSocketAddress socketAddress = new InetSocketAddress("server.example.com", 10
 NetworkAddress address3 = NetworkAddress.from(socketAddress);
 ```
 
-The from method parses addresses from strings or socket addresses.
+from 메서드는 문자열이나 소켓 주소에서 주소를 파싱합니다.
 
-## Node Metadata
+## 노드 메타데이터 {#node-metadata}
 
-Access node metadata:
+노드 메타데이터에 접근합니다:
 
 ```java
 ClusterNode node = cluster.localNode();
@@ -119,11 +119,11 @@ NodeMetadata metadata = node.nodeMetadata();
 // (specific metadata content depends on configuration)
 ```
 
-Node metadata contains additional node-specific information configured during cluster setup.
+노드 메타데이터는 클러스터 설정 중 구성된 노드별 추가 정보를 담고 있습니다.
 
-## Client Connections
+## 클라이언트 연결 {#client-connections}
 
-Thin clients can access active connections:
+씬 클라이언트는 활성 연결에 접근할 수 있습니다:
 
 ```java
 List<ClusterNode> connections = client.connections();
@@ -136,11 +136,11 @@ for (ClusterNode node : connections) {
 }
 ```
 
-The connections list shows servers with active client connections.
+connections 목록은 클라이언트와 활성 연결 중인 서버를 보여줍니다.
 
-## Node Selection
+## 노드 선택 {#node-selection}
 
-Select specific nodes for operations:
+작업에 사용할 특정 노드를 선택합니다:
 
 ```java
 Collection<ClusterNode> allNodes = ignite.clusterNodes();
@@ -156,9 +156,9 @@ if (targetNode != null) {
 }
 ```
 
-## Multiple Node Selection
+## 다중 노드 선택 {#multiple-node-selection}
 
-Filter nodes by criteria:
+조건에 따라 노드를 필터링합니다:
 
 ```java
 Collection<ClusterNode> allNodes = ignite.clusterNodes();
@@ -174,9 +174,9 @@ List<ClusterNode> hostFiltered = allNodes.stream()
     .collect(Collectors.toList());
 ```
 
-## Compute Job Targeting
+## 컴퓨트 작업 대상 지정 {#compute-job-targeting}
 
-Use node information for compute operations:
+컴퓨트 작업에 노드 정보를 사용합니다:
 
 ```java
 Collection<ClusterNode> nodes = ignite.clusterNodes();
@@ -200,9 +200,9 @@ for (ClusterNode node : nodes) {
 }
 ```
 
-## Address Parsing
+## 주소 파싱 {#address-parsing}
 
-Parse addresses from configuration strings:
+구성 문자열에서 주소를 파싱합니다:
 
 ```java
 String[] serverAddresses = {
@@ -220,9 +220,9 @@ for (NetworkAddress addr : addresses) {
 }
 ```
 
-## Address Formatting
+## 주소 포맷팅 {#address-formatting}
 
-Format addresses for display:
+주소를 표시용으로 포맷합니다:
 
 ```java
 NetworkAddress address = node.address();
@@ -234,9 +234,9 @@ System.out.println("Node endpoint: " + formatted);
 String automatic = address.toString();
 ```
 
-## Deprecated API
+## 지원 중단된 API {#deprecated-api}
 
-The clusterNodes method on Ignite is deprecated:
+Ignite의 clusterNodes 메서드는 지원이 중단되었습니다:
 
 ```java
 // Deprecated
@@ -246,11 +246,11 @@ Collection<ClusterNode> nodes1 = ignite.clusterNodes();
 Collection<ClusterNode> nodes2 = ignite.cluster().nodes();
 ```
 
-Use the cluster facade for topology access.
+토폴로지에 접근하려면 클러스터 퍼사드를 사용하세요.
 
-## Node Comparison
+## 노드 비교 {#node-comparison}
 
-Compare nodes by identity:
+식별자로 노드를 비교합니다:
 
 ```java
 ClusterNode node1 = cluster.localNode();
@@ -262,51 +262,51 @@ if (same) {
 }
 ```
 
-Compare nodes using their UUID identifiers.
+노드는 UUID 식별자로 비교합니다.
 
-## Reference
+## 참조 {#reference}
 
-- Cluster facade: `org.apache.ignite.network.IgniteCluster`
-- Node representation: `org.apache.ignite.network.ClusterNode`
-- Network address: `org.apache.ignite.network.NetworkAddress`
-- Node metadata: `org.apache.ignite.network.NodeMetadata`
+- 클러스터 퍼사드: `org.apache.ignite.network.IgniteCluster`
+- 노드 표현: `org.apache.ignite.network.ClusterNode`
+- 네트워크 주소: `org.apache.ignite.network.NetworkAddress`
+- 노드 메타데이터: `org.apache.ignite.network.NodeMetadata`
 
-### IgniteCluster Methods
+### IgniteCluster 메서드 {#ignitecluster-methods}
 
-- `Collection<ClusterNode> nodes()` - Get all cluster nodes
-- `CompletableFuture<Collection<ClusterNode>> nodesAsync()` - Async get nodes
-- `ClusterNode localNode()` - Get local node
+- `Collection<ClusterNode> nodes()` - 모든 클러스터 노드 조회
+- `CompletableFuture<Collection<ClusterNode>> nodesAsync()` - 노드를 비동기로 조회
+- `ClusterNode localNode()` - 로컬 노드 조회
 
-### ClusterNode Methods
+### ClusterNode 메서드 {#clusternode-methods}
 
-- `UUID id()` - Get node unique identifier
-- `String name()` - Get node name (consistent ID)
-- `NetworkAddress address()` - Get network address
-- `NodeMetadata nodeMetadata()` - Get node metadata
+- `UUID id()` - 노드 고유 식별자 조회
+- `String name()` - 노드 이름 조회(일관된 ID)
+- `NetworkAddress address()` - 네트워크 주소 조회
+- `NodeMetadata nodeMetadata()` - 노드 메타데이터 조회
 
-### NetworkAddress Methods
+### NetworkAddress 메서드 {#networkaddress-methods}
 
-- `String host()` - Get hostname
-- `int port()` - Get port number
+- `String host()` - 호스트 이름 조회
+- `int port()` - 포트 번호 조회
 
-### NetworkAddress Construction
+### NetworkAddress 생성 {#networkaddress-construction}
 
-- `NetworkAddress(String host, int port)` - Create from components
-- `static NetworkAddress from(String)` - Parse from "host:port" string
-- `static NetworkAddress from(InetSocketAddress)` - Convert from socket address
+- `NetworkAddress(String host, int port)` - 구성 요소로부터 생성
+- `static NetworkAddress from(String)` - "host:port" 형식 문자열에서 파싱
+- `static NetworkAddress from(InetSocketAddress)` - 소켓 주소에서 변환
 
-### IgniteClient Connection Methods
+### IgniteClient 연결 메서드 {#igniteclient-connection-methods}
 
-- `List<ClusterNode> connections()` - Get active server connections
+- `List<ClusterNode> connections()` - 활성 서버 연결 조회
 
-### Ignite Node Methods
+### Ignite 노드 메서드 {#ignite-node-methods}
 
-- `Collection<ClusterNode> clusterNodes()` - Get all nodes (deprecated, use cluster().nodes())
+- `Collection<ClusterNode> clusterNodes()` - 모든 노드 조회(지원 중단됨, cluster().nodes() 사용)
 
-### Topology Use Cases
+### 토폴로지 사용 사례 {#topology-use-cases}
 
-Node information supports several common patterns:
-- Compute job targeting based on node location or capabilities
-- Monitoring and diagnostics of cluster health
-- Connection management for thin clients
-- Custom load balancing and data locality optimization
+노드 정보는 여러 일반적인 패턴을 지원합니다:
+- 노드 위치나 기능에 따른 컴퓨트 작업 대상 지정
+- 클러스터 상태 모니터링 및 진단
+- 씬 클라이언트 연결 관리
+- 커스텀 로드 밸런싱 및 데이터 지역성 최적화

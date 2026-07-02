@@ -6,17 +6,17 @@ sidebar_position: 11
 
 # Security API
 
-The Security API configures authentication for client connections. Applications provide credentials when establishing connections to secure Ignite clusters. The API supports basic username and password authentication with extensibility for custom authentication mechanisms.
+Security API는 클라이언트 연결의 인증을 구성합니다. 애플리케이션은 보안이 설정된 Ignite 클러스터에 연결을 맺을 때 자격 증명을 제공합니다. 이 API는 기본적인 사용자 이름과 비밀번호 인증을 지원하며, 사용자 지정 인증 메커니즘으로 확장할 수 있습니다.
 
-## Key Concepts
+## 핵심 개념 {#key-concepts}
 
-Authentication occurs during client connection establishment. Clients configure authenticators through the builder pattern before creating connections. The authenticator provides identity and secret data to the server for validation.
+인증은 클라이언트가 연결을 맺는 과정에서 이뤄집니다. 클라이언트는 연결을 생성하기 전에 빌더 패턴으로 인증기를 구성합니다. 인증기는 검증을 위해 서버에 신원 정보와 비밀 정보를 제공합니다.
 
-Basic authentication transmits username and password credentials. The client includes authentication type and credentials in connection requests. Servers validate credentials before accepting connections.
+기본 인증은 사용자 이름과 비밀번호 자격 증명을 전송합니다. 클라이언트는 연결 요청에 인증 타입과 자격 증명을 포함합니다. 서버는 연결을 수락하기 전에 자격 증명을 검증합니다.
 
-## Basic Authentication
+## 기본 인증 {#basic-authentication}
 
-Configure basic authentication with username and password:
+사용자 이름과 비밀번호로 기본 인증을 구성합니다:
 
 ```java
 IgniteClient client = IgniteClient.builder()
@@ -35,9 +35,9 @@ try {
 }
 ```
 
-## Authentication Configuration
+## 인증 구성 {#authentication-configuration}
 
-Set authenticator during client building:
+클라이언트를 생성하는 동안 인증기를 설정합니다:
 
 ```java
 BasicAuthenticator authenticator = BasicAuthenticator.builder()
@@ -51,11 +51,11 @@ IgniteClient client = IgniteClient.builder()
     .build();
 ```
 
-The authenticator applies to all connections the client establishes.
+이 인증기는 클라이언트가 맺는 모든 연결에 적용됩니다.
 
-## Authentication Types
+## 인증 타입 {#authentication-types}
 
-Access authentication type information:
+인증 타입 정보에 접근합니다:
 
 ```java
 BasicAuthenticator authenticator = BasicAuthenticator.builder()
@@ -67,11 +67,11 @@ String type = authenticator.type();
 System.out.println("Authentication type: " + type);
 ```
 
-The BASIC type indicates username and password authentication.
+BASIC 타입은 사용자 이름과 비밀번호 인증을 나타냅니다.
 
-## Authentication Failure Handling
+## 인증 실패 처리 {#authentication-failure-handling}
 
-Handle authentication errors:
+인증 오류를 처리합니다:
 
 ```java
 try {
@@ -87,11 +87,11 @@ try {
 }
 ```
 
-Connection failures due to invalid credentials throw exceptions during client creation.
+잘못된 자격 증명으로 연결에 실패하면 클라이언트를 생성하는 동안 예외가 발생합니다.
 
-## No Authentication
+## 인증 없음 {#no-authentication}
 
-Omit the authenticator for unauthenticated connections:
+인증 없이 연결하려면 인증기를 생략합니다:
 
 ```java
 IgniteClient client = IgniteClient.builder()
@@ -99,11 +99,11 @@ IgniteClient client = IgniteClient.builder()
     .build();
 ```
 
-Clients without authenticators connect to clusters that do not require authentication.
+인증기가 없는 클라이언트는 인증이 필요하지 않은 클러스터에 연결합니다.
 
-## Authentication with TLS
+## TLS를 사용한 인증 {#authentication-with-tls}
 
-Combine authentication with TLS encryption:
+인증과 TLS 암호화를 함께 사용합니다:
 
 ```java
 SslConfiguration ssl = SslConfiguration.builder()
@@ -122,11 +122,11 @@ IgniteClient client = IgniteClient.builder()
     .build();
 ```
 
-TLS encrypts the connection while authentication validates identity.
+TLS는 연결을 암호화하고, 인증은 신원을 검증합니다.
 
-## Custom Authenticators
+## 사용자 지정 인증기 {#custom-authenticators}
 
-Implement custom authentication mechanisms:
+사용자 지정 인증 메커니즘을 구현합니다:
 
 ```java
 public class TokenAuthenticator implements IgniteClientAuthenticator {
@@ -153,11 +153,11 @@ public class TokenAuthenticator implements IgniteClientAuthenticator {
 }
 ```
 
-Custom authenticators provide identity and secret data in appropriate formats.
+사용자 지정 인증기는 적절한 형식으로 신원 정보와 비밀 정보를 제공합니다.
 
-## Authentication Type Parsing
+## 인증 타입 파싱 {#authentication-type-parsing}
 
-The type() method returns a string identifier:
+type() 메서드는 문자열 식별자를 반환합니다:
 
 ```java
 BasicAuthenticator authenticator = BasicAuthenticator.builder()
@@ -169,9 +169,9 @@ String typeString = authenticator.type();
 System.out.println("Type: " + typeString);
 ```
 
-## Credential Management
+## 자격 증명 관리 {#credential-management}
 
-Store credentials securely outside application code:
+자격 증명을 애플리케이션 코드 밖에 안전하게 저장합니다:
 
 ```java
 String username = System.getenv("IGNITE_USERNAME");
@@ -190,11 +190,11 @@ IgniteClient client = IgniteClient.builder()
     .build();
 ```
 
-Retrieve credentials from environment variables, configuration files, or credential managers.
+환경 변수, 구성 파일, 자격 증명 관리자에서 자격 증명을 가져옵니다.
 
-## Asynchronous Connection with Authentication
+## 인증을 사용한 비동기 연결 {#asynchronous-connection-with-authentication}
 
-Build authenticated clients asynchronously:
+인증된 클라이언트를 비동기로 생성합니다:
 
 ```java
 CompletableFuture<IgniteClient> clientFuture = IgniteClient.builder()
@@ -213,9 +213,9 @@ clientFuture.thenAccept(client -> {
 });
 ```
 
-## Connection Retry with Authentication
+## 인증을 사용한 연결 재시도 {#connection-retry-with-authentication}
 
-Retry policies apply to authenticated connections:
+재시도 정책은 인증된 연결에도 적용됩니다:
 
 ```java
 IgniteClient client = IgniteClient.builder()
@@ -228,15 +228,15 @@ IgniteClient client = IgniteClient.builder()
     .build();
 ```
 
-Failed operations retry according to the policy after successful authentication.
+인증에 성공한 뒤에는 실패한 작업이 정책에 따라 재시도됩니다.
 
-## Server-Side Authentication
+## 서버 측 인증 {#server-side-authentication}
 
-Server configuration determines authentication requirements. Clients must match server authentication settings. Consult server configuration documentation for authentication setup.
+서버 구성이 인증 요구 사항을 결정합니다. 클라이언트는 서버의 인증 설정과 일치해야 합니다. 인증 설정 방법은 서버 구성 문서를 참고하세요.
 
-## Authentication Interface
+## 인증 인터페이스 {#authentication-interface}
 
-The IgniteClientAuthenticator interface defines authentication contracts:
+IgniteClientAuthenticator 인터페이스는 인증 방식을 정의합니다:
 
 ```java
 public interface IgniteClientAuthenticator {
@@ -246,11 +246,11 @@ public interface IgniteClientAuthenticator {
 }
 ```
 
-Implementations provide authentication type and credential data.
+구현체는 인증 타입과 자격 증명 데이터를 제공합니다.
 
-## Identity and Secret Data
+## 신원과 비밀 데이터 {#identity-and-secret-data}
 
-Authenticators separate identity and secret information:
+인증기는 신원 정보와 비밀 정보를 분리합니다:
 
 ```java
 BasicAuthenticator auth = BasicAuthenticator.builder()
@@ -262,49 +262,49 @@ Object identity = auth.identity();
 Object secret = auth.secret();
 ```
 
-BasicAuthenticator returns username as identity and password as secret.
+BasicAuthenticator는 사용자 이름을 신원으로, 비밀번호를 비밀 정보로 반환합니다.
 
-## Embedded Node Authentication
+## 임베디드 노드 인증 {#embedded-node-authentication}
 
-Embedded nodes use configuration files for authentication setup. Client authentication applies only to thin client connections.
+임베디드 노드는 구성 파일로 인증을 설정합니다. 클라이언트 인증은 씬 클라이언트 연결에만 적용됩니다.
 
-## Reference
+## 참조 {#reference}
 
-- Authenticator interface: `org.apache.ignite.client.IgniteClientAuthenticator`
-- Basic authentication: `org.apache.ignite.client.BasicAuthenticator`
-- Authentication types: `org.apache.ignite.security.AuthenticationType`
+- 인증기 인터페이스: `org.apache.ignite.client.IgniteClientAuthenticator`
+- 기본 인증: `org.apache.ignite.client.BasicAuthenticator`
+- 인증 타입: `org.apache.ignite.security.AuthenticationType`
 
-### IgniteClientAuthenticator Interface
+### IgniteClientAuthenticator 인터페이스 {#igniteclientauthenticator-interface}
 
-- `String type()` - Get authentication type
-- `Object identity()` - Get identity data (username, token, etc.)
-- `Object secret()` - Get secret data (password, key, etc.)
+- `String type()` - 인증 타입 조회
+- `Object identity()` - 신원 데이터 조회(사용자 이름, 토큰 등)
+- `Object secret()` - 비밀 데이터 조회(비밀번호, 키 등)
 
-### BasicAuthenticator
+### BasicAuthenticator {#basicauthenticator}
 
-- `static Builder builder()` - Create builder for authenticator
-- `Builder.username(String)` - Set username, returns Builder
-- `Builder.password(String)` - Set password, returns Builder
-- `Builder.build()` - Build BasicAuthenticator instance
-- `String type()` - Returns "BASIC"
-- `Object identity()` - Returns username
-- `Object secret()` - Returns password
+- `static Builder builder()` - 인증기 빌더 생성
+- `Builder.username(String)` - 사용자 이름 설정, Builder 반환
+- `Builder.password(String)` - 비밀번호 설정, Builder 반환
+- `Builder.build()` - BasicAuthenticator 인스턴스 생성
+- `String type()` - "BASIC" 반환
+- `Object identity()` - 사용자 이름 반환
+- `Object secret()` - 비밀번호 반환
 
-### AuthenticationType
+### AuthenticationType {#authenticationtype}
 
-- `static AuthenticationType parse(String)` - Parse from string
-- `BASIC` - Basic username/password authentication
+- `static AuthenticationType parse(String)` - 문자열에서 파싱
+- `BASIC` - 사용자 이름/비밀번호 기본 인증
 
-### Client Builder Authentication
+### 클라이언트 빌더 인증 {#client-builder-authentication}
 
-- `authenticator(IgniteClientAuthenticator)` - Set authenticator for connections
+- `authenticator(IgniteClientAuthenticator)` - 연결의 인증기 설정
 
-### Authentication Best Practices
+### 인증 모범 사례 {#authentication-best-practices}
 
-- Store credentials in secure configuration stores, not in code
-- Use environment variables or credential management systems
-- Combine authentication with TLS for complete security
-- Validate credentials before distributing applications
-- Rotate credentials periodically according to security policies
-- Handle authentication failures gracefully with appropriate error messages
-- Test authentication in development environments before production deployment
+- 자격 증명은 코드가 아닌 안전한 구성 저장소에 저장하세요
+- 환경 변수나 자격 증명 관리 시스템을 사용하세요
+- 완전한 보안을 갖추려면 인증과 TLS를 함께 사용하세요
+- 애플리케이션을 배포하기 전에 자격 증명을 검증하세요
+- 보안 정책에 따라 자격 증명을 주기적으로 교체하세요
+- 인증 실패는 적절한 오류 메시지로 안정적으로 처리하세요
+- 프로덕션 환경에 배포하기 전에 개발 환경에서 인증을 테스트하세요

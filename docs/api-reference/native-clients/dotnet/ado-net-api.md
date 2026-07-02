@@ -4,52 +4,52 @@ id: ado-net-api
 sidebar_position: 5
 ---
 
-Apache Ignite implements [ADO.NET](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/ado-net-overview) classes, such as `DbConnection`, `DbCommand`, `DbDataReader`, etc.,
-allowing you to use standard ADO.NET components to interact with Ignite SQL.
+Apache Ignite는 `DbConnection`, `DbCommand`, `DbDataReader` 등 [ADO.NET](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/ado-net-overview) 클래스를 구현하며,
+표준 ADO.NET 컴포넌트로 Ignite SQL과 상호작용할 수 있습니다.
 
-## Getting Started
+## 시작하기 {#getting-started}
 
-### Prerequisites
+### 사전 요구 사항 {#prerequisites}
 
-To use C# thin client, .NET 8.0 or newer is required.
+C# 씬 클라이언트를 사용하려면 .NET 8.0 이상이 필요합니다.
 
-### Installation
+### 설치 {#installation}
 
-C# client is available via NuGet. To add it, use the `add package` command:
+C# 클라이언트는 NuGet으로 제공됩니다. 추가하려면 `add package` 명령을 사용하세요:
 
 ```bash
 dotnet add package Apache.Ignite --version {version}
 ```
 
-## Connecting to Cluster
+## 클러스터에 연결 {#connecting-to-cluster}
 
-To connect to an Apache Ignite cluster, create a new connection with the connection string:
+Apache Ignite 클러스터에 연결하려면 연결 문자열로 새 연결을 생성합니다:
 
 ```csharp
 var connStr = "Endpoints=localhost:10800";
 ```
 
-The connection string has the following parameters:
+연결 문자열은 다음 매개변수를 사용합니다:
 
-| Parameter | Description |
+| 매개변수 | 설명 |
 |-----------|-------------|
-| Endpoints | Required. Comma-separated list of server addresses with ports. |
-| SocketTimeout | Time span for socket operations timeout in `hh:mm:ss` format. 30 seconds by default. |
-| OperationTimeout | Time span for operation timeout in `hh:mm:ss` format. No timeout by default. |
-| HeartbeatInterval | Time span between heartbeat messages to keep connection alive in `hh:mm:ss.f` format. 30 seconds by default. |
-| ReconnectInterval | Time span between reconnection attempts in `hh:mm:ss` format. 30 seconds by default. |
-| SslEnabled | Boolean value to enable/disable SSL encryption. `False` by default. |
-| Username | Username for authentication. |
-| Password | Password for authentication. |
+| Endpoints | 필수. 포트를 포함한 서버 주소를 쉼표로 구분한 목록입니다. |
+| SocketTimeout | 소켓 작업 타임아웃 기간을 `hh:mm:ss` 형식으로 지정합니다. 기본값은 30초입니다. |
+| OperationTimeout | 작업 타임아웃 기간을 `hh:mm:ss` 형식으로 지정합니다. 기본적으로 타임아웃이 없습니다. |
+| HeartbeatInterval | 연결을 유지하기 위한 하트비트 메시지 간격을 `hh:mm:ss.f` 형식으로 지정합니다. 기본값은 30초입니다. |
+| ReconnectInterval | 재연결 시도 간격을 `hh:mm:ss` 형식으로 지정합니다. 기본값은 30초입니다. |
+| SslEnabled | SSL 암호화를 활성화/비활성화하는 불리언 값입니다. 기본값은 `False`입니다. |
+| Username | 인증에 사용할 사용자 이름입니다. |
+| Password | 인증에 사용할 비밀번호입니다. |
 
-The example below shows a complete connection string with all parameters
+아래 예시는 모든 매개변수를 포함한 전체 연결 문자열을 보여줍니다
 
 ```text
 Endpoints=localhost:10800,localhost:10801;SocketTimeout=00:00:10;OperationTimeout=00:03:30;
 HeartbeatInterval=00:00:05.5;ReconnectInterval=00:01:00;SslEnabled=True;Username=user;Password=pass
 ```
 
-Using the connection string, you can establish a connection to an Ignite cluster with the `IgniteDbConnection` class:
+연결 문자열을 사용해 `IgniteDbConnection` 클래스로 Ignite 클러스터에 연결을 맺을 수 있습니다:
 
 ```csharp
 var connStr = "Endpoints=localhost:10800";
@@ -57,11 +57,11 @@ await using var conn = new IgniteDbConnection(connStr);
 await conn.OpenAsync();
 ```
 
-## Executing SQL Commands
+## SQL 명령 실행 {#executing-sql-commands}
 
-You can use the `IgniteDbConnection.CreateCommand` method to create a command and then execute it with one of the [execution commands](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/executing-a-command).
+`IgniteDbConnection.CreateCommand` 메서드로 명령을 생성한 뒤 [실행 명령](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/executing-a-command) 중 하나로 실행할 수 있습니다.
 
-The example below does not expect the command to return any rows, and uses the `ExecuteNonQueryAsync` command.
+아래 예시는 명령이 행을 반환하지 않는 경우로, `ExecuteNonQueryAsync` 명령을 사용합니다.
 
 ```csharp
 DbCommand cmd = conn.CreateCommand();
@@ -69,11 +69,11 @@ cmd.CommandText = "DROP TABLE IF EXISTS Person";
 await cmd.ExecuteNonQueryAsync();
 ```
 
-## Reading Data From Cluster
+## 클러스터에서 데이터 읽기 {#reading-data-from-cluster}
 
-You can retrieve data from the cluster in a similar way to using [Data Readers](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/retrieving-data-using-a-datareader).
+[데이터 리더](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/retrieving-data-using-a-datareader)를 사용하는 방식과 비슷하게 클러스터에서 데이터를 가져올 수 있습니다.
 
-The example below shows how you can get data from your cluster:
+아래 예시는 클러스터에서 데이터를 가져오는 방법을 보여줍니다:
 
 ```csharp
 DbCommand cmd = conn.CreateCommand();
@@ -86,15 +86,15 @@ while (await reader.ReadAsync())
 }
 ```
 
-## Using Parameters
+## 매개변수 사용 {#using-parameters}
 
 :::note
-Apache Ignite only supports input parameters. Parameter types are automatically inferred from the SQL query context, so you do not need to specify the parameter type explicitly.
+Apache Ignite는 입력 매개변수만 지원합니다. 매개변수 타입은 SQL 쿼리 컨텍스트에서 자동으로 추론되므로 명시적으로 지정할 필요가 없습니다.
 :::
 
-Apache Ignite supports parameterized queries using positional parameters. You can use the `IgniteDbConnection.CreateParameter()` method to create parameters that will replace the `?` placeholders in your query text.
+Apache Ignite는 위치 매개변수를 사용하는 매개변수화된 쿼리를 지원합니다. `IgniteDbConnection.CreateParameter()` 메서드로 쿼리 텍스트의 `?` 자리표시자를 대체할 매개변수를 생성할 수 있습니다.
 
-The example below shows how you can parametrize your query:
+아래 예시는 쿼리에 매개변수를 지정하는 방법을 보여줍니다:
 
 ```csharp
 DbCommand cmd = conn.CreateCommand();
@@ -111,9 +111,9 @@ cmd.Parameters.Add(nameParam);
 await cmd.ExecuteNonQueryAsync();
 ```
 
-Parameters must be added in the exact order they appear in the query. The first `?` corresponds to the first parameter added, the second `?` to the second parameter, etc.
+매개변수는 쿼리에 나타나는 순서와 정확히 같은 순서로 추가해야 합니다. 첫 번째 `?`는 처음 추가한 매개변수에, 두 번째 `?`는 두 번째로 추가한 매개변수에 대응하는 식입니다.
 
-To pass null values, set the parameter value to `null`:
+null 값을 전달하려면 매개변수 값을 `null`로 설정하세요:
 
 ```csharp
 DbParameter param = cmd.CreateParameter();
@@ -121,15 +121,15 @@ param.Value = null;
 cmd.Parameters.Add(param);
 ```
 
-## Transactions
+## 트랜잭션 {#transactions}
 
 :::note
-Apache Ignite does not support custom isolation levels. All transactions are effectively `Serializable`.
+Apache Ignite는 사용자 정의 격리 수준을 지원하지 않습니다. 모든 트랜잭션은 사실상 `Serializable`입니다.
 :::
 
-You can use the `DbConnection.BeginTransaction` method to start a transaction.
+`DbConnection.BeginTransaction` 메서드로 트랜잭션을 시작할 수 있습니다.
 
-No data will be committed to the database until the transaction is committed. You can discard all changes with a rollback method:
+트랜잭션이 커밋되기 전까지는 데이터베이스에 어떤 데이터도 커밋되지 않습니다. 롤백 메서드로 모든 변경 사항을 취소할 수 있습니다:
 
 ```csharp
 await using DbTransaction tx = await conn.BeginTransactionAsync();
@@ -141,9 +141,9 @@ await tx.CommitAsync();
 // await tx.RollbackAsync();
 ```
 
-## Full Example
+## 전체 예시 {#full-example}
 
-The example below shows how you can work with an Apache Ignite cluster via ADO.NET:
+아래 예시는 ADO.NET으로 Apache Ignite 클러스터를 다루는 방법을 보여줍니다:
 
 ```csharp
 var connStr = $"Endpoints=localhost:10800";

@@ -1,182 +1,182 @@
 ---
-title: SQL Conformance
+title: SQL 표준 준수
 ---
 
-# SQL Conformance
+# SQL 표준 준수
 
-Apache Ignite supports most of the major features of ANSI SQL 2016 standard out-of-the-box. The following table shows Apache Ignite compliance to the aforementioned standard.
+Apache Ignite는 ANSI SQL 2016 표준의 주요 기능 대부분을 기본으로 지원합니다. 다음 표는 Apache Ignite가 이 표준을 얼마나 준수하는지 보여줍니다.
 
-| Feature ID | Feature Name | Subfeature ID | Subfeature Name | Supported | Limitations |
+| 기능 ID | 기능 이름 | 하위 기능 ID | 하위 기능 이름 | 지원 여부 | 제한 사항 |
 |---|---|---|---|---|---|
-| E011 | Numeric data types | E011 | | Yes | |
-| E011 | Numeric data types | E011-01 | INTEGER and SMALLINT data types | Yes | |
-| E011 | Numeric data types | E011-02 | REAL, DOUBLE PRECISION, and FLOAT data types | Yes | |
-| E011 | Numeric data types | E011-03 | DECIMAL and NUMERIC data types | Yes | DEC and NUMERIC types are not supported |
-| E011 | Numeric data types | E011-04 | Arithmetic operators | Yes | |
-| E011 | Numeric data types | E011-05 | Numeric comparison | Yes | |
-| E011 | Numeric data types | E011-06 | Implicit casting among the numeric data types | Yes | |
-| E021 | Character data types | E021 | | Yes | CHARACTER type cannot be used in table definition |
-| E021 | Character string types | E021-01 | CHARACTER data type | Yes | |
-| E021 | Character string types | E021-02 | CHARACTER VARYING data type | Yes | |
-| E021 | Character string types | E021-03 | Character literals | Yes | |
-| E021 | Character string types | E021-04 | CHARACTER_LENGTH function | Yes | |
-| E021 | Character string types | E021-05 | OCTET_LENGTH function | Yes | |
-| E021 | Character string types | E021-06 | SUBSTRING function | Yes | |
-| E021 | Character string types | E021-07 | Character concatenation | Yes | |
-| E021 | Character string types | E021-08 | UPPER and LOWER functions | Yes | |
-| E021 | Character string types | E021-09 | TRIM function | Yes | |
-| E021 | Character string types | E021-10 | Implicit casting among the character string types | Yes | |
-| E021 | Character string types | E021-11 | POSITION function | Yes | |
-| E021 | Character string types | E021-12 | Character comparison | Yes | |
-| E031 | Identifiers | E031 | | Yes | |
-| E031 | Identifiers | E031-01 | Delimited identifiers | Yes | |
-| E031 | Identifiers | E031-02 | Lower case identifiers | Yes | |
-| E031 | Identifiers | E031-03 | Trailing underscore | Yes | |
-| E051 | Basic query specification | E051 | | Yes | |
-| E051 | Basic query specification | E051-01 | SELECT DISTINCT | Yes | |
-| E051 | Basic query specification | E051-02 | GROUP BY clause | Yes | Supports GROUPING SETS. ROLLUP and CUBE are not supported |
-| E051 | Basic query specification | E051-04 | GROUP BY can contain columns not in &lt;select list&gt; | Yes | |
-| E051 | Basic query specification | E051-05 | Select list items can be renamed | Yes | |
-| E051 | Basic query specification | E051-06 | HAVING clause | Yes | |
-| E051 | Basic query specification | E051-07 | Qualified * in select list | Yes | |
-| E051 | Basic query specification | E051-08 | Correlation names in the FROM clause | Yes | |
-| E051 | Basic query specification | E051-09 | Rename columns in the FROM clause | Yes | |
-| E061 | Basic predicates and search conditions | E061 | | Yes | |
-| E061 | Basic predicates and search conditions | E061-01 | Comparison predicate | Yes | |
-| E061 | Basic predicates and search conditions | E061-02 | BETWEEN predicate | Yes | |
-| E061 | Basic predicates and search conditions | E061-03 | IN predicate with list of values | Yes | |
-| E061 | Basic predicates and search conditions | E061-04 | LIKE predicate | Yes | |
-| E061 | Basic predicates and search conditions | E061-05 | LIKE predicate ESCAPE clause | Yes | |
-| E061 | Basic predicates and search conditions | E061-06 | NULL predicate | Yes | |
-| E061 | Basic predicates and search conditions | E061-07 | Quantified comparison predicate | Yes | |
-| E061 | Basic predicates and search conditions | E061-08 | EXISTS predicate | Yes | |
-| E061 | Basic predicates and search conditions | E061-09 | Subqueries in comparison predicate | Yes | |
-| E061 | Basic predicates and search conditions | E061-11 | Subqueries in IN predicate | Yes | |
-| E061 | Basic predicates and search conditions | E061-12 | Subqueries in quantified comparison predicate | Yes | |
-| E061 | Basic predicates and search conditions | E061-13 | Correlated subqueries | Yes | |
-| E061 | Basic predicates and search conditions | E061-14 | Search condition | Yes | |
-| E071 | Basic query expressions | E071 | | Yes | |
-| E071 | Basic query expressions | E071-01 | UNION DISTINCT table operator | Yes | |
-| E071 | Basic query expressions | E071-02 | UNION ALL table operator | Yes | |
-| E071 | Basic query expressions | E071-03 | EXCEPT DISTINCT table operator | Yes | |
-| E071 | Basic query expressions | E071-05 | Columns combined via table operators need not have exactly the same data type | Yes | |
-| E071 | Basic query expressions | E071-06 | Table operators in subqueries | Yes | |
-| E081 | Basic Privileges | E081 | | No | |
-| E081 | Basic Privileges | E081-01 | SELECT privilege | No | |
-| E081 | Basic Privileges | E081-02 | DELETE privilege | No | |
-| E081 | Basic Privileges | E081-03 | INSERT privilege at the table level | No | |
-| E081 | Basic Privileges | E081-04 | UPDATE privilege at the table level | No | |
-| E091 | Set functions | E091 | | Yes | |
-| E091 | Set functions | E091-01 | AVG | Yes | |
-| E091 | Set functions | E091-02 | COUNT | Yes | |
-| E091 | Set functions | E091-03 | MAX | Yes | |
-| E091 | Set functions | E091-04 | MIN | Yes | |
-| E091 | Set functions | E091-05 | SUM | Yes | |
-| E091 | Set functions | E091-06 | ALL quantifier | Yes | |
-| E091 | Set functions | E091-07 | DISTINCT quantifier | Yes | |
-| E101 | Basic data manipulation | E101 | | Yes | |
-| E101 | Basic data manipulation | E101-01 | INSERT statement | Yes | |
-| E101 | Basic data manipulation | E101-03 | Searched UPDATE statement | Yes | |
-| E101 | Basic data manipulation | E101-04 | Searched DELETE statement | Yes | |
-| E111 | Single row SELECT statement | E111 | | Yes | |
-| E131 | Null value support (nulls in lieu of values) | E131 | | Yes | |
-| E141 | Basic integrity constraints | E141 | | Partially | NOT NULL and PRIMARY KEY constraints. |
-| E141 | Basic integrity constraints | E141-01 | NOT NULL constraints | Yes | |
-| E141 | Basic integrity constraints | E141-03 | PRIMARY KEY constraints | Yes | |
-| E141 | Basic integrity constraints | E141-07 | Column defaults | Partially | Only literals and RAND_UUID function |
-| E141 | Basic integrity constraints | E141-08 | NOT NULL inferred on PRIMARY KEY | Yes | |
-| E151 | Transaction support | E151 | | Partially | |
-| E151 | Transaction support | E151-01 | COMMIT statement | Partially | Only in SQL scripts. No options. |
-| E151 | Transaction support | E151-02 | ROLLBACK statement | Partially | Only in SQL scripts. No options. Savepoints are not supported |
-| E153 | Updatable queries with subqueries | E153 | | Yes | |
-| E161 | SQL comments using leading double minus | E161 | | Yes | |
-| E171 | SQLSTATE support | E171 | | No | |
-| F031 | Basic schema manipulation | F031 | | Partially | CREATE TABLE, ALTER TABLE, DROP TABLE |
-| F031 | Basic schema manipulation | F031-01 | CREATE TABLE statement to create persistent base tables | Partially | CREATE TABLE must always specify primary key |
-| F031 | Basic schema manipulation | F031-03 | GRANT statement | No | |
-| F031 | Basic schema manipulation | F031-04 | ALTER TABLE statement: ADD COLUMN clause | Yes | |
-| F033 | ALTER TABLE statement: DROP COLUMN clause | F033 | | Partially | DROP behaviour is not supported |
-| F041 | Basic joined table | F041 | | Yes | |
-| F041 | Basic joined table | F041-01 | Inner join (but not necessarily the INNER keyword) | Yes | |
-| F041 | Basic joined table | F041-02 | INNER keyword | Yes | |
-| F041 | Basic joined table | F041-03 | LEFT OUTER JOIN | Yes | |
-| F041 | Basic joined table | F041-04 | RIGHT OUTER JOIN | Yes | |
-| F041 | Basic joined table | F041-05 | Outer joins can be nested | Yes | |
-| F041 | Basic joined table | F041-07 | The inner table in a left or right outer join can also be used in an inner join | Yes | |
-| F041 | Basic joined table | F041-08 | All comparison operators are supported (rather than just =) | Yes | |
-| F051 | Basic date and time | F051 | | Yes | |
-| F051 | Basic date and time | F051-01 | DATE data type (including support of DATE literal) | Yes | |
-| F051 | Basic date and time | F051-02 | TIME data type (including support of TIME literal) with fractional seconds precision of at least 0 | Partially | TIME WITH TIME ZONE type is not supported. Does not support sub-ms precision |
-| F051 | Basic date and time | F051-03 | TIMESTAMP data type (including support of TIMESTAMP literal) with fractional seconds precision of at least 0 and 6 | Partially | TIMESTAMP WITH TIME ZONE is not supported. Does not support sub-ms precision |
-| F051 | Basic date and time | F051-04 | Comparison predicate on DATE, TIME, and TIMESTAMP data types | Yes | |
-| F051 | Basic date and time | F051-05 | Explicit CAST between datetime types and character string types | Yes | |
-| F051 | Basic date and time | F051-06 | CURRENT_DATE | Yes | |
-| F051 | Basic date and time | F051-07 | LOCALTIME | Yes | |
-| F051 | Basic date and time | F051-08 | LOCALTIMESTAMP | Yes | |
-| F052 | Intervals and datetime arithmetic | F052 | | Yes | |
-| F171 | Multiple schemas per user | F171 | | Yes | |
-| F201 | CAST function | F201 | | Yes | |
-| F221 | Explicit defaults | F221 | | Yes | |
-| F261 | CASE expression | F261 | | Yes | |
-| F261 | CASE expression | F261-01 | Simple CASE | Yes | |
-| F261 | CASE expression | F261-02 | Searched CASE | Yes | |
-| F261 | CASE expression | F261-03 | NULLIF | Yes | |
-| F261 | CASE expression | F261-04 | COALESCE | Yes | |
-| F302 | INTERSECT table operator | F302 | | Yes | |
-| F302 | INTERSECT table operator | F302-01 | INTERSECT DISTINCT table operator | Yes | |
-| F302 | INTERSECT table operator | F302-02 | INTERSECT ALL table operator | Yes | |
-| F304 | EXCEPT ALL table operator | F304 | | Yes | |
-| F311 | Schema definition statement | F311 | | Partially | |
-| F311 | Schema definition statement | F311-01 | CREATE SCHEMA | Yes | Schema elements are not supported |
-| F381 | Extended schema manipulation | F381-01 | ALTER TABLE statement: ALTER COLUMN clause | Partially | Default can not be set to non-constant in most cases. See DDL docs |
-| F391 | Long identifiers | F391 | | Yes | Up to 128 characters |
-| F392 | Unicode escapes in identifiers | F392 | | Partially | Partial support of unicode escapes |
-| F401 | Extended joined table | F401 | | Yes | |
-| F401 | Extended joined table | F401-01 | NATURAL JOIN | Yes | |
-| F401 | Extended joined table | F401-02 | FULL OUTER JOIN | Yes | |
-| F401 | Extended joined table | F401-04 | CROSS JOIN | Yes | |
-| F404 | Range variable for common column names | F404 | | Yes | |
-| F411 | Time zone specification | F411 | | Yes | |
-| F471 | Scalar subquery values | F471 | | Yes | |
-| F561 | Full value expressions | F561 | | Yes | |
-| F571 | Truth value tests | F571 | | Partially | UNKNOWN is not supported |
-| F591 | Derived tables | F591 | | Yes | |
-| F661 | Simple tables | F661 | | Yes | |
-| F781 | Self-referencing operations | F781 | | Yes | |
-| F850 | Top-level &lt;order by clause&gt; in &lt;query expression&gt; | F850 | | Yes | |
-| F851 | &lt;order by clause&gt; in subqueries | F851 | | Yes | |
-| F855 | Nested &lt;order by clause&gt; in &lt;query expression&gt; | F855 | | Yes | |
-| F861 | Top-level &lt;result offset clause&gt; in &lt;query expression&gt; | F861 | | Yes | |
-| F862 | &lt;result offset clause&gt; in subqueries | F862 | | Yes | |
-| F863 | Nested &lt;result offset clause&gt; in &lt;query expression&gt; | F863 | | Yes | |
-| T021 | BINARY and VARBINARY data types | T021 | | Yes | BINARY type cannot be used in table definition |
-| T031 | BOOLEAN data type | T031 | | Yes | |
-| T071 | BIGINT data type | T071 | | Yes | |
-| T121 | WITH (excluding RECURSIVE) in query expression | T121 | | Yes | |
-| T122 | WITH (excluding RECURSIVE) in subquery | T122 | | Yes | |
-| T141 | SIMILAR predicate | T141 | | Yes | |
-| T151 | DISTINCT predicate | T151 | | Yes | |
-| T152 | DISTINCT predicate with negation | T152 | | Yes | |
-| T285 | Enhanced derived column names | T285 | | Yes | |
-| T312 | OVERLAY function | T312 | | Yes | |
-| T351 | Bracketed SQL comments (/*...*/ comments) | T351 | | Yes | |
-| T434 | GROUP BY DISTINCT | T434 | | Yes | |
-| T441 | ABS and MOD functions | T441 | | Yes | |
-| T501 | Enhanced EXISTS predicate | T501 | | Yes | |
-| T551 | Optional key words for default syntax | T551 | | Yes | |
-| T621 | Enhanced numeric functions | T621 | | Yes | |
-| T622 | Trigonometric functions | T622 | | Yes | |
-| T623 | General logarithm functions | T623 | | Yes | |
-| T624 | Common logarithm functions | T624 | | Yes | |
-| T631 | IN predicate with one list element | T631 | | Yes | |
-| T828 | JSON_QUERY | T828 | | Yes | |
-| T829 | JSON_QUERY: array wrapper options | T829 | | Yes | |
-| T839 | Formatted cast of datetimes to/from character strings | T839 | | Yes | |
+| E011 | 숫자 데이터 타입 | E011 | | 예 | |
+| E011 | 숫자 데이터 타입 | E011-01 | INTEGER 및 SMALLINT 데이터 타입 | 예 | |
+| E011 | 숫자 데이터 타입 | E011-02 | REAL, DOUBLE PRECISION 및 FLOAT 데이터 타입 | 예 | |
+| E011 | 숫자 데이터 타입 | E011-03 | DECIMAL 및 NUMERIC 데이터 타입 | 예 | DEC 및 NUMERIC 타입은 지원하지 않습니다 |
+| E011 | 숫자 데이터 타입 | E011-04 | 산술 연산자 | 예 | |
+| E011 | 숫자 데이터 타입 | E011-05 | 숫자 비교 | 예 | |
+| E011 | 숫자 데이터 타입 | E011-06 | 숫자 데이터 타입 간 암시적 캐스팅 | 예 | |
+| E021 | 문자 데이터 타입 | E021 | | 예 | 테이블 정의에는 CHARACTER 타입을 사용할 수 없습니다 |
+| E021 | 문자열 타입 | E021-01 | CHARACTER 데이터 타입 | 예 | |
+| E021 | 문자열 타입 | E021-02 | CHARACTER VARYING 데이터 타입 | 예 | |
+| E021 | 문자열 타입 | E021-03 | 문자 리터럴 | 예 | |
+| E021 | 문자열 타입 | E021-04 | CHARACTER_LENGTH 함수 | 예 | |
+| E021 | 문자열 타입 | E021-05 | OCTET_LENGTH 함수 | 예 | |
+| E021 | 문자열 타입 | E021-06 | SUBSTRING 함수 | 예 | |
+| E021 | 문자열 타입 | E021-07 | 문자열 연결 | 예 | |
+| E021 | 문자열 타입 | E021-08 | UPPER 및 LOWER 함수 | 예 | |
+| E021 | 문자열 타입 | E021-09 | TRIM 함수 | 예 | |
+| E021 | 문자열 타입 | E021-10 | 문자열 타입 간 암시적 캐스팅 | 예 | |
+| E021 | 문자열 타입 | E021-11 | POSITION 함수 | 예 | |
+| E021 | 문자열 타입 | E021-12 | 문자 비교 | 예 | |
+| E031 | 식별자 | E031 | | 예 | |
+| E031 | 식별자 | E031-01 | 구분 식별자 | 예 | |
+| E031 | 식별자 | E031-02 | 소문자 식별자 | 예 | |
+| E031 | 식별자 | E031-03 | 후행 밑줄 | 예 | |
+| E051 | 기본 쿼리 사양 | E051 | | 예 | |
+| E051 | 기본 쿼리 사양 | E051-01 | SELECT DISTINCT | 예 | |
+| E051 | 기본 쿼리 사양 | E051-02 | GROUP BY 절 | 예 | GROUPING SETS를 지원합니다. ROLLUP과 CUBE는 지원하지 않습니다 |
+| E051 | 기본 쿼리 사양 | E051-04 | GROUP BY에 &lt;select list&gt;에 없는 컬럼을 포함할 수 있습니다 | 예 | |
+| E051 | 기본 쿼리 사양 | E051-05 | SELECT 목록 항목의 이름을 바꿀 수 있습니다 | 예 | |
+| E051 | 기본 쿼리 사양 | E051-06 | HAVING 절 | 예 | |
+| E051 | 기본 쿼리 사양 | E051-07 | SELECT 목록의 한정된 * | 예 | |
+| E051 | 기본 쿼리 사양 | E051-08 | FROM 절의 상관 이름 | 예 | |
+| E051 | 기본 쿼리 사양 | E051-09 | FROM 절에서 컬럼 이름 바꾸기 | 예 | |
+| E061 | 기본 조건자 및 검색 조건 | E061 | | 예 | |
+| E061 | 기본 조건자 및 검색 조건 | E061-01 | 비교 조건자 | 예 | |
+| E061 | 기본 조건자 및 검색 조건 | E061-02 | BETWEEN 조건자 | 예 | |
+| E061 | 기본 조건자 및 검색 조건 | E061-03 | 값 목록을 사용하는 IN 조건자 | 예 | |
+| E061 | 기본 조건자 및 검색 조건 | E061-04 | LIKE 조건자 | 예 | |
+| E061 | 기본 조건자 및 검색 조건 | E061-05 | LIKE 조건자의 ESCAPE 절 | 예 | |
+| E061 | 기본 조건자 및 검색 조건 | E061-06 | NULL 조건자 | 예 | |
+| E061 | 기본 조건자 및 검색 조건 | E061-07 | 한정 비교 조건자 | 예 | |
+| E061 | 기본 조건자 및 검색 조건 | E061-08 | EXISTS 조건자 | 예 | |
+| E061 | 기본 조건자 및 검색 조건 | E061-09 | 비교 조건자의 서브쿼리 | 예 | |
+| E061 | 기본 조건자 및 검색 조건 | E061-11 | IN 조건자의 서브쿼리 | 예 | |
+| E061 | 기본 조건자 및 검색 조건 | E061-12 | 한정 비교 조건자의 서브쿼리 | 예 | |
+| E061 | 기본 조건자 및 검색 조건 | E061-13 | 상관 서브쿼리 | 예 | |
+| E061 | 기본 조건자 및 검색 조건 | E061-14 | 검색 조건 | 예 | |
+| E071 | 기본 쿼리 표현식 | E071 | | 예 | |
+| E071 | 기본 쿼리 표현식 | E071-01 | UNION DISTINCT 테이블 연산자 | 예 | |
+| E071 | 기본 쿼리 표현식 | E071-02 | UNION ALL 테이블 연산자 | 예 | |
+| E071 | 기본 쿼리 표현식 | E071-03 | EXCEPT DISTINCT 테이블 연산자 | 예 | |
+| E071 | 기본 쿼리 표현식 | E071-05 | 테이블 연산자로 결합한 컬럼은 데이터 타입이 정확히 같지 않아도 됩니다 | 예 | |
+| E071 | 기본 쿼리 표현식 | E071-06 | 서브쿼리의 테이블 연산자 | 예 | |
+| E081 | 기본 권한 | E081 | | 아니요 | |
+| E081 | 기본 권한 | E081-01 | SELECT 권한 | 아니요 | |
+| E081 | 기본 권한 | E081-02 | DELETE 권한 | 아니요 | |
+| E081 | 기본 권한 | E081-03 | 테이블 수준의 INSERT 권한 | 아니요 | |
+| E081 | 기본 권한 | E081-04 | 테이블 수준의 UPDATE 권한 | 아니요 | |
+| E091 | 집합 함수 | E091 | | 예 | |
+| E091 | 집합 함수 | E091-01 | AVG | 예 | |
+| E091 | 집합 함수 | E091-02 | COUNT | 예 | |
+| E091 | 집합 함수 | E091-03 | MAX | 예 | |
+| E091 | 집합 함수 | E091-04 | MIN | 예 | |
+| E091 | 집합 함수 | E091-05 | SUM | 예 | |
+| E091 | 집합 함수 | E091-06 | ALL 한정자 | 예 | |
+| E091 | 집합 함수 | E091-07 | DISTINCT 한정자 | 예 | |
+| E101 | 기본 데이터 조작 | E101 | | 예 | |
+| E101 | 기본 데이터 조작 | E101-01 | INSERT 문 | 예 | |
+| E101 | 기본 데이터 조작 | E101-03 | 검색형 UPDATE 문 | 예 | |
+| E101 | 기본 데이터 조작 | E101-04 | 검색형 DELETE 문 | 예 | |
+| E111 | 단일 행 SELECT 문 | E111 | | 예 | |
+| E131 | NULL 값 지원(값 대신 NULL 사용) | E131 | | 예 | |
+| E141 | 기본 무결성 제약 조건 | E141 | | 부분 지원 | NOT NULL 및 PRIMARY KEY 제약 조건. |
+| E141 | 기본 무결성 제약 조건 | E141-01 | NOT NULL 제약 조건 | 예 | |
+| E141 | 기본 무결성 제약 조건 | E141-03 | PRIMARY KEY 제약 조건 | 예 | |
+| E141 | 기본 무결성 제약 조건 | E141-07 | 컬럼 기본값 | 부분 지원 | 리터럴과 RAND_UUID 함수만 가능합니다 |
+| E141 | 기본 무결성 제약 조건 | E141-08 | PRIMARY KEY에서 유추되는 NOT NULL | 예 | |
+| E151 | 트랜잭션 지원 | E151 | | 부분 지원 | |
+| E151 | 트랜잭션 지원 | E151-01 | COMMIT 문 | 부분 지원 | SQL 스크립트에서만 지원합니다. 옵션은 없습니다. |
+| E151 | 트랜잭션 지원 | E151-02 | ROLLBACK 문 | 부분 지원 | SQL 스크립트에서만 지원합니다. 옵션은 없습니다. 세이브포인트는 지원하지 않습니다 |
+| E153 | 서브쿼리를 포함한 갱신 가능 쿼리 | E153 | | 예 | |
+| E161 | 앞에 이중 마이너스 기호를 사용하는 SQL 주석 | E161 | | 예 | |
+| E171 | SQLSTATE 지원 | E171 | | 아니요 | |
+| F031 | 기본 스키마 조작 | F031 | | 부분 지원 | CREATE TABLE, ALTER TABLE, DROP TABLE |
+| F031 | 기본 스키마 조작 | F031-01 | 영속적인 기본 테이블을 생성하는 CREATE TABLE 문 | 부분 지원 | CREATE TABLE에는 항상 기본 키를 지정해야 합니다 |
+| F031 | 기본 스키마 조작 | F031-03 | GRANT 문 | 아니요 | |
+| F031 | 기본 스키마 조작 | F031-04 | ALTER TABLE 문: ADD COLUMN 절 | 예 | |
+| F033 | ALTER TABLE 문: DROP COLUMN 절 | F033 | | 부분 지원 | DROP 동작은 지원하지 않습니다 |
+| F041 | 기본 조인 테이블 | F041 | | 예 | |
+| F041 | 기본 조인 테이블 | F041-01 | 내부 조인(단, INNER 키워드가 필수는 아님) | 예 | |
+| F041 | 기본 조인 테이블 | F041-02 | INNER 키워드 | 예 | |
+| F041 | 기본 조인 테이블 | F041-03 | LEFT OUTER JOIN | 예 | |
+| F041 | 기본 조인 테이블 | F041-04 | RIGHT OUTER JOIN | 예 | |
+| F041 | 기본 조인 테이블 | F041-05 | 외부 조인은 중첩할 수 있습니다 | 예 | |
+| F041 | 기본 조인 테이블 | F041-07 | LEFT 또는 RIGHT 외부 조인의 내부 테이블은 내부 조인에도 사용할 수 있습니다 | 예 | |
+| F041 | 기본 조인 테이블 | F041-08 | = 연산자뿐 아니라 모든 비교 연산자를 지원합니다 | 예 | |
+| F051 | 기본 날짜 및 시간 | F051 | | 예 | |
+| F051 | 기본 날짜 및 시간 | F051-01 | DATE 데이터 타입(DATE 리터럴 지원 포함) | 예 | |
+| F051 | 기본 날짜 및 시간 | F051-02 | 초 이하 정밀도 0자리 이상을 지원하는 TIME 데이터 타입(TIME 리터럴 지원 포함) | 부분 지원 | TIME WITH TIME ZONE 타입은 지원하지 않습니다. 밀리초 미만 정밀도는 지원하지 않습니다 |
+| F051 | 기본 날짜 및 시간 | F051-03 | 초 이하 정밀도 0자리 및 6자리 이상을 지원하는 TIMESTAMP 데이터 타입(TIMESTAMP 리터럴 지원 포함) | 부분 지원 | TIMESTAMP WITH TIME ZONE은 지원하지 않습니다. 밀리초 미만 정밀도는 지원하지 않습니다 |
+| F051 | 기본 날짜 및 시간 | F051-04 | DATE, TIME, TIMESTAMP 데이터 타입에 대한 비교 조건자 | 예 | |
+| F051 | 기본 날짜 및 시간 | F051-05 | 날짜/시간 타입과 문자열 타입 간의 명시적 CAST | 예 | |
+| F051 | 기본 날짜 및 시간 | F051-06 | CURRENT_DATE | 예 | |
+| F051 | 기본 날짜 및 시간 | F051-07 | LOCALTIME | 예 | |
+| F051 | 기본 날짜 및 시간 | F051-08 | LOCALTIMESTAMP | 예 | |
+| F052 | 인터벌 및 날짜/시간 연산 | F052 | | 예 | |
+| F171 | 사용자당 다중 스키마 | F171 | | 예 | |
+| F201 | CAST 함수 | F201 | | 예 | |
+| F221 | 명시적 기본값 | F221 | | 예 | |
+| F261 | CASE 표현식 | F261 | | 예 | |
+| F261 | CASE 표현식 | F261-01 | 단순 CASE | 예 | |
+| F261 | CASE 표현식 | F261-02 | 검색형 CASE | 예 | |
+| F261 | CASE 표현식 | F261-03 | NULLIF | 예 | |
+| F261 | CASE 표현식 | F261-04 | COALESCE | 예 | |
+| F302 | INTERSECT 테이블 연산자 | F302 | | 예 | |
+| F302 | INTERSECT 테이블 연산자 | F302-01 | INTERSECT DISTINCT 테이블 연산자 | 예 | |
+| F302 | INTERSECT 테이블 연산자 | F302-02 | INTERSECT ALL 테이블 연산자 | 예 | |
+| F304 | EXCEPT ALL 테이블 연산자 | F304 | | 예 | |
+| F311 | 스키마 정의 문 | F311 | | 부분 지원 | |
+| F311 | 스키마 정의 문 | F311-01 | CREATE SCHEMA | 예 | 스키마 요소는 지원하지 않습니다 |
+| F381 | 확장 스키마 조작 | F381-01 | ALTER TABLE 문: ALTER COLUMN 절 | 부분 지원 | 대부분의 경우 기본값을 상수가 아닌 값으로 설정할 수 없습니다. DDL 문서를 참고하세요 |
+| F391 | 긴 식별자 | F391 | | 예 | 최대 128자 |
+| F392 | 식별자의 유니코드 이스케이프 | F392 | | 부분 지원 | 유니코드 이스케이프를 부분적으로 지원합니다 |
+| F401 | 확장 조인 테이블 | F401 | | 예 | |
+| F401 | 확장 조인 테이블 | F401-01 | NATURAL JOIN | 예 | |
+| F401 | 확장 조인 테이블 | F401-02 | FULL OUTER JOIN | 예 | |
+| F401 | 확장 조인 테이블 | F401-04 | CROSS JOIN | 예 | |
+| F404 | 공통 컬럼 이름을 위한 범위 변수 | F404 | | 예 | |
+| F411 | 시간대 지정 | F411 | | 예 | |
+| F471 | 스칼라 서브쿼리 값 | F471 | | 예 | |
+| F561 | 완전한 값 표현식 | F561 | | 예 | |
+| F571 | 진리값 검사 | F571 | | 부분 지원 | UNKNOWN은 지원하지 않습니다 |
+| F591 | 파생 테이블 | F591 | | 예 | |
+| F661 | 단순 테이블 | F661 | | 예 | |
+| F781 | 자기 참조 연산 | F781 | | 예 | |
+| F850 | &lt;query expression&gt;의 최상위 &lt;order by clause&gt; | F850 | | 예 | |
+| F851 | 서브쿼리의 &lt;order by clause&gt; | F851 | | 예 | |
+| F855 | &lt;query expression&gt;에 중첩된 &lt;order by clause&gt; | F855 | | 예 | |
+| F861 | &lt;query expression&gt;의 최상위 &lt;result offset clause&gt; | F861 | | 예 | |
+| F862 | 서브쿼리의 &lt;result offset clause&gt; | F862 | | 예 | |
+| F863 | &lt;query expression&gt;에 중첩된 &lt;result offset clause&gt; | F863 | | 예 | |
+| T021 | BINARY 및 VARBINARY 데이터 타입 | T021 | | 예 | 테이블 정의에는 BINARY 타입을 사용할 수 없습니다 |
+| T031 | BOOLEAN 데이터 타입 | T031 | | 예 | |
+| T071 | BIGINT 데이터 타입 | T071 | | 예 | |
+| T121 | 쿼리 표현식의 WITH(RECURSIVE 제외) | T121 | | 예 | |
+| T122 | 서브쿼리의 WITH(RECURSIVE 제외) | T122 | | 예 | |
+| T141 | SIMILAR 조건자 | T141 | | 예 | |
+| T151 | DISTINCT 조건자 | T151 | | 예 | |
+| T152 | 부정을 포함한 DISTINCT 조건자 | T152 | | 예 | |
+| T285 | 확장된 파생 컬럼 이름 | T285 | | 예 | |
+| T312 | OVERLAY 함수 | T312 | | 예 | |
+| T351 | 괄호형 SQL 주석(/*...*/ 주석) | T351 | | 예 | |
+| T434 | GROUP BY DISTINCT | T434 | | 예 | |
+| T441 | ABS 및 MOD 함수 | T441 | | 예 | |
+| T501 | 확장된 EXISTS 조건자 | T501 | | 예 | |
+| T551 | 기본 구문의 선택적 키워드 | T551 | | 예 | |
+| T621 | 확장된 숫자 함수 | T621 | | 예 | |
+| T622 | 삼각 함수 | T622 | | 예 | |
+| T623 | 일반 로그 함수 | T623 | | 예 | |
+| T624 | 상용 로그 함수 | T624 | | 예 | |
+| T631 | 목록 요소가 하나인 IN 조건자 | T631 | | 예 | |
+| T828 | JSON_QUERY | T828 | | 예 | |
+| T829 | JSON_QUERY: 배열 래퍼 옵션 | T829 | | 예 | |
+| T839 | 날짜/시간과 문자열 간의 형식화된 CAST | T839 | | 예 | |
 
-## Proposed Alternatives for Unsupported Features
+## 지원하지 않는 기능의 대안 {#proposed-alternatives-for-unsupported-features}
 
-Apache Ignite provides alternative solutions for some unsupported features, listed below:
+Apache Ignite는 지원하지 않는 일부 기능에 대한 대안을 아래와 같이 제공합니다.
 
-| Feature ID | Feature Name | Subfeature ID | Subfeature Name | Alternative |
+| 기능 ID | 기능 이름 | 하위 기능 ID | 하위 기능 이름 | 대안 |
 |---|---|---|---|---|
-| E171 | SQLSTATE support | E171 | | JDBC error codes, ODBC error codes |
+| E171 | SQLSTATE 지원 | E171 | | JDBC 오류 코드, ODBC 오류 코드 |

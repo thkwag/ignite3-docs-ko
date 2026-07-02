@@ -1,15 +1,15 @@
 ---
 id: operational-commands
-title: Operational Commands
+title: 운영 명령어
 ---
 
 import RailroadDiagram from '@site/src/components/RailroadDiagram';
 
-# Operational Commands
+# 운영 명령어 {#operational-commands}
 
 ## SELECT
 
-Retrieves data from a table or multiple tables.
+테이블 하나 또는 여러 테이블에서 데이터를 조회합니다.
 
 <RailroadDiagram>{`
 Diagram(
@@ -61,21 +61,21 @@ Terminal('having_boolean_expression')
 `}</RailroadDiagram>
 
 
-### Parameters
+### 매개변수 {#parameters}
 
-- `hint_comment` - an sql [optimizer hint](/sql/advanced/performance-tuning#optimizer-hints).
-- `where_boolean_expression` - an SQL expression that is run against table records and returns a boolean value. Only the records for which `TRUE` was returned will be returned. If not specified, all matching records are returned.
-- `having_boolean_expression` - an SQL expression that is run against groups and returns a boolean value. Can use [aggregate functions](/sql/reference/data-types-and-functions/operators-and-functions#aggregate-functions). Only the groups for which `TRUE` was returned will be returned. If not specified, all matching groups are returned.
+- `hint_comment` - SQL [옵티마이저 힌트](/sql/advanced/performance-tuning#optimizer-hints)입니다.
+- `where_boolean_expression` - 테이블 레코드를 대상으로 실행해 불리언 값을 반환하는 SQL 표현식입니다. `TRUE`가 반환된 레코드만 반환됩니다. 지정하지 않으면 조건에 맞는 모든 레코드가 반환됩니다.
+- `having_boolean_expression` - 그룹을 대상으로 실행해 불리언 값을 반환하는 SQL 표현식입니다. [집계 함수](/sql/reference/data-types-and-functions/operators-and-functions#aggregate-functions)를 사용할 수 있습니다. `TRUE`가 반환된 그룹만 반환됩니다. 지정하지 않으면 조건에 맞는 모든 그룹이 반환됩니다.
 
-### JOINs
+### 조인 {#joins}
 
-Apache Ignite supports colocated and non-colocated distributed SQL joins. Furthermore, if the data resides in different tables, Apache Ignite allows for cross-table joins as well.
+Apache Ignite는 콜로케이션된 분산 SQL 조인과 콜로케이션되지 않은 분산 SQL 조인을 모두 지원합니다. 데이터가 서로 다른 테이블에 있으면 테이블 간 조인도 지원합니다.
 
 ## COPY INTO
 
-### Description
+### 설명 {#description}
 
-Imports data from an external source into a table or exports data to a file from the table. The table the data is imported into must exist.
+외부 소스의 데이터를 테이블로 가져오거나, 테이블의 데이터를 파일로 내보냅니다. 데이터를 가져올 대상 테이블은 미리 존재해야 합니다.
 
 <RailroadDiagram>{`
 Diagram(
@@ -95,37 +95,37 @@ OneOrMore (NonTerminal('parameter', {href:'../language-definition/grammar-refere
 )
 `}</RailroadDiagram>
 
-### Parameters
+### 매개변수 {#parameters-1}
 
-* `source` - the full path to the file to import the data from (if `target` is a table). Then name of the table and the list of columns to export the data from (if `target` is a file). If the source is a table, you can further narrow down the selection by using a query.
-* `target` - the table and table columns when importing data to the table. The path to the file when exporting data.
-* `formatType` - the format of the file to work with:
+* `source` - `target`이 테이블이면(가져오기) 데이터를 가져올 파일의 전체 경로이고, `target`이 파일이면(내보내기) 데이터를 내보낼 테이블 이름과 컬럼 목록입니다. source가 테이블이면 쿼리로 선택 범위를 더 좁힐 수 있습니다.
+* `target` - 테이블로 데이터를 가져올 때는 테이블과 테이블 컬럼이고, 데이터를 내보낼 때는 파일 경로입니다.
+* `formatType` - 사용할 파일 형식입니다.
   * `CSV`
   * `PARQUET`
   * `ICEBERG`
-* `WITH` - accepts additional parameters. All properties are case-sensitive:
-  * `delimiter` - for CSV files only; default delimiter is `,`. Delimiter syntax is `'char'`. Any alphanumeric character can be a delimiter.
-  * `pattern` - the file pattern used when importing partitioned Parquet tables in the regular expression format. The regular expression must be enclosed in `'` signs. For example, `'.*'` imports all files. Partitioned column will not be imported.
-  * `header` - for CSV files only; if set to `true`, specifies that the created file should contain a header line with column names. Column names of the table are used to create the header line.
-  * `quoteChar` - for CSV files only; the character to use for quoted elements. Default quote character is `"`.
-  * `escapeChar` - for CSV files only; the character to use for escaping a separator or quote. Default escape character is `\`.
-  * `ignoreLeadingWhiteSpace` - for CSV files only; if `true`, ignore leading whitespace, keep them otherwise. Default value is `true`.
-  * `ignoreQuotations` - for CSV files only; if `true`, quoted elements are ignored, otherwise they are kept. Default value is `false`.
-  * `strictQuotes` - for CSV files only; if `true`, characters outside the quoted elements are ignored, otherwise they are kept. Default value is `false`.
-  * `batchSize` - the number of entries loaded in each batch. Default value is `1024`.
-  * `null` - what value empty values are mapped to on import, and `null` values are mapped to on export. By default, empty values are mapped to `null` on import, and `null` values are mapped to an empty string (`""`) on export.
+* `WITH` - 추가 매개변수를 지정합니다. 모든 속성은 대소문자를 구분합니다.
+  * `delimiter` - CSV 파일 전용입니다. 기본 구분자는 `,`입니다. 구분자 구문은 `'char'`이며, 영숫자 문자는 모두 구분자로 사용할 수 있습니다.
+  * `pattern` - 파티셔닝된 Parquet 테이블을 가져올 때 사용하는 파일 패턴으로, 정규 표현식 형식입니다. 정규 표현식은 `'` 기호로 감싸야 합니다. 예를 들어 `'.*'`는 모든 파일을 가져옵니다. 파티셔닝된 컬럼은 가져오지 않습니다.
+  * `header` - CSV 파일 전용입니다. `true`로 설정하면 생성된 파일에 컬럼 이름이 담긴 헤더 줄이 포함됩니다. 헤더 줄은 테이블의 컬럼 이름으로 생성합니다.
+  * `quoteChar` - CSV 파일 전용입니다. 인용된 요소에 사용할 문자입니다. 기본 인용 문자는 `"`입니다.
+  * `escapeChar` - CSV 파일 전용입니다. 구분자나 인용 부호를 이스케이프할 때 사용할 문자입니다. 기본 이스케이프 문자는 `\`입니다.
+  * `ignoreLeadingWhiteSpace` - CSV 파일 전용입니다. `true`이면 선행 공백을 무시하고, 그렇지 않으면 유지합니다. 기본값은 `true`입니다.
+  * `ignoreQuotations` - CSV 파일 전용입니다. `true`이면 인용된 요소를 무시하고, 그렇지 않으면 유지합니다. 기본값은 `false`입니다.
+  * `strictQuotes` - CSV 파일 전용입니다. `true`이면 인용된 요소 밖의 문자를 무시하고, 그렇지 않으면 유지합니다. 기본값은 `false`입니다.
+  * `batchSize` - 한 번의 일괄 처리로 적재하는 항목 수입니다. 기본값은 `1024`입니다.
+  * `null` - 가져오기 시 빈 값을 매핑할 값과, 내보내기 시 `null` 값을 매핑할 값을 지정합니다. 기본적으로 가져오기 시 빈 값은 `null`로 매핑되고, 내보내기 시 `null` 값은 빈 문자열(`""`)로 매핑됩니다.
   * `S3`:
-    * `s3.client-region` - when using S3 storage, the region to store the data in.
-    * `s3.access-key-id` - when using S3 storage, the AWS access key.
-    * `s3.secret-access-key` - when using S3 storage, the AWS secret key.
-    * Iceberg-specific:
-      * The [catalog properties](https://iceberg.apache.org/docs/latest/configuration#catalog-properties) are supported.
-      * The `table-identifier` property describes Apache Iceberg TableIdentifier names. The names can be dot-separated. For example, `db_name.table_name` or `table`.
-      * The `warehouse` path can be defined explicitly as a `'warehouse'='path'` property, or implicitly as a source or target `COPY FROM source INTO target`. If both ways are defined, the explicit property is used.
+    * `s3.client-region` - S3 스토리지를 사용할 때 데이터를 저장할 리전입니다.
+    * `s3.access-key-id` - S3 스토리지를 사용할 때 사용할 AWS 액세스 키입니다.
+    * `s3.secret-access-key` - S3 스토리지를 사용할 때 사용할 AWS 시크릿 키입니다.
+    * Iceberg 전용:
+      * [카탈로그 속성](https://iceberg.apache.org/docs/latest/configuration#catalog-properties)을 지원합니다.
+      * `table-identifier` 속성은 Apache Iceberg TableIdentifier 이름을 나타냅니다. 이름은 점으로 구분할 수 있으며, 예를 들어 `db_name.table_name` 또는 `table`과 같이 씁니다.
+      * `warehouse` 경로는 `'warehouse'='path'` 속성으로 명시적으로 지정하거나, `COPY FROM source INTO target`의 source나 target으로 암묵적으로 지정할 수 있습니다. 두 방식을 모두 지정하면 명시적 속성이 사용됩니다.
 
-### Examples
+### 예시 {#examples}
 
-Imports data from columns `name` and `age` of a CSV file with header into Table1 columns `name` and `age`:
+헤더가 있는 CSV 파일의 `name`, `age` 컬럼에서 Table1의 `name`, `age` 컬럼으로 데이터를 가져옵니다:
 
 ```sql
 /* Import data from CSV with column headers */
@@ -134,7 +134,7 @@ INTO Table1 (name, age)
 FORMAT CSV
 ```
 
-Imports data from the first two columns of a CSV file without header into Table1 columns `name` and `age`:
+헤더가 없는 CSV 파일의 처음 두 컬럼에서 Table1의 `name`, `age` 컬럼으로 데이터를 가져옵니다:
 
 ```sql
 /* Import data from CSV without column headers  */
@@ -142,7 +142,7 @@ COPY FROM '/path/to/dir/data.csv'
 INTO Table1 (name, age)
 ```
 
-Imports data from columns `name` and `age` of a CSV file that uses the `~` symbol as quotation character:
+인용 문자로 `~` 기호를 사용하는 CSV 파일의 `name`, `age` 컬럼에서 데이터를 가져옵니다:
 
 ```sql
 /* Import data from CSV with custom quotation character */
@@ -152,7 +152,7 @@ FORMAT CSV
 WITH 'quoteChar'='~'
 ```
 
-Imports data from columns `name`, `age` and `empty` of a CSV file and maps all empty values to `no data`:
+CSV 파일의 `name`, `age`, `empty` 컬럼에서 데이터를 가져오고, 모든 빈 값을 `no data`로 매핑합니다:
 
 ```sql
 /* Import data from CSV with custom quotation character */
@@ -162,7 +162,7 @@ FORMAT CSV
 WITH 'null'='no data'
 ```
 
-Imports data from CSV table in batches of 2048 entries:
+2048개 항목 단위로 일괄 처리해 CSV 테이블에서 데이터를 가져옵니다:
 
 ```sql
 /* Import data from CSV without column headers  */
@@ -171,7 +171,7 @@ INTO Table1 (name, age)
 WITH 'batchSize'='2048'
 ```
 
-Exports data from Table1 to a CSV file:
+Table1의 데이터를 CSV 파일로 내보냅니다:
 
 ```sql
 /* Export data to CSV */
@@ -180,7 +180,7 @@ INTO  '/path/to/dir/data.csv'
 FORMAT CSV
 ```
 
-Imports CSV file from AWS S3 into Table1:
+AWS S3의 CSV 파일을 Table1로 가져옵니다:
 
 ```sql
 /* Import CSV file from s3 */
@@ -190,7 +190,7 @@ FORMAT CSV
 WITH 'delimiter'= '|', 's3.access-key-id' = 'keyid', 's3.secret-access-key' = 'secretkey'
 ```
 
-A simple example of exporting data to Iceberg. For working with local file system you can use HadoopCatalog that does not need to connect to a Hive MetaStore.
+Iceberg로 데이터를 내보내는 간단한 예시입니다. 로컬 파일 시스템을 사용할 때는 Hive MetaStore에 연결할 필요가 없는 HadoopCatalog를 사용할 수 있습니다.
 
 ```sql
 COPY FROM Table1 (id,name,height)
@@ -199,7 +199,7 @@ FORMAT ICEBERG
 WITH 'table-identifier'='person', 'catalog-impl'='org.apache.iceberg.hadoop.HadoopCatalog'
 ```
 
-Exports data into Iceberg on AWS S3:
+AWS S3의 Iceberg로 데이터를 내보냅니다:
 
 ```sql
 COPY FROM person (id,name,height)
@@ -215,10 +215,10 @@ WITH
 ```
 
 :::warning
-Glue catalog requires the table identifier pattern `db_name.table_name - [a-z0-9_]` (all letters must be in low case with underscores and no spaces). It can be disabled by setting the `glue.skip-name-validation` property to `true` to skip validation. When database name and table name validation are skipped, there is no guarantee that downstream systems would all support the names.
+Glue 카탈로그는 테이블 식별자가 `db_name.table_name - [a-z0-9_]` 패턴을 따라야 합니다(모든 문자는 소문자여야 하며 밑줄만 사용하고 공백은 쓸 수 없습니다). `glue.skip-name-validation` 속성을 `true`로 설정하면 이 검증을 건너뛸 수 있습니다. 데이터베이스 이름과 테이블 이름 검증을 건너뛰면 다운스트림 시스템이 해당 이름을 모두 지원한다는 보장이 없습니다.
 :::
 
-Imports data from partitioned Parquet database:
+파티셔닝된 Parquet 데이터베이스에서 데이터를 가져옵니다:
 
 ```sql
 COPY FROM '/tmp/partitioned_table_dir'
@@ -227,7 +227,7 @@ FORMAT PARQUET
 WITH 'pattern' = '.*'
 ```
 
-Where the Parquet table looks like this:
+Parquet 테이블 구조는 다음과 같습니다:
 
 ```
 partitioned_table_dir/
@@ -239,7 +239,7 @@ partitioned_table_dir/
 
 ## KILL QUERY
 
-Cancels a running query. When a query is canceled with the `KILL` command, all parts of the query running on all other nodes are canceled too.
+실행 중인 쿼리를 취소합니다. `KILL` 명령으로 쿼리를 취소하면 다른 모든 노드에서 실행 중인 쿼리의 모든 부분도 함께 취소됩니다.
 
 <RailroadDiagram>{`
 Diagram(
@@ -250,14 +250,14 @@ Optional(Terminal('NO WAIT'))
 )
 `}</RailroadDiagram>
 
-### Parameters
+### 매개변수 {#parameters-2}
 
-* `query_id` - query identifier that can be retrieved via the `SQL_QUERIES` [system view](/configure-and-operate/monitoring/metrics-system-views).
-* `NO WAIT` - if specified, the command will return control immediately, without waiting for the query to be cancelled. You can monitor query status through the `SQL_QUERIES` [system view](/configure-and-operate/monitoring/metrics-system-views) to make sure it was cancelled.
+* `query_id` - `SQL_QUERIES` [시스템 뷰](/configure-and-operate/monitoring/metrics-system-views)에서 조회할 수 있는 쿼리 식별자입니다.
+* `NO WAIT` - 지정하면 쿼리 취소를 기다리지 않고 명령이 즉시 제어권을 반환합니다. 취소 여부는 `SQL_QUERIES` [시스템 뷰](/configure-and-operate/monitoring/metrics-system-views)로 확인할 수 있습니다.
 
 ## KILL TRANSACTION
 
-Cancels an active transaction.
+활성 트랜잭션을 취소합니다.
 
 <RailroadDiagram>{`
 Diagram(
@@ -268,14 +268,14 @@ Optional(Terminal('NO WAIT'))
 )
 `}</RailroadDiagram>
 
-### Parameters
+### 매개변수 {#parameters-3}
 
-* `transaction_id` - transaction identifier that can be retrieved via the `TRANSACTIONS` [system view](/configure-and-operate/monitoring/metrics-system-views).
-* `NO WAIT` - if specified, the command will return control immediately, without waiting for the transaction to be cancelled. You can monitor transaction status through the `TRANSACTIONS` [system view](/configure-and-operate/monitoring/metrics-system-views) to make sure it was cancelled.
+* `transaction_id` - `TRANSACTIONS` [시스템 뷰](/configure-and-operate/monitoring/metrics-system-views)에서 조회할 수 있는 트랜잭션 식별자입니다.
+* `NO WAIT` - 지정하면 트랜잭션 취소를 기다리지 않고 명령이 즉시 제어권을 반환합니다. 취소 여부는 `TRANSACTIONS` [시스템 뷰](/configure-and-operate/monitoring/metrics-system-views)로 확인할 수 있습니다.
 
 ## KILL COMPUTE
 
-Cancels a running compute job. When a job is canceled with the `KILL` command, all parts of the job running on all other nodes are canceled too.
+실행 중인 컴퓨트 작업을 취소합니다. `KILL` 명령으로 작업을 취소하면 다른 모든 노드에서 실행 중인 작업의 모든 부분도 함께 취소됩니다.
 
 <RailroadDiagram>{`
 Diagram(
@@ -286,7 +286,7 @@ Optional(Terminal('NO WAIT'))
 )
 `}</RailroadDiagram>
 
-### Parameters
+### 매개변수 {#parameters-4}
 
-* `job_id` - job identifier that can be retrieved via the `COMPUTE_JOBS` [system view](/configure-and-operate/monitoring/metrics-system-views).
-* `NO WAIT` - if specified, the command will return control immediately, without waiting for the job to be cancelled. You can monitor job status through the `COMPUTE_JOBS` [system view](/configure-and-operate/monitoring/metrics-system-views) to make sure it was cancelled.
+* `job_id` - `COMPUTE_JOBS` [시스템 뷰](/configure-and-operate/monitoring/metrics-system-views)에서 조회할 수 있는 작업 식별자입니다.
+* `NO WAIT` - 지정하면 작업 취소를 기다리지 않고 명령이 즉시 제어권을 반환합니다. 취소 여부는 `COMPUTE_JOBS` [시스템 뷰](/configure-and-operate/monitoring/metrics-system-views)로 확인할 수 있습니다.

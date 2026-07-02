@@ -1,59 +1,59 @@
 ---
 id: odbc
-title: ODBC Driver
+title: ODBC 드라이버
 sidebar_position: 2
 ---
 
-## Overview
+## 개요 {#overview}
 
-Ignite 3 includes an ODBC driver that allows you both to select and to modify data stored in a distributed cache by using standard SQL queries and native ODBC API. ODBC driver uses your [client connection configuration](/develop/ignite-clients/).
+Ignite 3에는 표준 SQL 쿼리와 네이티브 ODBC API로 분산 캐시에 저장된 데이터를 조회하고 수정할 수 있는 ODBC 드라이버가 포함되어 있습니다. ODBC 드라이버는 [클라이언트 연결 구성](/develop/ignite-clients/)을 사용합니다.
 
-ODBC driver only provides thread-safety at the connections level. This means that you should not access the same connection from multiple threads without additional synchronization, though you can create separate connections for every thread and use them simultaneously.
+ODBC 드라이버는 연결 수준에서만 스레드 안전성을 제공합니다. 즉, 추가 동기화 없이 여러 스레드에서 같은 연결에 접근해서는 안 되지만, 스레드마다 별도의 연결을 만들어 동시에 사용할 수는 있습니다.
 
-The ODBC driver implements version 3.8 of the ODBC API. For detailed information on ODBC please refer to [ODBC Programmer's Reference](https://msdn.microsoft.com/en-us/library/ms714177.aspx).
+ODBC 드라이버는 ODBC API 버전 3.8을 구현합니다. ODBC에 대한 자세한 내용은 [ODBC 프로그래머 참조 문서](https://msdn.microsoft.com/en-us/library/ms714177.aspx)를 참고하세요.
 
-## Installing ODBC Driver
+## ODBC 드라이버 설치 {#installing-odbc-driver}
 
-To use ODBC driver, register it in your system so that your ODBC Driver Manager will be able to locate it.
+ODBC 드라이버를 사용하려면 ODBC 드라이버 관리자가 찾을 수 있도록 시스템에 등록해야 합니다.
 
-### Installing on Windows
+### Windows에 설치하기 {#installing-on-windows}
 
-#### Prerequisites
+#### 사전 요구 사항 {#prerequisites}
 
-Microsoft Visual C++ 2017 Redistributable Package should be installed first.
+먼저 Microsoft Visual C++ 2017 Redistributable Package를 설치해야 합니다.
 
-#### Installation process
+#### 설치 과정 {#installation-process}
 
-Launch the provided installer and follow the instructions.
+제공된 설치 프로그램을 실행하고 안내를 따르세요.
 
-### Configuring the Cluster
+### 클러스터 구성 {#configuring-the-cluster}
 
-ODBC driver uses the client connector to work with the cluster. Make sure to configure the port to the one you intend to use, for example:
+ODBC 드라이버는 클라이언트 커넥터를 사용해 클러스터와 통신합니다. 사용하려는 포트로 반드시 구성하세요. 예:
 
 ```
 node config update clientConnector.port=10469
 ```
 
-For more information on configuring client connector, see [Client Connector Configuration](/develop/ignite-clients/).
+클라이언트 커넥터 구성에 대한 자세한 내용은 [클라이언트 커넥터 구성](/develop/ignite-clients/) 문서를 참고하세요.
 
-### Installing on Linux
+### Linux에 설치하기 {#installing-on-linux}
 
-To build and install ODBC driver on Linux, you need to first install ODBC Driver Manager. The ODBC driver has been tested with [UnixODBC](http://www.unixodbc.org).
+Linux에서 ODBC 드라이버를 빌드하고 설치하려면 먼저 ODBC 드라이버 관리자를 설치해야 합니다. ODBC 드라이버는 [UnixODBC](http://www.unixodbc.org)로 테스트했습니다.
 
-#### Prerequisites
+#### 사전 요구 사항 {#prerequisites-1}
 
-Install the following prerequisites first:
+먼저 다음 사전 요구 사항을 설치하세요:
 
-- [libstdc](https://gcc.gnu.org/onlinedocs/libstdc%2B%2B) library supporting C++14 standard
-- [UnixODBC](http://www.unixodbc.org) driver manager
+- C++14 표준을 지원하는 [libstdc](https://gcc.gnu.org/onlinedocs/libstdc%2B%2B) 라이브러리
+- [UnixODBC](http://www.unixodbc.org) 드라이버 관리자
 
-#### Download from website
+#### 웹사이트에서 다운로드하기 {#download-from-website}
 
-You can get the built rpm or deb package from the provided website. Then, install the package locally to use it.
+제공된 웹사이트에서 빌드된 rpm 또는 deb 패키지를 받을 수 있습니다. 이후 패키지를 로컬에 설치해 사용하세요.
 
-## Supported Data Types
+## 지원하는 데이터 타입 {#supported-data-types}
 
-The following SQL data types are supported:
+다음 SQL 데이터 타입을 지원합니다:
 
 - `SQL_CHAR`
 - `SQL_VARCHAR`
@@ -74,29 +74,29 @@ The following SQL data types are supported:
 - `SQL_TYPE_TIMESTAMP`
 - `SQL_TYPE_TIME`
 
-## Using pyodbc
+## pyodbc 사용하기 {#using-pyodbc}
 
-Ignite can be used with [pyodbc](https://pypi.org/project/pyodbc/). Here is how you can use pyodbc in Ignite 3:
+Ignite는 [pyodbc](https://pypi.org/project/pyodbc/)와 함께 사용할 수 있습니다. Ignite 3에서 pyodbc를 사용하는 방법은 다음과 같습니다:
 
-- Install pyodbc
+- pyodbc 설치하기:
 
 ```shell
 pip3 install pyodbc
 ```
 
-- Import pyodbc to your project:
+- 프로젝트에 pyodbc 가져오기:
 
 ```python
 import pyodbc
 ```
 
-- Connect to the database:
+- 데이터베이스에 연결하기:
 
 ```python
 conn = pyodbc.connect('Driver={Apache Ignite 3};Address=127.0.0.1:10800;')
 ```
 
-- Set encoding to UTF-8:
+- 인코딩을 UTF-8로 설정하기:
 
 ```python
 conn.setencoding(encoding='utf-8')
@@ -104,11 +104,11 @@ conn.setdecoding(sqltype=pyodbc.SQL_CHAR, encoding="utf-8")
 conn.setdecoding(sqltype=pyodbc.SQL_WCHAR, encoding="utf-8")
 ```
 
-- Get data from your database:
+- 데이터베이스에서 데이터 가져오기:
 
 ```python
 cursor = conn.cursor()
 cursor.execute('SELECT * FROM table_name')
 ```
 
-For more information on using pyodbc, use the [official documentation](https://github.com/mkleehammer/pyodbc/wiki).
+pyodbc 사용에 대한 자세한 내용은 [공식 문서](https://github.com/mkleehammer/pyodbc/wiki)를 참고하세요.
