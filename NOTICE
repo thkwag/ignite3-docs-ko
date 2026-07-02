@@ -1,0 +1,20 @@
+Apache Ignite
+Copyright 2022 The Apache Software Foundation
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
+
+---
+
+This repository is an unofficial derivative work. It contains a Korean
+translation of the Apache Ignite 3 documentation originally published at
+https://github.com/apache/ignite-3 (docs/docs), licensed under the Apache
+License, Version 2.0. Per section 4(b) of that license, this NOTICE records
+that the files have been changed: the documentation text has been translated
+from English to Korean, and site configuration (navigation, branding,
+versioning) has been adapted for standalone, single-language publication.
+
+This repository, its maintainer, and https://thkwag.github.io/ignite3-docs-ko/
+are not affiliated with, endorsed by, or sponsored by the Apache Software
+Foundation. "Apache", "Apache Ignite", and the Apache feather logo are
+trademarks of the Apache Software Foundation.
