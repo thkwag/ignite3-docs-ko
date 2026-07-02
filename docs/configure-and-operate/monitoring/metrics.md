@@ -1,47 +1,47 @@
 ---
 id: metrics
-title: Metrics
-sidebar_label: Overview
+title: 메트릭
+sidebar_label: 개요
 ---
 
-Apache Ignite 3 provides metrics for monitoring cluster health, performance, and resource utilization. Metrics help you understand system behavior, identify performance issues, and optimize cluster operations.
+Apache Ignite 3는 클러스터 상태, 성능, 리소스 사용률을 모니터링할 수 있는 메트릭(metric)을 제공합니다. 메트릭을 사용하면 시스템 동작을 이해하고, 성능 문제를 파악하고, 클러스터 운영을 최적화할 수 있습니다.
 
-## Metrics Architecture
+## 메트릭 아키텍처 {#metrics-architecture}
 
-Ignite organizes metrics into sources that represent different subsystems or components. Each metric source can be enabled or disabled independently to control collection overhead. Collected metrics are exposed through exporters that integrate with monitoring tools.
+Ignite는 메트릭을 여러 서브시스템이나 컴포넌트를 나타내는 소스로 구성합니다. 각 메트릭 소스는 독립적으로 활성화하거나 비활성화하여 수집 오버헤드를 제어할 수 있습니다. 수집된 메트릭은 모니터링 도구와 연동되는 익스포터(exporter)로 외부에 노출됩니다.
 
-Key components:
+주요 컴포넌트:
 
-- **Metric Sources**: Logical groupings of related metrics (JVM, storage, SQL, etc.)
-- **Metric Exporters**: Integration points for monitoring tools (JMX, OpenTelemetry, logs)
-- **System Views**: SQL interface for querying metrics directly
+- **메트릭 소스**: 관련 메트릭을 논리적으로 묶은 그룹(JVM, 스토리지, SQL 등)
+- **메트릭 익스포터**: 모니터링 도구와 연동하는 지점(JMX, OpenTelemetry, 로그)
+- **시스템 뷰**: 메트릭을 직접 쿼리하는 SQL 인터페이스
 
-## Working with Metrics
+## 메트릭 다루기 {#working-with-metrics}
 
-### Configuration
+### 구성 {#configuration}
 
-Control metric collection and export behavior through CLI commands. By default, metric sources are disabled to minimize performance impact. Enable only the sources you need for monitoring.
+CLI 명령어로 메트릭 수집과 내보내기 동작을 제어합니다. 기본적으로 메트릭 소스는 성능 영향을 최소화하기 위해 비활성화되어 있습니다. 모니터링에 필요한 소스만 활성화하세요.
 
-For configuration details, see [Configuring Metrics](configuring-metrics.md).
+구성에 관한 자세한 내용은 [메트릭 구성](configuring-metrics.md)을 참고하세요.
 
-### Available Metrics
+### 사용 가능한 메트릭 {#available-metrics}
 
-Ignite provides metrics across multiple categories including JVM performance, storage operations, SQL execution, network activity, and cluster coordination. Each metric source contains specific measurements relevant to that subsystem.
+Ignite는 JVM 성능, 스토리지 작업, SQL 실행, 네트워크 활동, 클러스터 조정 등 여러 범주에 걸쳐 메트릭을 제공합니다. 각 메트릭 소스에는 해당 서브시스템과 관련된 구체적인 측정값이 담겨 있습니다.
 
-For the complete metrics catalog, see [Available Metrics](available-metrics.md).
+전체 메트릭 목록은 [사용 가능한 메트릭](available-metrics.md)을 참고하세요.
 
-### System Views
+### 시스템 뷰 {#system-views}
 
-Query metrics directly using SQL through system views. This provides programmatic access to metrics data without requiring external monitoring tools.
+시스템 뷰를 사용하면 SQL로 메트릭을 직접 쿼리할 수 있습니다. 외부 모니터링 도구 없이도 메트릭 데이터에 프로그래밍 방식으로 접근할 수 있습니다.
 
-For system view details, see [Metrics System Views](metrics-system-views.md).
+시스템 뷰에 관한 자세한 내용은 [메트릭 시스템 뷰](metrics-system-views.md)를 참고하세요.
 
-## Performance Considerations
+## 성능 고려 사항 {#performance-considerations}
 
-Metric collection adds overhead to cluster operations. Impact varies by metric source:
+메트릭 수집은 클러스터 운영에 오버헤드를 더합니다. 영향은 메트릭 소스에 따라 다릅니다:
 
-- JVM metrics have minimal overhead
-- Storage and SQL metrics have moderate overhead
-- Fine-grained operation metrics may have higher overhead
+- JVM 메트릭은 오버헤드가 최소한입니다
+- 스토리지와 SQL 메트릭은 오버헤드가 중간 수준입니다
+- 세분화된 작업 메트릭은 오버헤드가 더 클 수 있습니다
 
-Enable metric sources selectively based on monitoring requirements and acceptable performance impact.
+모니터링 요구 사항과 허용 가능한 성능 영향을 고려해 메트릭 소스를 선별적으로 활성화하세요.

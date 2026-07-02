@@ -56,7 +56,7 @@ const sidebars: SidebarsConfig = {
             "develop/connect-to-ignite/jdbc",
             {
               type: "category",
-              label: "ODBC Driver",
+              label: "ODBC 드라이버",
               link: { type: "doc", id: "develop/connect-to-ignite/odbc" },
               items: [
                 "develop/connect-to-ignite/odbc-connection-string",
@@ -85,7 +85,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: "category",
-          label: "Integrate",
+          label: "통합",
           link: { type: "doc", id: "develop/integrate/index" },
           items: [
             "develop/integrate/spring-boot",
@@ -135,7 +135,7 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: "category",
-              label: "Data Types and Functions",
+              label: "데이터 타입과 함수",
               link: { type: "doc", id: "sql/reference/data-types-and-functions/index" },
               items: [
                 "sql/reference/data-types-and-functions/data-types",
@@ -145,7 +145,7 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: "category",
-              label: "SQL Conformance",
+              label: "SQL 표준 준수",
               link: { type: "doc", id: "sql/reference/sql-conformance/index" },
               items: [
                 "sql/reference/sql-conformance/overview",
@@ -185,13 +185,13 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: "category",
-          label: "Configuration",
+          label: "구성",
           link: { type: "doc", id: "configure-and-operate/configuration/index" },
           items: [
             "configure-and-operate/configuration/config-cluster-and-nodes",
             {
               type: "category",
-              label: "Storage Configuration",
+              label: "스토리지 구성",
               link: {
                 type: "doc",
                 id: "configure-and-operate/configuration/config-storage-overview",
@@ -217,7 +217,7 @@ const sidebars: SidebarsConfig = {
             "configure-and-operate/operations/lifecycle",
             {
               type: "category",
-              label: "Disaster Recovery",
+              label: "재해 복구",
               link: {
                 type: "doc",
                 id: "configure-and-operate/operations/disaster-recovery",
@@ -233,12 +233,12 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: "category",
-          label: "Monitoring",
+          label: "모니터링",
           link: { type: "doc", id: "configure-and-operate/monitoring/index" },
           items: [
             {
               type: "category",
-              label: "Metrics",
+              label: "메트릭",
               link: {
                 type: "doc",
                 id: "configure-and-operate/monitoring/metrics",
@@ -253,7 +253,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: "category",
-          label: "Configuration Reference",
+          label: "구성 참조",
           link: { type: "doc", id: "configure-and-operate/reference/index" },
           items: [
             "configure-and-operate/reference/node-configuration",
@@ -387,7 +387,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: "category",
-          label: "SQL-Only APIs",
+          label: "SQL 전용 API",
           link: { type: "doc", id: "api-reference/sql-only-apis/index" },
           items: [
             "api-reference/sql-only-apis/jdbc",
@@ -397,7 +397,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: "category",
-          label: "API Documentation",
+          label: "API 문서",
           link: { type: "doc", id: "api-reference/api/index" },
           items: [
             "api-reference/api/java-api-reference",

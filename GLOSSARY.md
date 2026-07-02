@@ -33,15 +33,19 @@
 | leaseholder | 리스홀더 | 리스 소유자, 임차인 | |
 | placement driver | 배치 드라이버 | 플레이스먼트 드라이버, 배포 드라이버 | 프라이머리 복제본·리스 배치를 관리하는 컴포넌트 |
 | quorum | 정족수 | 쿼럼 | RAFT 그룹에서 업데이트에 필요한 최소 투표 수 |
+| majority (of replicas) | 과반수 | 다수, 다수결, 머저리티 | RAFT·복제본 합의에서 전체 절반을 넘는 수. quorum(정족수)과 관련된 개념. "majority loss" → 과반수 상실 |
+| minority (of replicas) | 소수 | 마이너리티 | majority(과반수)와 대비되는, 절반에 못 미치는 수 |
 | consensus | 합의 | 컨센서스, 콘센서스 | RAFT 합의. consensus group → 합의 그룹 |
 | peer | 피어 | 피어들, 동료 | RAFT 합의 그룹에서 투표에 참여하는 복제본 역할. learner와 대비되는 역할 |
 | learner | 러너 | 학습자 | 데이터를 수동 수신만 하고 선출에 참여하지 않는 복제본 역할 |
 | cluster management group | 클러스터 관리 그룹 | 클러스터 매니지먼트 그룹, 클러스터 운영 그룹 | 클러스터 초기화·노드 승인·논리 토폴로지를 관리하는 전용 RAFT 그룹. 약어 CMG는 원문 유지 |
+| node membership | 노드 구성원 | 노드 멤버십, 노드 소속 | 클러스터 관리 그룹(CMG)이 관리하는, 클러스터에 소속된 노드 집합 |
 | metastorage | 메타스토리지 | 메타 스토리지, 메타저장소 | 클러스터 메타데이터를 저장하는 컴포넌트. 코드 `Metastorage`·설정 키는 원문 유지 |
 | storage engine | 스토리지 엔진 | 저장소 엔진, 저장 엔진 | |
 | storage profile | 스토리지 프로파일 | 스토리지 프로필, 저장소 프로파일 | |
 | data region | 데이터 영역 | 데이터 리전 | |
 | compute job | 컴퓨트 작업 | 계산 작업, 컴퓨트 잡 | Compute API 등 API 명칭은 원문 유지 |
+| distributed computing | 분산 컴퓨트 | 디스트리뷰티드 컴퓨팅, 분산 컴퓨팅 | Ignite의 컴퓨트 서브시스템을 가리키는 소개문·링크 텍스트·섹션 제목. compute job(컴퓨트 작업)과 같은 맥락에서 "컴퓨트"를 유지한다 |
 | broadcast | 브로드캐스트 | 브로드 캐스트, 방송 | 작업을 여러 노드에 동시에 전송하는 컴퓨트 실행 방식. `BroadcastJobTarget` 등 코드 식별자는 원문 유지 |
 | coordinator node | 코디네이터 노드 | 조정자 노드 | |
 | deployment unit | 배포 단위 | 배포 유닛 | |
@@ -55,6 +59,8 @@
 | key-value view | 키-값 뷰 | | |
 | system view | 시스템 뷰 | 시스템 view | |
 | metric | 메트릭 | 매트릭, 지표 | |
+| metric source | 메트릭 소스 | 메트릭 원본, 메트릭 출처 | 관련 메트릭을 묶은 논리 그룹(JVM, 스토리지, SQL 등) |
+| metric exporter | 메트릭 익스포터 | 메트릭 익스포터기, 메트릭 내보내기 도구, 메트릭 엑스포터 | 수집된 메트릭을 JMX·OpenTelemetry·로그 등 모니터링 도구로 노출하는 컴포넌트 |
 | event channel | 이벤트 채널 | | 수집할 이벤트를 정의하는 설정 단위. event sink(이벤트 싱크)와 함께 이벤트 구성을 이룬다 |
 | event sink | 이벤트 싱크 | 이벤트 씽크, 이벤트 수신처 | 이벤트 데이터를 내보낼 대상을 정의하는 설정 단위 |
 | snapshot | 스냅샷 | 스넵샷 | |
@@ -69,6 +75,8 @@
 | follower | 팔로워 | 추종자, 팔로어 | RAFT·복제 그룹 맥락 |
 | predicate | 조건자 | 술어, 프레디킷 | |
 | fluent builder | 플루언트 빌더 | 유창한 빌더, 연쇄 빌더 | 메서드 체이닝으로 객체를 단계적으로 구성하는 빌더 패턴. Catalog API의 테이블 생성 빌더 등을 가리킨다 |
+| derived query | 파생 쿼리 | 유도 쿼리, 파생된 쿼리 | Spring Data에서 리포지토리 메서드명으로부터 자동 생성되는 쿼리 |
+| pagination | 페이지네이션 | 페이징, 페이지화 | 조회 결과를 페이지 단위로 나누는 기능(Spring Data 등) |
 | partitioned | 파티셔닝된 | 파티션된 | |
 | configuration | 구성 | | settings는 "설정", configure(동사)는 "구성하다" |
 | command | 명령어 | 커맨드 | CLI 명령어 |
@@ -82,7 +90,9 @@
 | failover | 장애 조치 | 페일오버, 절체 | |
 | disaster recovery | 재해 복구 | 재난 복구 | |
 | restore | 복원 | | 백업에서 데이터를 되살리는 동작. "복구"는 disaster recovery(재해 복구)·error recovery(오류 복구) 등 recovery 번역과 겹쳐 오탐 위험이 있어 금지 표기에서 제외(검수로 관리) |
+| Repair Conductor | 복구 지휘자 | 리페어 컨덕터, 복구 컨덕터, 수리 지휘자 | 시스템 RAFT 그룹 재해 복구에서 reset 절차를 개시하는 노드 역할. 첫 등장 시 "복구 지휘자(Repair Conductor)" 병기 |
 | network segmentation | 네트워크 분할 | 네트워크 세그멘테이션, 네트워크 분리 | 클러스터가 네트워크로 갈라지는 상황(스플릿 브레인) |
+| split brain | 스플릿 브레인 | 스플릿브레인, 분할 뇌, 스플릿-브레인 | 클러스터가 네트워크 분할로 둘 이상으로 갈라지는 현상. network segmentation(네트워크 분할)의 결과 |
 | fault tolerance | 장애 허용성 | 내결함성, 결함 허용성 | 여러 노드에 복제해 장애에 대응하는 능력 |
 | high availability | 고가용성 | | 비교급 "더 높은 가용성"(higher availability)은 별개 표현 |
 | consistency | 일관성 | 정합성 | |
@@ -110,6 +120,7 @@
 | transition | 전환 | 트랜지션 | ALTER COLUMN의 데이터 타입·NULL 허용 여부 전환 맥락. "변환"은 일반 명사라 오탐 위험이 있어 금지 표기에서 제외(검수로 관리) |
 | example | 예시 | 예제 | "Examples:" 섹션 제목 |
 | execution plan | 실행 계획 | 수행 계획 | |
+| query plan | 쿼리 계획 | 쿼리 플랜, 질의 계획 | execution plan(실행 계획)과 구분되는 개념. `SQL_CACHED_QUERY_PLANS` 시스템 뷰 등에 등장 |
 | operator (EXPLAIN) | 연산자 | /(?<!Kubernetes )오퍼레이터/ | `EXPLAIN` 출력에서 쿼리 실행 계획을 구성하는 단위(TableScan, HashJoin 등). understand/performance/explain-operators.md 참고. Kubernetes operator(Kubernetes 오퍼레이터)와는 다른 개념 |
 | Kubernetes operator | Kubernetes 오퍼레이터 | | 커스텀 리소스로 애플리케이션 운영을 자동화하는 Kubernetes 확장 패턴. operator (EXPLAIN)의 SQL 연산자와는 다른 개념 |
 | aggregation | 집계 | 애그리게이션, 애그리게이트 | GROUP BY 등 그룹화 연산. aggregate function → 집계 함수, aggregate operator → 집계 연산자 |
@@ -192,6 +203,7 @@
 | write-ahead log | 미리 쓰기 로그 | 라이트 어헤드 로그, 선행 기입 로그, 선행 기록 로그, 쓰기 전 로그 | 첫 등장 시 "미리 쓰기 로그(write-ahead log, WAL)". 약어 WAL 병기 |
 | append-only | 추가 전용 | 어펜드 온리 | 기존 데이터를 수정하지 않고 새 항목만 뒤에 추가하는 저장 방식 |
 | dirty page | 더티 페이지 | 더러운 페이지, 오염 페이지 | 캐시에서 변경됐지만 아직 디스크에 기록되지 않은 페이지 |
+| checkpoint buffer | 체크포인트 버퍼 | 체크포인팅 버퍼, 검사점 버퍼 | 체크포인트 진행 중 더티 페이지의 이전 상태를 보관하는 메모리 영역 |
 | page cache | 페이지 캐시 | | 인메모리 페이지 캐시. cache는 캐시 |
 | compaction | 컴팩션 | 컴팩숀 | LSM 트리에서 SST 파일을 병합해 하위 레벨로 옮기는 백그라운드 프로세스. "압축"은 아카이브 압축(zip.md 등)과 겹쳐 금지 표기에서 제외(검수로 관리) |
 | write throttling | 쓰기 스로틀링 | 라이트 스로틀링, 쓰기 조절 | 체크포인트 버퍼 포화를 막기 위해 업데이트 속도를 늦추는 메커니즘. throttling 단독도 "스로틀링" |
@@ -209,6 +221,8 @@
 | version storage | 버전 저장 | 버전 스토리지, 버전 저장소 | MVCC 버전 체인을 보관하는 영역. understand/core-concepts/data-partitioning.md의 "버전 저장" 절을 가리킨다 |
 | lifecycle | 라이프사이클 | 생명 주기, 생애 주기 | 클러스터·트랜잭션 등의 생성부터 종료까지의 흐름 |
 | rolling upgrade | 롤링 업그레이드 | 무중단 업그레이드, 순차 업그레이드, 단계적 업그레이드 | 클러스터 전체 다운타임 없이 노드를 순서대로 업데이트하는 방식 |
+| authentication | 인증 | 어센티케이션, 오센티케이션 | authorization(인가)과 짝을 이루는 보안 개념어. 사용자·클라이언트의 신원을 확인하는 절차 |
+| authenticator | 인증기 | 인증자, 오센티케이터 | 인증 방식을 수행하는 서버 측 컴포넌트(예: basic authenticator) |
 | provider | 공급자 | 프로바이더, 제공자 | 인증 공급자(authentication provider), ID 공급자(identity provider) 등 인증 방식을 제공하는 컴포넌트를 가리키는 개념어 |
 | credential | 자격 증명 | 크리덴셜 | 사용자 인증에 쓰이는 비밀 정보(사용자 이름, 비밀번호 등) |
 | authorization | 인가 | 권한 부여, 어쏘라이제이션 | authentication(인증)과 구분되는 접근 권한 판단 |
@@ -224,6 +238,9 @@
 | Advanced SQL | 고급 SQL | | 섹션 제목 관례. sql/advanced 카테고리 라벨 겸 링크 텍스트 |
 | SQL Conformance | SQL 표준 준수 | SQL 적합성, SQL 준수성 | 섹션 제목 관례. sql/reference/sql-conformance 카테고리 라벨 겸 카드 제목 |
 | Data Types and Functions | 데이터 타입과 함수 | | 섹션 제목 관례. sql/reference/data-types-and-functions 카테고리 라벨 겸 카드 제목 |
+| Language Definition | 언어 정의 | 랭귀지 데피니션, 언어 정의어 | 섹션 제목 관례. sql/reference/language-definition 카테고리 라벨 겸 카드 제목. DDL(데이터 정의어)과 혼동하지 않는다 |
+| Operational Commands | 운영 명령어 | 운영 커맨드, 오퍼레이셔널 커맨드 | Data Types and Functions 하위 문서·카드 제목 |
+| Operators and Functions | 연산자와 함수 | 오퍼레이터와 함수 | Data Types and Functions 하위 문서·카드 제목 |
 
 ## 원문 유지 용어
 
@@ -241,6 +258,7 @@
 | RocksDB, aimem, aipersist | 스토리지 엔진 식별자 |
 | Compute API, Table API, Key-Value API, Catalog API, Criteria API, Client API | API 고유 명칭. 일반 명사 맥락(예: "컴퓨트 작업")과 구분 |
 | RecordView, KeyValueView | Java `Table` API의 실제 클래스명. 코드와 동일한 표기를 프로즈에서도 유지("RecordView 패턴"). 일반 개념을 가리킬 때는 대역표의 record view(레코드 뷰)·key-value view(키-값 뷰) 사용 |
+| Query by Example, QBE | Spring Data 기능 고유명. 번역·음차하지 않는다 |
 | 코드 식별자·설정 키·CLI 명령·SQL 키워드 | `ignite3-db`, `CREATE ZONE`, `storageProfiles` 등 코드로 표기되는 모든 것 |
 
 ## 금지 표현

@@ -1,19 +1,19 @@
 ---
 id: transactions
-title: Transactions
+title: 트랜잭션
 ---
 
 import RailroadDiagram from '@site/src/components/RailroadDiagram';
 
-# Transactions
+# 트랜잭션
 
-A transaction is a sequence of SQL operations that starts with the `START TRANSACTION` statement and ends with the `COMMIT` statement. Either the effect of all operations will be published, or no results will be published at all.
+트랜잭션(transaction)은 `START TRANSACTION` 문으로 시작해 `COMMIT` 문으로 끝나는 일련의 SQL 작업입니다. 모든 작업의 결과가 함께 반영되거나, 아무 결과도 반영되지 않습니다.
 
 :::warning
-Transaction control statements are only allowed within a [script](/sql/working-with-sql/execute-queries).
+트랜잭션 제어 문은 [스크립트](/sql/working-with-sql/execute-queries) 안에서만 사용할 수 있습니다.
 :::
 
-In Apache Ignite 3, you start the transaction by using the `START TRANSACTION` statement:
+Apache Ignite 3에서는 `START TRANSACTION` 문으로 트랜잭션을 시작합니다:
 
 <RailroadDiagram>{`
 Diagram(
@@ -24,24 +24,24 @@ Terminal('READ WRITE')))
 `}</RailroadDiagram>
 
 :::note
-DDL statements are not supported inside transactions.
+트랜잭션 안에서는 DDL 문을 지원하지 않습니다.
 :::
 
-Parameters:
+매개변수:
 
-- `READ WRITE` - both read and write operations are allowed in the transaction. Used by default.
-- `READ ONLY` - only read operations are allowed in the transaction.
+- `READ WRITE` - 트랜잭션에서 읽기와 쓰기 작업을 모두 수행할 수 있습니다. 기본값으로 사용됩니다.
+- `READ ONLY` - 트랜잭션에서 읽기 작업만 수행할 수 있습니다.
 
-You close and commit the transaction by using the `COMMIT` statement:
+`COMMIT` 문으로 트랜잭션을 닫고 커밋합니다:
 
 <RailroadDiagram>{`
 Diagram(
 Terminal('COMMIT'))
 `}</RailroadDiagram>
 
-## Example
+## 예시 {#example}
 
-The example below inserts 3 lines into the table in a single transaction, ensuring they will all be committed together:
+아래 예시는 하나의 트랜잭션에서 테이블에 세 개의 행을 삽입하여, 세 행이 모두 함께 커밋되도록 합니다:
 
 ```sql
 START TRANSACTION READ WRITE;

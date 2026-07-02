@@ -1,58 +1,58 @@
 ---
 id: storage-profiles
-title: Storage Profiles Reference
-sidebar_label: Storage Profiles
+title: 스토리지 프로파일 참조
+sidebar_label: 스토리지 프로파일
 ---
 
-## What is a Storage Profile?
+## 스토리지 프로파일이란? {#what-is-a-storage-profile}
 
-Storage profiles are Apache Ignite node entities that define a Storage Engine and its configuration parameters. They create a bridge between tables and the underlying storage engines that store data.
+스토리지 프로파일(storage profile)은 스토리지 엔진(storage engine)과 그 구성 매개변수를 정의하는 Apache Ignite 노드 엔티티입니다. 스토리지 프로파일은 테이블과, 데이터를 저장하는 기반 스토리지 엔진 사이를 연결합니다.
 
-A storage profile defines:
+스토리지 프로파일은 다음을 정의합니다:
 
-- What storage engine is used to store data
-- Configuration values for a particular Storage Engine's configuration properties
+- 데이터를 저장하는 데 사용할 스토리지 엔진
+- 특정 스토리지 엔진의 구성 속성에 지정할 값
 
-Each node in an Apache Ignite cluster can have multiple storage profiles defined, and a table can only have a single storage profile defined.
+Apache Ignite 클러스터의 각 노드에는 여러 스토리지 프로파일을 정의할 수 있지만, 테이블 하나에는 스토리지 프로파일을 하나만 정의할 수 있습니다.
 
-## Storage Profiles and Distribution Zones
+## 스토리지 프로파일과 분산 영역 {#storage-profiles-and-distribution-zones}
 
-A Distribution Zone must be configured to use a set of declared Storage Profiles, which can be used to parameterize tables created in this Zone with different Storage Engines. When creating a distribution zone, you specify which storage profiles it can use:
+분산 영역(distribution zone)은 미리 선언한 스토리지 프로파일 집합을 사용하도록 구성해야 합니다. 이렇게 하면 해당 영역에서 생성되는 테이블마다 서로 다른 스토리지 엔진을 지정할 수 있습니다. 분산 영역을 생성할 때 사용할 스토리지 프로파일을 지정합니다:
 
 ```sql
 CREATE ZONE exampleZone (PARTITIONS 2, REPLICAS 3) STORAGE PROFILES ['profile1, profile3'];
 ```
 
-In this case, the tables created in this distribution zone can only use `profile1` or `profile3`.
+이 경우 이 분산 영역에서 생성된 테이블은 `profile1` 또는 `profile3`만 사용할 수 있습니다.
 
-## Default Storage Profile
+## 기본 스토리지 프로파일 {#default-storage-profile}
 
-Apache Ignite creates a `default` storage profile that uses the persistent Apache Ignite storage engine (`aipersist`) to store data. Unless otherwise specified, distribution zones will use this storage profile to store data.
+Apache Ignite는 데이터를 저장할 때 영속 Apache Ignite 스토리지 엔진(`aipersist`)을 사용하는 `default` 스토리지 프로파일을 생성합니다. 별도로 지정하지 않으면 분산 영역은 이 스토리지 프로파일로 데이터를 저장합니다.
 
-To check the currently available profiles on the node, use the following command:
+노드에서 현재 사용 가능한 프로파일을 확인하려면 다음 명령어를 사용하세요:
 
 ```bash
 node config show ignite.storage.profiles
 ```
 
-## Creating and Using Storage Profiles
+## 스토리지 프로파일 생성 및 사용 {#creating-and-using-storage-profiles}
 
-By default, only the `default` storage profile is created, however a node can have any number of storage profiles on it. To create a new profile, pass the profile configuration to the `storage.profiles` parameter:
+기본적으로는 `default` 스토리지 프로파일만 생성되지만, 노드에는 스토리지 프로파일을 원하는 만큼 둘 수 있습니다. 새 프로파일을 생성하려면 프로파일 구성을 `storage.profiles` 매개변수에 전달하세요:
 
 ```bash
 node config update "ignite.storage.profiles:{rocksProfile{engine:rocksdb,size:10000}}"
 ```
 
-After the configuration is updated, make sure to restart the node. The created storage profile will be available for use by a distribution zone after the restart.
+구성을 업데이트한 뒤에는 반드시 노드를 재시작하세요. 생성된 스토리지 프로파일은 재시작 후에 분산 영역에서 사용할 수 있습니다.
 
-## Defining Tables With Storage Profiles
+## 스토리지 프로파일로 테이블 정의 {#defining-tables-with-storage-profiles}
 
-After you have defined your storage profiles and distribution zones, you can create tables in it by using SQL or from code. Both zone and storage profile cannot be changed after the table has been created.
+스토리지 프로파일과 분산 영역을 정의한 뒤에는 SQL이나 코드로 그 안에 테이블을 생성할 수 있습니다. 영역과 스토리지 프로파일은 모두 테이블을 생성한 뒤에는 변경할 수 없습니다.
 
-For example, here is how you create a simple table:
+예를 들어, 간단한 테이블은 다음과 같이 생성합니다:
 
 ```sql
 CREATE TABLE exampleTable (key INT PRIMARY KEY, my_value VARCHAR) ZONE exampleZone STORAGE PROFILE 'profile1';
 ```
 
-In this case, the `exampleTable` table will be using the storage engine with the parameters specified in the `profile1` storage profile. If the node does not have the `profile1`, the table will not be stored on it. Each node may have different configuration for `profile1`, and data will be stored according to local configuration.
+이 경우 `exampleTable` 테이블은 `profile1` 스토리지 프로파일에 지정된 매개변수로 스토리지 엔진을 사용합니다. 노드에 `profile1`이 없으면 해당 노드에는 이 테이블이 저장되지 않습니다. 노드마다 `profile1` 구성이 다를 수 있으며, 데이터는 각 노드의 로컬 구성에 따라 저장됩니다.

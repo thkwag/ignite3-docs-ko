@@ -1,20 +1,20 @@
 ---
 id: config-authentication
-title: Authentication
-sidebar_label: Authentication
+title: 인증
+sidebar_label: 인증
 ---
 
-Apache Ignite 3 provides basic Authentication capabilities.
+Apache Ignite 3는 기본 인증(authentication) 기능을 제공합니다.
 
-## Authentication Configuration
+## 인증 구성 {#authentication-configuration}
 
-### Basic Authentication
+### 기본 인증 {#basic-authentication}
 
-To start using basic authentication on the cluster, you need to enable it and create an initial administrator user. By default, the role that grants administrator permissions is called `admin`, but you can change it in cluster configuration.
+클러스터에서 기본 인증을 사용하려면 인증을 활성화하고 초기 관리자 사용자를 생성해야 합니다. 기본적으로 관리자 권한을 부여하는 역할은 `admin`이라고 하며, 이 이름은 클러스터 구성에서 변경할 수 있습니다.
 
-Here is an example of configuration that initializes the cluster and enables security on it:
+다음은 클러스터를 초기화하고 보안을 활성화하는 구성 예시입니다:
 
-- Prepare cluster configuration file with security configuration:
+- 보안 구성이 포함된 클러스터 구성 파일을 준비합니다:
 
 ```hocon
 ignite {
@@ -42,29 +42,29 @@ ignite {
 }
 ```
 
-- Initialize the cluster with the security configuration:
+- 보안 구성으로 클러스터를 초기화합니다:
 
 ```shell
 cluster init --name=sampleCluster --config-files=/cluster-config.conf
 ```
 
-When the cluster has been initialized, it has basic authorization configured for `ignite` user name and `ignite` password with system level access. However, by default security is disabled. To enable it:
+클러스터가 초기화되면 `ignite` 사용자 이름과 `ignite` 비밀번호에 시스템 수준 접근 권한을 부여하는 기본 인가(authorization)가 구성됩니다. 다만 보안은 기본적으로 비활성화되어 있습니다. 활성화하려면:
 
 ```shell
 cluster config update ignite.security.enabled=true
 ```
 
 :::warning
-If you lose access to all accounts with system role, you will lose administrator access to the cluster.
+system 역할을 가진 모든 계정에 접근할 수 없게 되면 클러스터의 관리자 접근 권한을 잃게 됩니다.
 :::
 
-After authorization is enabled, you will be disconnected from the cluster and must reconnect to the cluster:
+인가가 활성화되면 클러스터와의 연결이 끊어지므로 다시 연결해야 합니다:
 
 ```shell
 connect http://127.0.0.1:10300 --username ignite --password ignite
 ```
 
-You can change the password for the default user by updating cluster configuration, for example:
+클러스터 구성을 업데이트하면 기본 사용자의 비밀번호를 변경할 수 있습니다. 예를 들어:
 
 ```shell
 cluster config update  ignite.security.authentication.providers.default.users.ignite.password=myPass

@@ -1,37 +1,37 @@
 ---
 id: config-storage-persistent
-title: Persistent Storage
-sidebar_label: Persistent Storage
+title: 영속 스토리지
+sidebar_label: 영속 스토리지
 ---
 
-## Overview
+## 개요 {#overview}
 
-Apache Ignite Persistence is designed to provide a quick and responsive persistent storage. When using the persistent storage, Apache Ignite stores all the data on disk, and loads as much data as it can into RAM for processing.
+Apache Ignite 영속성(persistence)은 빠르고 응답성 있는 영속 스토리지를 제공하도록 설계되었습니다. 영속 스토리지를 사용하면 Apache Ignite는 모든 데이터를 디스크에 저장하고, 처리를 위해 가능한 한 많은 데이터를 RAM에 적재합니다.
 
-When persistence is enabled, Apache Ignite stores each partition in a separate file on disk. In addition to data partitions, Apache Ignite stores indexes and metadata.
+영속성이 활성화되면 Apache Ignite는 각 파티션을 디스크의 별도 파일에 저장합니다. 데이터 파티션 외에도 인덱스와 메타데이터를 저장합니다.
 
-## Profile Configuration
+## 프로파일 구성 {#profile-configuration}
 
-Each Apache Ignite storage engine can have several storage profiles.
+각 Apache Ignite 스토리지 엔진에는 여러 스토리지 프로파일을 둘 수 있습니다.
 
-## Checkpointing
+## 체크포인팅 {#checkpointing}
 
-_Checkpointing_ is the process of copying dirty pages from RAM to partition files on disk. A dirty page is a page that was updated in RAM but was not written to the respective partition file.
+_체크포인팅_(checkpointing)은 더티 페이지(dirty page)를 RAM에서 디스크의 파티션 파일로 복사하는 과정입니다. 더티 페이지는 RAM에서 갱신되었지만 해당 파티션 파일에는 아직 기록되지 않은 페이지입니다.
 
-After a checkpoint is created, all changes are persisted to disk and will be available if the node crashes and is restarted.
+체크포인트가 생성되고 나면 모든 변경 사항이 디스크에 저장되어, 노드에 장애가 발생해 재시작되더라도 사용할 수 있습니다.
 
-Checkpointing is designed to ensure durability of data and recovery in case of a node failure.
+체크포인팅은 데이터의 내구성을 보장하고 노드 장애 시 복구를 지원하도록 설계되었습니다.
 
-This process helps you utilize disk space frugally by keeping pages in the most up-to-date state on disk.
+이 과정은 페이지를 디스크에서 항상 최신 상태로 유지함으로써 디스크 공간을 절약하는 데 도움이 됩니다.
 
-## Write Throttling
+## 쓰기 스로틀링 {#write-throttling}
 
-If a dirty page, scheduled for checkpointing, is updated before being written to disk, its previous state is copied to a special region called a checkpointing buffer. If the buffer overflows, Apache Ignite would have to stop processing all updates until the [Checkpointing](#checkpointing) is over. As a result, write performance would drop to zero until the checkpointing cycle is completed.
+체크포인팅 대상으로 예정된 더티 페이지가 디스크에 기록되기 전에 갱신되면, 이전 상태가 체크포인트 버퍼라는 특수 영역으로 복사됩니다. 버퍼가 넘치면 Apache Ignite는 [체크포인팅](#checkpointing)이 끝날 때까지 모든 업데이트 처리를 중단해야 합니다. 그 결과 체크포인팅 주기가 완료될 때까지 쓰기 성능이 0으로 떨어집니다.
 
-To avoid the scenario where all updates are stopped, Apache Ignite always performs write throttling once the checkpoint buffer is two-thirds full. Once the threshold is reached, checkpoint writer priority is increased, and more priority is given to checkpointing over new updates as the buffer fills more. This prevents buffer overflow while also slowing down update rate.
+모든 업데이트가 중단되는 상황을 피하기 위해, Apache Ignite는 체크포인트 버퍼가 3분의 2까지 차면 항상 쓰기 스로틀링을 수행합니다. 임계값에 도달하면 체크포인트 기록기의 우선순위가 높아지고, 버퍼가 더 찰수록 새 업데이트보다 체크포인팅에 더 높은 우선순위가 부여됩니다. 이렇게 하면 버퍼 넘침을 막으면서 업데이트 속도도 늦춥니다.
 
-In most cases, write throttling is caused by a slow drive, or a high update rate, and should not be a part of normal node operation.
+대부분의 경우 쓰기 스로틀링은 느린 드라이브나 높은 업데이트 속도 때문에 발생하며, 정상적인 노드 운영에서는 나타나지 않아야 합니다.
 
-## Storage Configuration
+## 스토리지 구성 {#storage-configuration}
 
-In Apache Ignite 3, all storage configuration is consolidated under the `ignite.storage` node configuration. For more information on how storage is configured, see Storage Profiles and Engines documentation.
+Apache Ignite 3에서는 모든 스토리지 구성이 `ignite.storage` 노드 구성 아래로 통합되어 있습니다. 스토리지 구성 방법은 스토리지 프로파일 및 엔진 문서를 참조하세요.

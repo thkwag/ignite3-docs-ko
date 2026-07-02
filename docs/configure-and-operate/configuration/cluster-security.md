@@ -1,27 +1,27 @@
 ---
 id: config-cluster-security
-title: Cluster Security
-sidebar_label: Cluster Security
+title: 클러스터 보안
+sidebar_label: 클러스터 보안
 ---
 
-## User Security
+## 사용자 보안 {#user-security}
 
-By default, all users can perform any updates on the cluster, or [upload arbitrary code to the cluster](/develop/work-with-data/code-deployment) and perform remote code execution with [distributed computing](/develop/work-with-data/compute). To improve security, we recommend configuring user roles and permissions and enabling authorization on the cluster.
+기본적으로 모든 사용자가 클러스터에서 어떤 변경이든 수행할 수 있으며, [클러스터에 임의의 코드를 업로드](/develop/work-with-data/code-deployment)하고 [분산 컴퓨트](/develop/work-with-data/compute)으로 원격 코드를 실행할 수도 있습니다. 보안을 강화하려면 사용자 역할과 권한을 구성하고 클러스터에서 인가(authorization)를 활성화하기를 권장합니다.
 
-## Communication
+## 통신 {#communication}
 
-By default, nodes use plain-text communication that is vulnerable to malicious actions. Ignite 3 separates communications between cluster nodes and communication with clients.
+기본적으로 노드는 악의적인 행위에 취약한 평문 통신을 사용합니다. Ignite 3는 클러스터 노드 간 통신과 클라이언트와의 통신을 분리합니다.
 
-## Node to Node Communication
+## 노드 간 통신 {#node-to-node-communication}
 
-Communication between nodes usually happens within the same data center. We recommend the following to improve the security of your cluster:
+노드 간 통신은 보통 같은 데이터 센터 안에서 이루어집니다. 클러스터의 보안을 높이려면 다음을 권장합니다:
 
-- Enable SSL for cluster communication with the `ignite.network.ssl` [node configuration](/configure-and-operate/reference/node-configuration).
-- Run the cluster in a trusted and isolated network.
+- `ignite.network.ssl` [노드 구성](/configure-and-operate/reference/node-configuration)으로 클러스터 통신에 SSL을 활성화합니다.
+- 신뢰할 수 있고 격리된 네트워크에서 클러스터를 실행합니다.
 
-## Node to Client Communication
+## 노드-클라이언트 통신 {#node-to-client-communication}
 
-Client to server communication may be over internet or otherwise untrusted network. Only the client port (10800 by default) is typically exposed outside of the cluster. To securely interact with your clients:
+클라이언트-서버 통신은 인터넷이나 그 밖의 신뢰할 수 없는 네트워크를 거칠 수 있습니다. 보통 클러스터 외부에 노출되는 것은 클라이언트 포트(기본값 10800)뿐입니다. 클라이언트와 안전하게 통신하려면:
 
-- Enable SSL for client communication with the `ignite.clientConnector.ssl` [node configuration](/configure-and-operate/reference/node-configuration).
-- Enable [authentication](/configure-and-operate/configuration/config-authentication) on the cluster.
+- `ignite.clientConnector.ssl` [노드 구성](/configure-and-operate/reference/node-configuration)으로 클라이언트 통신에 SSL을 활성화합니다.
+- 클러스터에서 [인증](/configure-and-operate/configuration/config-authentication)을 활성화합니다.

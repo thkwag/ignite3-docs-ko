@@ -11,8 +11,9 @@
       "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
     },
     "api-reference/api/index.mdx": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:52:01.274Z"
     },
     "api-reference/api/java-api.md": {
       "status": "pending",
@@ -148,8 +149,9 @@
       "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
     },
     "api-reference/sql-only-apis/index.mdx": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:51:43.927Z"
     },
     "api-reference/sql-only-apis/jdbc.md": {
       "status": "pending",
@@ -164,16 +166,19 @@
       "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
     },
     "configure-and-operate/configuration/authentication.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:54:07.037Z"
     },
     "configure-and-operate/configuration/cluster-and-nodes.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:51:26.969Z"
     },
     "configure-and-operate/configuration/cluster-security.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:51:13.181Z"
     },
     "configure-and-operate/configuration/index.mdx": {
       "status": "pending",
@@ -192,20 +197,24 @@
       "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
     },
     "configure-and-operate/configuration/storage-persistent.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:51:53.603Z"
     },
     "configure-and-operate/configuration/storage-rocksdb.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:51:02.953Z"
     },
     "configure-and-operate/configuration/storage-volatile.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:51:27.248Z"
     },
     "configure-and-operate/configuration/storage.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:53:28.430Z"
     },
     "configure-and-operate/index.mdx": {
       "status": "translated",
@@ -243,32 +252,37 @@
       "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
     },
     "configure-and-operate/monitoring/index.mdx": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:49:51.601Z"
     },
     "configure-and-operate/monitoring/metrics-system-views.md": {
       "status": "pending",
       "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
     },
     "configure-and-operate/monitoring/metrics.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:52:16.078Z"
     },
     "configure-and-operate/operations/colocation.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:52:52.595Z"
     },
     "configure-and-operate/operations/disaster-recovery-partitions.md": {
       "status": "pending",
       "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
     },
     "configure-and-operate/operations/disaster-recovery-system-groups.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:56:57.270Z"
     },
     "configure-and-operate/operations/disaster-recovery.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:51:04.635Z"
     },
     "configure-and-operate/operations/handle-exceptions.md": {
       "status": "pending",
@@ -284,24 +298,27 @@
       "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
     },
     "configure-and-operate/reference/cli-configuration.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:54:03.017Z"
     },
     "configure-and-operate/reference/cluster-configuration.md": {
       "status": "pending",
       "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
     },
     "configure-and-operate/reference/index.mdx": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:52:28.443Z"
     },
     "configure-and-operate/reference/node-configuration.md": {
       "status": "pending",
       "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
     },
     "configure-and-operate/reference/storage-profiles.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:54:20.336Z"
     },
     "develop/connect-to-ignite/index.mdx": {
       "status": "translated",
@@ -314,8 +331,9 @@
       "translatedAt": "2026-07-02T04:23:01.420Z"
     },
     "develop/connect-to-ignite/odbc-connection-string.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:54:36.907Z"
     },
     "develop/connect-to-ignite/odbc-querying-data.md": {
       "status": "pending",
@@ -353,8 +371,9 @@
       "translatedAt": "2026-07-02T04:26:23.099Z"
     },
     "develop/integrate/index.mdx": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:51:02.214Z"
     },
     "develop/integrate/spring-boot.md": {
       "status": "pending",
@@ -499,8 +518,9 @@
       "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
     },
     "sql/reference/data-types-and-functions/index.mdx": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:51:53.227Z"
     },
     "sql/reference/data-types-and-functions/operational-commands.mdx": {
       "status": "pending",
@@ -533,16 +553,19 @@
       "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
     },
     "sql/reference/language-definition/index.mdx": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:55:01.799Z"
     },
     "sql/reference/language-definition/transactions.mdx": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:51:58.212Z"
     },
     "sql/reference/sql-conformance/index.mdx": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:50:49.698Z"
     },
     "sql/reference/sql-conformance/keywords.md": {
       "status": "pending",
@@ -563,8 +586,9 @@
       "translatedAt": "2026-07-02T04:24:40.877Z"
     },
     "sql/working-with-sql/system-views.md": {
-      "status": "pending",
-      "upstreamCommit": "de1cc0bf48f300cd15c74525827715bd9feae357"
+      "status": "translated",
+      "upstreamCommit": "fe84d407852ee876bb02ab7023797cdb53339237",
+      "translatedAt": "2026-07-02T05:55:07.660Z"
     },
     "tools/cli-commands.md": {
       "status": "translated",

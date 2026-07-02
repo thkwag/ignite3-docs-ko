@@ -1,22 +1,22 @@
 ---
 id: system-views
-title: System Views
-sidebar_label: System Views
+title: 시스템 뷰
+sidebar_label: 시스템 뷰
 ---
 
-# System Views
+# 시스템 뷰
 
-Ignite provides a number of built-in SQL views that provide information on the cluster's state and provide real-time insight into the status of its components. These views are available in the SYSTEM schema.
+Ignite는 클러스터 상태 정보와 각 구성 요소의 상태를 실시간으로 파악할 수 있는 여러 내장 SQL 뷰를 제공합니다. 이러한 뷰는 SYSTEM 스키마에서 사용할 수 있습니다.
 
-## Getting Data
+## 데이터 가져오기 {#getting-data}
 
-You access system views in Ignite by using SQL and selecting data from the system view like you would from any other table. For example, you can get a list of all available system views in the following way:
+Ignite에서 시스템 뷰에 접근할 때는 다른 테이블에서와 마찬가지로 SQL로 시스템 뷰에서 데이터를 조회합니다. 예를 들어 사용 가능한 모든 시스템 뷰 목록은 다음과 같이 가져올 수 있습니다.
 
 ```sql
 SELECT id, schema, name FROM system.system_views WHERE type = 'NODE'
 ```
 
-You can also use joins to combine data from multiple views. The example below returns all columns of a view that was found in the `SYSTEM_VIEWS` view:
+조인을 사용해 여러 뷰의 데이터를 결합할 수도 있습니다. 아래 예시는 `SYSTEM_VIEWS` 뷰에서 찾은 뷰의 모든 컬럼을 반환합니다.
 
 ```sql
 SELECT svc.*
@@ -25,54 +25,54 @@ SELECT svc.*
  WHERE sv.name = 'SYSTEM_VIEWS'
 ```
 
-## Available Views
+## 사용 가능한 뷰 {#available-views}
 
 ### SYSTEM_VIEWS
 
-Describes available system views.
+사용 가능한 시스템 뷰를 설명합니다.
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |--------|-----------|-------------|
-| ID | INT32 | System view ID. |
-| SCHEMA | STRING | Name of the schema used. Default is `SYSTEM`. |
-| NAME | STRING | System view name. |
-| TYPE | STRING | System view type. Possible values:<br/>- NODE - The view provides node-specific information. Data will be collected from all nodes, and represented in the view.<br/>- CLUSTER - The view provides cluster-wide information. Data will be collected from one node, chosen to represent the cluster. |
+| ID | INT32 | 시스템 뷰 ID. |
+| SCHEMA | STRING | 사용되는 스키마 이름. 기본값은 `SYSTEM`입니다. |
+| NAME | STRING | 시스템 뷰 이름. |
+| TYPE | STRING | 시스템 뷰 유형. 가능한 값:<br/>- NODE - 노드별 정보를 제공하는 뷰. 모든 노드에서 데이터를 수집해 뷰에 나타냅니다.<br/>- CLUSTER - 클러스터 전체 정보를 제공하는 뷰. 클러스터를 대표하도록 선택된 한 노드에서 데이터를 수집합니다. |
 
 ### SYSTEM_VIEW_COLUMNS
 
-Describes available system view columns.
+사용 가능한 시스템 뷰 컬럼을 설명합니다.
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |--------|-----------|-------------|
-| VIEW_ID | INT32 | System view ID. |
-| NAME | STRING | Column name. |
-| TYPE | STRING | Column type. Can by any of the [supported types](/sql/reference/data-types-and-functions/data-types). |
-| NULLABLE | BOOLEAN | Defines if the column can be empty. |
-| PRECISION | INT32 | Maximum number of digits. |
-| SCALE | INT32 | Maximum number of decimal places. |
-| LENGTH | INT32 | Maximum length of the value. Symbols for string values or bytes for binary values. |
+| VIEW_ID | INT32 | 시스템 뷰 ID. |
+| NAME | STRING | 컬럼 이름. |
+| TYPE | STRING | 컬럼 타입. [지원되는 타입](/sql/reference/data-types-and-functions/data-types) 중 하나일 수 있습니다. |
+| NULLABLE | BOOLEAN | 컬럼이 비어 있을 수 있는지 정의합니다. |
+| PRECISION | INT32 | 최대 자릿수. |
+| SCALE | INT32 | 최대 소수 자릿수. |
+| LENGTH | INT32 | 값의 최대 길이. 문자열 값은 문자 수, 바이너리 값은 바이트 수입니다. |
 
 ### SYSTEM.ZONES
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |--------|-----------|-------------|
-| NAME | STRING | The name of the distribution zone. |
-| PARTITIONS | INT32 | The number of partitions in the distribution zone. |
-| REPLICAS | STRING | The number of copies of each partition in the distribution zone. |
-| DATA_NODES_AUTO_ADJUST_SCALE_UP | INT32 | The delay in seconds between the new node joining and the start of data zone adjustment. |
-| DATA_NODES_AUTO_ADJUST_SCALE_DOWN | INT32 | The delay in seconds between the node leaving the cluster and the start of data zone adjustment. |
-| DATA_NODES_FILTER | STRING | The filter that specifies what nodes will be used by the distribution zone. |
-| IS_DEFAULT_ZONE | BOOLEAN | Defines if the data zone is used by default. |
+| NAME | STRING | 분산 영역(distribution zone)의 이름. |
+| PARTITIONS | INT32 | 분산 영역의 파티션 수. |
+| REPLICAS | STRING | 분산 영역에서 각 파티션의 복제본 수. |
+| DATA_NODES_AUTO_ADJUST_SCALE_UP | INT32 | 새 노드가 합류한 시점과 분산 영역 조정이 시작되는 시점 사이의 지연 시간(초). |
+| DATA_NODES_AUTO_ADJUST_SCALE_DOWN | INT32 | 노드가 클러스터에서 이탈한 시점과 분산 영역 조정이 시작되는 시점 사이의 지연 시간(초). |
+| DATA_NODES_FILTER | STRING | 분산 영역이 사용할 노드를 지정하는 필터. |
+| IS_DEFAULT_ZONE | BOOLEAN | 이 분산 영역이 기본으로 사용되는지 정의합니다. |
 
 ### SQL_CACHED_QUERY_PLANS
 
-| Column | Data Type | Description |
+| 컬럼 | 데이터 타입 | 설명 |
 |--------|-----------|-------------|
-| NODE_ID | STRING | ID of the node where the plan is cached. |
-| PLAN_ID | STRING | Internal identifier of the prepared plan. |
-| CATALOG_VERSION | INT32 | Catalog version used when the query was prepared. |
-| QUERY_DEFAULT_SCHEMA | STRING | Default schema applied during query preparation. |
-| SQL | STRING | Normalized SQL text of the query. |
-| QUERY_TYPE | STRING | Query type. |
-| QUERY_PLAN | STRING | Serialized or explain representation of the chosen query plan. |
-| QUERY_PREPARE_TIME | TIMESTAMP WITH LOCAL TIME ZONE | Time the plan was prepared on the node. |
+| NODE_ID | STRING | 계획이 캐시된 노드의 ID. |
+| PLAN_ID | STRING | 준비된 계획의 내부 식별자. |
+| CATALOG_VERSION | INT32 | 쿼리를 준비할 때 사용된 카탈로그 버전. |
+| QUERY_DEFAULT_SCHEMA | STRING | 쿼리 준비 중에 적용된 기본 스키마. |
+| SQL | STRING | 쿼리의 정규화된 SQL 텍스트. |
+| QUERY_TYPE | STRING | 쿼리 유형. |
+| QUERY_PLAN | STRING | 선택된 쿼리 계획의 직렬화 표현 또는 EXPLAIN 표현. |
+| QUERY_PREPARE_TIME | TIMESTAMP WITH LOCAL TIME ZONE | 노드에서 계획이 준비된 시각. |
