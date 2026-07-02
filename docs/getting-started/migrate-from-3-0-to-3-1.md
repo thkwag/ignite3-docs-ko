@@ -1,71 +1,71 @@
 ---
-title: Migrating from Apache Ignite 3.0 to 3.1
-sidebar_label: Migrate from 3.0 to 3.1
+title: Apache Ignite 3.0에서 3.1로 마이그레이션
+sidebar_label: 3.0에서 3.1로 마이그레이션
 ---
 
-## Overview
+## 개요 {#overview}
 
-This guide provides step-by-step instructions for migrating Apache Ignite clusters from version 3.0 to version 3.1. Due to architectural changes in 3.1, including the introduction of zone-based replication, migration requires creating a new 3.1 cluster and migrating data using the export/import process.
+이 가이드는 Apache Ignite 클러스터를 버전 3.0에서 버전 3.1로 마이그레이션하는 단계별 방법을 설명합니다. 영역 기반 복제 도입을 비롯한 3.1의 아키텍처 변경 사항 때문에, 마이그레이션하려면 새 3.1 클러스터를 만들고 내보내기/가져오기 과정으로 데이터를 옮겨야 합니다.
 
 :::warning
-This migration requires cluster downtime.
+이 마이그레이션은 클러스터 다운타임이 필요합니다.
 :::
 
-## Zone-Based Replication
+## 영역 기반 복제 {#zone-based-replication}
 
-Apache Ignite 3.1 introduces zone-based replication, replacing the table-based replication model from version 3.0. Table-based replication is still supported, however it will be dropped in a later release.
+Apache Ignite 3.1은 3.0의 테이블 기반 복제 모델을 대체하는 영역 기반 복제(zone-based replication)를 도입합니다. 테이블 기반 복제는 계속 지원되지만 이후 릴리스에서 제거될 예정입니다.
 
-### Table-Based vs Zone-Based Replication
+### 테이블 기반 복제와 영역 기반 복제 비교 {#table-based-vs-zone-based-replication}
 
-| Aspect | 3.0 Table-Based | 3.1 Zone-Based |
+| 항목 | 3.0 테이블 기반 | 3.1 영역 기반 |
 |--------|-----------------|----------------|
-| RAFT Groups | Each table creates separate RAFT groups | Tables in same zone share RAFT groups |
-| Example (100 tables) | 100 separate RAFT group sets | 1 shared RAFT group set |
-| Memory Footprint | Higher with more tables | Significantly reduced |
-| Thread Overhead | Higher (more RAFT groups) | Lower (fewer RAFT groups) |
+| RAFT 그룹 | 테이블마다 별도의 RAFT 그룹 생성 | 같은 영역의 테이블이 RAFT 그룹을 공유 |
+| 예시(테이블 100개) | 별도의 RAFT 그룹 집합 100개 | 공유 RAFT 그룹 집합 1개 |
+| 메모리 사용량 | 테이블이 많을수록 증가 | 크게 감소 |
+| 스레드 오버헤드 | 높음(RAFT 그룹이 더 많음) | 낮음(RAFT 그룹이 더 적음) |
 
-### Benefits of Zone-Based Replication
+### 영역 기반 복제의 이점 {#benefits-of-zone-based-replication}
 
-- **Reduced Memory Footprint:** Fewer RAFT groups means lower memory consumption for clusters with many tables
-- **Lower Thread Overhead:** Decreased number of RAFT groups reduces thread management complexity
-- **Improved Performance:** Better resource utilization for multi-table workloads
-- **Transparent Migration:** No changes to user-facing APIs or query behavior
+- **메모리 사용량 감소:** RAFT 그룹 수가 줄어들면 테이블이 많은 클러스터의 메모리 사용량이 낮아집니다
+- **스레드 오버헤드 감소:** RAFT 그룹 수가 줄면 스레드 관리 복잡도가 낮아집니다
+- **성능 향상:** 다중 테이블 워크로드에서 리소스 활용도가 개선됩니다
+- **투명한 마이그레이션:** 사용자에게 노출되는 API나 쿼리 동작에는 변경이 없습니다
 
 :::note
-Zone-based replication is an internal cluster optimization. Your applications will continue to work without code changes.
+영역 기반 복제는 클러스터 내부의 최적화입니다. 애플리케이션은 코드 변경 없이 계속 동작합니다.
 :::
 
-## Phase 1: Document Current Environment
+## 1단계: 현재 환경 문서화 {#phase-1-document-current-environment}
 
-### Step 1.1: Connect to 3.0 Cluster
+### 1.1단계: 3.0 클러스터에 연결 {#step-11-connect-to-30-cluster}
 
-Connect to your Apache Ignite 3.0 cluster using the CLI tool:
+CLI 도구를 사용해 Apache Ignite 3.0 클러스터에 연결하세요.
 
 ```bash
 cd ignite3-cli-3.0.0/bin
 ./ignite3
 ```
 
-Once connected, enter sql execution mode:
+연결한 후 SQL 실행 모드로 들어가세요.
 
 ```bash
 sql
 ```
 
-### Step 1.2: Document All Schemas
+### 1.2단계: 모든 스키마 문서화 {#step-12-document-all-schemas}
 
-List all schemas in your cluster:
+클러스터의 모든 스키마를 조회하세요.
 
 ```sql
 -- List all schemas
 SELECT * FROM SYSTEM.SCHEMAS;
 ```
 
-Save the output to a file for reference during schema recreation.
+나중에 스키마를 재생성할 때 참고할 수 있도록 출력 결과를 파일로 저장하세요.
 
-### Step 1.3: Document All Tables
+### 1.3단계: 모든 테이블 문서화 {#step-13-document-all-tables}
 
-List all tables across all schemas:
+모든 스키마에 걸쳐 모든 테이블을 조회하세요.
 
 ```sql
 -- List all tables
@@ -75,11 +75,11 @@ WHERE TABLE_TYPE = 'TABLE'
 ORDER BY SCHEMA_NAME, TABLE_NAME;
 ```
 
-Save the output to a file for reference during table recreation.
+나중에 테이블을 재생성할 때 참고할 수 있도록 출력 결과를 파일로 저장하세요.
 
-### Step 1.4: Document Table Schemas
+### 1.4단계: 테이블 스키마 문서화 {#step-14-document-table-schemas}
 
-For each table, capture its complete schema definition:
+테이블마다 전체 스키마 정의를 기록하세요.
 
 ```sql
 -- Get detailed schema for each table
@@ -95,26 +95,26 @@ WHERE SCHEMA_NAME = 'YOUR_SCHEMA'
 ORDER BY TABLE_NAME, ORDINAL_POSITION;
 ```
 
-Save the output to a file for reference during schema recreation.
+나중에 스키마를 재생성할 때 참고할 수 있도록 출력 결과를 파일로 저장하세요.
 
 :::warning
-Document the exact CREATE TABLE statements for all tables. You'll need these to recreate the schema in 3.1.
+모든 테이블의 정확한 CREATE TABLE 문을 기록하세요. 3.1에서 스키마를 재생성할 때 필요합니다.
 :::
 
-### Step 1.5: Document Distribution Zones
+### 1.5단계: 분산 영역 문서화 {#step-15-document-distribution-zones}
 
-Capture current distribution zone configuration:
+현재 분산 영역 구성을 기록하세요.
 
 ```sql
 -- Document distribution zones
 SELECT * FROM SYSTEM.ZONES;
 ```
 
-Save the output to a file for reference during schema recreation.
+나중에 스키마를 재생성할 때 참고할 수 있도록 출력 결과를 파일로 저장하세요.
 
-### Step 1.6: Calculate Data Volume
+### 1.6단계: 데이터 양 계산 {#step-16-calculate-data-volume}
 
-Estimate the size of data to be migrated:
+마이그레이션할 데이터 크기를 추정하세요.
 
 ```sql
 -- Get row count for each table
@@ -125,11 +125,11 @@ FROM your_table
 GROUP BY TABLE_NAME;
 ```
 
-Save row counts for each table. You'll use these to verify data integrity after migration.
+테이블마다 행 수를 저장하세요. 마이그레이션 후 데이터 무결성을 검증할 때 사용합니다.
 
-### Step 1.7: Create Schema Recreation Script
+### 1.7단계: 스키마 재생성 스크립트 작성 {#step-17-create-schema-recreation-script}
 
-Create a SQL script file named `schema-recreation.sql` containing all CREATE TABLE statements:
+모든 CREATE TABLE 문을 담은 `schema-recreation.sql`이라는 SQL 스크립트 파일을 만드세요.
 
 ```sql
 -- Example for a table:
@@ -146,17 +146,17 @@ CREATE TABLE analytics.events (
 -- Repeat for all tables
 ```
 
-Save the output to a file for reference during schema recreation.
+나중에 스키마를 재생성할 때 참고할 수 있도록 출력 결과를 파일로 저장하세요.
 
 :::caution
-Ensure your CREATE TABLE statements include all constraints, indexes, and table options. Missing configuration can lead to performance or data integrity issues.
+CREATE TABLE 문에 모든 제약 조건, 인덱스, 테이블 옵션이 포함됐는지 확인하세요. 구성이 누락되면 성능이나 데이터 무결성 문제가 발생할 수 있습니다.
 :::
 
-## Phase 2: Export Data from 3.0 Cluster
+## 2단계: 3.0 클러스터에서 데이터 내보내기 {#phase-2-export-data-from-30-cluster}
 
-### Step 2.1: Create Export Directory
+### 2.1단계: 내보내기 디렉터리 생성 {#step-21-create-export-directory}
 
-Create a directory for export files on accessible storage:
+접근 가능한 스토리지에 내보내기 파일을 저장할 디렉터리를 만드세요.
 
 ```bash
 mkdir -p /backup/ignite-3.0-export
@@ -164,23 +164,23 @@ chmod 755 /backup/ignite-3.0-export
 ```
 
 :::note
-If using shared network storage, ensure all nodes have write access to this location.
+공유 네트워크 스토리지를 사용한다면 모든 노드에 이 위치에 대한 쓰기 권한이 있는지 확인하세요.
 :::
 
-### Step 2.2: Choose Export Format
+### 2.2단계: 내보내기 형식 선택 {#step-22-choose-export-format}
 
-Apache Ignite supports two export formats:
+Apache Ignite는 두 가지 내보내기 형식을 지원합니다.
 
-| Format | Advantages | Best For |
+| 형식 | 장점 | 적합한 용도 |
 |--------|------------|----------|
-| **CSV** | Human-readable, easy to debug, compatible with many tools | Small to medium datasets, troubleshooting |
-| **Parquet** | Compressed, faster I/O, efficient for large datasets | Large datasets, production migrations |
+| **CSV** | 사람이 읽기 쉽고 디버그가 편하며 여러 도구와 호환됨 | 소규모~중간 규모 데이터셋, 문제 해결 |
+| **Parquet** | 파일 크기가 작고 I/O가 더 빠르며 대규모 데이터셋에 효율적 | 대규모 데이터셋, 프로덕션 마이그레이션 |
 
-### Step 2.3: Export Table Data
+### 2.3단계: 테이블 데이터 내보내기 {#step-23-export-table-data}
 
-Export each table using the `COPY INTO` command.
+`COPY INTO` 명령어로 테이블마다 데이터를 내보냅니다.
 
-#### CSV Export
+#### CSV 내보내기 {#csv-export}
 
 ```sql
 -- Export with headers for easier import
@@ -190,7 +190,7 @@ FORMAT CSV
 WITH 'header'='true';
 ```
 
-For large tables, export in chunks:
+큰 테이블은 청크 단위로 나눠 내보내세요.
 
 ```sql
 -- Export in chunks by partition
@@ -200,7 +200,7 @@ FORMAT CSV
 WITH 'header'='true';
 ```
 
-#### Parquet Export (Recommended)
+#### Parquet 내보내기(권장) {#parquet-export-recommended}
 
 ```sql
 COPY FROM analytics.events (id, event_time, user_id, event_type, payload)
@@ -208,9 +208,9 @@ INTO '/backup/ignite-3.0-export/analytics_events.parquet'
 FORMAT PARQUET;
 ```
 
-### Step 2.4: Automate Exports with Script
+### 2.4단계: 스크립트로 내보내기 자동화 {#step-24-automate-exports-with-script}
 
-Create a shell script to export all tables automatically:
+모든 테이블을 자동으로 내보내는 셸 스크립트를 작성하세요.
 
 ```bash
 #!/bin/bash
@@ -250,16 +250,16 @@ done
 echo "Export complete. Files in ${BACKUP_DIR}"
 ```
 
-Make the script executable and run it:
+스크립트에 실행 권한을 부여하고 실행하세요.
 
 ```bash
 chmod +x export-all-tables.sh
 ./export-all-tables.sh
 ```
 
-### Step 2.5: Verify Exports
+### 2.5단계: 내보내기 검증 {#step-25-verify-exports}
 
-Check that all export files were created successfully:
+모든 내보내기 파일이 정상적으로 생성됐는지 확인하세요.
 
 ```bash
 # List all export files
@@ -270,12 +270,12 @@ find /backup/ignite-3.0-export/ -size 0
 ```
 
 :::caution
-Do not proceed to the next phase until all exports are verified. Missing or corrupted export files will result in data loss.
+모든 내보내기 파일을 검증하기 전까지 다음 단계로 넘어가지 마세요. 내보내기 파일이 누락되거나 손상되면 데이터가 유실됩니다.
 :::
 
-### Step 2.6: Stop 3.0 Cluster
+### 2.6단계: 3.0 클러스터 중지 {#step-26-stop-30-cluster}
 
-Once all exports are verified, gracefully stop all cluster nodes:
+모든 내보내기를 검증했다면 클러스터의 모든 노드를 정상적으로 종료하세요.
 
 ```bash
 # Stop all nodes gracefully
@@ -285,33 +285,33 @@ ignite node stop --node node2
 ```
 
 :::warning
-After stopping the 3.0 cluster, do not delete any data until the migration is completely verified in the 3.1 cluster.
+3.0 클러스터를 중지한 후에는 3.1 클러스터에서 마이그레이션을 완전히 검증할 때까지 어떤 데이터도 삭제하지 마세요.
 :::
 
-## Phase 3: Set Up 3.1 Cluster
+## 3단계: 3.1 클러스터 구성 {#phase-3-set-up-31-cluster}
 
-### Step 3.1: Download Apache Ignite 3.1
+### 3.1단계: Apache Ignite 3.1 다운로드 {#step-31-download-apache-ignite-31}
 
-Download the Apache Ignite 3.1 distribution from the [official website](https://ignite.apache.org/download.cgi).
+[공식 웹사이트](https://ignite.apache.org/download.cgi)에서 Apache Ignite 3.1 배포판을 다운로드하세요.
 
-### Step 3.2: Configure Cluster Nodes
+### 3.2단계: 클러스터 노드 구성 {#step-32-configure-cluster-nodes}
 
-Update your configuration files from 3.0 to 3.1 format:
+구성 파일을 3.0 형식에서 3.1 형식으로 업데이트하세요.
 
-#### Configuration Changes in 3.1
+#### 3.1의 구성 변경 사항 {#configuration-changes-in-31}
 
-| Change Type | 3.0 Format | 3.1 Format |
+| 변경 유형 | 3.0 형식 | 3.1 형식 |
 |-------------|------------|------------|
-| Timeout Properties | `timeout=5000` | `timeoutMillis=5000` |
-| Zone Creation | `CREATE ZONE myZone WITH STORAGE_PROFILES='default', REPLICAS=3;` | `CREATE ZONE myZone (REPLICAS 3) STORAGE PROFILES['default'];` |
+| 타임아웃 속성 | `timeout=5000` | `timeoutMillis=5000` |
+| 영역 생성 | `CREATE ZONE myZone WITH STORAGE_PROFILES='default', REPLICAS=3;` | `CREATE ZONE myZone (REPLICAS 3) STORAGE PROFILES['default'];` |
 
 :::tip
-Review the Apache Ignite 3.1 documentation for a complete list of configuration changes.
+구성 변경 사항 전체 목록은 Apache Ignite 3.1 문서를 참고하세요.
 :::
 
-### Step 3.3: Start Cluster Nodes
+### 3.3단계: 클러스터 노드 시작 {#step-33-start-cluster-nodes}
 
-Start each node in your cluster:
+클러스터의 각 노드를 시작하세요.
 
 ```bash
 # Start each node (repeat for all nodes)
@@ -319,26 +319,26 @@ Start each node in your cluster:
 ```
 
 :::note
-By default, nodes load the configuration from `etc/ignite-config.conf`. You can specify a different configuration file with the `--config` parameter.
+기본적으로 노드는 `etc/ignite-config.conf`에서 구성을 불러옵니다. `--config` 매개변수로 다른 구성 파일을 지정할 수 있습니다.
 :::
 
-### Step 3.4: Initialize the Cluster
+### 3.4단계: 클러스터 초기화 {#step-34-initialize-the-cluster}
 
-Once all nodes are started, initialize the cluster from any node:
+모든 노드를 시작했다면 아무 노드에서나 클러스터를 초기화하세요.
 
 ```bash
 ignite cluster init --name=ignite-cluster
 ```
 
-### Step 3.5: Verify Cluster Topology
+### 3.5단계: 클러스터 토폴로지 확인 {#step-35-verify-cluster-topology}
 
-Confirm all nodes are part of the cluster:
+모든 노드가 클러스터에 속해 있는지 확인하세요.
 
 ```bash
 ignite cluster topology
 ```
 
-Expected output should show all nodes in ACTIVE state:
+예상 출력에는 모든 노드가 ACTIVE 상태로 표시됩니다.
 
 ```
 [name=node1, address=192.168.1.10:10800, state=ACTIVE]
@@ -346,9 +346,9 @@ Expected output should show all nodes in ACTIVE state:
 ...
 ```
 
-### Step 3.6: Recreate Schemas
+### 3.6단계: 스키마 재생성 {#step-36-recreate-schemas}
 
-Connect to the cluster and recreate all schemas:
+클러스터에 연결해 모든 스키마를 재생성하세요.
 
 ```sql
 -- Create schemas
@@ -356,18 +356,18 @@ CREATE SCHEMA analytics;
 CREATE SCHEMA sales;
 ```
 
-### Step 3.7: Recreate Distribution Zones
+### 3.7단계: 분산 영역 재생성 {#step-37-recreate-distribution-zones}
 
-If you have custom distribution zones, recreate them:
+사용자 지정 분산 영역이 있다면 재생성하세요.
 
 ```sql
 -- Create distribution zones (if customized)
 CREATE ZONE analytics_zone (REPLICAS 3) STORAGE PROFILES['default'];
 ```
 
-### Step 3.8: Recreate Tables
+### 3.8단계: 테이블 재생성 {#step-38-recreate-tables}
 
-Execute your saved schema recreation script:
+저장해 둔 스키마 재생성 스크립트를 실행하세요.
 
 ```sql
 CREATE TABLE analytics.events (
@@ -381,7 +381,7 @@ CREATE TABLE analytics.events (
 -- Repeat for all tables
 ```
 
-Verify each table was created correctly:
+각 테이블이 올바르게 생성됐는지 확인하세요.
 
 ```sql
 -- Verify table creation
@@ -389,16 +389,16 @@ SELECT * FROM SYSTEM.TABLES WHERE TABLE_NAME = 'EVENTS';
 ```
 
 :::warning
-Ensure table schemas in 3.1 exactly match the schemas from 3.0. Mismatches will cause import failures.
+3.1의 테이블 스키마가 3.0의 스키마와 정확히 일치하는지 확인하세요. 일치하지 않으면 가져오기가 실패합니다.
 :::
 
-## Phase 4: Import Data into 3.1 Cluster
+## 4단계: 3.1 클러스터로 데이터 가져오기 {#phase-4-import-data-into-31-cluster}
 
-### Step 4.1: Import Individual Tables
+### 4.1단계: 개별 테이블 가져오기 {#step-41-import-individual-tables}
 
-Import data for each table using the `COPY FROM` command.
+`COPY FROM` 명령어로 테이블마다 데이터를 가져옵니다.
 
-#### CSV Import
+#### CSV 가져오기 {#csv-import}
 
 ```sql
 COPY FROM '/backup/ignite-3.0-export/analytics_events.csv'
@@ -407,7 +407,7 @@ FORMAT CSV
 WITH 'header'='true', 'batchSize'='2048';
 ```
 
-#### Parquet Import (Recommended)
+#### Parquet 가져오기(권장) {#parquet-import-recommended}
 
 ```sql
 COPY FROM '/backup/ignite-3.0-export/analytics_events.parquet'
@@ -416,9 +416,9 @@ FORMAT PARQUET
 WITH 'batchSize'='2048';
 ```
 
-### Step 4.2: Automate Imports with Script
+### 4.2단계: 스크립트로 가져오기 자동화 {#step-42-automate-imports-with-script}
 
-Create a shell script to import all tables:
+모든 테이블을 가져오는 셸 스크립트를 작성하세요.
 
 ```bash
 #!/bin/bash
@@ -469,27 +469,27 @@ done
 echo "Import complete."
 ```
 
-Make the script executable and run it:
+스크립트에 실행 권한을 부여하고 실행하세요.
 
 ```bash
 chmod +x import-all-tables.sh
 ./import-all-tables.sh
 ```
 
-### Step 4.3: Verify Data Integrity
+### 4.3단계: 데이터 무결성 검증 {#step-43-verify-data-integrity}
 
-After imports complete, perform thorough verification:
+가져오기가 끝나면 철저히 검증하세요.
 
-#### Row Count Verification
+#### 행 수 검증 {#row-count-verification}
 
 ```sql
 -- Compare row counts
 SELECT COUNT(*) FROM analytics.events;
 ```
 
-Compare with the saved row counts from your 3.0 cluster.
+3.0 클러스터에서 저장해 둔 행 수와 비교하세요.
 
-#### Data Sampling
+#### 데이터 샘플링 {#data-sampling}
 
 ```sql
 -- Spot check data
@@ -504,9 +504,9 @@ SELECT MIN(event_time), MAX(event_time)
 FROM analytics.events;
 ```
 
-#### Create Verification Script
+#### 검증 스크립트 작성 {#create-verification-script}
 
-Automate verification across all tables:
+모든 테이블의 검증을 자동화하세요.
 
 ```bash
 #!/bin/bash
@@ -548,14 +548,14 @@ done
 ```
 
 :::caution
-Do not proceed with application cutover until all verification checks pass successfully.
+모든 검증 항목이 통과할 때까지 애플리케이션 전환을 진행하지 마세요.
 :::
 
-## Phase 5: Update Client Applications
+## 5단계: 클라이언트 애플리케이션 업데이트 {#phase-5-update-client-applications}
 
-### Step 5.1: Update Connection Configuration
+### 5.1단계: 연결 구성 업데이트 {#step-51-update-connection-configuration}
 
-Update application configuration to point to the 3.1 cluster:
+애플리케이션 구성이 3.1 클러스터를 가리키도록 업데이트하세요.
 
 ```properties
 # Old 3.0 connection
@@ -565,11 +565,11 @@ ignite.endpoints=old-node1:10800,old-node2:10800,old-node3:10800
 ignite.endpoints=new-node1:10800,new-node2:10800,new-node3:10800
 ```
 
-### Step 5.2: Review API Changes
+### 5.2단계: API 변경 사항 검토 {#step-52-review-api-changes}
 
-Check for deprecated APIs in your client code:
+클라이언트 코드에서 지원 중단된 API가 있는지 확인하세요.
 
-#### Java API Changes
+#### Java API 변경 사항 {#java-api-changes}
 
 ```java
 // Deprecated in 3.1
@@ -580,12 +580,12 @@ ignite.cluster().nodes()
 ```
 
 :::tip
-Refer to the Apache Ignite 3.1 release notes for a complete list of API changes: https://ignite.apache.org/releases/release_notes.html
+API 변경 사항 전체 목록은 Apache Ignite 3.1 릴리스 노트를 참고하세요: https://ignite.apache.org/releases/release_notes.html
 :::
 
-### Step 5.3: Test Client Connectivity
+### 5.3단계: 클라이언트 연결 테스트 {#step-53-test-client-connectivity}
 
-Before switching production traffic, test connectivity:
+프로덕션 트래픽을 전환하기 전에 연결을 테스트하세요.
 
 ```java
 // Connection test
@@ -606,26 +606,26 @@ try (IgniteClient client = IgniteClient.builder()
 }
 ```
 
-Once the connection is confirmed, gradually migrate traffic.
+연결이 확인되면 트래픽을 점진적으로 전환하세요.
 
-## Phase 6: Post-Migration Verification
+## 6단계: 마이그레이션 후 검증 {#phase-6-post-migration-verification}
 
-### Step 6.1: Verify Zone-Based Replication
+### 6.1단계: 영역 기반 복제 확인 {#step-61-verify-zone-based-replication}
 
-Confirm zone-based replication is active by checking cluster startup logs:
+클러스터 시작 로그를 확인해 영역 기반 복제가 활성화됐는지 확인하세요.
 
 ```bash
 # Check node logs for confirmation
 grep "Zone based replication" /path/to/node/logs/*.log
 ```
 
-Expected output:
+예상 출력:
 
 ```
 Zone based replication: true
 ```
 
-Verify zones are properly configured:
+영역이 올바르게 구성됐는지 확인하세요.
 
 ```sql
 SELECT * FROM SYSTEM.ZONES;

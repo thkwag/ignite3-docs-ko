@@ -40,7 +40,7 @@ const sidebars: SidebarsConfig = {
       items: [
         {
           type: "category",
-          label: "Ignite Clients",
+          label: "Ignite 클라이언트",
           link: { type: "doc", id: "develop/ignite-clients/index" },
           items: [
             "develop/ignite-clients/java-client",
@@ -50,7 +50,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: "category",
-          label: "Connect to Ignite",
+          label: "Ignite에 연결",
           link: { type: "doc", id: "develop/connect-to-ignite/index" },
           items: [
             "develop/connect-to-ignite/jdbc",
@@ -103,13 +103,13 @@ const sidebars: SidebarsConfig = {
       items: [
         {
           type: "category",
-          label: "SQL Fundamentals",
+          label: "SQL 기초",
           link: { type: "doc", id: "sql/fundamentals/index" },
           items: ["sql/fundamentals/engine-architecture"],
         },
         {
           type: "category",
-          label: "SQL Operations",
+          label: "SQL 작업",
           link: { type: "doc", id: "sql/working-with-sql/index" },
           items: [
             "sql/working-with-sql/execute-queries",
@@ -156,7 +156,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: "category",
-          label: "Advanced SQL",
+          label: "고급 SQL",
           link: { type: "doc", id: "sql/advanced/index" },
           items: [
             "sql/advanced/explain-statement",
@@ -169,12 +169,12 @@ const sidebars: SidebarsConfig = {
     // Configure and Operate (27 pages)
     {
       type: "category",
-      label: "Configure and Operate",
+      label: "구성 및 운영",
       link: { type: "doc", id: "configure-and-operate/index" },
       items: [
         {
           type: "category",
-          label: "Installation",
+          label: "설치",
           link: { type: "doc", id: "configure-and-operate/installation/index" },
           items: [
             "configure-and-operate/installation/install-zip",
@@ -211,7 +211,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: "category",
-          label: "Operations",
+          label: "운영",
           link: { type: "doc", id: "configure-and-operate/operations/index" },
           items: [
             "configure-and-operate/operations/lifecycle",
@@ -293,7 +293,7 @@ const sidebars: SidebarsConfig = {
             "understand/architecture/storage-architecture",
             {
               type: "category",
-              label: "Storage Engines",
+              label: "스토리지 엔진",
               link: { type: "doc", id: "understand/architecture/storage-engines/index" },
               items: [
                 "understand/architecture/storage-engines/aimem",
@@ -306,7 +306,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: "category",
-          label: "Performance",
+          label: "성능",
           link: { type: "doc", id: "understand/performance/index" },
           items: [
             "understand/performance/using-explain",
@@ -411,7 +411,7 @@ const sidebars: SidebarsConfig = {
     // Tools (3 pages)
     {
       type: "category",
-      label: "Tools",
+      label: "도구",
       link: { type: "doc", id: "tools/index" },
       items: ["tools/cli-commands", "tools/rest-api", "tools/glossary"],
     },

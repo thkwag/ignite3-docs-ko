@@ -1,171 +1,171 @@
-# Understand
+# 이해하기
 
-This section explains how Apache Ignite 3 works. Start with core concepts to understand the data model and distributed processing fundamentals, then explore the architecture for implementation details.
+이 섹션은 Apache Ignite 3의 동작 방식을 설명합니다. 핵심 개념으로 데이터 모델과 분산 처리의 기본 원리를 먼저 익히고, 아키텍처에서 구현 세부 사항을 살펴보세요.
 
-## Core Concepts
+## 핵심 개념 {#core-concepts}
 
-Fundamental concepts for working with Apache Ignite 3.
-
-<div className="card-container">
-  <div className="card">
-    <div className="card__header">
-      <h3><IIcon icon="mdi:information-outline" height="24" /> What is Apache Ignite 3?</h3>
-    </div>
-    <div className="card__body">
-      <p>Distributed database capabilities, use cases, and system components.</p>
-    </div>
-    <div className="card__footer">
-      <a href="./understand/core-concepts/what-is-ignite">Learn more →</a>
-    </div>
-  </div>
-
-  <div className="card">
-    <div className="card__header">
-      <h3><IIcon icon="mdi:table-large" height="24" /> Tables and Schemas</h3>
-    </div>
-    <div className="card__body">
-      <p>Data organization with tables, schemas, indexes, and the system catalog.</p>
-    </div>
-    <div className="card__footer">
-      <a href="./understand/core-concepts/tables-and-schemas">Learn more →</a>
-    </div>
-  </div>
-
-  <div className="card">
-    <div className="card__header">
-      <h3><IIcon icon="mdi:history" height="24" /> Transactions and MVCC</h3>
-    </div>
-    <div className="card__body">
-      <p>ACID transactions, isolation levels, and multi-version concurrency control.</p>
-    </div>
-    <div className="card__footer">
-      <a href="./understand/core-concepts/transactions-and-mvcc">Learn more →</a>
-    </div>
-  </div>
-
-  <div className="card">
-    <div className="card__header">
-      <h3><IIcon icon="mdi:map-marker-multiple-outline" height="24" /> Distribution and Colocation</h3>
-    </div>
-    <div className="card__body">
-      <p>Distribution zones, data placement, and colocation strategies for joins.</p>
-    </div>
-    <div className="card__footer">
-      <a href="./understand/core-concepts/distribution-and-colocation">Learn more →</a>
-    </div>
-  </div>
-
-  <div className="card">
-    <div className="card__header">
-      <h3><IIcon icon="mdi:view-grid-outline" height="24" /> Data Partitioning</h3>
-    </div>
-    <div className="card__body">
-      <p>Partition distribution, replicas, leases, and replication groups.</p>
-    </div>
-    <div className="card__footer">
-      <a href="./understand/core-concepts/data-partitioning">Learn more →</a>
-    </div>
-  </div>
-
-  <div className="card">
-    <div className="card__header">
-      <h3><IIcon icon="mdi:server-network" height="24" /> Compute and Events</h3>
-    </div>
-    <div className="card__body">
-      <p>Distributed job execution, code deployment, and cluster event handling.</p>
-    </div>
-    <div className="card__footer">
-      <a href="./understand/core-concepts/compute-and-events">Learn more →</a>
-    </div>
-  </div>
-</div>
-
-## Architecture
-
-System architecture, storage implementation, and data distribution.
+Apache Ignite 3를 다루는 데 필요한 기본 개념입니다.
 
 <div className="card-container">
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:sitemap" height="24" /> Architecture Overview</h3>
+      <h3><IIcon icon="mdi:information-outline" height="24" /> Apache Ignite 3란?</h3>
     </div>
     <div className="card__body">
-      <p>Node components, cluster coordination, RAFT consensus, and request flow.</p>
+      <p>분산 데이터베이스 기능, 사용 사례, 시스템 구성 요소를 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./understand/architecture/architecture-overview">Learn more →</a>
+      <a href="./understand/core-concepts/what-is-ignite">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:harddisk" height="24" /> Storage Architecture</h3>
+      <h3><IIcon icon="mdi:table-large" height="24" /> 테이블과 스키마</h3>
     </div>
     <div className="card__body">
-      <p>Storage layers, profiles, and the relationship between zones and engines.</p>
+      <p>테이블, 스키마, 인덱스, 시스템 카탈로그를 사용한 데이터 구성 방식을 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./understand/architecture/storage-architecture">Learn more →</a>
+      <a href="./understand/core-concepts/tables-and-schemas">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:database-cog-outline" height="24" /> Storage Engines</h3>
+      <h3><IIcon icon="mdi:history" height="24" /> 트랜잭션과 MVCC</h3>
     </div>
     <div className="card__body">
-      <p>AIMemory, AIPersist, and RocksDB engine configuration and characteristics.</p>
+      <p>ACID 트랜잭션, 격리 수준, 다중 버전 동시성 제어를 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./understand/architecture/storage-engines/">Learn more →</a>
+      <a href="./understand/core-concepts/transactions-and-mvcc">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:shield-lock-outline" height="24" /> Security Architecture</h3>
+      <h3><IIcon icon="mdi:map-marker-multiple-outline" height="24" /> 분산과 콜로케이션</h3>
     </div>
     <div className="card__body">
-      <p>Authentication, SSL/TLS encryption, and security configuration.</p>
+      <p>분산 영역(distribution zone), 데이터 배치, 조인을 위한 콜로케이션 전략을 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./understand/architecture/security">Learn more →</a>
+      <a href="./understand/core-concepts/distribution-and-colocation">자세히 보기 →</a>
+    </div>
+  </div>
+
+  <div className="card">
+    <div className="card__header">
+      <h3><IIcon icon="mdi:view-grid-outline" height="24" /> 데이터 파티셔닝</h3>
+    </div>
+    <div className="card__body">
+      <p>파티션 분산, 복제본, 리스, 복제 그룹을 다룹니다.</p>
+    </div>
+    <div className="card__footer">
+      <a href="./understand/core-concepts/data-partitioning">자세히 보기 →</a>
+    </div>
+  </div>
+
+  <div className="card">
+    <div className="card__header">
+      <h3><IIcon icon="mdi:server-network" height="24" /> 컴퓨트와 이벤트</h3>
+    </div>
+    <div className="card__body">
+      <p>분산 작업 실행, 코드 배포, 클러스터 이벤트 처리를 다룹니다.</p>
+    </div>
+    <div className="card__footer">
+      <a href="./understand/core-concepts/compute-and-events">자세히 보기 →</a>
     </div>
   </div>
 </div>
 
-## Performance
+## 아키텍처 {#architecture}
 
-Query analysis and optimization techniques.
+시스템 아키텍처, 스토리지 구현, 데이터 분산을 다룹니다.
 
 <div className="card-container">
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:file-search-outline" height="24" /> Using EXPLAIN</h3>
+      <h3><IIcon icon="mdi:sitemap" height="24" /> 아키텍처 개요</h3>
     </div>
     <div className="card__body">
-      <p>Analyze query execution plans to understand performance characteristics.</p>
+      <p>노드 구성 요소, 클러스터 조정, RAFT 합의, 요청 흐름을 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./understand/performance/using-explain">Learn more →</a>
+      <a href="./understand/architecture/architecture-overview">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:format-list-text" height="24" /> EXPLAIN Operators</h3>
+      <h3><IIcon icon="mdi:harddisk" height="24" /> 스토리지 아키텍처</h3>
     </div>
     <div className="card__body">
-      <p>Reference for all query plan operators and their attributes.</p>
+      <p>스토리지 계층, 프로파일, 영역과 엔진의 관계를 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./understand/performance/explain-operators">Learn more →</a>
+      <a href="./understand/architecture/storage-architecture">자세히 보기 →</a>
+    </div>
+  </div>
+
+  <div className="card">
+    <div className="card__header">
+      <h3><IIcon icon="mdi:database-cog-outline" height="24" /> 스토리지 엔진</h3>
+    </div>
+    <div className="card__body">
+      <p>AIMemory, AIPersist, RocksDB 엔진의 구성과 특성을 다룹니다.</p>
+    </div>
+    <div className="card__footer">
+      <a href="./understand/architecture/storage-engines/">자세히 보기 →</a>
+    </div>
+  </div>
+
+  <div className="card">
+    <div className="card__header">
+      <h3><IIcon icon="mdi:shield-lock-outline" height="24" /> 보안 아키텍처</h3>
+    </div>
+    <div className="card__body">
+      <p>인증, SSL/TLS 암호화, 보안 구성을 다룹니다.</p>
+    </div>
+    <div className="card__footer">
+      <a href="./understand/architecture/security">자세히 보기 →</a>
     </div>
   </div>
 </div>
 
-## Next Steps
+## 성능 {#performance}
 
-- [Getting Started](getting-started) - Quick start guides
-- [Develop](develop) - Build applications with Ignite
-- [SQL Reference](sql) - SQL syntax and operations
+쿼리 분석과 최적화 기법을 다룹니다.
+
+<div className="card-container">
+  <div className="card">
+    <div className="card__header">
+      <h3><IIcon icon="mdi:file-search-outline" height="24" /> EXPLAIN 사용</h3>
+    </div>
+    <div className="card__body">
+      <p>쿼리 실행 계획을 분석해 성능 특성을 파악하는 방법을 다룹니다.</p>
+    </div>
+    <div className="card__footer">
+      <a href="./understand/performance/using-explain">자세히 보기 →</a>
+    </div>
+  </div>
+
+  <div className="card">
+    <div className="card__header">
+      <h3><IIcon icon="mdi:format-list-text" height="24" /> EXPLAIN 연산자</h3>
+    </div>
+    <div className="card__body">
+      <p>모든 쿼리 계획 연산자와 속성을 정리한 참조 문서입니다.</p>
+    </div>
+    <div className="card__footer">
+      <a href="./understand/performance/explain-operators">자세히 보기 →</a>
+    </div>
+  </div>
+</div>
+
+## 다음 단계 {#next-steps}
+
+- [시작하기](getting-started) - 빠른 시작 가이드
+- [개발](develop) - Ignite로 애플리케이션 빌드
+- [SQL 참조](sql) - SQL 문법과 연산

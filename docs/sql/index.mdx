@@ -5,170 +5,170 @@ title: SQL
 
 # SQL
 
-Complete SQL reference for Apache Ignite 3, including fundamentals, syntax, and performance tuning.
+Apache Ignite 3의 기본 개념, 구문, 성능 튜닝을 다루는 전체 SQL 참조 문서입니다.
 
-## In This Section
+## 이 섹션의 내용 {#in-this-section}
 
 <div className="card-container">
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:engine-outline" height="24" /> SQL Engine Architecture</h3>
+      <h3><IIcon icon="mdi:engine-outline" height="24" /> SQL 엔진 아키텍처</h3>
     </div>
     <div className="card__body">
-      <p>Understanding the SQL engine, query processing pipeline, and distributed query execution.</p>
+      <p>SQL 엔진, 쿼리 처리 파이프라인, 분산 쿼리 실행 방식을 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./sql/fundamentals/engine-architecture">Learn more →</a>
+      <a href="./sql/fundamentals/engine-architecture">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:play-circle-outline" height="24" /> Execute Queries</h3>
+      <h3><IIcon icon="mdi:play-circle-outline" height="24" /> 쿼리 실행</h3>
     </div>
     <div className="card__body">
-      <p>Run SQL from applications using prepared statements, parameter binding, and result processing.</p>
+      <p>애플리케이션에서 준비된 문(prepared statement), 매개변수 바인딩, 결과 처리로 SQL을 실행합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./sql/working-with-sql/execute-queries">Learn more →</a>
+      <a href="./sql/working-with-sql/execute-queries">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:view-list-outline" height="24" /> Work with System Views</h3>
+      <h3><IIcon icon="mdi:view-list-outline" height="24" /> 시스템 뷰 다루기</h3>
     </div>
     <div className="card__body">
-      <p>Query cluster metadata, metrics, and system information through SQL views.</p>
+      <p>SQL 뷰로 클러스터 메타데이터, 메트릭, 시스템 정보를 조회합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./sql/working-with-sql/system-views">Learn more →</a>
+      <a href="./sql/working-with-sql/system-views">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:file-document-outline" height="24" /> DDL Commands</h3>
+      <h3><IIcon icon="mdi:file-document-outline" height="24" /> DDL 명령어</h3>
     </div>
     <div className="card__body">
-      <p>Data definition language including CREATE, ALTER, and DROP statements for schema management.</p>
+      <p>스키마를 관리하는 CREATE, ALTER, DROP 문을 포함한 데이터 정의어(DDL)입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./sql/reference/language-definition/ddl">Learn more →</a>
+      <a href="./sql/reference/language-definition/ddl">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:database-edit-outline" height="24" /> DML Commands</h3>
+      <h3><IIcon icon="mdi:database-edit-outline" height="24" /> DML 명령어</h3>
     </div>
     <div className="card__body">
-      <p>Data manipulation language including SELECT, INSERT, UPDATE, and DELETE operations.</p>
+      <p>SELECT, INSERT, UPDATE, DELETE 연산을 포함한 데이터 조작어(DML)입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./sql/reference/language-definition/dml">Learn more →</a>
+      <a href="./sql/reference/language-definition/dml">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:variable" height="24" /> Data Types</h3>
+      <h3><IIcon icon="mdi:variable" height="24" /> 데이터 타입</h3>
     </div>
     <div className="card__body">
-      <p>Supported SQL data types including numeric, string, temporal, and binary types.</p>
+      <p>숫자, 문자열, 날짜/시간, 이진 등 지원되는 SQL 데이터 타입입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./sql/reference/data-types-and-functions/data-types">Learn more →</a>
+      <a href="./sql/reference/data-types-and-functions/data-types">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:function-variant" height="24" /> Operators and Functions</h3>
+      <h3><IIcon icon="mdi:function-variant" height="24" /> 연산자와 함수</h3>
     </div>
     <div className="card__body">
-      <p>Built-in SQL functions and operators for arithmetic, string manipulation, date operations, and aggregations.</p>
+      <p>산술, 문자열 처리, 날짜 연산, 집계에 사용하는 내장 SQL 함수와 연산자입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./sql/reference/data-types-and-functions/operators-and-functions">Learn more →</a>
+      <a href="./sql/reference/data-types-and-functions/operators-and-functions">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:code-tags" height="24" /> Grammar Reference</h3>
+      <h3><IIcon icon="mdi:code-tags" height="24" /> 문법 참조</h3>
     </div>
     <div className="card__body">
-      <p>Complete SQL syntax with railroad diagrams showing valid statement structures.</p>
+      <p>레일로드 다이어그램(railroad diagram)으로 유효한 문 구조를 보여주는 전체 SQL 문법입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./sql/reference/language-definition/grammar-reference">Learn more →</a>
+      <a href="./sql/reference/language-definition/grammar-reference">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:key" height="24" /> Keywords</h3>
+      <h3><IIcon icon="mdi:key" height="24" /> 키워드</h3>
     </div>
     <div className="card__body">
-      <p>Reserved SQL keywords and naming restrictions for identifiers.</p>
+      <p>예약된 SQL 키워드와 식별자 이름 지정 제한 사항입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./sql/reference/sql-conformance/keywords">Learn more →</a>
+      <a href="./sql/reference/sql-conformance/keywords">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:check-decagram-outline" height="24" /> SQL Conformance</h3>
+      <h3><IIcon icon="mdi:check-decagram-outline" height="24" /> SQL 표준 준수</h3>
     </div>
     <div className="card__body">
-      <p>SQL standards compliance and supported ANSI SQL features.</p>
+      <p>SQL 표준 준수 여부와 지원하는 ANSI SQL 기능입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./sql/reference/sql-conformance/overview">Learn more →</a>
+      <a href="./sql/reference/sql-conformance/overview">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:view-grid-outline" height="24" /> Distribution Zones</h3>
+      <h3><IIcon icon="mdi:view-grid-outline" height="24" /> 분산 영역</h3>
     </div>
     <div className="card__body">
-      <p>Control data distribution across cluster nodes for performance optimization.</p>
+      <p>클러스터 노드 간 데이터 분산을 제어해 성능을 최적화합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./sql/reference/language-definition/distribution-zones">Learn more →</a>
+      <a href="./sql/reference/language-definition/distribution-zones">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:chart-timeline-variant" height="24" /> EXPLAIN Statement</h3>
+      <h3><IIcon icon="mdi:chart-timeline-variant" height="24" /> EXPLAIN 문</h3>
     </div>
     <div className="card__body">
-      <p>Analyze query execution plans to understand performance characteristics.</p>
+      <p>쿼리 실행 계획을 분석하여 성능 특성을 파악합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./sql/advanced/explain-statement">Learn more →</a>
+      <a href="./sql/advanced/explain-statement">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:speedometer" height="24" /> Performance Tuning</h3>
+      <h3><IIcon icon="mdi:speedometer" height="24" /> 성능 튜닝</h3>
     </div>
     <div className="card__body">
-      <p>Best practices for SQL query optimization and performance improvement.</p>
+      <p>SQL 쿼리를 최적화하고 성능을 개선하는 모범 사례입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./sql/advanced/performance-tuning">Learn more →</a>
+      <a href="./sql/advanced/performance-tuning">자세히 보기 →</a>
     </div>
   </div>
 </div>
 
-## Next Steps
+## 다음 단계 {#next-steps}
 
-- [Develop](develop) - Build applications with SQL
-- [Configure and Operate](configure-and-operate) - Production deployment
-- [API Reference](api-reference/sql-only-apis/jdbc/) - SQL driver documentation
+- [개발](develop) - SQL로 애플리케이션 구축
+- [구성 및 운영](configure-and-operate) - 프로덕션 배포
+- [API 참조](api-reference/sql-only-apis/jdbc/) - SQL 드라이버 문서

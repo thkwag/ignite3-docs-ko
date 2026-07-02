@@ -1,22 +1,22 @@
 ---
-title: Migrating from Ignite 2
+title: Ignite 2에서 마이그레이션
 ---
 
-This section describes how to configure an Apache Ignite 3 cluster into which you will migrate all the components of your Apache Ignite 2 cluster.
+이 섹션에서는 Apache Ignite 2 클러스터의 모든 구성 요소를 마이그레이션할 Apache Ignite 3 클러스터를 구성하는 방법을 설명합니다.
 
-## Configuration Migration
+## 구성 마이그레이션 {#configuration-migration}
 
-You need to configure the cluster you have created to match the Apache Ignite 2 cluster you are migrating from.
+생성한 클러스터를 마이그레이션 대상인 Apache Ignite 2 클러스터와 일치하도록 구성해야 합니다.
 
-While cluster configurations in Apache Ignite 2 are XML beans, in Apache Ignite 3 they are in HOCON format. Moreover, many configuration structures in version 3 are different from those in version 2.
+Apache Ignite 2의 클러스터 구성은 XML 빈이지만 Apache Ignite 3에서는 HOCON 형식입니다. 또한 버전 3의 구성 구조 상당수가 버전 2와 다릅니다.
 
-In Apache Ignite 3, the configuration file has a single root "node," called `ignite`. All configuration sections are children, grandchildren, etc., of that node.
+Apache Ignite 3에서 구성 파일에는 `ignite`라는 단일 루트 "노드"가 있습니다. 모든 구성 섹션은 이 노드의 자식, 손자 등에 해당합니다.
 
 :::note
-In Apache Ignite 3, you can create and maintain the configuration in either JSON or HOCON format.
+Apache Ignite 3에서는 JSON 또는 HOCON 형식으로 구성을 작성하고 유지할 수 있습니다.
 :::
 
-For example:
+예시:
 
 ```json
 {
@@ -43,75 +43,75 @@ For example:
 }
 ```
 
-When migrating your environment Apache Ignite 3 configuration is split between Cluster, Node and distribution zone configurations.
+환경을 마이그레이션할 때 Apache Ignite 3 구성은 클러스터, 노드, 분산 영역(distribution zone) 구성으로 나뉩니다.
 
-### Node Configuration
+### 노드 구성 {#node-configuration}
 
-Node configuration stores information about the locally running node.
+노드 구성에는 로컬에서 실행 중인 노드에 대한 정보가 저장됩니다.
 
-#### Storage Configuration
+#### 스토리지 구성 {#storage-configuration}
 
-Apache Ignite 3 storage is configured in a completely different manner from Apache Ignite 2.
+Apache Ignite 3의 스토리지 구성 방식은 Apache Ignite 2와 완전히 다릅니다.
 
-* First, you configure **storage engine** properties, which may include properties like page size or checkpoint frequency.
-* Then, you create a **storage profile**, which defines a specific storage that will be used.
-* Then, you create a **distribution zone** using the storage profile, which can be further used to fine-tune the storage by defining where and how to store data across the cluster.
-* Finally, each **table** can be assigned to the distribution zone, or directly to a storage profile.
+* 먼저 **스토리지 엔진(storage engine)** 속성을 구성합니다. 여기에는 페이지 크기나 체크포인트 빈도 같은 속성이 포함될 수 있습니다.
+* 그다음 사용할 특정 스토리지를 정의하는 **스토리지 프로파일(storage profile)**을 생성합니다.
+* 그다음 스토리지 프로파일을 사용해 **분산 영역**을 생성합니다. 분산 영역은 클러스터 전체에서 데이터를 어디에 어떻게 저장할지 정의해 스토리지를 세밀하게 조정하는 데 활용할 수 있습니다.
+* 마지막으로 각 **테이블**을 분산 영역에 배정하거나 스토리지 프로파일에 직접 배정할 수 있습니다.
 
-Note:
+참고:
 
-* Only tables and distribution zones can be configured from code. Storage profiles and engines must be configured by updating node configuration and restarting node.
-* Custom affinity functions are replaced by distribution zones.
-* External storage is supported via cache storage that must be configured by using SQL.
+* 코드로 구성할 수 있는 것은 테이블과 분산 영역뿐입니다. 스토리지 프로파일과 엔진은 노드 구성을 업데이트하고 노드를 재시작해야 구성할 수 있습니다.
+* 커스텀 어피니티 함수는 분산 영역으로 대체됩니다.
+* 외부 스토리지는 SQL로 구성해야 하는 캐시 스토리지로 지원됩니다.
 
-#### Client Configuration
+#### 클라이언트 구성 {#client-configuration}
 
-All clients in Apache Ignite 3 are "thin", and use a similar `clientConnector` configuration. See [Apache Ignite Clients](/develop/ignite-clients/) section for more information on configuring client connector.
+Apache Ignite 3의 모든 클라이언트는 씬 클라이언트(thin client)이며 비슷한 `clientConnector` 구성을 사용합니다. 클라이언트 커넥터 구성에 대한 자세한 내용은 [Apache Ignite 클라이언트](/develop/ignite-clients/) 섹션을 참고하세요.
 
-#### Network Configuration
+#### 네트워크 구성 {#network-configuration}
 
-Node network configuration is now performed in the `network` section of the [node configuration](/configure-and-operate/reference/node-configuration).
+노드 네트워크 구성은 이제 [노드 구성](/configure-and-operate/reference/node-configuration)의 `network` 섹션에서 수행합니다.
 
-#### REST API Configuration
+#### REST API 구성 {#rest-api-configuration}
 
-REST API is a significant part of Apache Ignite 3. It can be used for multiple purposes, including cluster and node configuration and running SQL requests.
+REST API는 Apache Ignite 3의 중요한 부분입니다. 클러스터·노드 구성, SQL 요청 실행 등 다양한 용도로 사용할 수 있습니다.
 
-You can configure REST properties in [node configuration](/configure-and-operate/reference/node-configuration).
+REST 속성은 [노드 구성](/configure-and-operate/reference/node-configuration)에서 구성할 수 있습니다.
 
-### Cluster Configuration
+### 클러스터 구성 {#cluster-configuration}
 
-Cluster configuration applies to all nodes in the cluster. It is automatically propagated across the cluster from the node you apply in at.
+클러스터 구성은 클러스터의 모든 노드에 적용됩니다. 구성을 적용한 노드로부터 클러스터 전체에 자동으로 전파됩니다.
 
-#### Handling Events
+#### 이벤트 처리 {#handling-events}
 
-Events configuration is simplified in Apache Ignite 3. It is separated in 2 configurations:
+Apache Ignite 3에서는 이벤트 구성이 단순화되었습니다. 다음 두 가지 구성으로 나뉩니다.
 
-* Event **channels** define what is collected.
-* Event **sinks** define where the data is sent.
+* 이벤트 **채널**은 수집 대상을 정의합니다.
+* 이벤트 **싱크**는 데이터를 보낼 대상을 정의합니다.
 
-In the current release, only `log` sink are supported. You can configure events as described in the [Events](/develop/work-with-data/events) section.
+현재 릴리스에서는 `log` 싱크만 지원합니다. 이벤트 구성 방법은 [이벤트](/develop/work-with-data/events) 섹션을 참고하세요.
 
-#### Metrics Collection
+#### 메트릭 수집 {#metrics-collection}
 
-Apache Ignite 3 has metrics disabled by default.
+Apache Ignite 3는 기본적으로 메트릭이 비활성화되어 있습니다.
 
-All metrics are grouped according to their metric sources, and are enabled in cluster configuration per metric source.
+모든 메트릭은 메트릭 소스별로 그룹화되며, 클러스터 구성에서 메트릭 소스 단위로 활성화합니다.
 
-Then, these metrics will be available in Apache Ignite JMX beans.
+그러면 Apache Ignite JMX 빈에서 이 메트릭을 확인할 수 있습니다.
 
-For instructions on configuring metrics, see [Metrics Configuration](/configure-and-operate/configuration/metrics-configuration).
+메트릭 구성 방법은 [메트릭 구성](/configure-and-operate/configuration/metrics-configuration) 문서를 참고하세요.
 
-## Code Migration
+## 코드 마이그레이션 {#code-migration}
 
-Code written for Apache Ignite 2 cannot be directly reused, however as most concepts remain similar, code migration should not take too much time.
+Apache Ignite 2용으로 작성한 코드는 그대로 재사용할 수 없지만, 대부분의 개념이 비슷하게 유지되므로 코드 마이그레이션에 그리 오랜 시간이 걸리지 않습니다.
 
-### Collocated Compute and Partition-Local Queries
+### 콜로케이션 컴퓨트와 파티션 로컬 쿼리 {#collocated-compute-and-partition-local-queries}
 
-In Apache Ignite 2, you could pin a compute job to a specific partition using `ComputeTask` with `setPartition` on the job context. Ignite 3 provides two approaches to achieve the same result, both based on running a job on the node that owns a partition and then querying only that partition's rows using the `__PARTITION_ID` virtual SQL column.
+Apache Ignite 2에서는 작업 컨텍스트에 `setPartition`을 지정한 `ComputeTask`를 사용해 컴퓨트 작업을 특정 파티션에 고정할 수 있었습니다. Ignite 3는 같은 결과를 얻는 두 가지 방식을 제공하며, 두 방식 모두 파티션을 소유한 노드에서 작업을 실행한 뒤 `__PARTITION_ID` 가상 SQL 컬럼으로 해당 파티션의 행만 조회하는 원리를 사용합니다.
 
-#### Option 1: Broadcast to Table Partitions (Recommended)
+#### 옵션 1: 테이블 파티션에 브로드캐스트(권장) {#option-1-broadcast-to-table-partitions-recommended}
 
-Use `BroadcastJobTarget.table()` with `JobExecutionContext.partition()`. This is the preferred approach because Ignite routes each job instance to the node currently holding its partition, and `context.partition()` is always non-null, so execution is guaranteed to be local.
+`BroadcastJobTarget.table()`을 `JobExecutionContext.partition()`과 함께 사용하세요. 이 방식이 권장되는 이유는 Ignite가 각 작업 인스턴스를 해당 파티션을 현재 보유한 노드로 라우팅하고, `context.partition()`이 항상 null이 아니어서 로컬 실행이 보장되기 때문입니다.
 
 ```java
 JobDescriptor<Void, Long> job = JobDescriptor.builder(PartitionQueryJob.class)
@@ -124,7 +124,7 @@ Collection<Long> partitionCounts = client.compute()
 long total = partitionCounts.stream().mapToLong(Long::longValue).sum();
 ```
 
-Inside the job, read `context.partition()` to get the partition assigned to this instance, then filter rows with `__PARTITION_ID`:
+작업 내부에서 `context.partition()`을 읽어 이 인스턴스에 배정된 파티션을 가져온 뒤, `__PARTITION_ID`로 행을 필터링하세요.
 
 ```java
 public class PartitionQueryJob implements ComputeJob<Void, Long> {
@@ -147,11 +147,11 @@ public class PartitionQueryJob implements ComputeJob<Void, Long> {
 }
 ```
 
-See `ComputeBroadcastExample` in the examples module for a complete runnable version.
+실행 가능한 전체 버전은 examples 모듈의 `ComputeBroadcastExample`을 참고하세요.
 
-#### Option 2: MapReduce over Partition Distribution
+#### 옵션 2: 파티션 분산 기반 맵리듀스 {#option-2-mapreduce-over-partition-distribution}
 
-Use `PartitionDistribution` to enumerate partitions in the split phase of a `MapReduceTask`, then dispatch one job per partition to its primary replica node:
+`MapReduceTask`의 분할 단계에서 `PartitionDistribution`을 사용해 파티션을 나열한 뒤, 파티션마다 하나의 작업을 해당 프라이머리 복제본 노드로 전달하세요.
 
 ```java
 public class PersonCountByPartitionTask implements MapReduceTask<Void, Long, Long, Long> {
@@ -185,7 +185,7 @@ public class PersonCountByPartitionTask implements MapReduceTask<Void, Long, Lon
 }
 ```
 
-Each job receives the partition ID as its argument and queries only that partition:
+각 작업은 파티션 ID를 인수로 받아 해당 파티션만 조회합니다.
 
 ```java
 public class PartitionPersonCountJob implements ComputeJob<Long, Long> {
@@ -206,18 +206,18 @@ public class PartitionPersonCountJob implements ComputeJob<Long, Long> {
 }
 ```
 
-See `ComputePartitionQueryMapReduceExample` in the examples module for a complete runnable version.
+실행 가능한 전체 버전은 examples 모듈의 `ComputePartitionQueryMapReduceExample`을 참고하세요.
 
 :::note
-`PartitionDistribution.primaryReplicas()` captures partition locations at a point in time. If a partition is reassigned between the split phase and job execution, the job may run on a non-primary node and the SQL query will not be local. Use `BroadcastJobTarget.table()` (Option 1) when local execution must be guaranteed.
+`PartitionDistribution.primaryReplicas()`는 특정 시점의 파티션 위치를 캡처합니다. 분할 단계와 작업 실행 사이에 파티션이 재배정되면 작업이 프라이머리가 아닌 노드에서 실행될 수 있고, 이 경우 SQL 쿼리는 로컬로 실행되지 않습니다. 로컬 실행을 반드시 보장해야 한다면 `BroadcastJobTarget.table()`(옵션 1)을 사용하세요.
 :::
 
-#### How to Run a Local Query
+#### 로컬 쿼리 실행 방법 {#how-to-run-a-local-query}
 
-Both approaches use the `__PARTITION_ID` virtual column (type `BIGINT`) to restrict a query to a single partition's rows. This is how you achieve the equivalent of Ignite 2's collocated queries without cross-node data movement:
+두 방식 모두 `__PARTITION_ID` 가상 컬럼(타입 `BIGINT`)을 사용해 쿼리를 단일 파티션의 행으로 제한합니다. 이 방식으로 노드 간 데이터 이동 없이 Ignite 2의 콜로케이션 쿼리와 동등한 효과를 얻을 수 있습니다.
 
 ```sql
 SELECT * FROM Person WHERE __PARTITION_ID = ?
 ```
 
-Pass the partition ID returned by `partition.id()` (Option 1) or the `long` ID passed as the job argument (Option 2) as the query parameter.
+쿼리 매개변수로 `partition.id()`가 반환하는 파티션 ID(옵션 1) 또는 작업 인수로 전달되는 `long` ID(옵션 2)를 전달하세요.

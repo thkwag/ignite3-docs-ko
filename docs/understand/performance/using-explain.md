@@ -1,12 +1,12 @@
 ---
 id: using-explain
-title: Using EXPLAIN Command
+title: EXPLAIN 명령어 사용
 sidebar_position: 1
 ---
 
-# Using EXPLAIN Command
+# EXPLAIN 명령어 사용
 
-The `EXPLAIN` command displays the execution plan for a SQL query without running it. Use this to understand how the query optimizer processes your query and identify performance bottlenecks.
+`EXPLAIN` 명령어는 SQL 쿼리를 실행하지 않고 실행 계획을 표시합니다. 이 명령으로 쿼리 옵티마이저가 쿼리를 처리하는 방식을 파악하고 성능 병목 지점을 찾을 수 있습니다.
 
 ```mermaid
 flowchart LR
@@ -22,30 +22,30 @@ flowchart LR
     end
 ```
 
-The execution plan reveals:
+실행 계획은 다음을 보여줍니다.
 
-- Table access order and methods (full scan vs index scan)
-- Join algorithms (hash join, merge join, nested loop)
-- Index usage and search bounds
-- Row count estimates at each stage
-- Data distribution across cluster nodes (with MAPPING)
+- 테이블 접근 순서와 방식(전체 스캔 대 인덱스 스캔)
+- 조인 알고리즘(해시 조인, 병합 조인, 중첩 루프)
+- 인덱스 사용 여부와 검색 범위
+- 각 단계의 예상 행 수
+- 클러스터 노드 전반의 데이터 분산(MAPPING 사용 시)
 
-## EXPLAIN Command Syntax
+## EXPLAIN 명령어 구문 {#explain-command-syntax}
 
-Apache Ignite supports two variations of the `EXPLAIN` command:
+Apache Ignite는 `EXPLAIN` 명령어의 두 가지 변형을 지원합니다.
 
 ```sql
 EXPLAIN [PLAN | MAPPING] FOR <query>
 ```
 
-If neither `PLAN` nor `MAPPING` is specified, then `PLAN` is implicit.
+`PLAN`과 `MAPPING`을 모두 지정하지 않으면 `PLAN`이 기본으로 적용됩니다.
 
-Parameters:
+매개변수:
 
-- `PLAN` - explains query in terms of relational operators tree. This representation is suitable for investigation of performance issues related to the optimizer.
-- `MAPPING` - explains query in terms of mapping of query fragment to a particular node of the cluster. This representation is suitable for investigation of performance issues related to the data colocation.
+- `PLAN` - 쿼리를 관계형 연산자 트리 형태로 설명합니다. 이 표현 방식은 옵티마이저와 관련된 성능 문제를 조사하는 데 적합합니다.
+- `MAPPING` - 프래그먼트가 클러스터의 특정 노드에 매핑되는 방식으로 쿼리를 설명합니다. 이 표현 방식은 데이터 콜로케이션과 관련된 성능 문제를 조사하는 데 적합합니다.
 
-Examples:
+예시:
 
 ```sql
 EXPLAIN SELECT * FROM lineitem;
@@ -53,9 +53,9 @@ EXPLAIN PLAN FOR SELECT * FROM lineitem;
 EXPLAIN MAPPING FOR SELECT * FROM lineitem;
 ```
 
-## Understanding The Output
+## 출력 이해하기 {#understanding-the-output}
 
-Each query plan is a tree of relational operators. Data flows from leaf nodes (table scans) up through transformation nodes (joins, sorts) to the root node (final result).
+각 쿼리 계획은 관계형 연산자로 구성된 트리입니다. 데이터는 리프 노드(테이블 스캔)에서 시작해 변환 노드(조인, 정렬)를 거쳐 루트 노드(최종 결과)로 흘러갑니다.
 
 ```mermaid
 flowchart TB
@@ -78,11 +78,11 @@ flowchart TB
     end
 ```
 
-Each operator node includes:
+각 연산자 노드는 다음 정보를 포함합니다.
 
-- **Name**: The algorithm used (TableScan, HashJoin, Sort, etc.)
-- **Attributes**: Operator-specific details (table name, predicate, field names)
-- **Estimate**: Expected row count at this stage (`est: (rows=N)`)
+- **Name**: 사용된 알고리즘(TableScan, HashJoin, Sort 등)
+- **Attributes**: 연산자별 세부 정보(테이블 이름, 조건자, 필드 이름)
+- **Estimate**: 이 단계에서 예상되는 행 수(`est: (rows=N)`)
 
 ```text
 OperatorName
@@ -91,38 +91,38 @@ OperatorName
     est: (rows=N)
 ```
 
-### Operator Categories
+### 연산자 범주 {#operator-categories}
 
-| Category | Operators | Purpose |
+| 범주 | 연산자 | 목적 |
 |----------|-----------|---------|
-| **Scan** | TableScan, IndexScan, SystemViewScan | Read data from tables |
-| **Join** | HashJoin, MergeJoin, NestedLoopJoin | Combine rows from multiple sources |
-| **Aggregate** | ColocatedHashAggregate, MapSortAggregate | GROUP BY operations |
-| **Transform** | Project, Filter, Sort, Limit | Shape and order results |
-| **Distribution** | Exchange, Sender, Receiver | Move data between nodes |
+| **스캔** | TableScan, IndexScan, SystemViewScan | 테이블에서 데이터를 읽습니다 |
+| **조인** | HashJoin, MergeJoin, NestedLoopJoin | 여러 소스의 행을 결합합니다 |
+| **집계** | ColocatedHashAggregate, MapSortAggregate | GROUP BY 연산을 수행합니다 |
+| **변환** | Project, Filter, Sort, Limit | 결과의 형태와 순서를 조정합니다 |
+| **분산** | Exchange, Sender, Receiver | 노드 간 데이터를 이동합니다 |
 
-See [EXPLAIN Operators Reference](./explain-operators) for the complete operator list.
+전체 연산자 목록은 [EXPLAIN 연산자 참조](./explain-operators)를 확인하세요.
 
-### Plan Structure
+### 계획 구조 {#plan-structure}
 
-- **Leaf nodes**: Data sources (TableScan, IndexScan)
-- **Internal nodes**: Transformations (Join, Sort, Aggregate)
-- **Root node**: Final operator producing the query result
+- **리프 노드**: 데이터 소스(TableScan, IndexScan)
+- **내부 노드**: 변환(Join, Sort, Aggregate)
+- **루트 노드**: 쿼리 결과를 생성하는 최종 연산자
 
-## Common Query Optimization Issues
+## 일반적인 쿼리 최적화 문제 {#common-query-optimization-issues}
 
-SQL EXPLAIN output analysis can help you optimize slow query execution. You can avoid common bottlenecks in SQL execution by following these guidelines:
+SQL EXPLAIN 출력을 분석하면 느린 쿼리 실행을 최적화하는 데 도움이 됩니다. 다음 지침을 따르면 SQL 실행에서 흔히 발생하는 병목을 피할 수 있습니다.
 
-- Avoid scanning an entire table.
-- Avoid scanning non-optimal indexes.
-- Avoid suboptimal join ordering or join algorithm.
-- Ensure optimal data colocation for your queries.
+- 테이블 전체를 스캔하지 마세요.
+- 최적이 아닌 인덱스를 스캔하지 마세요.
+- 최적이 아닌 조인 순서나 조인 알고리즘을 피하세요.
+- 쿼리에 최적의 데이터 콜로케이션을 보장하세요.
 
-In the following sections, we will see some common issues with queries and ways to identify and fix them.
+다음 절에서는 쿼리에서 흔히 발생하는 문제와 이를 발견하고 해결하는 방법을 살펴봅니다.
 
-## Full Scan Instead of Index Scan
+## 인덱스 스캔 대신 전체 스캔 {#full-scan-instead-of-index-scan}
 
-Suppose related sql execution flow looks like:
+관련 SQL 실행 흐름이 다음과 같다고 가정합니다.
 
 ```sql
 CREATE TABLE t (id INT PRIMARY KEY, col1 VARCHAR);
@@ -131,7 +131,7 @@ CREATE INDEX t_col1_idx ON t(col1);
 SELECT id FROM t WHERE col1 = '1';
 ```
 
-And possible EXPLAIN output:
+가능한 EXPLAIN 출력은 다음과 같습니다.
 
 ```sql
    TableScan
@@ -142,16 +142,16 @@ And possible EXPLAIN output:
 ```
 
 :::note
-For simplicity, here and below, information that is not related to the example is omitted from the EXPLAIN output.
+간단히 하기 위해 이 예시와 이후 예시에서는 EXPLAIN 출력 중 예시와 관련 없는 정보를 생략합니다.
 :::
 
-We can see a full scan (*TableScan* operator) with predicate. The execution planner chooses which scan implementation (**TableScan** or **IndexScan**) to use. If you expect that index scan is preferable, you can use the `FORCE_INDEX` hint to manually force `IndexScan` approach:
+조건자가 있는 전체 스캔(*TableScan* 연산자)이 보입니다. 실행 플래너는 어떤 스캔 구현(**TableScan** 또는 **IndexScan**)을 사용할지 선택합니다. 인덱스 스캔이 더 낫다고 판단되면 `FORCE_INDEX` 힌트로 `IndexScan` 방식을 직접 강제할 수 있습니다.
 
 ```sql
 SELECT /*+ FORCE_INDEX(t_col1_idx) */ id FROM t WHERE col1 = '1';
 ```
 
-Will show a different plan, like:
+다음과 같이 다른 계획이 표시됩니다.
 
 ```sql
    IndexScan
@@ -165,9 +165,9 @@ Will show a different plan, like:
        est: (rows=1)
 ```
 
-## Suboptimal Indexes
+## 최적이 아닌 인덱스 {#suboptimal-indexes}
 
-Indexes with less prediction can be chosen, for example schema and query may look as follows:
+예측력이 낮은 인덱스가 선택되기도 합니다. 예를 들어 스키마와 쿼리는 다음과 같습니다.
 
 ```sql
 CREATE TABLE t (id INT PRIMARY KEY, col1 VARCHAR, col2 VARCHAR);
@@ -177,7 +177,7 @@ CREATE INDEX t_col1_idx ON t(col1);
 SELECT id FROM t WHERE col1 = '1' AND col2 = '2';
 ```
 
-and a possible plan would be:
+가능한 계획은 다음과 같습니다.
 
 ```sql
    IndexScan
@@ -186,7 +186,7 @@ and a possible plan would be:
        ...
 ```
 
-We can see that the execution uses the **T_COL1_IDX** index, through both predicates **COL1 = '1' AND COL2 = '2'** are involved and the **T_COL1_COL2_IDX** is preferable. In this case, the optimal plan would be:
+실행에 **T_COL1_IDX** 인덱스가 사용된 것을 확인할 수 있는데, **COL1 = '1' AND COL2 = '2'** 두 조건자가 모두 관련되어 있어 **T_COL1_COL2_IDX** 인덱스가 더 적합합니다. 이 경우 최적의 계획은 다음과 같습니다.
 
 ```sql
    IndexScan
@@ -195,17 +195,17 @@ We can see that the execution uses the **T_COL1_IDX** index, through both predic
        ...
 ```
 
-You can also use the `FORCE_INDEX` hint to achieve this:
+이를 위해 `FORCE_INDEX` 힌트를 사용할 수도 있습니다.
 
 ```sql
 SELECT /*+ FORCE_INDEX(t_col1_col2_idx) */ id FROM t WHERE col1 = '1' AND col2 = '2';
 ```
 
-## Unexpected Sort Operation
+## 예상치 못한 정렬 연산 {#unexpected-sort-operation}
 
-By default, sorted indexes store their entries in ascending order. You can adjust the ordering of a sorted index by including the options ASC or DESC.
+기본적으로 정렬된 인덱스는 항목을 오름차순으로 저장합니다. ASC 또는 DESC 옵션을 포함하면 정렬된 인덱스의 순서를 조정할 수 있습니다.
 
-Let's suppose the schema and related query look like this:
+스키마와 관련 쿼리가 다음과 같다고 가정합니다.
 
 ```sql
 CREATE TABLE t1 (id INT PRIMARY KEY, col1 VARCHAR);
@@ -216,7 +216,7 @@ CREATE INDEX t2_col1_idx ON t2(col1);
 SELECT t1.id as t1id, t2.id as t2id FROM t1 JOIN t2 USING (col1);
 ```
 
-And the possible execution plan looks like this:
+가능한 실행 계획은 다음과 같습니다.
 
 ```sql
    MergeJoin
@@ -229,15 +229,15 @@ And the possible execution plan looks like this:
            ...
 ```
 
-In the example above, the planner adds the **Sort** operation before performing the **IndexScan**, as the index used is sorted in descending order, while ascending order is required.
+위 예시에서 플래너는 **IndexScan**을 수행하기 전에 **Sort** 연산을 추가하는데, 사용된 인덱스가 내림차순으로 정렬되어 있지만 오름차순이 필요하기 때문입니다.
 
-Extra **Sort** operations adds performance costs, and we can avoid it by creating an index with the appropriate sort ordering:
+추가 **Sort** 연산은 성능 비용을 늘리며, 적절한 정렬 순서로 인덱스를 생성하면 이를 피할 수 있습니다.
 
 ```sql
 CREATE INDEX t1_col1_idx ON t1(col1);
 ```
 
-And plan will no longer display the **Sort** operation, improving query execution speed:
+이제 계획에 **Sort** 연산이 더 이상 표시되지 않아 쿼리 실행 속도가 향상됩니다.
 
 ```sql
    MergeJoin
@@ -250,9 +250,9 @@ And plan will no longer display the **Sort** operation, improving query executio
            ...
 ```
 
-## Performance Impact of Correlated Subqueries
+## 상관 서브쿼리의 성능 영향 {#performance-impact-of-correlated-subqueries}
 
-The SQL-99 standard allows for nested subqueries at nearly all places within a query, so Ignite 3 supports nested subqueries, both correlated and not. Performance of certain complex correlated subqueries may be insufficient. Let's consider a correlated query:
+SQL-99 표준은 쿼리 내 거의 모든 위치에서 중첩 서브쿼리를 허용하므로, Ignite 3는 상관 서브쿼리와 비상관 서브쿼리를 모두 포함한 중첩 서브쿼리를 지원합니다. 일부 복잡한 상관 서브쿼리는 성능이 충분하지 않을 수 있습니다. 상관 쿼리 예시를 살펴봅니다.
 
 ```sql
 CREATE TABLE emp(dept_id INTEGER PRIMARY KEY, name VARCHAR, salary INTEGER);
@@ -263,7 +263,7 @@ FROM emp
 WHERE emp.salary > 1000;
 ```
 
-We can see nested correlated subquery here, lets check the plan:
+여기서 중첩된 상관 서브쿼리가 보입니다. 계획을 살펴봅니다.
 
 ```sql
    CorrelatedNestedLoopJoin
@@ -280,13 +280,13 @@ We can see nested correlated subquery here, lets check the plan:
              ...
 ```
 
-The example above shows the slow **CorrelatedNestedLoopJoin** operation. Queries with this operation may cause a number of issues:
+위 예시는 느린 **CorrelatedNestedLoopJoin** 연산을 보여줍니다. 이 연산이 포함된 쿼리는 다음과 같은 여러 문제를 일으킬 수 있습니다.
 
-- Such subqueries may become bottlenecks.
-- Queries can cause high CPU load.
-- Certain queries may perform slower than expected.
+- 이러한 서브쿼리는 병목이 될 수 있습니다.
+- 쿼리가 높은 CPU 부하를 유발할 수 있습니다.
+- 특정 쿼리는 예상보다 느리게 실행될 수 있습니다.
 
-If performance issues are found in similar queries, it would be more efficient to rewrite the query without nested subqueries, for example:
+비슷한 쿼리에서 성능 문제가 발견되면 중첩 서브쿼리 없이 쿼리를 다시 작성하는 편이 더 효율적입니다. 예를 들면 다음과 같습니다.
 
 ```sql
 SELECT emp.name, dept.name
@@ -294,7 +294,7 @@ FROM emp, dept
 WHERE emp.salary > 1000 AND emp.dept_id=dept.id;
 ```
 
-And new plan becomes:
+새 계획은 다음과 같습니다.
 
 ```sql
      HashJoin
@@ -309,11 +309,11 @@ And new plan becomes:
              ...
 ```
 
-Without the **CorrelatedNestedLoopJoin** operation, the query should perform much better than the previous one.
+**CorrelatedNestedLoopJoin** 연산이 사라졌으므로 이 쿼리는 이전 쿼리보다 성능이 훨씬 좋아집니다.
 
-## Excessive Sorting
+## 과도한 정렬 {#excessive-sorting}
 
-Let's explain we have an index involved two columns one of them is participate in predicate and other in ordering, or in sql terms:
+두 컬럼으로 구성된 인덱스가 있고, 그중 하나는 조건자에, 다른 하나는 정렬에 사용된다고 가정합니다. SQL로는 다음과 같습니다.
 
 ```sql
 CREATE TABLE emp(dept_id INTEGER PRIMARY KEY, name VARCHAR, salary INTEGER);
@@ -322,12 +322,12 @@ CREATE INDEX emp_salary_name_idx ON emp(salary, name);
 SELECT dept_id FROM emp WHERE salary = 1 ORDER BY name;
 ```
 
-Expectations:
+예상되는 동작:
 
-- Index need to be used here.
-- No additional sort is needed because index is ordered by **name** column is satisfies initial query ordering.
+- 여기서는 인덱스가 사용되어야 합니다.
+- 인덱스가 **name** 컬럼으로 정렬되어 있어 원래 쿼리의 정렬 조건을 충족하므로 추가 정렬이 필요하지 않습니다.
 
-But the real execution plan shows a different result:
+하지만 실제 실행 계획은 다른 결과를 보여줍니다.
 
 ```sql
      Sort
@@ -339,13 +339,13 @@ But the real execution plan shows a different result:
            ...
 ```
 
-We can see a redundant **Sort** operator. A bit query refactoring can help to avoid excessive sorting:
+불필요한 **Sort** 연산자가 보입니다. 쿼리를 약간 리팩터링하면 과도한 정렬을 피할 수 있습니다.
 
 ```sql
 SELECT dept_id FROM emp WHERE salary = 1 ORDER BY salary, name;
 ```
 
-And the plan becomes as follows:
+계획은 다음과 같이 바뀝니다.
 
 ```sql
      IndexScan
@@ -355,15 +355,15 @@ And the plan becomes as follows:
          ...
 ```
 
-## Select Count Optimization
+## SELECT COUNT 최적화 {#select-count-optimization}
 
-Some queries can be optimized to use more optimal plans which brings performance speed up. For example, plan for:
+일부 쿼리는 최적화를 거쳐 더 효율적인 계획을 사용하게 되면서 성능이 향상됩니다. 예를 들어 다음 쿼리의 계획은:
 
 ```sql
 SELECT COUNT(*) FROM emp;
 ```
 
-Can look like this:
+다음과 같을 수 있습니다.
 
 ```sql
  SelectCount
@@ -372,9 +372,9 @@ Can look like this:
      ...
 ```
 
-But there are numerous cases where such optimization is not applicable. In such a cases, a plan can be different and the execution may require more time.
+하지만 이 최적화가 적용되지 않는 경우도 많습니다. 이런 경우 계획이 달라질 수 있고 실행에 더 많은 시간이 걸릴 수 있습니다.
 
-The same query as above, but with explicit transaction may produce a different plan, for example:
+위와 같은 쿼리라도 명시적 트랜잭션을 사용하면 다른 계획이 나올 수 있습니다. 예를 들면:
 
 ```sql
    ReduceSortAggregate
@@ -387,11 +387,11 @@ The same query as above, but with explicit transaction may produce a different p
              ...
 ```
 
-## Index Scan Without Exact Search Bounds
+## 정확한 검색 범위가 없는 인덱스 스캔 {#index-scan-without-exact-search-bounds}
 
-Table scans are available in two implementations: direct table scan and scan through index. Index scans contain predicate and search bounds. Predicate provides final rows comparison. If search bounds are absent, the query degenerates into table scan through index scan (requiring an additional store look up), with further predicate comparison, that incurs additional performance overhead costs.
+테이블 스캔은 직접 테이블 스캔과 인덱스를 통한 스캔, 두 가지 방식으로 구현됩니다. 인덱스 스캔은 조건자와 검색 범위를 포함합니다. 조건자는 최종 행 비교를 수행합니다. 검색 범위가 없으면 쿼리는 인덱스 스캔을 통한 테이블 스캔(추가 저장소 조회 필요)으로 저하되고, 이후 조건자 비교까지 거치면서 추가 성능 오버헤드 비용이 발생합니다.
 
-Let's suppose we have schema and query like this:
+다음과 같은 스키마와 쿼리가 있다고 가정합니다.
 
 ```sql
 CREATE TABLE t (id INTEGER PRIMARY KEY, col1 DECIMAL(5, 3));
@@ -400,7 +400,7 @@ CREATE INDEX t_col1_idx ON t(col1);
 SELECT id FROM t WHERE col1 = 43;
 ```
 
-And possible plan would look like this:
+가능한 계획은 다음과 같습니다.
 
 ```sql
    IndexScan
@@ -410,16 +410,16 @@ And possible plan would look like this:
        ...
 ```
 
-We can see here only **predicate** (and no **searchBounds**) which means that **all** rows from index will go through predicate and bring additional performance penalty.
+여기서는 **조건자**만 있고 **searchBounds**는 없습니다. 이는 인덱스의 **모든** 행이 조건자를 거치면서 추가 성능 저하를 유발한다는 의미입니다.
 
-Two type of solutions are possible here:
+여기서는 두 가지 해결 방법이 가능합니다.
 
-- You can prohibit suboptimal index usage.
-- You can explicitly help the planner with type derivation.
+- 최적이 아닌 인덱스 사용을 금지할 수 있습니다.
+- 타입 유추를 명시적으로 지정해 플래너를 도울 수 있습니다.
 
-### Prohibit Index Usage
+### 인덱스 사용 금지 {#prohibit-index-usage}
 
-For the first approach, use the **NO_INDEX** hint to prohibit index usage:
+첫 번째 방법에서는 **NO_INDEX** 힌트로 인덱스 사용을 금지합니다.
 
 ```sql
 SELECT /*+ NO_INDEX */ id FROM t WHERE col1 = 43;
@@ -429,7 +429,7 @@ SELECT /*+ NO_INDEX */ id FROM t WHERE col1 = 43;
 SELECT /*+ NO_INDEX(t_col1_idx) */ id FROM t WHERE col1 = 43;
 ```
 
-As a result, you will have a plan similar to this:
+그 결과 다음과 비슷한 계획을 얻습니다.
 
 ```sql
    TableScan
@@ -438,9 +438,9 @@ As a result, you will have a plan similar to this:
        ...
 ```
 
-### Manual Type Casting
+### 수동 타입 캐스팅 {#manual-type-casting}
 
-You can append additional cast to the same query to explicitly cast data as a specific type:
+동일한 쿼리에 캐스트를 추가하면 데이터를 특정 타입으로 명시적으로 캐스팅할 수 있습니다.
 
 ```sql
 SELECT id FROM t WHERE col1 = 43::DECIMAL(5, 3);
@@ -455,9 +455,9 @@ SELECT id FROM t WHERE col1 = 43::DECIMAL(5, 3);
        ...
 ```
 
-We can see here both **searchBounds** and **predicate** which means that only exact lookup through index will be involved.
+여기서는 **searchBounds**와 **조건자**가 모두 있습니다. 이는 인덱스를 통한 정확한 조회만 수행된다는 의미입니다.
 
-The same case as above but for a bit complicated query:
+위와 같은 상황을 조금 더 복잡한 쿼리로도 살펴봅니다.
 
 ```sql
 CREATE TABLE t (id INT PRIMARY KEY, col1 INT);
@@ -466,7 +466,7 @@ CREATE INDEX t_col1_asc_idx ON t (col1);
 SELECT * FROM t WHERE col1::varchar = SUBSTR(CURRENT_DATE::varchar, 4);
 ```
 
-Possible plan:
+가능한 계획:
 
 ```sql
    IndexScan
@@ -476,15 +476,15 @@ Possible plan:
        ...
 ```
 
-And we also can see that no **search bounds** are involved here.
+여기에는 **검색 범위**도 없습니다.
 
-Try to change it like:
+다음과 같이 변경해 보세요.
 
 ```sql
 SELECT * FROM t WHERE col1 = SUBSTR(CURRENT_DATE::varchar, 4)::int;
 ```
 
-And the possible plan will become:
+그러면 가능한 계획은 다음과 같이 바뀝니다.
 
 ```sql
    IndexScan
@@ -495,11 +495,11 @@ And the possible plan will become:
        ...
 ```
 
-We can see that **searchBounds** are present, thus more productive execution flow is expected here.
+**searchBounds**가 있으므로 여기서는 더 효율적인 실행 흐름이 예상됩니다.
 
-## Colocation Usage
+## 콜로케이션 사용 {#colocation-usage}
 
-Data colocation eliminates network transfers during joins by ensuring related rows reside on the same node. The EXPLAIN output shows this through Exchange operators.
+데이터 콜로케이션은 관련된 행이 같은 노드에 위치하도록 보장해 조인 시 네트워크 전송을 없앱니다. EXPLAIN 출력은 이를 Exchange 연산자로 보여줍니다.
 
 ```mermaid
 flowchart TB
@@ -526,9 +526,9 @@ flowchart TB
     end
 ```
 
-Exchange operators indicate data movement between nodes. Fewer Exchange operators mean less network overhead.
+Exchange 연산자는 노드 간 데이터 이동을 나타냅니다. Exchange 연산자가 적을수록 네트워크 오버헤드가 줄어듭니다.
 
-For example, if tables are created without colocation consideration:
+예를 들어 콜로케이션을 고려하지 않고 테이블을 생성하면:
 
 ```sql
 -- by default, the table is implicitly colocated by PRIMARY KEY
@@ -538,13 +538,13 @@ CREATE TABLE emp(dept_id INTEGER, name VARCHAR, salary INTEGER, PRIMARY KEY(dept
 CREATE TABLE dept(id INTEGER, name VARCHAR, PRIMARY KEY(name, id));
 ```
 
-And query as follows:
+쿼리는 다음과 같습니다.
 
 ```sql
 SELECT emp.name, dept.name FROM emp JOIN dept ON emp.dept_id = dept.id AND emp.salary > 1000;
 ```
 
-Bring plan like:
+다음과 같은 계획이 나옵니다.
 
 ```sql
    HashJoin
@@ -562,9 +562,9 @@ Bring plan like:
            ...
 ```
 
-We can see two **Exchange** operators, which means that all rows are transferred into a single node and then are joined. This execution flow brings a performance cost and slows down query execution.
+**Exchange** 연산자가 두 개 보이는데, 이는 모든 행이 단일 노드로 전송된 후 조인된다는 의미입니다. 이 실행 흐름은 성능 비용을 유발해 쿼리 실행 속도를 늦춥니다.
 
-Let's try to improve it by adding explicit colocation for the **dept** table by the **ID** column:
+**dept** 테이블에 **ID** 컬럼 기준의 명시적 콜로케이션을 추가해 이를 개선해 봅니다.
 
 ```sql
 -- implicitly colocated by PRIMARY KEY
@@ -573,7 +573,7 @@ CREATE TABLE emp(dept_id INTEGER, name VARCHAR, salary INTEGER, PRIMARY KEY(dept
 CREATE TABLE dept(id INTEGER, name VARCHAR, PRIMARY KEY(name, id)) COLOCATE BY (id);
 ```
 
-Now the dependent rows from **emp** table are transferred into the appropriate node where **dept** holds the rows according to **DEPT.ID** distribution:
+이제 **emp** 테이블의 종속된 행은 **DEPT.ID** 분산에 따라 **dept**가 행을 보유한 적절한 노드로 전송됩니다.
 
 ```sql
      HashJoin
@@ -590,12 +590,12 @@ Now the dependent rows from **emp** table are transferred into the appropriate n
            ...
 ```
 
-Only one **Exchange** operator for now, which, once again, mean only rows transferring from **emp** table to appropriate **dept** one.
+이제 **Exchange** 연산자가 하나만 있으며, 이는 다시 한번 **emp** 테이블에서 적절한 **dept** 노드로만 행이 전송된다는 의미입니다.
 
-And finally, both join predicate related columns are colocated:
+마지막으로 조인 조건자와 관련된 두 컬럼이 모두 콜로케이션됩니다.
 
 :::note
-The following colocation example will only work if the **emp** and **dept** tables belong to the same distribution zone.
+다음 콜로케이션 예시는 **emp**와 **dept** 테이블이 같은 분산 영역에 속할 때만 동작합니다.
 :::
 
 ```sql
@@ -605,9 +605,9 @@ CREATE TABLE emp(dept_id INTEGER, name VARCHAR, salary INTEGER, PRIMARY KEY(dept
 CREATE TABLE dept(id INTEGER, name VARCHAR, PRIMARY KEY(id, name)) COLOCATE BY(id);
 ```
 
-Now, the **emp** and **dept** tables are both colocated.
+이제 **emp**와 **dept** 테이블은 모두 콜로케이션되었습니다.
 
-And the final plan will look like this:
+최종 계획은 다음과 같습니다.
 
 ```sql
      HashJoin
@@ -621,11 +621,11 @@ And the final plan will look like this:
            ...
 ```
 
-No **Exchange** operators are involved in the explanation, which means that no excessive rows transfer has occurred.
+설명에 **Exchange** 연산자가 전혀 없으며, 이는 불필요한 행 전송이 발생하지 않았다는 의미입니다.
 
-## Additional EXPLAIN Examples
+## 추가 EXPLAIN 예시 {#additional-explain-examples}
 
-### Example: Complex Join Query
+### 예시: 복잡한 조인 쿼리 {#example-complex-join-query}
 
 ```sql
 EXPLAIN PLAN FOR
@@ -637,7 +637,7 @@ EXPLAIN PLAN FOR
     AND P.ProductName = 'Product_' || ?::varchar
 ```
 
-The resulting output is:
+결과 출력은 다음과 같습니다.
 
 ```text
 Project
@@ -678,27 +678,27 @@ Project
           est: (rows=10000)
 ```
 
-This execution plan represents a query that joins three tables: `USERS`, `REVIEWS`, and `PRODUCTS`, and selects four fields after filtering by product name.
+이 실행 계획은 `USERS`, `REVIEWS`, `PRODUCTS` 세 테이블을 조인하고, 제품명으로 필터링한 뒤 네 개의 필드를 선택하는 쿼리를 나타냅니다.
 
-- **Project** (root node): Outputs the final selected fields (USERNAME, PRODUCTNAME, REVIEWTEXT, and RATING).
-- **HashJoins** (two levels): Perform the inner joins.
-  - The first (bottom-most) joins REVIEWS with PRODUCTS on PRODUCTID.
-  - The second joins the result with USERS on USERID.
-- **TableScans**: Each table is scanned:
-  - REVIEWS is fully scanned.
-  - PRODUCTS is scanned with a filter on PRODUCTNAME.
-  - USERS is fully scanned.
-- **Exchange** nodes: Indicate data redistribution between operators.
+- **Project**(루트 노드): 최종 선택 필드(USERNAME, PRODUCTNAME, REVIEWTEXT, RATING)를 출력합니다.
+- **HashJoins**(두 단계): 내부 조인을 수행합니다.
+  - 첫 번째(가장 아래) 조인은 PRODUCTID를 기준으로 REVIEWS와 PRODUCTS를 조인합니다.
+  - 두 번째 조인은 그 결과를 USERID를 기준으로 USERS와 조인합니다.
+- **TableScans**: 각 테이블을 스캔합니다.
+  - REVIEWS는 전체 스캔됩니다.
+  - PRODUCTS는 PRODUCTNAME 필터를 적용해 스캔됩니다.
+  - USERS는 전체 스캔됩니다.
+- **Exchange** 노드: 연산자 간 데이터 재분산을 나타냅니다.
 
-Each node includes:
+각 노드는 다음을 포함합니다.
 
-- `fieldNames`: Output columns at that stage.
-- `predicate`: Join or filter condition.
-- `est`: Estimated number of rows at that point in the plan.
+- `fieldNames`: 해당 단계의 출력 컬럼입니다.
+- `predicate`: 조인 또는 필터 조건입니다.
+- `est`: 계획의 해당 지점에서 예상되는 행 수입니다.
 
-### Example: Query Mapping
+### 예시: 쿼리 매핑 {#example-query-mapping}
 
-A result of EXPLAIN MAPPING command includes additional metadata providing insight at how the query is mapped on cluster topology. So, for the command like below:
+EXPLAIN MAPPING 명령어의 결과에는 쿼리가 클러스터 토폴로지에 어떻게 매핑되는지 파악할 수 있는 추가 메타데이터가 포함됩니다. 예를 들어 다음과 같은 명령어에 대해:
 
 ```sql
 EXPLAIN MAPPING FOR
@@ -710,7 +710,7 @@ EXPLAIN MAPPING FOR
     AND P.ProductName = 'Product_' || ?::varchar
 ```
 
-The resulting output is:
+결과 출력은 다음과 같습니다.
 
 ```text
 Fragment#0 root
@@ -788,23 +788,23 @@ Fragment#3
           est: (rows=10000)
 ```
 
-Where:
+여기서:
 
-- **Fragment#0** means fragment with id=0
-- A **root** marks a fragment which is considered as root fragment, i.e. a fragment which represents user's cursor
-- A **distribution** attribute provides an insight into which mapping strategy was applied to this particular fragment
-- A **executionNodes** attribute provides a list of nodes this fragment will be executed on
-- A **partitions** attribute provides an insight into which partitions of which tables will be read from which nodes
-- A **tree** attribute specifies which part of the relational tree corresponds to this fragment
+- **Fragment#0**은 id=0인 프래그먼트를 의미합니다.
+- **root**는 루트 프래그먼트로 간주되는 프래그먼트, 즉 사용자 커서를 나타내는 프래그먼트를 표시합니다.
+- **distribution** 속성은 해당 프래그먼트에 어떤 매핑 전략이 적용되었는지 알려줍니다.
+- **executionNodes** 속성은 이 프래그먼트가 실행될 노드 목록을 제공합니다.
+- **partitions** 속성은 어떤 테이블의 어떤 파티션이 어떤 노드에서 읽히는지 알려줍니다.
+- **tree** 속성은 관계형 트리의 어느 부분이 이 프래그먼트에 해당하는지 지정합니다.
 
-The output above shows how the query is broken into multiple execution fragments and distributed across the cluster. It gives insight into both the logical execution plan and how it maps to the physical topology.
+위 출력은 쿼리가 여러 실행 프래그먼트로 나뉘어 클러스터 전체에 분산되는 방식을 보여주며, 논리적 실행 계획과 이것이 물리적 토폴로지에 매핑되는 방식을 모두 담고 있습니다.
 
-The query starts execution in *Fragment#0*, which serves as the root of the plan (this is where the final result is produced). It runs on a single node (`node_1`) and contains the main logic of the query, including the projection and two nested hash joins. Instead of scanning tables directly, it receives data from other fragments through `Receiver` operators. These incoming streams correspond to the `REVIEWS`, `PRODUCTS`, and `USERS` tables.
+쿼리는 계획의 루트 역할을 하는 *Fragment#0*에서 실행을 시작합니다(최종 결과가 여기서 생성됩니다). 이 프래그먼트는 단일 노드(`node_1`)에서 실행되며, 프로젝션과 두 개의 중첩 해시 조인을 포함한 쿼리의 주요 로직을 담고 있습니다. 테이블을 직접 스캔하는 대신, `Receiver` 연산자를 통해 다른 프래그먼트로부터 데이터를 받습니다. 이렇게 들어오는 스트림은 `REVIEWS`, `PRODUCTS`, `USERS` 테이블에 해당합니다.
 
-The actual table scans happen in *Fragments 1 through 3*, each responsible for one of the involved tables. These fragments operate in parallel across the cluster. Each performs a scan on its respective table and then sends the results back to Fragment#0.
+실제 테이블 스캔은 각각 관련 테이블 하나씩을 담당하는 *Fragment 1부터 3*에서 발생합니다. 이 프래그먼트는 클러스터 전체에서 병렬로 동작합니다. 각 프래그먼트는 해당 테이블을 스캔한 뒤 결과를 Fragment#0으로 돌려보냅니다.
 
-- *Fragment#1* handles the `REVIEWS` table. It runs on all nodes and uses a random distribution strategy. Data is partitioned across nodes, and after scanning the table, results are sent upstream.
-- *Fragment#2* is in charge of the `PRODUCTS` table. It also spans all nodes but follows a zone-based distribution linked to the table's partitioning. There's a filter applied to `PRODUCTNAME`, which limits the amount of data sent to the root.
-- *Fragment#3* covers the `USERS` table. Like the others, it's distributed and reads from table partitions spread across the cluster.
+- *Fragment#1*은 `REVIEWS` 테이블을 처리합니다. 모든 노드에서 실행되며 랜덤 분산 전략을 사용합니다. 데이터는 노드 전체에 파티셔닝되어 있고, 테이블 스캔 후 결과가 상위로 전송됩니다.
+- *Fragment#2*는 `PRODUCTS` 테이블을 담당합니다. 이 역시 모든 노드에서 실행되지만 테이블의 파티셔닝과 연결된 영역 기반 분산을 따릅니다. `PRODUCTNAME`에 필터가 적용되어 루트로 전송되는 데이터양이 줄어듭니다.
+- *Fragment#3*은 `USERS` 테이블을 다룹니다. 다른 프래그먼트와 마찬가지로 분산되어 있으며 클러스터 전체에 퍼져 있는 테이블 파티션에서 데이터를 읽습니다.
 
-Each fragment includes metadata such as the nodes it's executed on, how data is partitioned, and how results are sent between fragments. This layout provides a clear view of not only how the query is logically processed, but also how the workload is split and coordinated in a distributed environment.
+각 프래그먼트에는 실행되는 노드, 데이터 파티셔닝 방식, 프래그먼트 간 결과 전송 방식 같은 메타데이터가 포함됩니다. 이 구조는 쿼리가 논리적으로 어떻게 처리되는지뿐 아니라, 분산 환경에서 워크로드가 어떻게 나뉘어 조율되는지도 명확히 보여줍니다.

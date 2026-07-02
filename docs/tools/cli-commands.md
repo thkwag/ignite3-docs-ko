@@ -1,30 +1,30 @@
 ---
 id: cli-commands
-title: CLI Commands Reference
+title: CLI 명령어 참조
 sidebar_position: 1
 ---
 
-# Apache Ignite CLI Tool
+# Apache Ignite CLI 도구
 
-## Overview
+## 개요 {#overview}
 
-The Apache Ignite CLI communicates with the cluster via the REST API, allowing you to configure the entire cluster or apply node-specific settings. You can run the CLI either in the interactive mode or execute commands without entering it.
+Apache Ignite CLI는 REST API로 클러스터와 통신하며, 전체 클러스터를 구성하거나 노드별 설정을 적용할 수 있습니다. CLI는 대화형 모드로 실행하거나, 대화형 모드에 진입하지 않고 명령어를 바로 실행할 수도 있습니다.
 
-### Interactive CLI Mode
+### 대화형 CLI 모드 {#interactive-cli-mode}
 
-To use the CLI in the interactive mode, first [run](/getting-started/quick-start#start-the-ignite-cli) it, then configure the [cluster](/configure-and-operate/configuration/config-cluster-and-nodes) or [node](/configure-and-operate/reference/node-configuration) using the `update` command.
+CLI를 대화형 모드로 사용하려면 먼저 CLI를 [실행](/getting-started/quick-start#start-the-ignite-cli)한 다음, `update` 명령어로 [클러스터](/configure-and-operate/configuration/config-cluster-and-nodes)나 [노드](/configure-and-operate/reference/node-configuration)를 구성하세요.
 
-For example, to add a new user to the cluster:
+예를 들어 클러스터에 새 사용자를 추가하는 명령어는 다음과 같습니다:
 
 ```bash
 cluster config update ignite.security.authentication.providers.default.users=[{username=newuser,displayName=newuser,password="newpassword",passwordEncoding=PLAIN,roles=[system]}]
 ```
 
-### Non-Interactive CLI Mode
+### 비대화형 CLI 모드 {#non-interactive-cli-mode}
 
-Non-interactive mode is useful for quick updates or when running commands in scripts.
+비대화형 모드는 빠른 업데이트나 스크립트에서 명령어를 실행할 때 유용합니다.
 
-When running commands non-interactively, enclose arguments in quotation marks to ensure that special POSIX characters (such as `{` and `}`) are interpreted correctly:
+명령어를 비대화형으로 실행할 때는 `{`, `}`와 같은 특수 POSIX 문자가 올바르게 해석되도록 인수를 따옴표로 감싸세요:
 
 ```bash title="Linux"
 bin/ignite3 cluster config update "ignite.schemaSync={delayDurationMillis=500,maxClockSkewMillis=500}"
@@ -34,7 +34,7 @@ bin/ignite3 cluster config update "ignite.schemaSync={delayDurationMillis=500,ma
 bin/ignite3.bat cluster config update "ignite.schemaSync={delayDurationMillis=500,maxClockSkewMillis=500}"
 ```
 
-Alternatively, you can use the backslash (`\`) to escape all special characters in your command. For example:
+또는 백슬래시(`\`)로 명령어의 모든 특수 문자를 이스케이프할 수 있습니다. 예를 들면 다음과 같습니다:
 
 ```bash title="Linux"
 bin/ignite3 cluster config update ignite.security.authentication.providers.default.users=\[\{username\=newuser,displayName\=newuser,password\=\"newpassword\",passwordEncoding\=PLAIN,roles\=\[system\]\}\]
@@ -44,7 +44,7 @@ bin/ignite3 cluster config update ignite.security.authentication.providers.defau
 bin/ignite3.bat cluster config update ignite.security.authentication.providers.default.users=\[\{username\=newuser,displayName\=newuser,password\=\"newpassword\",passwordEncoding\=PLAIN,roles\=\[system\]\}\]
 ```
 
-Non-interactive mode is also useful in automation scripts. For example, you can set configuration items in a Bash script as follows:
+비대화형 모드는 자동화 스크립트에서도 유용합니다. 예를 들어 Bash 스크립트에서 다음과 같이 구성 항목을 설정할 수 있습니다:
 
 ```bash
 #!/bin/bash
@@ -56,48 +56,48 @@ bin/ignite3 cluster config update "ignite.schemaSync={delayDurationMillis=500,ma
 bin/ignite3 cluster config update "ignite.security.authentication.providers.default.users=[{username=newuser,displayName=newuser,password=\"newpassword\",passwordEncoding=PLAIN,roles=[system]}]"
 ```
 
-### Verbose Output
+### 상세 출력 {#verbose-output}
 
-All CLI commands can provide additional output that can be helpful in debugging. You can specify the `-v` option multiple times to increase output verbosity. Single option shows REST request and response, second option (-vv) shows request headers, third one (-vvv) shows request body.
+모든 CLI 명령어는 디버깅에 도움이 되는 추가 출력을 표시할 수 있습니다. `-v` 옵션을 여러 번 지정하면 출력 상세도를 높일 수 있습니다. 옵션 1개는 REST 요청과 응답을 보여주고, 2개(-vv)는 요청 헤더를, 3개(-vvv)는 요청 본문을 보여줍니다.
 
-### CLI Tool Logs
+### CLI 도구 로그 {#cli-tool-logs}
 
-CLI tool stores extended logs for your operations. These logs contain additional information not displayed during normal operation. You can configure the directory in the following ways:
+CLI 도구는 수행한 작업의 확장 로그를 저장합니다. 이 로그에는 일반 작업 중에는 표시되지 않는 추가 정보가 담겨 있습니다. 로그 디렉터리는 다음 방법으로 구성할 수 있습니다:
 
-- By setting the `IGNITE_CLI_LOGS_DIR` environment variable to the directory where logs will be stored.
-- By setting the `$XDG_STATE_HOME` environment variable to set the CLI home folder. This configuration variable follows the [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/latest/) and does not override the `IGNITE_CLI_LOGS_DIR`. If `$XDG_STATE_HOME` is set and `IGNITE_CLI_LOGS_DIR` is not, logs will be stored in `$XDG_STATE_HOME/ignitecli/logs` directory.
+- 로그를 저장할 디렉터리를 `IGNITE_CLI_LOGS_DIR` 환경 변수로 설정합니다.
+- CLI 홈 폴더를 지정하려면 `$XDG_STATE_HOME` 환경 변수를 설정합니다. 이 구성 변수는 [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/latest/)을 따르며 `IGNITE_CLI_LOGS_DIR`을 덮어쓰지 않습니다. `$XDG_STATE_HOME`은 설정되어 있고 `IGNITE_CLI_LOGS_DIR`은 설정되어 있지 않으면 로그는 `$XDG_STATE_HOME/ignitecli/logs` 디렉터리에 저장됩니다.
 
-If neither of the above properties are set, the logs are stored in the following locations:
+위 속성이 모두 설정되어 있지 않으면 로그는 다음 위치에 저장됩니다:
 
-- On Unix systems and MacOS, in the `~/.local/state/ignitecli/logs` directory.
-- On Windows, in the `%USERPROFILE%\.local\state\ignitecli\logs` folder.
+- Unix 시스템과 macOS에서는 `~/.local/state/ignitecli/logs` 디렉터리에 저장됩니다.
+- Windows에서는 `%USERPROFILE%\.local\state\ignitecli\logs` 폴더에 저장됩니다.
 
-## SQL Commands
+## SQL 명령어 {#sql-commands}
 
-These commands help you execute SQL queries against the cluster.
+이 명령어는 클러스터에서 SQL 쿼리를 실행하는 데 사용합니다.
 
 ### sql
 
-Executes SQL query or enters the interactive SQL editor mode if no SQL query is specified.
+SQL 쿼리를 실행합니다. SQL 쿼리를 지정하지 않으면 대화형 SQL 편집기 모드로 진입합니다.
 
-#### Syntax
+#### 구문 {#syntax}
 
 ```
 sql [--jdbc-url=<jdbc>] [--plain] [--file=<file>] [--profile=<profileName>] [--verbose] <command>
 ```
 
-#### Parameters
+#### 매개변수 {#parameters}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--jdbc-url` | Option | No | JDBC url to ignite cluster (e.g., 'jdbc:ignite:thin://127.0.0.1:10800'). |
-| `--plain` | Flag | No | Display output with plain formatting. |
-| `--file` | Option | No | Path to file with SQL commands to execute. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
-| `<command>` | Argument | Yes | SQL query to execute. |
+| `--jdbc-url` | 옵션 | 아니요 | Ignite 클러스터의 JDBC URL입니다(예: 'jdbc:ignite:thin://127.0.0.1:10800'). |
+| `--plain` | 플래그 | 아니요 | 출력을 일반 텍스트 형식으로 표시합니다. |
+| `--file` | 옵션 | 아니요 | 실행할 SQL 명령어가 담긴 파일의 경로입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
+| `<command>` | 인수 | 예 | 실행할 SQL 쿼리입니다. |
 
-#### Example
+#### 예시 {#example}
 
 ```bash
 sql "SELECT * FROM PUBLIC.PERSON"
@@ -105,53 +105,53 @@ sql "SELECT * FROM PUBLIC.PERSON"
 
 ### sql planner invalidate-cache
 
-Invalidates SQL planner cache.
+SQL 플래너 캐시를 무효화합니다.
 
-#### Syntax
+#### 구문 {#syntax-1}
 
 ```
 sql planner invalidate-cache [--tables=<tables>] [--url=<clusterUrl>] [--profile=<profileName>] [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-1}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--tables` | Option | No | Comma-separated list of tables. |
-| `--url` | Option | No | URL of cluster endpoint. It can be any node URL. If not set, the default URL from the profile settings will be used. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--tables` | 옵션 | 아니요 | 테이블 목록입니다(쉼표로 구분). |
+| `--url` | 옵션 | 아니요 | 클러스터 엔드포인트의 URL입니다. 아무 노드의 URL이나 사용할 수 있습니다. 지정하지 않으면 프로파일 설정의 기본 URL을 사용합니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-1}
 
 ```bash
 sql planner invalidate-cache --tables=PUBLIC.PERSON,PUBLIC.ORDERS
 ```
 
-## CLI Configuration Commands
+## CLI 구성 명령어 {#cli-configuration-commands}
 
-These commands help you configure Apache Ignite CLI tool profiles and settings.
+이 명령어는 Apache Ignite CLI 도구의 프로파일과 설정을 구성하는 데 사용합니다.
 
 ### cli config profile create
 
-Creates a profile with the given name.
+지정한 이름으로 프로파일을 생성합니다.
 
-#### Syntax
+#### 구문 {#syntax-2}
 
 ```
 cli config profile create [--activate] [--copy-from=<copyFrom>] [--verbose] <profileName>
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-2}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--activate` | Flag | No | Activate new profile as current. |
-| `--copy-from` | Option | No | Profile whose content will be copied to new one. |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
-| `<profileName>` | Argument | Yes | Name of new profile. |
+| `--activate` | 플래그 | 아니요 | 새 프로파일을 현재 프로파일로 활성화합니다. |
+| `--copy-from` | 옵션 | 아니요 | 내용을 새 프로파일에 복사할 프로파일입니다. |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
+| `<profileName>` | 인수 | 예 | 새 프로파일의 이름입니다. |
 
-#### Example
+#### 예시 {#example-2}
 
 ```bash
 cli config profile create --activate --copy-from=default myprofile
@@ -159,22 +159,22 @@ cli config profile create --activate --copy-from=default myprofile
 
 ### cli config profile activate
 
-Activates the profile identified by name.
+이름으로 지정한 프로파일을 활성화합니다.
 
-#### Syntax
+#### 구문 {#syntax-3}
 
 ```
 cli config profile activate [--verbose] <profileName>
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-3}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
-| `<profileName>` | Argument | Yes | Name of profile to activate. |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
+| `<profileName>` | 인수 | 예 | 활성화할 프로파일의 이름입니다. |
 
-#### Example
+#### 예시 {#example-3}
 
 ```bash
 cli config profile activate myprofile
@@ -182,21 +182,21 @@ cli config profile activate myprofile
 
 ### cli config profile list
 
-Lists configuration profiles.
+구성 프로파일 목록을 표시합니다.
 
-#### Syntax
+#### 구문 {#syntax-4}
 
 ```
 cli config profile list [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-4}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-4}
 
 ```bash
 cli config profile list
@@ -204,21 +204,21 @@ cli config profile list
 
 ### cli config profile show
 
-Gets the current profile details.
+현재 프로파일의 세부 정보를 가져옵니다.
 
-#### Syntax
+#### 구문 {#syntax-5}
 
 ```
 cli config profile show [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-5}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-5}
 
 ```bash
 cli config profile show
@@ -226,23 +226,23 @@ cli config profile show
 
 ### cli config get
 
-Gets the value for the specified configuration key.
+지정한 구성 키의 값을 가져옵니다.
 
-#### Syntax
+#### 구문 {#syntax-6}
 
 ```
 cli config get [--profile=<profileName>] [--verbose] <key>
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-6}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
-| `<key>` | Argument | Yes | Property name. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
+| `<key>` | 인수 | 예 | 속성 이름입니다. |
 
-#### Example
+#### 예시 {#example-6}
 
 ```bash
 cli config get ignite.jdbc-url
@@ -250,23 +250,23 @@ cli config get ignite.jdbc-url
 
 ### cli config set
 
-Sets configuration parameters using comma-separated input key-value pairs.
+쉼표로 구분한 키-값 쌍을 입력받아 구성 매개변수를 설정합니다.
 
-#### Syntax
+#### 구문 {#syntax-7}
 
 ```
 cli config set [--profile=<profileName>] [--verbose] <String=String>...
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-7}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
-| `<String=String>...` | Arguments | Yes | CLI configuration parameters. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
+| `<String=String>...` | 인수 | 예 | CLI 구성 매개변수입니다. |
 
-#### Example
+#### 예시 {#example-7}
 
 ```bash
 cli config set ignite.jdbc-url=http://localhost:10300
@@ -274,22 +274,22 @@ cli config set ignite.jdbc-url=http://localhost:10300
 
 ### cli config show
 
-Shows the currently active configuration.
+현재 활성화된 구성을 표시합니다.
 
-#### Syntax
+#### 구문 {#syntax-8}
 
 ```
 cli config show [--profile=<profileName>] [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-8}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-8}
 
 ```bash
 cli config show
@@ -297,53 +297,53 @@ cli config show
 
 ### cli config remove
 
-Removes the specified configuration key.
+지정한 구성 키를 제거합니다.
 
-#### Syntax
+#### 구문 {#syntax-9}
 
 ```
 cli config remove [--profile=<profileName>] [--verbose] <key>
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-9}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
-| `<key>` | Argument | Yes | Property name. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
+| `<key>` | 인수 | 예 | 속성 이름입니다. |
 
-#### Example
+#### 예시 {#example-9}
 
 ```bash
 cli config remove ignite.jdbc-url
 ```
 
-## Cluster Commands
+## 클러스터 명령어 {#cluster-commands}
 
-These commands help you manage your cluster.
+이 명령어는 클러스터를 관리하는 데 사용합니다.
 
 ### cluster config show
 
-Shows configuration of the cluster indicated by the endpoint URL and, optionally, by a configuration path selector.
+엔드포인트 URL로 지정한 클러스터의 구성을 표시합니다. 구성 경로 선택자를 지정하면 선택자로 지정한 범위만 표시합니다.
 
-#### Syntax
+#### 구문 {#syntax-10}
 
 ```
 cluster config show [--url=<clusterUrl>] [--format=<format>] [--profile=<profileName>] [--verbose] [<selector>]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-10}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--url` | Option | No | URL of cluster endpoint. |
-| `--format` | Option | No | Output format. Valid values: JSON, HOCON (Default: HOCON). |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
-| `<selector>` | Argument | No | Configuration path selector. |
+| `--url` | 옵션 | 아니요 | 클러스터 엔드포인트의 URL입니다. |
+| `--format` | 옵션 | 아니요 | 출력 형식입니다. 사용 가능한 값: JSON, HOCON(기본값: HOCON). |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
+| `<selector>` | 인수 | 아니요 | 구성 경로 선택자입니다. |
 
-#### Example
+#### 예시 {#example-10}
 
 ```bash
 cluster config show
@@ -351,25 +351,25 @@ cluster config show
 
 ### cluster config update
 
-Updates configuration of the cluster indicated by the endpoint URL with the provided argument values.
+엔드포인트 URL로 지정한 클러스터의 구성을 제공된 인수 값으로 업데이트합니다.
 
-#### Syntax
+#### 구문 {#syntax-11}
 
 ```
 cluster config update [--url=<clusterUrl>] [--file=<configFile>] [--profile=<profileName>] [--verbose] [<args>...]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-11}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--url` | Option | No | URL of cluster endpoint. |
-| `--file` | Option | No | Path to file with config update commands to execute. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
-| `<args>...` | Arguments | No | Configuration arguments and values to update. |
+| `--url` | 옵션 | 아니요 | 클러스터 엔드포인트의 URL입니다. |
+| `--file` | 옵션 | 아니요 | 실행할 구성 업데이트 명령어가 담긴 파일의 경로입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
+| `<args>...` | 인수 | 아니요 | 업데이트할 구성 인수와 값입니다. |
 
-#### Example
+#### 예시 {#example-11}
 
 ```bash
 cluster config update ignite.system.idleSafeTimeSyncIntervalMillis=250
@@ -377,28 +377,28 @@ cluster config update ignite.system.idleSafeTimeSyncIntervalMillis=250
 
 ### cluster init
 
-Initializes an Ignite cluster.
+Ignite 클러스터를 초기화합니다.
 
-#### Syntax
+#### 구문 {#syntax-12}
 
 ```
 cluster init --name=<clusterName> [--metastorage-group=<nodeNames>] [--cluster-management-group=<nodeNames>] [--config=<config>] [--config-files=<filePaths>] [--url=<clusterUrl>] [--profile=<profileName>] [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-12}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--name` | Option | Yes | Human-readable name of the cluster. Can be changed after initialization. |
-| `--metastorage-group` | Option | No | Metastorage group nodes (comma-separated list). |
-| `--cluster-management-group` | Option | No | Names of nodes that will host the Cluster Management Group (comma-separated list). |
-| `--config` | Option | No | Cluster configuration that will be applied during initialization. |
-| `--config-files` | Option | No | Path to cluster configuration files (comma-separated list). |
-| `--url` | Option | No | URL of cluster endpoint. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--name` | 옵션 | 예 | 사람이 읽을 수 있는 클러스터 이름입니다. 초기화 후에도 변경할 수 있습니다. |
+| `--metastorage-group` | 옵션 | 아니요 | 메타스토리지 그룹 노드입니다(쉼표로 구분된 목록). |
+| `--cluster-management-group` | 옵션 | 아니요 | 클러스터 관리 그룹을 호스팅할 노드 이름입니다(쉼표로 구분된 목록). |
+| `--config` | 옵션 | 아니요 | 초기화 중에 적용할 클러스터 구성입니다. |
+| `--config-files` | 옵션 | 아니요 | 클러스터 구성 파일의 경로입니다(쉼표로 구분된 목록). |
+| `--url` | 옵션 | 아니요 | 클러스터 엔드포인트의 URL입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-12}
 
 ```bash
 cluster init --name=myCluster
@@ -406,23 +406,23 @@ cluster init --name=myCluster
 
 ### cluster status
 
-Prints status of the cluster.
+클러스터의 상태를 출력합니다.
 
-#### Syntax
+#### 구문 {#syntax-13}
 
 ```
 cluster status [--url=<clusterUrl>] [--profile=<profileName>] [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-13}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--url` | Option | No | URL of cluster endpoint. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--url` | 옵션 | 아니요 | 클러스터 엔드포인트의 URL입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-13}
 
 ```bash
 cluster status --url http://localhost:10300
@@ -430,24 +430,24 @@ cluster status --url http://localhost:10300
 
 ### cluster topology physical
 
-Shows physical topology of the specified cluster.
+지정한 클러스터의 물리 토폴로지를 표시합니다.
 
-#### Syntax
+#### 구문 {#syntax-14}
 
 ```
 cluster topology physical [--plain] [--url=<clusterUrl>] [--profile=<profileName>] [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-14}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--plain` | Flag | No | Display output with plain formatting. |
-| `--url` | Option | No | URL of cluster endpoint. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--plain` | 플래그 | 아니요 | 출력을 일반 텍스트 형식으로 표시합니다. |
+| `--url` | 옵션 | 아니요 | 클러스터 엔드포인트의 URL입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-14}
 
 ```bash
 cluster topology physical --url http://localhost:10300
@@ -455,24 +455,24 @@ cluster topology physical --url http://localhost:10300
 
 ### cluster topology logical
 
-Shows logical topology of the specified cluster.
+지정한 클러스터의 논리 토폴로지를 표시합니다.
 
-#### Syntax
+#### 구문 {#syntax-15}
 
 ```
 cluster topology logical [--plain] [--url=<clusterUrl>] [--profile=<profileName>] [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-15}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--plain` | Flag | No | Display output with plain formatting. |
-| `--url` | Option | No | URL of cluster endpoint. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--plain` | 플래그 | 아니요 | 출력을 일반 텍스트 형식으로 표시합니다. |
+| `--url` | 옵션 | 아니요 | 클러스터 엔드포인트의 URL입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-15}
 
 ```bash
 cluster topology logical --url http://localhost:10300
@@ -480,27 +480,27 @@ cluster topology logical --url http://localhost:10300
 
 ### cluster unit deploy
 
-Deploys a unit from a file or a directory (non-recursively).
+파일이나 디렉터리에서 배포 단위를 배포합니다(하위 디렉터리는 재귀적으로 탐색하지 않음).
 
-#### Syntax
+#### 구문 {#syntax-16}
 
 ```
 cluster unit deploy --version=<version> --path=<path> [--nodes=<nodes>] [--url=<clusterUrl>] [--profile=<profileName>] [--verbose] <id>
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-16}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--version` | Option | Yes | Unit version (x.y.z). |
-| `--path` | Option | Yes | Path to deployment unit file or directory. |
-| `--nodes` | Option | No | Initial set of nodes where the unit will be deployed (comma-separated). |
-| `--url` | Option | No | URL of cluster endpoint. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
-| `<id>` | Argument | Yes | Deployment unit identifier. |
+| `--version` | 옵션 | 예 | 단위 버전(x.y.z)입니다. |
+| `--path` | 옵션 | 예 | 배포 단위 파일이나 디렉터리의 경로입니다. |
+| `--nodes` | 옵션 | 아니요 | 단위를 배포할 초기 노드 집합입니다(쉼표로 구분). |
+| `--url` | 옵션 | 아니요 | 클러스터 엔드포인트의 URL입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
+| `<id>` | 인수 | 예 | 배포 단위 식별자입니다. |
 
-#### Example
+#### 예시 {#example-16}
 
 ```bash
 cluster unit deploy --version=1.0.0 --path=/path/to/unit.jar myunit
@@ -508,25 +508,25 @@ cluster unit deploy --version=1.0.0 --path=/path/to/unit.jar myunit
 
 ### cluster unit undeploy
 
-Undeploys a unit.
+배포 단위를 배포 해제합니다.
 
-#### Syntax
+#### 구문 {#syntax-17}
 
 ```
 cluster unit undeploy --version=<version> [--url=<clusterUrl>] [--profile=<profileName>] [--verbose] <id>
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-17}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--version` | Option | Yes | Unit version (x.y.z). |
-| `--url` | Option | No | URL of cluster endpoint. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
-| `<id>` | Argument | Yes | Unit id. |
+| `--version` | 옵션 | 예 | 단위 버전(x.y.z)입니다. |
+| `--url` | 옵션 | 아니요 | 클러스터 엔드포인트의 URL입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
+| `<id>` | 인수 | 예 | 단위 ID입니다. |
 
-#### Example
+#### 예시 {#example-17}
 
 ```bash
 cluster unit undeploy --version=1.0.0 --url http://localhost:10300 myunit
@@ -534,27 +534,27 @@ cluster unit undeploy --version=1.0.0 --url http://localhost:10300 myunit
 
 ### cluster unit list
 
-Shows a list of deployed units for specified deployment unit.
+지정한 배포 단위 ID의 배포 목록을 표시합니다.
 
-#### Syntax
+#### 구문 {#syntax-18}
 
 ```
 cluster unit list [--version=<version>] [--status=<statuses>] [--plain] [--url=<clusterUrl>] [--profile=<profileName>] [--verbose] <unitId>
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-18}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--version` | Option | No | Filters out deployment unit by version (exact match assumed). |
-| `--status` | Option | No | Filters out deployment unit by status (comma-separated). |
-| `--plain` | Flag | No | Display output with plain formatting. |
-| `--url` | Option | No | URL of cluster endpoint. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
-| `<unitId>` | Argument | Yes | Deployment unit id. |
+| `--version` | 옵션 | 아니요 | 버전으로 배포 단위를 필터링합니다(정확히 일치해야 함). |
+| `--status` | 옵션 | 아니요 | 상태로 배포 단위를 필터링합니다(쉼표로 구분). |
+| `--plain` | 플래그 | 아니요 | 출력을 일반 텍스트 형식으로 표시합니다. |
+| `--url` | 옵션 | 아니요 | 클러스터 엔드포인트의 URL입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
+| `<unitId>` | 인수 | 예 | 배포 단위 ID입니다. |
 
-#### Example
+#### 예시 {#example-18}
 
 ```bash
 cluster unit list --status=DEPLOYED,STARTING myunit
@@ -562,24 +562,24 @@ cluster unit list --status=DEPLOYED,STARTING myunit
 
 ### cluster metric source enable
 
-Enables cluster metric source.
+클러스터 메트릭 소스를 활성화합니다.
 
-#### Syntax
+#### 구문 {#syntax-19}
 
 ```
 cluster metric source enable [--url=<clusterUrl>] [--profile=<profileName>] [--verbose] <srcName>
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-19}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--url` | Option | No | URL of cluster endpoint. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
-| `<srcName>` | Argument | Yes | Metric source name. |
+| `--url` | 옵션 | 아니요 | 클러스터 엔드포인트의 URL입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
+| `<srcName>` | 인수 | 예 | 메트릭 소스 이름입니다. |
 
-#### Example
+#### 예시 {#example-19}
 
 ```bash
 cluster metric source enable jvm
@@ -587,24 +587,24 @@ cluster metric source enable jvm
 
 ### cluster metric source disable
 
-Disables cluster metric source.
+클러스터 메트릭 소스를 비활성화합니다.
 
-#### Syntax
+#### 구문 {#syntax-20}
 
 ```
 cluster metric source disable [--url=<clusterUrl>] [--profile=<profileName>] [--verbose] <srcName>
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-20}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--url` | Option | No | URL of cluster endpoint. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
-| `<srcName>` | Argument | Yes | Metric source name. |
+| `--url` | 옵션 | 아니요 | 클러스터 엔드포인트의 URL입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
+| `<srcName>` | 인수 | 예 | 메트릭 소스 이름입니다. |
 
-#### Example
+#### 예시 {#example-20}
 
 ```bash
 cluster metric source disable jvm
@@ -612,54 +612,54 @@ cluster metric source disable jvm
 
 ### cluster metric source list
 
-Lists cluster metric sources.
+클러스터 메트릭 소스 목록을 표시합니다.
 
-#### Syntax
+#### 구문 {#syntax-21}
 
 ```
 cluster metric source list [--plain] [--url=<clusterUrl>] [--profile=<profileName>] [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-21}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--plain` | Flag | No | Display output with plain formatting. |
-| `--url` | Option | No | URL of cluster endpoint. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--plain` | 플래그 | 아니요 | 출력을 일반 텍스트 형식으로 표시합니다. |
+| `--url` | 옵션 | 아니요 | 클러스터 엔드포인트의 URL입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-21}
 
 ```bash
 cluster metric source list
 ```
 
-## Node Commands
+## 노드 명령어 {#node-commands}
 
-These commands help you manage individual nodes.
+이 명령어는 개별 노드를 관리하는 데 사용합니다.
 
 ### node config show
 
-Shows node configuration.
+노드 구성을 표시합니다.
 
-#### Syntax
+#### 구문 {#syntax-22}
 
 ```
 node config show [--url=<nodeUrl>] [--format=<format>] [--profile=<profileName>] [--verbose] [<selector>]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-22}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--url` | Option | No | URL of a node that will be used as a communication endpoint. |
-| `--format` | Option | No | Output format. Valid values: JSON, HOCON (Default: HOCON). |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
-| `<selector>` | Argument | No | Configuration path selector. |
+| `--url` | 옵션 | 아니요 | 통신 엔드포인트로 사용할 노드의 URL입니다. |
+| `--format` | 옵션 | 아니요 | 출력 형식입니다. 사용 가능한 값: JSON, HOCON(기본값: HOCON). |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
+| `<selector>` | 인수 | 아니요 | 구성 경로 선택자입니다. |
 
-#### Example
+#### 예시 {#example-22}
 
 ```bash
 node config show ignite.clientConnector
@@ -667,25 +667,25 @@ node config show ignite.clientConnector
 
 ### node config update
 
-Updates node configuration.
+노드 구성을 업데이트합니다.
 
-#### Syntax
+#### 구문 {#syntax-23}
 
 ```
 node config update [--url=<nodeUrl>] [--file=<configFile>] [--profile=<profileName>] [--verbose] [<args>...]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-23}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--url` | Option | No | URL of a node that will be used as a communication endpoint. |
-| `--file` | Option | No | Path to file with config update commands to execute. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
-| `<args>...` | Arguments | No | Configuration arguments and values to update. |
+| `--url` | 옵션 | 아니요 | 통신 엔드포인트로 사용할 노드의 URL입니다. |
+| `--file` | 옵션 | 아니요 | 실행할 구성 업데이트 명령어가 담긴 파일의 경로입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
+| `<args>...` | 인수 | 아니요 | 업데이트할 구성 인수와 값입니다. |
 
-#### Example
+#### 예시 {#example-23}
 
 ```bash
 node config update --url http://localhost:10300 ignite.clientConnector.connectTimeoutMillis=5000
@@ -693,23 +693,23 @@ node config update --url http://localhost:10300 ignite.clientConnector.connectTi
 
 ### node status
 
-Prints status of the node.
+노드의 상태를 출력합니다.
 
-#### Syntax
+#### 구문 {#syntax-24}
 
 ```
 node status [--url=<nodeUrl>] [--profile=<profileName>] [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-24}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--url` | Option | No | URL of a node that will be used as a communication endpoint. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--url` | 옵션 | 아니요 | 통신 엔드포인트로 사용할 노드의 URL입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-24}
 
 ```bash
 node status
@@ -717,23 +717,23 @@ node status
 
 ### node version
 
-Prints the node build version.
+노드 빌드 버전을 출력합니다.
 
-#### Syntax
+#### 구문 {#syntax-25}
 
 ```
 node version [--url=<nodeUrl>] [--profile=<profileName>] [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-25}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--url` | Option | No | URL of a node that will be used as a communication endpoint. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--url` | 옵션 | 아니요 | 통신 엔드포인트로 사용할 노드의 URL입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-25}
 
 ```bash
 node version
@@ -741,24 +741,24 @@ node version
 
 ### node metric list
 
-Lists node metrics.
+노드 메트릭 목록을 표시합니다.
 
-#### Syntax
+#### 구문 {#syntax-26}
 
 ```
 node metric list [--url=<nodeUrl>] [--plain] [--profile=<profileName>] [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-26}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--url` | Option | No | URL of a node that will be used as a communication endpoint. |
-| `--plain` | Flag | No | Display output with plain formatting. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--url` | 옵션 | 아니요 | 통신 엔드포인트로 사용할 노드의 URL입니다. |
+| `--plain` | 플래그 | 아니요 | 출력을 일반 텍스트 형식으로 표시합니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-26}
 
 ```bash
 node metric list
@@ -766,24 +766,24 @@ node metric list
 
 ### node metric source enable
 
-Enables node metric source.
+노드 메트릭 소스를 활성화합니다.
 
-#### Syntax
+#### 구문 {#syntax-27}
 
 ```
 node metric source enable [--url=<nodeUrl>] [--profile=<profileName>] [--verbose] <srcName>
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-27}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--url` | Option | No | URL of a node that will be used as a communication endpoint. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
-| `<srcName>` | Argument | Yes | Metric source name. |
+| `--url` | 옵션 | 아니요 | 통신 엔드포인트로 사용할 노드의 URL입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
+| `<srcName>` | 인수 | 예 | 메트릭 소스 이름입니다. |
 
-#### Example
+#### 예시 {#example-27}
 
 ```bash
 node metric source enable jvm
@@ -791,24 +791,24 @@ node metric source enable jvm
 
 ### node metric source disable
 
-Disables node metric source.
+노드 메트릭 소스를 비활성화합니다.
 
-#### Syntax
+#### 구문 {#syntax-28}
 
 ```
 node metric source disable [--url=<nodeUrl>] [--profile=<profileName>] [--verbose] <srcName>
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-28}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--url` | Option | No | URL of a node that will be used as a communication endpoint. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
-| `<srcName>` | Argument | Yes | Metric source name. |
+| `--url` | 옵션 | 아니요 | 통신 엔드포인트로 사용할 노드의 URL입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
+| `<srcName>` | 인수 | 예 | 메트릭 소스 이름입니다. |
 
-#### Example
+#### 예시 {#example-28}
 
 ```bash
 node metric source disable jvm
@@ -816,24 +816,24 @@ node metric source disable jvm
 
 ### node metric source list
 
-Lists node metric sources.
+노드 메트릭 소스 목록을 표시합니다.
 
-#### Syntax
+#### 구문 {#syntax-29}
 
 ```
 node metric source list [--url=<nodeUrl>] [--plain] [--profile=<profileName>] [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-29}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--url` | Option | No | URL of a node that will be used as a communication endpoint. |
-| `--plain` | Flag | No | Display output with plain formatting. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--url` | 옵션 | 아니요 | 통신 엔드포인트로 사용할 노드의 URL입니다. |
+| `--plain` | 플래그 | 아니요 | 출력을 일반 텍스트 형식으로 표시합니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-29}
 
 ```bash
 node metric source list --plain
@@ -841,60 +841,60 @@ node metric source list --plain
 
 ### node unit list
 
-Shows a list of deployed units.
+배포된 단위 목록을 표시합니다.
 
-#### Syntax
+#### 구문 {#syntax-30}
 
 ```
 node unit list [--version=<version>] [--status=<statuses>] [--url=<nodeUrl>] [--plain] [--profile=<profileName>] [--verbose] <unitId>
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-30}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--version` | Option | No | Filters out deployment unit by version (exact match assumed). |
-| `--status` | Option | No | Filters out deployment unit by status (comma-separated). |
-| `--url` | Option | No | URL of a node that will be used as a communication endpoint. |
-| `--plain` | Flag | No | Display output with plain formatting. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
-| `<unitId>` | Argument | Yes | Deployment unit id. |
+| `--version` | 옵션 | 아니요 | 버전으로 배포 단위를 필터링합니다(정확히 일치해야 함). |
+| `--status` | 옵션 | 아니요 | 상태로 배포 단위를 필터링합니다(쉼표로 구분). |
+| `--url` | 옵션 | 아니요 | 통신 엔드포인트로 사용할 노드의 URL입니다. |
+| `--plain` | 플래그 | 아니요 | 출력을 일반 텍스트 형식으로 표시합니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
+| `<unitId>` | 인수 | 예 | 배포 단위 ID입니다. |
 
-#### Example
+#### 예시 {#example-30}
 
 ```bash
 node unit list --status=DEPLOYED myunit
 ```
 
-## Disaster Recovery Commands
+## 재해 복구 명령어 {#disaster-recovery-commands}
 
-These commands let you recover data partitions in disaster scenarios and recover system RAFT groups.
+이 명령어는 재해 상황에서 데이터 파티션을 복구하고 시스템 RAFT 그룹을 복구하는 데 사용합니다.
 
 ### recovery partitions restart
 
-Restarts partitions.
+파티션을 재시작합니다.
 
-#### Syntax
+#### 구문 {#syntax-31}
 
 ```
 recovery partitions restart --zone=<zoneName> --table=<tableName> [--partitions=<partitionIds>] [--nodes=<nodeNames>] [--with-cleanup] [--url=<clusterUrl>] [--profile=<profileName>] [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-31}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--zone` | Option | Yes | Name of the zone to reset partitions of. Case-sensitive, without quotes. |
-| `--table` | Option | Yes | Fully-qualified name of the table to reset partitions of. Case-sensitive, without quotes. |
-| `--partitions` | Option | No | IDs of partitions to get states. All partitions if not set (comma-separated). |
-| `--nodes` | Option | No | Names specifying nodes to get partition states from. Case-sensitive, without quotes, all nodes if not set (comma-separated). |
-| `--with-cleanup` | Flag | No | Restarts partitions, preceded by a storage cleanup. This will remove all data from the partition storages before restart. |
-| `--url` | Option | No | URL of cluster endpoint. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--zone` | 옵션 | 예 | 파티션을 재설정할 영역의 이름입니다. 대소문자를 구분하며 따옴표 없이 입력합니다. |
+| `--table` | 옵션 | 예 | 파티션을 재설정할 테이블의 정규화된 이름입니다. 대소문자를 구분하며 따옴표 없이 입력합니다. |
+| `--partitions` | 옵션 | 아니요 | 상태를 조회할 파티션 ID입니다. 지정하지 않으면 모든 파티션이 대상입니다(쉼표로 구분). |
+| `--nodes` | 옵션 | 아니요 | 파티션 상태를 조회할 노드 이름입니다. 대소문자를 구분하며 따옴표 없이 입력하고, 지정하지 않으면 모든 노드가 대상입니다(쉼표로 구분). |
+| `--with-cleanup` | 플래그 | 아니요 | 스토리지 정리 후 파티션을 재시작합니다. 재시작 전에 파티션 스토리지의 모든 데이터를 제거합니다. |
+| `--url` | 옵션 | 아니요 | 클러스터 엔드포인트의 URL입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-31}
 
 ```bash
 recovery partitions restart --zone=default --table=PUBLIC.PERSON --with-cleanup
@@ -902,26 +902,26 @@ recovery partitions restart --zone=default --table=PUBLIC.PERSON --with-cleanup
 
 ### recovery partitions reset
 
-Resets partitions.
+파티션을 재설정합니다.
 
-#### Syntax
+#### 구문 {#syntax-32}
 
 ```
 recovery partitions reset --zone=<zoneName> [--table=<tableName>] [--partitions=<partitionIds>] [--url=<clusterUrl>] [--profile=<profileName>] [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-32}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--zone` | Option | Yes | Name of the zone to reset partitions of. Case-sensitive, without quotes. |
-| `--table` | Option | No | Fully-qualified name of the table to reset partitions of. Case-sensitive, without quotes. |
-| `--partitions` | Option | No | IDs of partitions to get states. All partitions if not set (comma-separated). |
-| `--url` | Option | No | URL of cluster endpoint. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--zone` | 옵션 | 예 | 파티션을 재설정할 영역의 이름입니다. 대소문자를 구분하며 따옴표 없이 입력합니다. |
+| `--table` | 옵션 | 아니요 | 파티션을 재설정할 테이블의 정규화된 이름입니다. 대소문자를 구분하며 따옴표 없이 입력합니다. |
+| `--partitions` | 옵션 | 아니요 | 상태를 조회할 파티션 ID입니다. 지정하지 않으면 모든 파티션이 대상입니다(쉼표로 구분). |
+| `--url` | 옵션 | 아니요 | 클러스터 엔드포인트의 URL입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-32}
 
 ```bash
 recovery partitions reset --zone=default --table=PUBLIC.PERSON
@@ -929,29 +929,29 @@ recovery partitions reset --zone=default --table=PUBLIC.PERSON
 
 ### recovery partitions states
 
-Returns partition states.
+파티션 상태를 반환합니다.
 
-#### Syntax
+#### 구문 {#syntax-33}
 
 ```
 recovery partitions states (--global | --local) [--nodes=<nodeNames>] [--partitions=<partitionIds>] [--zones=<zoneNames>] [--plain] [--url=<clusterUrl>] [--profile=<profileName>] [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-33}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--global` | Flag | Yes* | Gets global partition states. One of global or local is required. |
-| `--local` | Flag | Yes* | Gets local partition states. One of global or local is required. |
-| `--nodes` | Option | No | Names specifying nodes to get partition states from. Case-sensitive, without quotes, all nodes if not set (comma-separated). |
-| `--partitions` | Option | No | IDs of partitions to get states. All partitions if not set (comma-separated). |
-| `--zones` | Option | No | Names specifying zones to get partition states from. Case-sensitive, without quotes, all zones if not set (comma-separated). |
-| `--plain` | Flag | No | Display output with plain formatting. |
-| `--url` | Option | No | URL of cluster endpoint. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--global` | 플래그 | 예* | 글로벌 파티션 상태를 가져옵니다. global과 local 중 하나는 반드시 지정해야 합니다. |
+| `--local` | 플래그 | 예* | 로컬 파티션 상태를 가져옵니다. global과 local 중 하나는 반드시 지정해야 합니다. |
+| `--nodes` | 옵션 | 아니요 | 파티션 상태를 조회할 노드 이름입니다. 대소문자를 구분하며 따옴표 없이 입력하고, 지정하지 않으면 모든 노드가 대상입니다(쉼표로 구분). |
+| `--partitions` | 옵션 | 아니요 | 상태를 조회할 파티션 ID입니다. 지정하지 않으면 모든 파티션이 대상입니다(쉼표로 구분). |
+| `--zones` | 옵션 | 아니요 | 파티션 상태를 조회할 영역 이름입니다. 대소문자를 구분하며 따옴표 없이 입력하고, 지정하지 않으면 모든 영역이 대상입니다(쉼표로 구분). |
+| `--plain` | 플래그 | 아니요 | 출력을 일반 텍스트 형식으로 표시합니다. |
+| `--url` | 옵션 | 아니요 | 클러스터 엔드포인트의 URL입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-33}
 
 ```bash
 recovery partitions states --local --zones=default
@@ -959,25 +959,25 @@ recovery partitions states --local --zones=default
 
 ### recovery cluster reset
 
-Resets cluster.
+클러스터를 재설정합니다.
 
-#### Syntax
+#### 구문 {#syntax-34}
 
 ```
 recovery cluster reset [--cluster-management-group=<cmgNodeNames>] [--metastorage-replication-factor=<metastorageReplicationFactor>] [--url=<clusterUrl>] [--profile=<profileName>] [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-34}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--cluster-management-group` | Option | No | Names of nodes that will host the Cluster Management Group (comma-separated). |
-| `--metastorage-replication-factor` | Option | No | Number of nodes in the voting member set of the Metastorage RAFT group. |
-| `--url` | Option | No | URL of cluster endpoint. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--cluster-management-group` | 옵션 | 아니요 | 클러스터 관리 그룹을 호스팅할 노드 이름입니다(쉼표로 구분). |
+| `--metastorage-replication-factor` | 옵션 | 아니요 | 메타스토리지 RAFT 그룹의 투표 멤버 집합에 속한 노드 수입니다. |
+| `--url` | 옵션 | 아니요 | 클러스터 엔드포인트의 URL입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-34}
 
 ```bash
 recovery cluster reset
@@ -985,101 +985,101 @@ recovery cluster reset
 
 ### recovery cluster migrate
 
-Migrates nodes missed during repair to repaired cluster.
+복구 과정에서 누락된 노드를 복구된 클러스터로 마이그레이션합니다.
 
-#### Syntax
+#### 구문 {#syntax-35}
 
 ```
 recovery cluster migrate --old-cluster-url=<oldClusterUrl> --new-cluster-url=<newClusterUrl> [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-35}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--old-cluster-url` | Option | Yes | URL of old cluster endpoint (nodes of this cluster will be migrated to a new cluster). |
-| `--new-cluster-url` | Option | Yes | URL of new cluster endpoint (nodes of old cluster will be migrated to this cluster). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--old-cluster-url` | 옵션 | 예 | 이전 클러스터 엔드포인트의 URL입니다(이 클러스터의 노드를 새 클러스터로 마이그레이션합니다). |
+| `--new-cluster-url` | 옵션 | 예 | 새 클러스터 엔드포인트의 URL입니다(이전 클러스터의 노드를 이 클러스터로 마이그레이션합니다). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-35}
 
 ```bash
 recovery cluster migrate --old-cluster-url=http://old-cluster:10300 --new-cluster-url=http://new-cluster:10300
 ```
 
-## Distribution Commands
+## 분산 명령어 {#distribution-commands}
 
-These commands help you manage table partition distribution.
+이 명령어는 테이블 파티션 분산을 관리하는 데 사용합니다.
 
 ### distribution reset
 
-Resets distribution of partitions.
+파티션 분산을 재설정합니다.
 
-#### Syntax
+#### 구문 {#syntax-36}
 
 ```
 distribution reset --zones=<zoneNames> [--url=<clusterUrl>] [--profile=<profileName>] [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-36}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--zones` | Option | Yes | Names specifying zones to reset the distribution state in (comma-separated). |
-| `--url` | Option | No | URL of cluster endpoint. |
-| `--profile` | Option | No | Local CLI profile name (only available in non-interactive mode). |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--zones` | 옵션 | 예 | 분산 상태를 재설정할 영역 이름입니다(쉼표로 구분). |
+| `--url` | 옵션 | 아니요 | 클러스터 엔드포인트의 URL입니다. |
+| `--profile` | 옵션 | 아니요 | 로컬 CLI 프로파일 이름(비대화형 모드에서만 사용 가능). |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-36}
 
 ```bash
 distribution reset --zones=default
 ```
 
-## Zone Commands
+## 영역 명령어 {#zone-commands}
 
-These commands manage zone-level configuration and data-node assignments.
+이 명령어는 영역 수준 구성과 데이터 노드 할당을 관리합니다.
 
 ### zone datanodes reset
 
-Resets data nodes for the specified zones.
+지정한 영역의 데이터 노드를 재설정합니다.
 
-#### Syntax
+#### 구문 {#syntax-37}
 
 ```
 zone datanodes reset --zone-names=<zoneNames>
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-37}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--zone-names` | Argument | No | Comma-separated list of zone names to reset data nodes for. If not specified, all zones are reset. |
+| `--zone-names` | 인수 | 아니요 | 데이터 노드를 재설정할 영역 이름 목록입니다(쉼표로 구분). 지정하지 않으면 모든 영역을 재설정합니다. |
 
-## Miscellaneous Commands
+## 기타 명령어 {#miscellaneous-commands}
 
-These are general-purpose commands.
+일반적인 용도로 사용하는 명령어입니다.
 
 ### connect
 
-Connects to an Ignite 3 node.
+Ignite 3 노드에 연결합니다.
 
-#### Syntax
+#### 구문 {#syntax-38}
 
 ```
 connect --username=<username> --password=<password> [--verbose] <nodeUrl>
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-38}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--username` | Option | Yes | Username to connect to cluster. |
-| `--password` | Option | Yes | Password to connect to cluster. |
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
-| `<nodeUrl>` | Argument | Yes | URL of a node that will be used as a communication endpoint. |
+| `--username` | 옵션 | 예 | 클러스터에 연결할 사용자 이름입니다. |
+| `--password` | 옵션 | 예 | 클러스터에 연결할 비밀번호입니다. |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
+| `<nodeUrl>` | 인수 | 예 | 통신 엔드포인트로 사용할 노드의 URL입니다. |
 
-#### Example
+#### 예시 {#example-37}
 
 ```bash
 connect --username=admin --password=password http://localhost:10300
@@ -1087,21 +1087,21 @@ connect --username=admin --password=password http://localhost:10300
 
 ### disconnect
 
-Disconnects from an Ignite 3 node.
+Ignite 3 노드와의 연결을 해제합니다.
 
-#### Syntax
+#### 구문 {#syntax-39}
 
 ```
 disconnect [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-39}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-38}
 
 ```bash
 disconnect
@@ -1109,19 +1109,19 @@ disconnect
 
 ### clear
 
-Clears the screen.
+화면을 지웁니다.
 
-#### Syntax
+#### 구문 {#syntax-40}
 
 ```
 clear
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-40}
 
-This command takes no parameters.
+이 명령어는 매개변수를 받지 않습니다.
 
-#### Example
+#### 예시 {#example-39}
 
 ```bash
 clear
@@ -1129,21 +1129,21 @@ clear
 
 ### cls
 
-Clears the screen.
+화면을 지웁니다.
 
-#### Syntax
+#### 구문 {#syntax-41}
 
 ```
 cls [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-41}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-40}
 
 ```bash
 cls
@@ -1151,21 +1151,21 @@ cls
 
 ### exit
 
-Exits the CLI.
+CLI를 종료합니다.
 
-#### Syntax
+#### 구문 {#syntax-42}
 
 ```
 exit [--verbose]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-42}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `--verbose` | Flag | No | Show additional information: logs, REST calls. |
+| `--verbose` | 플래그 | 아니요 | 로그, REST 호출 등 추가 정보를 표시합니다. |
 
-#### Example
+#### 예시 {#example-41}
 
 ```bash
 exit
@@ -1173,21 +1173,21 @@ exit
 
 ### help
 
-Display help information about the specified command.
+지정한 명령어의 도움말 정보를 표시합니다.
 
-#### Syntax
+#### 구문 {#syntax-43}
 
 ```
 help [COMMAND]
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-43}
 
-| Parameter | Type | Required | Description |
+| 매개변수 | 타입 | 필수 | 설명 |
 |-----------|------|----------|-------------|
-| `[COMMAND]` | Argument | No | The COMMAND to display the usage help message for. |
+| `[COMMAND]` | 인수 | 아니요 | 사용법 도움말을 표시할 COMMAND입니다. |
 
-#### Example
+#### 예시 {#example-42}
 
 ```bash
 help cluster config show
@@ -1195,19 +1195,19 @@ help cluster config show
 
 ### version
 
-Displays the current CLI tool version.
+현재 CLI 도구 버전을 표시합니다.
 
-#### Syntax
+#### 구문 {#syntax-44}
 
 ```
 version
 ```
 
-#### Parameters
+#### 매개변수 {#parameters-44}
 
-This command takes no parameters.
+이 명령어는 매개변수를 받지 않습니다.
 
-#### Example
+#### 예시 {#example-43}
 
 ```bash
 version

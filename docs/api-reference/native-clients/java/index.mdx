@@ -6,15 +6,15 @@ sidebar_position: 1
 
 # Java API
 
-The primary API for Apache Ignite 3 with complete feature support across all platform capabilities.
+Apache Ignite 3의 기본 API로, 플랫폼의 모든 기능을 완전하게 지원합니다.
 
-## Overview
+## 개요 {#overview}
 
-The Java API provides two deployment modes. The thin client connects to remote clusters without joining topology. The embedded node participates in cluster operations and storage.
+Java API는 두 가지 배포 모드를 제공합니다. 씬 클라이언트는 토폴로지에 합류하지 않고 원격 클러스터에 연결합니다. 임베디드 노드는 클러스터 작업과 스토리지에 참여합니다.
 
-Both modes share common APIs for tables, SQL, transactions, compute, streaming, and catalog management. The embedded mode adds cluster initialization APIs and direct access to internal cluster components.
+두 모드 모두 테이블, SQL, 트랜잭션, 컴퓨트, 스트리밍, 카탈로그 관리를 위한 공통 API를 공유합니다. 임베디드 모드는 클러스터 초기화 API를 추가로 제공하며, 내부 클러스터 컴포넌트에 직접 접근할 수 있습니다.
 
-## API Categories
+## API 분류 {#api-categories}
 
 <div className="card-container">
   <div className="card">
@@ -22,10 +22,10 @@ Both modes share common APIs for tables, SQL, transactions, compute, streaming, 
       <h3><IIcon icon="mdi:connection" height="24" /> Client API</h3>
     </div>
     <div className="card__body">
-      <p>Thin client connection configuration, connection pooling, and cluster discovery.</p>
+      <p>씬 클라이언트 연결 구성, 연결 풀링, 클러스터 검색을 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./java/client-api">Learn more →</a>
+      <a href="./java/client-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -34,10 +34,10 @@ Both modes share common APIs for tables, SQL, transactions, compute, streaming, 
       <h3><IIcon icon="mdi:server" height="24" /> Server API</h3>
     </div>
     <div className="card__body">
-      <p>Embedded node initialization, lifecycle management, and local cluster participation.</p>
+      <p>임베디드 노드 초기화, 라이프사이클 관리, 로컬 클러스터 참여를 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./java/server-api">Learn more →</a>
+      <a href="./java/server-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -46,10 +46,10 @@ Both modes share common APIs for tables, SQL, transactions, compute, streaming, 
       <h3><IIcon icon="mdi:table" height="24" /> Tables API</h3>
     </div>
     <div className="card__body">
-      <p>Record and key-value operations with typed and binary views for table data access.</p>
+      <p>타입이 지정된 뷰와 바이너리 뷰로 테이블 데이터에 접근하는 레코드·키-값 연산을 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./java/tables-api">Learn more →</a>
+      <a href="./java/tables-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -58,10 +58,10 @@ Both modes share common APIs for tables, SQL, transactions, compute, streaming, 
       <h3><IIcon icon="mdi:upload-network-outline" height="24" /> Data Streamer API</h3>
     </div>
     <div className="card__body">
-      <p>High-throughput bulk loading with reactive streams and backpressure handling.</p>
+      <p>리액티브 스트림과 배압 처리를 활용한 고처리량 대량 적재를 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./java/data-streamer-api">Learn more →</a>
+      <a href="./java/data-streamer-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -70,10 +70,10 @@ Both modes share common APIs for tables, SQL, transactions, compute, streaming, 
       <h3><IIcon icon="mdi:console-line" height="24" /> SQL API</h3>
     </div>
     <div className="card__body">
-      <p>Query execution with prepared statements, parameter binding, and result processing.</p>
+      <p>준비된 문, 매개변수 바인딩, 결과 처리로 쿼리를 실행합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./java/sql-api">Learn more →</a>
+      <a href="./java/sql-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -82,10 +82,10 @@ Both modes share common APIs for tables, SQL, transactions, compute, streaming, 
       <h3><IIcon icon="mdi:shield-check-outline" height="24" /> Transactions API</h3>
     </div>
     <div className="card__body">
-      <p>ACID transaction management with explicit control and closure-based patterns.</p>
+      <p>명시적 제어와 클로저 기반 패턴으로 ACID 트랜잭션을 관리합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./java/transactions-api">Learn more →</a>
+      <a href="./java/transactions-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -94,10 +94,10 @@ Both modes share common APIs for tables, SQL, transactions, compute, streaming, 
       <h3><IIcon icon="mdi:server-network" height="24" /> Compute API</h3>
     </div>
     <div className="card__body">
-      <p>Distributed job execution with colocated processing and broadcast operations.</p>
+      <p>콜로케이션 처리와 브로드캐스트 연산으로 분산 작업을 실행합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./java/compute-api">Learn more →</a>
+      <a href="./java/compute-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -106,10 +106,10 @@ Both modes share common APIs for tables, SQL, transactions, compute, streaming, 
       <h3><IIcon icon="mdi:file-tree-outline" height="24" /> Catalog API</h3>
     </div>
     <div className="card__body">
-      <p>Schema management with annotations and fluent builders for table creation.</p>
+      <p>애노테이션과 플루언트 빌더로 테이블을 생성하는 스키마 관리를 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./java/catalog-api">Learn more →</a>
+      <a href="./java/catalog-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -118,10 +118,10 @@ Both modes share common APIs for tables, SQL, transactions, compute, streaming, 
       <h3><IIcon icon="mdi:filter-outline" height="24" /> Criteria API</h3>
     </div>
     <div className="card__body">
-      <p>Type-safe predicate construction for table queries with compile-time validation.</p>
+      <p>컴파일 타임에 검증하는 테이블 쿼리용 타입 안전 조건자 구성을 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./java/criteria-api">Learn more →</a>
+      <a href="./java/criteria-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -130,10 +130,10 @@ Both modes share common APIs for tables, SQL, transactions, compute, streaming, 
       <h3><IIcon icon="carbon:network-3" height="24" /> Network API</h3>
     </div>
     <div className="card__body">
-      <p>Cluster topology discovery and node information for distributed coordination.</p>
+      <p>분산 조정을 위한 클러스터 토폴로지 검색과 노드 정보를 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./java/network-api">Learn more →</a>
+      <a href="./java/network-api">자세히 보기 →</a>
     </div>
   </div>
 
@@ -142,19 +142,19 @@ Both modes share common APIs for tables, SQL, transactions, compute, streaming, 
       <h3><IIcon icon="mdi:security" height="24" /> Security API</h3>
     </div>
     <div className="card__body">
-      <p>Authentication configuration and credential management for secure cluster access.</p>
+      <p>안전한 클러스터 접근을 위한 인증 구성과 자격 증명 관리를 다룹니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./java/security-api">Learn more →</a>
+      <a href="./java/security-api">자세히 보기 →</a>
     </div>
   </div>
 </div>
 
-## Reference
+## 참조 {#reference}
 
-- [Java API Documentation](https://ignite.apache.org/releases/ignite3/javadoc/)
+- [Java API 문서](https://ignite.apache.org/releases/ignite3/javadoc/)
 
-## Next Steps
+## 다음 단계 {#next-steps}
 
-- [Getting Started](../../getting-started) - Quick start tutorials
-- [Develop and Build](../../develop) - Application development guides
+- [시작하기](../../getting-started) - 빠른 시작 튜토리얼
+- [개발 및 빌드](../../develop) - 애플리케이션 개발 가이드

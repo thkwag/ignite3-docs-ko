@@ -27,6 +27,7 @@
 | scale-up | 확장 | 스케일 업, 스케일업 | 분산 영역에 노드가 추가될 때의 자동 조정 동작. `DATA_NODES_AUTO_ADJUST_SCALE_UP` 등 코드 요소는 원문 유지 |
 | scale-down | 축소 | 스케일 다운, 스케일다운 | 분산 영역에서 노드가 제거될 때의 자동 조정 동작. `DATA_NODES_AUTO_ADJUST_SCALE_DOWN` 등 코드 요소는 원문 유지 |
 | distribution zone | 분산 영역 | 배포 영역, 분산 존, 배포 존 | 첫 등장 시 "분산 영역(distribution zone)" 병기. SQL의 `ZONE` 등 코드 요소는 원문 유지 |
+| zone-based replication | 영역 기반 복제 | 존 기반 복제, 배포 기반 복제 | Ignite 3.1에서 도입된, 같은 분산 영역의 테이블이 RAFT 그룹을 공유하는 복제 모델. table-based replication → 테이블 기반 복제 |
 | colocation | 콜로케이션 | 코로케이션, 코-로케이션, 동일 배치 | 데이터 콜로케이션. 동사 맥락은 "함께 배치" 허용 |
 | lease | 리스 | 임대, 임차 | |
 | leaseholder | 리스홀더 | 리스 소유자, 임차인 | |
@@ -35,22 +36,29 @@
 | consensus | 합의 | 컨센서스, 콘센서스 | RAFT 합의. consensus group → 합의 그룹 |
 | peer | 피어 | 피어들, 동료 | RAFT 합의 그룹에서 투표에 참여하는 복제본 역할. learner와 대비되는 역할 |
 | learner | 러너 | 학습자 | 데이터를 수동 수신만 하고 선출에 참여하지 않는 복제본 역할 |
+| cluster management group | 클러스터 관리 그룹 | 클러스터 매니지먼트 그룹, 클러스터 운영 그룹 | 클러스터 초기화·노드 승인·논리 토폴로지를 관리하는 전용 RAFT 그룹. 약어 CMG는 원문 유지 |
 | metastorage | 메타스토리지 | 메타 스토리지, 메타저장소 | 클러스터 메타데이터를 저장하는 컴포넌트. 코드 `Metastorage`·설정 키는 원문 유지 |
 | storage engine | 스토리지 엔진 | 저장소 엔진, 저장 엔진 | |
 | storage profile | 스토리지 프로파일 | 스토리지 프로필, 저장소 프로파일 | |
 | data region | 데이터 영역 | 데이터 리전 | |
 | compute job | 컴퓨트 작업 | 계산 작업, 컴퓨트 잡 | Compute API 등 API 명칭은 원문 유지 |
+| broadcast | 브로드캐스트 | 브로드 캐스트, 방송 | 작업을 여러 노드에 동시에 전송하는 컴퓨트 실행 방식. `BroadcastJobTarget` 등 코드 식별자는 원문 유지 |
 | coordinator node | 코디네이터 노드 | 조정자 노드 | |
 | deployment unit | 배포 단위 | 배포 유닛 | |
 | data streamer | 데이터 스트리머 | | |
 | streaming | 스트리밍 | | |
+| bulk loading | 대량 적재 | 벌크 로딩, 일괄 로딩 | Data Streamer API 등으로 대량 데이터를 한 번에 테이블에 적재하는 작업 |
+| reactive stream | 리액티브 스트림 | 반응형 스트림, 리액티브 스트림즈 | Reactive Streams 사양 기반 비동기 스트리밍 패턴 |
+| backpressure | 배압 | 백프레셔, 역압 | 빠른 생산자를 느린 소비자에 맞춰 늦추는 흐름 제어 메커니즘. `subscription.request(n)` 등 코드 요소는 원문 유지 |
 | key-value | 키-값 | 키-밸류, 키밸류 | |
 | record view | 레코드 뷰 | | |
 | key-value view | 키-값 뷰 | | |
 | system view | 시스템 뷰 | 시스템 view | |
 | metric | 메트릭 | 매트릭, 지표 | |
+| event channel | 이벤트 채널 | | 수집할 이벤트를 정의하는 설정 단위. event sink(이벤트 싱크)와 함께 이벤트 구성을 이룬다 |
+| event sink | 이벤트 싱크 | 이벤트 씽크, 이벤트 수신처 | 이벤트 데이터를 내보낼 대상을 정의하는 설정 단위 |
 | snapshot | 스냅샷 | 스넵샷 | |
-| checkpoint | 체크포인트 | 검사점 | |
+| checkpoint | 체크포인트 | 검사점 | checkpointing(동명사)은 "체크포인팅" |
 | thin client | 씬 클라이언트 | 신 클라이언트, 얇은 클라이언트 | |
 | thick client | 씩 클라이언트 | 두꺼운 클라이언트, 시크 클라이언트 | Ignite 2 마이그레이션 맥락 |
 | binary object | 바이너리 객체 | 바이너리 오브젝트, 이진 객체 | Ignite 2 데이터 형식 |
@@ -60,10 +68,12 @@
 | leader | 리더 | 지도자 | RAFT·복제 그룹 맥락 |
 | follower | 팔로워 | 추종자, 팔로어 | RAFT·복제 그룹 맥락 |
 | predicate | 조건자 | 술어, 프레디킷 | |
+| fluent builder | 플루언트 빌더 | 유창한 빌더, 연쇄 빌더 | 메서드 체이닝으로 객체를 단계적으로 구성하는 빌더 패턴. Catalog API의 테이블 생성 빌더 등을 가리킨다 |
 | partitioned | 파티셔닝된 | 파티션된 | |
 | configuration | 구성 | | settings는 "설정", configure(동사)는 "구성하다" |
 | command | 명령어 | 커맨드 | CLI 명령어 |
 | low latency | 낮은 지연 | 저레이턴시 | |
+| high-throughput | 고처리량 | 높은 처리량, 하이스루풋 | throughput 단독은 "처리량" |
 | client connector | 클라이언트 커넥터 | | |
 | embedded mode | 임베디드 모드 | 내장 모드 | |
 | logical topology | 논리 토폴로지 | 논리 위상 | |
@@ -71,6 +81,7 @@
 | topology | 토폴로지 | 위상 | 단독 topology도 "토폴로지". 논리/물리 topology는 별도 항목 |
 | failover | 장애 조치 | 페일오버, 절체 | |
 | disaster recovery | 재해 복구 | 재난 복구 | |
+| restore | 복원 | | 백업에서 데이터를 되살리는 동작. "복구"는 disaster recovery(재해 복구)·error recovery(오류 복구) 등 recovery 번역과 겹쳐 오탐 위험이 있어 금지 표기에서 제외(검수로 관리) |
 | network segmentation | 네트워크 분할 | 네트워크 세그멘테이션, 네트워크 분리 | 클러스터가 네트워크로 갈라지는 상황(스플릿 브레인) |
 | fault tolerance | 장애 허용성 | 내결함성, 결함 허용성 | 여러 노드에 복제해 장애에 대응하는 능력 |
 | high availability | 고가용성 | | 비교급 "더 높은 가용성"(higher availability)은 별개 표현 |
@@ -85,17 +96,40 @@
 | schema evolution | 스키마 진화 | 스키마 에볼루션, 스키마 변화 | 스키마가 시간에 따라 바뀌는 것을 가리키는 개념어. Ignite 3는 추가 전용(append-only) 버전 관리로 구현한다 |
 | catalog | 카탈로그 | 카달로그 | |
 | query | 쿼리 | 질의 | |
+| map-reduce | 맵리듀스 | 맵-리듀스, 맵 리듀스 | 데이터 수집 단계를 여러 노드에 분산해 처리하는 연산 모델. MapReduce API 등 API·메서드명은 원문 유지 |
+| task (Compute API) | 태스크 | 맵리듀스 잡, 태스크들 | `MapReduceTask`가 여러 job을 조율하는 상위 실행 단위. job(작업)과 구분되는 Compute API 개념. `MapReduceTask`·`TaskDescriptor`·`TaskExecution` 등 코드 식별자는 원문 유지 |
 | SQL statement | SQL 문 | SQL 구문, SQL 스테이트먼트 | "구문"은 syntax 번역에 예약 |
+| prepared statement | 준비된 문 | 프리페어드 스테이트먼트, 준비된 구문, 준비 구문 | 매개변수를 바인딩해 재실행하는 미리 컴파일된 SQL 문. "구문"은 syntax 번역에 예약 |
 | data definition language | 데이터 정의어 | 데이터 정의 언어, 데이터 정의언어 | DDL의 정식 명칭. 약어 DDL은 원문 유지 |
+| data manipulation language | 데이터 조작어 | 데이터 조작 언어, 데이터 조작언어 | DML의 정식 명칭. 약어 DML은 원문 유지 |
+| railroad diagram | 레일로드 다이어그램 | 철도 다이어그램, 레일로드 다이아그램 | SQL 문법 구조를 시각적으로 보여주는 다이어그램. `RailroadDiagram` 컴포넌트명은 원문 유지 |
 | keyword | 키워드 | | DDL/DML 등 SQL 참조 문서의 "Keywords and parameters" 섹션에 반복 등장 |
 | parameter | 매개변수 | 파라미터 | SQL 참조 문서의 "Keywords and parameters" 섹션 |
+| argument (CLI) | 인수 | 인자, 아규먼트 | CLI 명령어의 위치 인수(옵션·플래그와 구분되는 매개변수 유형). CLI 참조 문서의 Parameters 표 Type 열에 반복 등장 |
 | data type | 데이터 타입 | 자료형, 데이타 타입 | |
 | transition | 전환 | 트랜지션 | ALTER COLUMN의 데이터 타입·NULL 허용 여부 전환 맥락. "변환"은 일반 명사라 오탐 위험이 있어 금지 표기에서 제외(검수로 관리) |
 | example | 예시 | 예제 | "Examples:" 섹션 제목 |
 | execution plan | 실행 계획 | 수행 계획 | |
+| operator (EXPLAIN) | 연산자 | /(?<!Kubernetes )오퍼레이터/ | `EXPLAIN` 출력에서 쿼리 실행 계획을 구성하는 단위(TableScan, HashJoin 등). understand/performance/explain-operators.md 참고. Kubernetes operator(Kubernetes 오퍼레이터)와는 다른 개념 |
+| Kubernetes operator | Kubernetes 오퍼레이터 | | 커스텀 리소스로 애플리케이션 운영을 자동화하는 Kubernetes 확장 패턴. operator (EXPLAIN)의 SQL 연산자와는 다른 개념 |
+| aggregation | 집계 | 애그리게이션, 애그리게이트 | GROUP BY 등 그룹화 연산. aggregate function → 집계 함수, aggregate operator → 집계 연산자 |
+| accumulator | 누산기 | 어큐뮬레이터, 누적기 | 집계 연산에서 그룹별 중간 상태를 유지하는 객체 |
+| tuple | 튜플 | 터플 | 관계형 연산이 다루는 레코드 단위. row(행)와 구분해 EXPLAIN 연산자 설명 등에 쓰인다 |
+| join | 조인 | | 두 입력을 조인 표현식 기준으로 결합하는 관계형 연산. SQL의 `JOIN` 키워드는 원문 유지 |
+| projection | 프로젝션 | 투영 | 입력에서 특정 컬럼·표현식만 선택하는 관계형 연산 |
+| grouping key | 그룹화 키 | 그룹 키, 그룹핑 키 | 집계 연산에서 그룹을 나누는 기준이 되는 컬럼 |
+| query fragment | 프래그먼트 | 단편 | 분산 쿼리 실행 시 노드에 배포되는 실행 단위. `sourceFragmentId`·`targetFragmentId` 등 코드 속성은 원문 유지. "조각"은 일반 명사라 오탐 위험이 있어 금지 표기에서 제외(검수로 관리) |
+| distribution (data distribution strategy) | 분산 | 디스트리뷰션 | Exchange·Sender 등 연산자가 노드 간 데이터를 분산하는 전략(single/broadcast/random/hash/table/identity). "배포"(deployment)와 혼동하지 않는다 |
+| optimizer | 옵티마이저 | 최적화기, 옵티마이져 | 쿼리 실행 계획을 세우는 SQL 엔진 컴포넌트. query optimizer → 쿼리 옵티마이저 |
+| planner | 플래너 | 플랜너, 계획기, 계획자 | SQL 실행 계획을 수립하는 컴포넌트를 가리키는 용어. optimizer(옵티마이저)와 별개 단어로 원문에서 구분해 쓰므로 번역도 구분한다 |
+| hint | 힌트 | | SQL 힌트(`/*+ HINT */`). hint block → 힌트 블록 |
+| subquery | 서브쿼리 | 서브 쿼리, 하위 쿼리, 하위쿼리 | |
+| correlated subquery | 상관 서브쿼리 | 상관관계 서브쿼리, 연관 서브쿼리, 코릴레이티드 서브쿼리 | 외부 쿼리의 값에 의존해 매 행마다 재평가되는 서브쿼리 |
+| cartesian product | 카티션 곱 | 데카르트 곱, 카테시안 곱 | 조인 조건 없이 두 테이블의 모든 행 조합을 만드는 연산 |
+| batch, batching | 일괄 처리 | | 여러 요청을 모아 한 번에 처리하는 것. "배치"는 placement driver 등 배치(placement)와 겹쳐 혼동을 줄 수 있어 사용하지 않는다 |
 | index | 인덱스 | 색인 | |
 | primary key | 기본 키 | 주 키, 프라이머리 키 | |
-| collation | 콜레이션 | 콜라레이션, 컬레이션 | 정렬 기본 키·인덱스의 정렬 규칙을 가리키는 SQL 개념어 |
+| collation | 콜레이션 | 콜라레이션, 컬레이션 | 정렬 기본 키·인덱스의 정렬 규칙을 가리키는 SQL 개념어. EXPLAIN 연산자 속성 `collation`(정렬 연산자가 사용하는 정렬 키·순서 목록)은 이 개념과 달리 "정렬 기준"으로 옮긴다 |
 | nullable | NULL 허용 | 널러블, 눌러블 | non-nullable은 "NULL을 허용하지 않음"으로 옮긴다 |
 | column | 컬럼 | | "열"은 감사 불가(오탐)이므로 검수로 관리 |
 | precision | 정밀도 | | 숫자·시간 타입의 자릿수. DECIMAL(precision, scale) 등에 쓰인다 |
@@ -107,8 +141,11 @@
 | deadlock | 데드락 | 교착 상태, 교착상태 | |
 | endpoint | 엔드포인트 | 종단점, 엔드 포인트 | |
 | connection | 연결 | 커넥션 | connection pool → 연결 풀 |
+| connection string | 연결 문자열 | 커넥션 스트링, 접속 문자열 | JDBC/ODBC 연결 URL 형식을 가리키는 용어 |
+| heartbeat | 하트비트 | 하트 비트, 헛비트 | 클라이언트-서버 간 생존 확인 메시지. heartbeat message → 하트비트 메시지 |
+| handshake | 핸드셰이크 | 핸드 셰이크, 악수 | 클라이언트-서버 연결 수립 시 초기 협상 과정 |
 | directory | 디렉터리 | 디렉토리 | 외래어 표기법 준수 |
-| repository | 저장소 | 리포지토리, 레포지토리 | git 저장소 맥락 |
+| repository | 저장소 | 리포지토리, 레포지토리 | git 저장소, Repository 디자인 패턴(예: Spring Data Repository)을 모두 포함 |
 | release | 릴리스 | 릴리즈 | |
 | license | 라이선스 | 라이센스 | |
 | message | 메시지 | 메세지 | |
@@ -116,11 +153,21 @@
 | operating system | 운영 체제 | 운영체제 | 표준 띄어쓰기 |
 | architecture | 아키텍처 | 아키텍쳐 | |
 | interface | 인터페이스 | 인터훼이스 | |
+| facade | 퍼사드 | 파사드, 훼사드, 퍼싸드, 페이사드 | Ignite 클라이언트가 제공하는 진입점 인터페이스(IgniteSql, IgniteCompute, IgniteCatalog 등)를 가리키는 디자인 패턴 용어. 클래스명 자체는 원문 유지 |
+| annotation | 애노테이션 | 어노테이션, 애너테이션 | Java 클래스·필드에 붙는 메타데이터 표기. `@Table`, `@Id` 등 코드상 애노테이션 이름은 원문 유지 |
 | best practices | 모범 사례 | 베스트 프랙티스 | |
 | prerequisites | 사전 요구 사항 | 전제 조건, 선행 조건, 사전 준비 사항 | 섹션 제목 관례 |
 | getting started | 시작하기 | | 섹션 제목 관례 |
 | overview | 개요 | | 섹션 제목 관례 |
 | next steps | 다음 단계 | | 섹션 제목 관례 |
+| when to use | 사용 시점 | | 섹션 제목 관례 |
+| configure and operate | 구성 및 운영 | | Configure and Operate 섹션을 가리키는 링크 텍스트. sidebars.ts 라벨은 해당 섹션 문서를 번역할 때 별도로 다룬다 |
+| develop | 개발 | | Develop 섹션을 가리키는 링크 텍스트. sidebars.ts 라벨은 해당 섹션 문서를 번역할 때 별도로 다룬다 |
+| api reference | API 참조 | | API Reference 섹션을 가리키는 링크 텍스트. sidebars.ts 라벨은 해당 섹션 문서를 번역할 때 별도로 다룬다 |
+| tools (섹션명) | 도구 | | Tools 섹션을 가리키는 제목·링크 텍스트. tools/index.mdx 제목, sidebars.ts 카테고리 라벨, docs/index.mdx 카드 제목에 모두 쓰인다 |
+| in this section | 이 섹션의 내용 | | 섹션 제목 관례. 카드 목록으로 하위 문서를 안내하는 인덱스 페이지에 반복 등장 |
+| learn more | 자세히 보기 | 더 알아보기 | 카드 링크 텍스트 관례. 화살표(→)는 그대로 유지 |
+| glossary (섹션·페이지 명) | 용어집 | 용어사전 | Ignite 문서 자체의 "Glossary" 페이지·카드 제목을 가리킨다. 이 저장소의 번역 용어사전(GLOSSARY.md)과 구분하기 위해 "용어집"을 쓴다 |
 | concurrency control | 동시성 제어 | 병행 제어, 동시성 컨트롤 | MVCC = 다중 버전 동시성 제어 |
 | two-phase locking | 2단계 락킹 | 2단계 잠금, 이단계 잠금, 투페이즈 락킹 | 첫 등장 시 "2단계 락킹(two-phase locking, 2PL)" 병기. lock은 "락" |
 | growing phase | 확장 단계 | 성장 단계 | 2PL 단계 |
@@ -146,6 +193,14 @@
 | append-only | 추가 전용 | 어펜드 온리 | 기존 데이터를 수정하지 않고 새 항목만 뒤에 추가하는 저장 방식 |
 | dirty page | 더티 페이지 | 더러운 페이지, 오염 페이지 | 캐시에서 변경됐지만 아직 디스크에 기록되지 않은 페이지 |
 | page cache | 페이지 캐시 | | 인메모리 페이지 캐시. cache는 캐시 |
+| compaction | 컴팩션 | 컴팩숀 | LSM 트리에서 SST 파일을 병합해 하위 레벨로 옮기는 백그라운드 프로세스. "압축"은 아카이브 압축(zip.md 등)과 겹쳐 금지 표기에서 제외(검수로 관리) |
+| write throttling | 쓰기 스로틀링 | 라이트 스로틀링, 쓰기 조절 | 체크포인트 버퍼 포화를 막기 위해 업데이트 속도를 늦추는 메커니즘. throttling 단독도 "스로틀링" |
+| flush | 플러시 | 플래시 | 메모리의 데이터를 디스크로 내보내는 동작. `flushDelayMillis` 등 설정 키는 원문 유지 |
+| write buffer | 쓰기 버퍼 | 라이트 버퍼 | RocksDB가 쓰기를 모아두는 인메모리 버퍼. `writeBufferSizeBytes` 설정 키는 원문 유지 |
+| write amplification | 쓰기 증폭 | 라이트 앰플리피케이션 | 컴팩션 등으로 같은 데이터가 여러 번 다시 쓰이며 발생하는 디스크 쓰기 증가 |
+| space amplification | 공간 증폭 | 스페이스 앰플리피케이션 | 컴팩션 도중 여러 버전이 일시적으로 함께 존재해 발생하는 디스크 공간 증가 |
+| read amplification | 읽기 증폭 | 리드 앰플리피케이션 | 조회 하나에 여러 번의 디스크 읽기가 필요해 발생하는 증가 |
+| point lookup | 포인트 조회 | 포인트 룩업, 지점 조회 | 기본 키 하나로 단일 행을 조회하는 읽기 패턴 |
 | zero-copy | 제로카피 | 제로 카피, 무복사 | 데이터를 복사하지 않고 읽고 쓰는 최적화 기법 |
 | off-heap memory | 오프힙 메모리 | 힙 외부 메모리, 오프 힙, 오프-힙 | JVM 힙 밖에 할당하는 메모리 |
 | volatile | 휘발성 | | 스토리지 지속성 구분(휘발성 vs 영속). non-volatile는 비휘발성 |
@@ -153,6 +208,7 @@
 | transaction coordinator | 트랜잭션 코디네이터 | 트랜잭션 조정자, 트랜잭션 조율자 | 트랜잭션을 시작한 노드가 맡는 역할. coordinator node(코디네이터 노드)와는 별개 표기 |
 | version storage | 버전 저장 | 버전 스토리지, 버전 저장소 | MVCC 버전 체인을 보관하는 영역. understand/core-concepts/data-partitioning.md의 "버전 저장" 절을 가리킨다 |
 | lifecycle | 라이프사이클 | 생명 주기, 생애 주기 | 클러스터·트랜잭션 등의 생성부터 종료까지의 흐름 |
+| rolling upgrade | 롤링 업그레이드 | 무중단 업그레이드, 순차 업그레이드, 단계적 업그레이드 | 클러스터 전체 다운타임 없이 노드를 순서대로 업데이트하는 방식 |
 | provider | 공급자 | 프로바이더, 제공자 | 인증 공급자(authentication provider), ID 공급자(identity provider) 등 인증 방식을 제공하는 컴포넌트를 가리키는 개념어 |
 | credential | 자격 증명 | 크리덴셜 | 사용자 인증에 쓰이는 비밀 정보(사용자 이름, 비밀번호 등) |
 | authorization | 인가 | 권한 부여, 어쏘라이제이션 | authentication(인증)과 구분되는 접근 권한 판단 |
@@ -162,6 +218,12 @@
 | cipher | 암호화 방식 | 사이퍼, 싸이퍼 | TLS cipher 목록 등에서 사용하는 암호화 알고리즘을 가리키는 보안 용어 |
 | mutual TLS | 상호 TLS | 뮤추얼 TLS, 뮤추얼티엘에스 | 첫 등장 시 "상호 TLS(mutual TLS, mTLS)" 병기. 약어 mTLS는 원문 유지 |
 | transport encryption | 전송 암호화 | 트랜스포트 암호화 | 클라이언트-서버·노드 간 통신을 암호화하는 보안 계층. authentication(인증)과 대비되는 개념 |
+| SQL Fundamentals | SQL 기초 | | 섹션 제목 관례. sql/fundamentals 카테고리 라벨 겸 링크 텍스트 |
+| SQL Operations | SQL 작업 | | 섹션 제목 관례. sql/working-with-sql 카테고리 라벨 겸 링크 텍스트 |
+| SQL Reference | SQL 참조 | SQL 레퍼런스 | 섹션 제목 관례. sql/reference 카테고리 라벨 겸 링크 텍스트 |
+| Advanced SQL | 고급 SQL | | 섹션 제목 관례. sql/advanced 카테고리 라벨 겸 링크 텍스트 |
+| SQL Conformance | SQL 표준 준수 | SQL 적합성, SQL 준수성 | 섹션 제목 관례. sql/reference/sql-conformance 카테고리 라벨 겸 카드 제목 |
+| Data Types and Functions | 데이터 타입과 함수 | | 섹션 제목 관례. sql/reference/data-types-and-functions 카테고리 라벨 겸 카드 제목 |
 
 ## 원문 유지 용어
 
@@ -173,11 +235,12 @@
 | RAFT | 합의 프로토콜 명칭. "RAFT 그룹"처럼 조합 사용 |
 | GridGain | 회사·제품명 |
 | Docker, Kubernetes, Helm | 제품명 |
-| JDBC, ODBC, REST, CLI, API, SQL, DDL, DML, MVCC, ACID, SSL/TLS, JVM, JDK, GC, 2PC, 2PL, HLC | 약어는 원문 유지 |
+| JDBC, ODBC, REST, CLI, API, SQL, DDL, DML, MVCC, ACID, SSL/TLS, JVM, JDK, GC, 2PC, 2PL, HLC, JUL | 약어는 원문 유지. JUL = java.util.logging. CMG는 위 cluster management group 항목 참고 |
 | Java, JavaScript, .NET, C++, Python, Spring Boot, Spring Data, LINQ | 언어·프레임워크명 |
 | Windows, Linux, macOS | 운영 체제명 |
 | RocksDB, aimem, aipersist | 스토리지 엔진 식별자 |
 | Compute API, Table API, Key-Value API, Catalog API, Criteria API, Client API | API 고유 명칭. 일반 명사 맥락(예: "컴퓨트 작업")과 구분 |
+| RecordView, KeyValueView | Java `Table` API의 실제 클래스명. 코드와 동일한 표기를 프로즈에서도 유지("RecordView 패턴"). 일반 개념을 가리킬 때는 대역표의 record view(레코드 뷰)·key-value view(키-값 뷰) 사용 |
 | 코드 식별자·설정 키·CLI 명령·SQL 키워드 | `ignite3-db`, `CREATE ZONE`, `storageProfiles` 등 코드로 표기되는 모든 것 |
 
 ## 금지 표현

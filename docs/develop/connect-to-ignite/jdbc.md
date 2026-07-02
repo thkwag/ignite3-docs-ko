@@ -1,27 +1,27 @@
 ---
 id: jdbc
-title: JDBC Driver
+title: JDBC 드라이버
 sidebar_position: 1
 ---
 
-Apache Ignite is shipped with JDBC driver that allows processing of distributed data using standard SQL statements like `SELECT`, `INSERT`, `UPDATE`, or `DELETE` directly from the JDBC side. The name of the driver's class is `org.apache.ignite.jdbc.IgniteJdbcDriver`.
+Apache Ignite는 JDBC 드라이버와 함께 제공되며, JDBC 쪽에서 `SELECT`, `INSERT`, `UPDATE`, `DELETE` 같은 표준 SQL 문으로 분산 데이터를 직접 처리할 수 있습니다. 드라이버 클래스 이름은 `org.apache.ignite.jdbc.IgniteJdbcDriver`입니다.
 
-This implementation of JDBC driver does not support:
+이 JDBC 드라이버 구현은 다음을 지원하지 않습니다:
 
-* Multiple endpoints
-* JDBC connection pools
+* 다중 엔드포인트
+* JDBC 연결 풀
 
-See also:
+참고:
 
-* [Unsupported Mandatory JDBC Features](#unsupported-mandatory-jdbc-features)
-* [Unsupported Optional JDBC Features](#unsupported-optional-jdbc-features)
-* [JDBC Features with Limited Support](#jdbc-features-with-limited-support)
+* [지원하지 않는 필수 JDBC 기능](#unsupported-mandatory-jdbc-features)
+* [지원하지 않는 선택적 JDBC 기능](#unsupported-optional-jdbc-features)
+* [제한적으로 지원하는 JDBC 기능](#jdbc-features-with-limited-support)
 
-## Setting Up
+## 설정하기 {#setting-up}
 
-JDBC driver uses the client connector to work with the cluster. For more information on configuring client connector, see [Client Connector Configuration](/develop/ignite-clients/).
+JDBC 드라이버는 클라이언트 커넥터를 사용해 클러스터와 통신합니다. 클라이언트 커넥터를 구성하는 방법은 [클라이언트 커넥터 구성](/develop/ignite-clients/) 문서에서 확인하세요.
 
-The JDBC connector needs to be included from Maven:
+Maven에서 JDBC 커넥터를 다음과 같이 추가합니다:
 
 ```xml
 <dependency>
@@ -31,53 +31,53 @@ The JDBC connector needs to be included from Maven:
 </dependency>
 ```
 
-Here is how you can open a JDBC connection to the cluster node listening on IP address `127.0.0.1`:
+다음은 IP 주소 `127.0.0.1`에서 대기 중인 클러스터 노드에 JDBC 연결을 여는 방법입니다:
 
 ```java
 Connection conn = DriverManager.getConnection("jdbc:ignite:thin://127.0.0.1:10800");
 ```
 
-The driver connects to one of the cluster nodes and forwards all the queries to it for final execution. The node handles the query distribution and the result's aggregations. Then the result is sent back to the client application.
+드라이버는 클러스터 노드 중 하나에 연결하고 모든 쿼리를 그 노드로 전달해 최종 실행합니다. 해당 노드가 쿼리 분산과 결과 집계를 처리한 다음, 결과를 클라이언트 애플리케이션으로 다시 전송합니다.
 
-The JDBC connection string can have an optional list of name-value pairs as parameters after the '?' delimiter. Name and value are separated by the '=' symbol and multiple properties are separated either by an '&' or a ';'. Separate sign can't be mixed and should be either semicolon or ampersand sign.
+JDBC 연결 문자열은 '?' 구분자 뒤에 이름-값 쌍 목록을 매개변수로 선택적으로 붙일 수 있습니다. 이름과 값은 '=' 기호로 구분하고, 여러 속성은 '&' 또는 ';' 중 하나로 구분합니다. 구분 기호는 세미콜론과 앰퍼샌드를 섞어 쓸 수 없으며 둘 중 하나로 통일해야 합니다.
 
 ```java
 jdbc:ignite:thin://host[:port][,host[:port][/schema][[?parameter1=value1][&parameter2=value2],...]]
 jdbc:ignite:thin://host[:port][,host[:port][/schema][[?parameter1=value1][;parameter2=value2],...]]
 ```
 
-* `host` is required and defines the host of the cluster node to connect to.
-* `port` is the port to use to open the connection. 10800 is used by default if this parameter is omitted.
-* `schema` is the schema name to access. PUBLIC is used by default. This name should correspond to the SQL ANSI-99 standard. Non-quoted identifiers are not case sensitive. Quoted identifiers are case sensitive. When semicolon format is used, the schema may be defined as a parameter with name schema.
-* `parameters` are optional parameters. The following parameters are available:
-  * `connectionTimeZone` - Client connection time-zone ID. This property can be used by the client to change the time zone of the session on the server. Affects the interpretation of dates in queries that do not specify the time zone explicitly. If not set, system default on client timezone will be used.
-  * `queryTimeout` - Number of seconds the driver will wait for a `Statement` object to execute. 0 means there is no limit. Default value: `0`.
-  * `connectionTimeout` - Number of milliseconds JDBC client will wait for server to respond. 0 means there is no limit. Default value: `0`.
-  * `reconnectThrottlingPeriod` - Reconnect throttling period, in milliseconds. 0 means there is no limit. Default value: `30_000`.
-  * `reconnectThrottlingRetries` - Reconnect throttling retries. 0 means there is no limit. Default value: `3`.
-  * `username` - username for basic authentication to the cluster.
-  * `password` - user password for basic authentication to the cluster.
-  * `sslEnabled` - Determines if SSL is enabled. Possible values: `true`, `false`. Default value: `false`
-    * `trustStorePath` - Path to trust store on client side.
-    * `trustStorePassword` - Trust store password.
-    * `keyStorePath` - Path to key store on client side.
-    * `keyStorePassword` - Key store password.
-    * `clientAuth` - SSL client authentication. Possible values: `NONE`, `OPTIONAL`, `REQUIRE`.
-    * `ciphers` - comma-separated SSL ciphers list.
+* `host`는 필수이며 연결할 클러스터 노드의 호스트를 지정합니다.
+* `port`는 연결을 여는 데 사용할 포트입니다. 이 매개변수를 생략하면 기본값으로 10800을 사용합니다.
+* `schema`는 접근할 스키마 이름입니다. 기본값은 PUBLIC입니다. 이 이름은 SQL ANSI-99 표준을 따라야 합니다. 따옴표로 묶지 않은 식별자는 대소문자를 구분하지 않고, 따옴표로 묶은 식별자는 대소문자를 구분합니다. 세미콜론 형식을 사용할 때는 schema라는 이름의 매개변수로 스키마를 지정할 수도 있습니다.
+* `parameters`는 선택적 매개변수입니다. 다음 매개변수를 사용할 수 있습니다:
+  * `connectionTimeZone` - 클라이언트 연결의 시간대 ID입니다. 클라이언트가 이 속성으로 서버 세션의 시간대를 변경할 수 있습니다. 쿼리에서 시간대를 명시적으로 지정하지 않은 경우 날짜 해석에 영향을 줍니다. 설정하지 않으면 클라이언트의 시스템 기본 시간대를 사용합니다.
+  * `queryTimeout` - 드라이버가 `Statement` 객체 실행을 기다리는 시간(초)입니다. 0은 제한이 없다는 의미입니다. 기본값: `0`.
+  * `connectionTimeout` - JDBC 클라이언트가 서버 응답을 기다리는 시간(밀리초)입니다. 0은 제한이 없다는 의미입니다. 기본값: `0`.
+  * `reconnectThrottlingPeriod` - 재연결 스로틀링 기간(밀리초)입니다. 0은 제한이 없다는 의미입니다. 기본값: `30_000`.
+  * `reconnectThrottlingRetries` - 재연결 스로틀링 재시도 횟수입니다. 0은 제한이 없다는 의미입니다. 기본값: `3`.
+  * `username` - 클러스터에 기본 인증할 때 사용하는 사용자 이름입니다.
+  * `password` - 클러스터에 기본 인증할 때 사용하는 사용자 비밀번호입니다.
+  * `sslEnabled` - SSL 사용 여부를 결정합니다. 가능한 값: `true`, `false`. 기본값: `false`
+    * `trustStorePath` - 클라이언트 측 트러스트스토어 경로입니다.
+    * `trustStorePassword` - 트러스트스토어 비밀번호입니다.
+    * `keyStorePath` - 클라이언트 측 키스토어 경로입니다.
+    * `keyStorePassword` - 키스토어 비밀번호입니다.
+    * `clientAuth` - SSL 클라이언트 인증입니다. 가능한 값: `NONE`, `OPTIONAL`, `REQUIRE`.
+    * `ciphers` - 쉼표로 구분한 SSL 암호화 방식 목록입니다.
 
-### Parameter Precedence
+### 매개변수 우선순위 {#parameter-precedence}
 
-If the same parameters are passed by using different means, the JDBC driver prioritizes them in the following way:
+같은 매개변수를 여러 방식으로 전달하면 JDBC 드라이버는 다음 순서로 우선순위를 적용합니다:
 
-1. API arguments passed in the `Connection` objects
-2. Last instance of the parameter in the connection string
-3. Properties object passed during connection
+1. `Connection` 객체에 전달한 API 인수
+2. 연결 문자열에서 마지막에 나온 매개변수 값
+3. 연결 시 전달한 Properties 객체
 
-## Performing Transactions
+## 트랜잭션 수행 {#performing-transactions}
 
-With the JDBC driver, you can perform `commit` and `rollback` transactions. For more information about transactions, see [Performing Transactions](/develop/work-with-data/transactions).
+JDBC 드라이버로 트랜잭션을 `commit`하거나 `rollback`할 수 있습니다. 트랜잭션에 대한 자세한 내용은 [트랜잭션 수행](/develop/work-with-data/transactions) 문서를 참고하세요.
 
-Here is how you can commit a transaction:
+다음은 트랜잭션을 커밋하는 방법입니다:
 
 ```java
 // Open the JDBC connection.
@@ -87,17 +87,17 @@ Connection conn = DriverManager.getConnection("jdbc:ignite:thin://127.0.0.1:1080
 conn.commit();
 ```
 
-You can also configure Apache Ignite to automatically commit transactions by using the `setAutoCommit()` method.
+`setAutoCommit()` 메서드를 사용해 Apache Ignite가 트랜잭션을 자동으로 커밋하도록 구성할 수도 있습니다.
 
-Here is how you can rollback a transaction:
+다음은 트랜잭션을 롤백하는 방법입니다:
 
 ```java
 conn.rollback();
 ```
 
-## Unsupported Mandatory JDBC Features
+## 지원하지 않는 필수 JDBC 기능 {#unsupported-mandatory-jdbc-features}
 
-The following mandatory JDBC features are currently not supported (sorted alphabetically):
+다음 필수 JDBC 기능은 현재 지원하지 않습니다(알파벳순 정렬):
 
 * java.sql.Connection#clearWarnings
 * java.sql.Connection#getWarnings
@@ -118,9 +118,9 @@ The following mandatory JDBC features are currently not supported (sorted alphab
 * java.sql.Statement#setFetchDirection
 * java.sql.Statement#setMaxFieldSize
 
-## Unsupported Optional JDBC Features
+## 지원하지 않는 선택적 JDBC 기능 {#unsupported-optional-jdbc-features}
 
-The following optional JDBC features are currently not supported (sorted alphabetically):
+다음 선택적 JDBC 기능은 현재 지원하지 않습니다(알파벳순 정렬):
 
 * java.sql.Connection#createArrayOf
 * java.sql.Connection#createBlob
@@ -190,14 +190,14 @@ The following optional JDBC features are currently not supported (sorted alphabe
 * java.sql.Statement#setCursorName
 * java.sql.Statement#setPoolable
 
-## JDBC Features with Limited Support
+## 제한적으로 지원하는 JDBC 기능 {#jdbc-features-with-limited-support}
 
-The following JDBC features are supported only in specific cases:
+다음 JDBC 기능은 특정 상황에서만 지원합니다:
 
-| Feature | Supported Cases |
+| 기능 | 지원 상황 |
 |---------|-----------------|
-| java.sql.Connection#prepareStatement | autoGeneratedKeys=Statement.NO_GENERATED_KEYS, resultSetType=ResultSet.TYPE_FORWARD_ONLY, resultSetConcurrency=ResultSet.CONCUR_READ_ONLY, null or empty columnIndexes, and null or empty columnNames. |
-| java.sql.Connection#rollback | Without savepoint. |
-| java.sql.Statement#execute | autoGeneratedKeys=Statement.NO_GENERATED_KEYS, null or empty columnIndexes, and null or empty columnNames. |
-| java.sql.Statement#executeUpdate | autoGeneratedKeys=Statement.NO_GENERATED_KEYS, null or empty columnIndexes, and null or empty columnNames. |
-| java.sql.Statement#getMoreResults | current=Statement.CLOSE_CURRENT_RESULT. |
+| java.sql.Connection#prepareStatement | autoGeneratedKeys=Statement.NO_GENERATED_KEYS, resultSetType=ResultSet.TYPE_FORWARD_ONLY, resultSetConcurrency=ResultSet.CONCUR_READ_ONLY이고 columnIndexes와 columnNames가 null이거나 비어 있는 경우. |
+| java.sql.Connection#rollback | 세이브포인트를 사용하지 않는 경우. |
+| java.sql.Statement#execute | autoGeneratedKeys=Statement.NO_GENERATED_KEYS이고 columnIndexes와 columnNames가 null이거나 비어 있는 경우. |
+| java.sql.Statement#executeUpdate | autoGeneratedKeys=Statement.NO_GENERATED_KEYS이고 columnIndexes와 columnNames가 null이거나 비어 있는 경우. |
+| java.sql.Statement#getMoreResults | current=Statement.CLOSE_CURRENT_RESULT인 경우. |

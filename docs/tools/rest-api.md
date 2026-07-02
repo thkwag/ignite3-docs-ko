@@ -6,29 +6,29 @@ sidebar_position: 2
 
 # REST API
 
-The Apache Ignite clusters provide an [OpenAPI](https://www.openapis.org/) specification that can be used to work with Apache Ignite by standard REST methods.
+Apache Ignite 클러스터는 표준 REST 방식으로 Apache Ignite를 사용할 수 있는 [OpenAPI](https://www.openapis.org/) 명세를 제공합니다.
 
-## REST Connector Configuration
+## REST 커넥터 구성 {#rest-connector-configuration}
 
-By default, rest connector starts on port 10300. This port can be configured in the `ignite.rest` [node configuration](/configure-and-operate/reference/node-configuration).
+기본적으로 REST 커넥터는 10300 포트에서 시작합니다. 이 포트는 `ignite.rest` [노드 구성](/configure-and-operate/reference/node-configuration)에서 구성할 수 있습니다.
 
-## Using HTTP Tools
+## HTTP 도구 사용 {#using-http-tools}
 
-Once the cluster is started, you can use external tools to monitor the cluster over http, or manage the cluster. In this example, we will use [curl](https://curl.se/) to get cluster status:
+클러스터가 시작되면 외부 도구를 사용해 HTTP로 클러스터를 모니터링하거나 관리할 수 있습니다. 이 예시에서는 [curl](https://curl.se/)로 클러스터 상태를 가져옵니다.
 
 ```bash
 curl 'http://localhost:10300/management/v1/cluster/state'
 ```
 
-You are not limited to only monitoring, as Apache Ignite REST API provides endpoints that can be used to manage the cluster as well. For example, you can create a [snapshot](/configure-and-operate/operations/disaster-recovery-partitions) via REST:
+모니터링만 가능한 것은 아닙니다. Apache Ignite REST API는 클러스터를 관리할 수 있는 엔드포인트도 제공합니다. 예를 들어 REST로 [스냅샷](/configure-and-operate/operations/disaster-recovery-partitions)을 생성할 수 있습니다.
 
 ```bash
 curl -H "Content-Type: application/json" -d '{"snapshotType": "FULL","tableNames": "table1,table2","startTimeEpochMilli": 0}' http://localhost:10300/management/v1/snapshot/create
 ```
 
-## Java Project Configuration
+## Java 프로젝트 구성 {#java-project-configuration}
 
-If you want to integrate Apache Ignite REST API closer into your application, we recommend using an [OpenAPI generator](https://github.com/OpenAPITools/openapi-generator) to generate a Java client. Once the client is generated, you can use it to work with REST API from code, for example:
+애플리케이션에 Apache Ignite REST API를 더 긴밀하게 통합하려면 [OpenAPI generator](https://github.com/OpenAPITools/openapi-generator)로 Java 클라이언트를 생성하는 것을 권장합니다. 클라이언트를 생성한 후에는 코드에서 REST API를 사용할 수 있습니다. 예를 들면 다음과 같습니다.
 
 ```java
 ApiClient client = Configuration.getDefaultApiClient();

@@ -1,14 +1,14 @@
 ---
 id: aipersist
-title: AIPersist Storage Engine
+title: AIPersist 스토리지 엔진
 sidebar_position: 1
 ---
 
-# AIPersist Storage Engine
+# AIPersist 스토리지 엔진
 
-The AIPersist engine (`aipersist`) provides durable storage using B+ tree data structures with checkpoint-based persistence. Data is stored in partition files on disk with an in-memory page cache for fast access. This is the default storage engine.
+AIPersist 엔진(`aipersist`)은 B+ 트리 자료 구조와 체크포인트 기반 영속성을 사용해 내구성 있는 스토리지를 제공합니다. 데이터는 디스크의 파티션 파일에 저장되며, 빠른 접근을 위해 인메모리 페이지 캐시를 함께 사용합니다. 이 엔진이 기본 스토리지 엔진입니다.
 
-## Storage Architecture
+## 스토리지 아키텍처 {#storage-architecture}
 
 ```mermaid
 flowchart TB
@@ -44,16 +44,16 @@ flowchart TB
     PC --> VCT & SIT & HIT & IMT
 ```
 
-Storage organization:
+스토리지 구성:
 
-- Each partition stored in a separate file: `table-{tableId}/part-{partitionId}.bin`
-- Delta files capture incremental changes between checkpoints
-- B+ trees store version chains (row data), sorted indexes, hash indexes, and metadata
-- Default page size: 16 KB
+- 각 파티션은 별도 파일(`table-{tableId}/part-{partitionId}.bin`)에 저장됩니다
+- 델타 파일은 체크포인트 사이의 증분 변경 사항을 기록합니다
+- B+ 트리는 버전 체인(행 데이터), 정렬 인덱스, 해시 인덱스, 메타데이터를 저장합니다
+- 기본 페이지 크기: 16 KB
 
-## Checkpointing
+## 체크포인팅 {#checkpointing}
 
-Checkpointing flushes dirty pages from memory to partition files on disk. This process ensures durability and enables crash recovery.
+체크포인팅은 메모리의 더티 페이지를 디스크의 파티션 파일로 플러시합니다. 이 과정은 내구성을 보장하고 장애 복구를 지원합니다.
 
 ```mermaid
 sequenceDiagram
@@ -81,23 +81,23 @@ sequenceDiagram
     CP->>CB: Clear Buffer
 ```
 
-Checkpoint configuration:
+체크포인트 구성:
 
-| Property | Default | Description |
+| 속성 | 기본값 | 설명 |
 |----------|---------|-------------|
-| `intervalMillis` | 180000 | Time between checkpoints (3 minutes) |
-| `intervalDeviationPercent` | 40 | Random deviation to prevent synchronized checkpoints |
-| `checkpointThreads` | - | Number of checkpoint writer threads |
-| `compactionThreads` | - | Number of compaction threads |
+| `intervalMillis` | 180000 | 체크포인트 사이의 시간 간격(3분) |
+| `intervalDeviationPercent` | 40 | 체크포인트가 동시에 발생하지 않도록 하는 무작위 편차 |
+| `checkpointThreads` | - | 체크포인트 기록 스레드 수 |
+| `compactionThreads` | - | 컴팩션 스레드 수 |
 
 ```bash
 # Configure checkpoint interval to 2 minutes
 node config update ignite.storage.engines.aipersist.checkpoint.intervalMillis=120000
 ```
 
-## Write Throttling
+## 쓰기 스로틀링 {#write-throttling}
 
-When the checkpoint buffer reaches two-thirds capacity (66.7%), write throttling activates to prevent buffer overflow.
+체크포인트 버퍼가 용량의 3분의 2(66.7%)에 도달하면, 버퍼 포화를 막기 위해 쓰기 스로틀링이 활성화됩니다.
 
 ```mermaid
 flowchart LR
@@ -113,22 +113,22 @@ flowchart LR
     R -->|"Checkpoint completes"| G
 ```
 
-Throttling behavior:
+스로틀링 동작:
 
-- Below 66%: Normal operation, no throttling
-- 66% to 90%: Progressive throttling, checkpoint priority increases
-- Above 90%: Heavy throttling, updates significantly delayed
+- 66% 미만: 정상 동작, 스로틀링 없음
+- 66%~90%: 점진적 스로틀링, 체크포인트 우선순위가 높아짐
+- 90% 초과: 강한 스로틀링, 업데이트가 크게 지연됨
 
-Write throttling indicates either slow disk I/O or excessive write rate. Monitor throttling metrics to identify bottlenecks.
+쓰기 스로틀링이 발생한다면 디스크 I/O가 느리거나 쓰기 속도가 과도하다는 신호입니다. 스로틀링 메트릭을 모니터링해 병목 지점을 파악하세요.
 
-## Profile Configuration
+## 프로파일 구성 {#profile-configuration}
 
-| Property | Default | Description |
+| 속성 | 기본값 | 설명 |
 |----------|---------|-------------|
-| `engine` | - | Must be `"aipersist"` |
-| `sizeBytes` | Dynamic | Storage size. Defaults to `max(256 MB, 20% of physical RAM)` |
+| `engine` | - | `"aipersist"`이어야 합니다 |
+| `sizeBytes` | 동적 | 스토리지 크기. 기본값은 `max(256 MB, 20% of physical RAM)`입니다 |
 
-## Configuration Example
+## 구성 예시 {#configuration-example}
 
 ```json
 {
@@ -151,9 +151,9 @@ Write throttling indicates either slow disk I/O or excessive write rate. Monitor
 node config update "ignite.storage.profiles:{persistent_profile{engine:aipersist,sizeBytes:2147483648}}"
 ```
 
-## Usage
+## 사용법 {#usage}
 
-The `default` profile uses aipersist automatically. For custom profiles:
+`default` 프로파일은 aipersist를 자동으로 사용합니다. 사용자 지정 프로파일은 다음과 같이 구성합니다:
 
 ```sql
 -- Create a zone with the persistent profile

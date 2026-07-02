@@ -1,253 +1,253 @@
-# Configure and Operate
+# 구성 및 운영
 
-Install, configure, and operate Apache Ignite 3 clusters in production environments.
+프로덕션 환경에서 Apache Ignite 3 클러스터를 설치, 구성, 운영합니다.
 
-## In This Section
+## 이 섹션의 내용 {#in-this-section}
 
 <div className="card-container">
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:zip-box-outline" height="24" /> Install Using ZIP Archive</h3>
+      <h3><IIcon icon="mdi:zip-box-outline" height="24" /> ZIP 아카이브로 설치</h3>
     </div>
     <div className="card__body">
-      <p>Manual installation from binary distribution for Linux, macOS, and Windows.</p>
+      <p>Linux, macOS, Windows용 바이너리 배포판으로 수동 설치합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/installation/install-zip">Learn more →</a>
+      <a href="./configure-and-operate/installation/install-zip">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="carbon:package" height="24" /> Install Using DEB/RPM Packages</h3>
+      <h3><IIcon icon="carbon:package" height="24" /> DEB/RPM 패키지로 설치</h3>
     </div>
     <div className="card__body">
-      <p>Install through Linux package managers on Debian, Ubuntu, RHEL, and CentOS systems.</p>
+      <p>Debian, Ubuntu, RHEL, CentOS 시스템에서 Linux 패키지 관리자로 설치합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/installation/install-deb-rpm">Learn more →</a>
+      <a href="./configure-and-operate/installation/install-deb-rpm">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="simple-icons:docker" height="24" /> Install Using Docker</h3>
+      <h3><IIcon icon="simple-icons:docker" height="24" /> Docker로 설치</h3>
     </div>
     <div className="card__body">
-      <p>Containerized deployment with Docker images for development and production environments.</p>
+      <p>개발 환경과 프로덕션 환경에서 Docker 이미지로 컨테이너 배포합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/installation/install-docker">Learn more →</a>
+      <a href="./configure-and-operate/installation/install-docker">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="simple-icons:kubernetes" height="24" /> Install to Kubernetes</h3>
+      <h3><IIcon icon="simple-icons:kubernetes" height="24" /> Kubernetes에 설치</h3>
     </div>
     <div className="card__body">
-      <p>Cloud-native deployment using Kubernetes operators and Helm charts.</p>
+      <p>Kubernetes 오퍼레이터와 Helm 차트로 클라우드 네이티브 방식으로 배포합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/installation/install-kubernetes">Learn more →</a>
+      <a href="./configure-and-operate/installation/install-kubernetes">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:cog-outline" height="24" /> Configure Cluster and Nodes</h3>
+      <h3><IIcon icon="mdi:cog-outline" height="24" /> 클러스터와 노드 구성</h3>
     </div>
     <div className="card__body">
-      <p>Essential cluster configuration including node settings, network parameters, and cluster initialization.</p>
+      <p>노드 설정, 네트워크 매개변수, 클러스터 초기화를 포함한 핵심 클러스터 구성입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/configuration/config-cluster-and-nodes">Learn more →</a>
+      <a href="./configure-and-operate/configuration/config-cluster-and-nodes">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:database-cog-outline" height="24" /> Configure Storage</h3>
+      <h3><IIcon icon="mdi:database-cog-outline" height="24" /> 스토리지 구성</h3>
     </div>
     <div className="card__body">
-      <p>Storage profiles and engine configuration for AIPersist, RocksDB, and in-memory storage.</p>
+      <p>AIPersist, RocksDB, 인메모리 스토리지를 위한 스토리지 프로파일과 엔진 구성입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/configuration/config-storage-overview">Learn more →</a>
+      <a href="./configure-and-operate/configuration/config-storage-overview">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:shield-account-outline" height="24" /> Set Up Authentication</h3>
+      <h3><IIcon icon="mdi:shield-account-outline" height="24" /> 인증 설정</h3>
     </div>
     <div className="card__body">
-      <p>Security configuration with basic authentication and user credential management.</p>
+      <p>기본 인증과 사용자 자격 증명 관리를 포함한 보안 구성입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/configuration/config-authentication">Learn more →</a>
+      <a href="./configure-and-operate/configuration/config-authentication">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:certificate-outline" height="24" /> Enable SSL/TLS</h3>
+      <h3><IIcon icon="mdi:certificate-outline" height="24" /> SSL/TLS 활성화</h3>
     </div>
     <div className="card__body">
-      <p>Configure encrypted connections with SSL/TLS certificates for client and inter-node communication.</p>
+      <p>클라이언트 통신과 노드 간 통신을 위한 SSL/TLS 인증서로 암호화된 연결을 구성합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/configuration/config-ssl-tls">Learn more →</a>
+      <a href="./configure-and-operate/configuration/config-ssl-tls">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:chart-line" height="24" /> Configure Metrics</h3>
+      <h3><IIcon icon="mdi:chart-line" height="24" /> 메트릭 구성</h3>
     </div>
     <div className="card__body">
-      <p>Set up metrics collection and export for cluster monitoring and observability.</p>
+      <p>클러스터 모니터링과 관측 가능성을 위한 메트릭 수집과 내보내기를 설정합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/configuration/metrics-configuration">Learn more →</a>
+      <a href="./configure-and-operate/configuration/metrics-configuration">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:server-outline" height="24" /> Manage Cluster Lifecycle</h3>
+      <h3><IIcon icon="mdi:server-outline" height="24" /> 클러스터 라이프사이클 관리</h3>
     </div>
     <div className="card__body">
-      <p>Start, stop, and manage nodes with cluster initialization and topology changes.</p>
+      <p>클러스터 초기화와 토폴로지 변경을 포함해 노드를 시작, 중지, 관리합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/operations/lifecycle">Learn more →</a>
+      <a href="./configure-and-operate/operations/lifecycle">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:backup-restore" height="24" /> Disaster Recovery (Partitions)</h3>
+      <h3><IIcon icon="mdi:backup-restore" height="24" /> 재해 복구(파티션)</h3>
     </div>
     <div className="card__body">
-      <p>Partition recovery procedures for data loss scenarios and cluster failures.</p>
+      <p>데이터 손실 시나리오와 클러스터 장애에 대비한 파티션 복구 절차입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/operations/disaster-recovery-partitions">Learn more →</a>
+      <a href="./configure-and-operate/operations/disaster-recovery-partitions">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:database-sync-outline" height="24" /> Disaster Recovery (System Groups)</h3>
+      <h3><IIcon icon="mdi:database-sync-outline" height="24" /> 재해 복구(시스템 그룹)</h3>
     </div>
     <div className="card__body">
-      <p>System group recovery for metadata and catalog restoration.</p>
+      <p>메타데이터와 카탈로그 복원을 위한 시스템 그룹 복구입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/operations/disaster-recovery-system-groups">Learn more →</a>
+      <a href="./configure-and-operate/operations/disaster-recovery-system-groups">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:map-marker-multiple-outline" height="24" /> Monitor Performance</h3>
+      <h3><IIcon icon="mdi:map-marker-multiple-outline" height="24" /> 성능 모니터링</h3>
     </div>
     <div className="card__body">
-      <p>Performance monitoring with colocation strategies and query optimization.</p>
+      <p>콜로케이션 전략과 쿼리 최적화를 포함한 성능 모니터링입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/operations/colocation">Learn more →</a>
+      <a href="./configure-and-operate/operations/colocation">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:alert-circle-outline" height="24" /> Handle Exceptions</h3>
+      <h3><IIcon icon="mdi:alert-circle-outline" height="24" /> 예외 처리</h3>
     </div>
     <div className="card__body">
-      <p>Error handling patterns and troubleshooting common cluster issues.</p>
+      <p>일반적인 클러스터 문제에 대한 오류 처리 패턴과 문제 해결 방법입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/operations/handle-exceptions">Learn more →</a>
+      <a href="./configure-and-operate/operations/handle-exceptions">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:gauge" height="24" /> Available Metrics</h3>
+      <h3><IIcon icon="mdi:gauge" height="24" /> 사용 가능한 메트릭</h3>
     </div>
     <div className="card__body">
-      <p>Complete reference of metrics exposed for monitoring cluster health and performance.</p>
+      <p>클러스터 상태와 성능을 모니터링하기 위해 노출되는 메트릭의 전체 참조입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/monitoring/available-metrics">Learn more →</a>
+      <a href="./configure-and-operate/monitoring/available-metrics">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:table-eye" height="24" /> Metrics System Views</h3>
+      <h3><IIcon icon="mdi:table-eye" height="24" /> 메트릭 시스템 뷰</h3>
     </div>
     <div className="card__body">
-      <p>Query metrics through SQL views for programmatic access to cluster statistics.</p>
+      <p>클러스터 통계에 프로그래밍 방식으로 접근할 수 있도록 SQL 뷰로 메트릭을 조회합니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/monitoring/metrics-system-views">Learn more →</a>
+      <a href="./configure-and-operate/monitoring/metrics-system-views">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:file-document-edit-outline" height="24" /> Node Configuration Parameters</h3>
+      <h3><IIcon icon="mdi:file-document-edit-outline" height="24" /> 노드 구성 매개변수</h3>
     </div>
     <div className="card__body">
-      <p>Complete reference of node-level configuration parameters and settings.</p>
+      <p>노드 수준 구성 매개변수와 설정의 전체 참조입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/reference/node-configuration">Learn more →</a>
+      <a href="./configure-and-operate/reference/node-configuration">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:server-network" height="24" /> Cluster Configuration Parameters</h3>
+      <h3><IIcon icon="mdi:server-network" height="24" /> 클러스터 구성 매개변수</h3>
     </div>
     <div className="card__body">
-      <p>Complete reference of cluster-level configuration parameters and defaults.</p>
+      <p>클러스터 수준 구성 매개변수와 기본값의 전체 참조입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/reference/cluster-configuration">Learn more →</a>
+      <a href="./configure-and-operate/reference/cluster-configuration">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:console" height="24" /> CLI Configuration</h3>
+      <h3><IIcon icon="mdi:console" height="24" /> CLI 구성</h3>
     </div>
     <div className="card__body">
-      <p>Command-line interface configuration and usage patterns.</p>
+      <p>명령줄 인터페이스 구성과 사용 패턴입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/reference/cli-configuration">Learn more →</a>
+      <a href="./configure-and-operate/reference/cli-configuration">자세히 보기 →</a>
     </div>
   </div>
 
   <div className="card">
     <div className="card__header">
-      <h3><IIcon icon="mdi:harddisk" height="24" /> Storage Profiles</h3>
+      <h3><IIcon icon="mdi:harddisk" height="24" /> 스토리지 프로파일</h3>
     </div>
     <div className="card__body">
-      <p>Storage engine configuration including engine selection and performance tuning.</p>
+      <p>엔진 선택과 성능 튜닝을 포함한 스토리지 엔진 구성입니다.</p>
     </div>
     <div className="card__footer">
-      <a href="./configure-and-operate/reference/storage-profiles">Learn more →</a>
+      <a href="./configure-and-operate/reference/storage-profiles">자세히 보기 →</a>
     </div>
   </div>
 </div>
 
-## Next Steps
+## 다음 단계 {#next-steps}
 
-- [Getting Started](getting-started) - Quick start guides
-- [Understand](understand) - Architecture and concepts
-- [Tools](tools) - CLI and REST API reference
+- [시작하기](getting-started) - 빠른 시작 가이드
+- [이해하기](understand) - 아키텍처와 개념
+- [도구](tools) - CLI 및 REST API 참조

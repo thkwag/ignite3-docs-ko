@@ -1,18 +1,18 @@
 ---
-title: Start a Cluster in Docker
+title: Docker에서 클러스터 시작하기
 ---
 
-This guide walks you through the process of setting up and running an Apache Ignite 3 cluster using Docker containers. Follow these steps to get a three-node cluster up and running quickly.
+이 가이드는 Docker 컨테이너를 사용해 Apache Ignite 3 클러스터를 설정하고 실행하는 과정을 설명합니다. 다음 단계를 따라 3노드 클러스터를 빠르게 구성해 실행해 보세요.
 
-## Prerequisites
+## 사전 요구 사항 {#prerequisites}
 
-* Up-to-date Docker and Docker Compose installed on your system
-* Basic familiarity with command-line operations
-* The code editor of your choice (VS Code, IntelliJ IDEA, etc.)
+* 시스템에 최신 버전의 Docker와 Docker Compose가 설치되어 있어야 합니다
+* 명령줄 작업에 대한 기본 지식
+* 원하는 코드 편집기(VS Code, IntelliJ IDEA 등)
 
-## Step 1: Create a Docker Compose Configuration
+## 1단계: Docker Compose 구성 만들기 {#step-1-create-a-docker-compose-configuration}
 
-1. Create a file named `docker-compose.yml` in your project directory:
+1. 프로젝트 디렉터리에 `docker-compose.yml` 파일을 만듭니다:
 
 ```yaml
 name: ignite3
@@ -58,22 +58,22 @@ configs:
       }
 ```
 
-## Step 2: Start the Ignite Cluster
+## 2단계: Ignite 클러스터 시작하기 {#step-2-start-the-ignite-cluster}
 
-1. Open a terminal in the directory containing your `docker-compose.yml` file
-2. Run the following command to start the cluster:
+1. `docker-compose.yml` 파일이 있는 디렉터리에서 터미널을 엽니다
+2. 다음 명령어를 실행해 클러스터를 시작합니다:
 
 ```bash
 docker compose up -d
 ```
 
-3. Verify that all containers are running:
+3. 모든 컨테이너가 실행 중인지 확인합니다:
 
 ```bash
 docker compose ps
 ```
 
-Here is how the command output may look:
+명령어 출력은 다음과 비슷하게 나타납니다:
 
 ```text
 NAME              IMAGE                       COMMAND                  SERVICE   CREATED          STATUS          PORTS
@@ -82,31 +82,31 @@ ignite3-node2-1   apacheignite/ignite:3.0.0   "docker-entrypoint.s…"   node2  
 ignite3-node3-1   apacheignite/ignite:3.0.0   "docker-entrypoint.s…"   node3     13 seconds ago   Up 10 seconds   3344/tcp, 0.0.0.0:10302->10300/tcp, 0.0.0.0:10802->10800/tcp
 ```
 
-Your nodes are now running, but the cluster is not initialized.
+이제 노드가 실행 중이지만 클러스터는 아직 초기화되지 않았습니다.
 
-## Step 3: Initialize the Cluster
+## 3단계: 클러스터 초기화하기 {#step-3-initialize-the-cluster}
 
-1. Start the Ignite CLI in Docker:
+1. Docker에서 Ignite CLI를 시작합니다:
 
 ```text
 docker run --rm -it --network=host -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 apacheignite/ignite:3.0.0 cli
 ```
 
-2. Inside the CLI, connect to one of the nodes:
+2. CLI 안에서 노드 중 하나에 연결합니다:
 
 ```bash
 connect http://localhost:10300
 ```
 
-3. Confirm the connection to the default node in the CLI tool.
+3. CLI 도구에서 기본 노드 연결을 확인합니다.
 
-4. Initialize the cluster with a name and the metastorage group of all nodes:
+4. 이름과 모든 노드의 메타스토리지 그룹을 지정해 클러스터를 초기화합니다:
 
 ```bash
 cluster init --name=ignite3 --metastorage-group=node1,node2,node3
 ```
 
-The output from this step should be similar to this:
+이 단계의 출력은 다음과 비슷합니다:
 
 ```text
            #              ___                         __
@@ -132,36 +132,36 @@ The cluster is not initialized. Run cluster init command to initialize it.
 Cluster was initialized successfully
 ```
 
-## Step 4: Verify Your Cluster
+## 4단계: 클러스터 확인하기 {#step-4-verify-your-cluster}
 
-1. Use the `cluster status` CLI command to verify your cluster is running correctly.
+1. `cluster status` CLI 명령어로 클러스터가 정상적으로 실행 중인지 확인합니다.
 
 ```bash
 cluster status
 ```
 
-The output should look similar to this:
+출력은 다음과 비슷하게 나타납니다:
 
 ```text
 [name: ignite3, nodes: 3, status: active, cmgNodes: [node1, node2, node3], msNodes: [node1, node2, node3]]
 ```
 
-This means that all 3 nodes found each other and formed an active cluster.
+이는 3개 노드가 모두 서로를 찾아 활성 클러스터를 구성했다는 의미입니다.
 
-2. Exit the CLI by typing `exit` or pressing Ctrl+D. This will also stop the CLI container.
+2. `exit`를 입력하거나 Ctrl+D를 눌러 CLI를 종료합니다. 이렇게 하면 CLI 컨테이너도 함께 중지됩니다.
 
-Congratulations! You have a local Apache Ignite 3 cluster running that you can use for development.
+축하합니다! 이제 개발에 사용할 수 있는 로컬 Apache Ignite 3 클러스터가 실행되고 있습니다.
 
-## Understanding Port Configuration
+## 포트 구성 이해하기 {#understanding-port-configuration}
 
-The Docker Compose file exposes two types of ports for each node:
+Docker Compose 파일은 각 노드에 대해 두 종류의 포트를 노출합니다:
 
-* **10300-10302**: REST API ports for administrative operations
-* **10800-10802**: Client connection ports for your applications
+* **10300-10302**: 관리 작업용 REST API 포트
+* **10800-10802**: 애플리케이션의 클라이언트 연결 포트
 
-## Stopping the Cluster
+## 클러스터 중지하기 {#stopping-the-cluster}
 
-If you want to pause your cluster:
+클러스터를 일시 중지하려면 다음을 실행합니다:
 
 ```bash
 docker compose stop
@@ -172,11 +172,11 @@ docker compose stop
  ✔ Container ignite3-node3-1  Stopped
 ```
 
-This will stop the containers and retain your data.
+이렇게 하면 컨테이너가 중지되고 데이터는 유지됩니다.
 
-## Removing the Cluster
+## 클러스터 제거하기 {#removing-the-cluster}
 
-When you are done working with the cluster, you can remove it using:
+클러스터 작업을 마쳤다면 다음 명령어로 제거할 수 있습니다:
 
 ```bash
 docker compose down
@@ -188,4 +188,4 @@ docker compose down
  ✔ Network ignite3_default    Removed
 ```
 
-This will stop and remove all the containers. Your data will be lost unless you have configured persistent storage.
+이렇게 하면 모든 컨테이너가 중지되고 제거됩니다. 영속 스토리지를 구성하지 않았다면 데이터가 사라집니다.

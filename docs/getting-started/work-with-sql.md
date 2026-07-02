@@ -1,45 +1,45 @@
 ---
-title: Working with SQL
+title: SQL 다루기
 ---
 
 import Mermaid from '@theme/Mermaid';
 
-This guide walks you through using Apache Ignite 3 SQL capabilities via the command-line interface. You'll set up a distributed Apache Ignite cluster, create and manipulate the Chinook database (a sample database representing a digital media store), and learn to leverage Apache Ignite's powerful SQL features.
+이 가이드는 명령줄 인터페이스로 Apache Ignite 3 SQL 기능을 사용하는 과정을 설명합니다. 분산 Apache Ignite 클러스터를 구성하고, Chinook 데이터베이스(디지털 미디어 스토어를 표현하는 샘플 데이터베이스)를 생성·조작하며, Apache Ignite의 다양한 SQL 기능을 활용하는 방법을 배웁니다.
 
-## Prerequisites
+## 사전 요구 사항 {#prerequisites}
 
-* Docker and Docker Compose installed on your system
-* Basic familiarity with SQL
-* Command-line terminal access
-* 8GB+ of available RAM for running the containers
-* SQL directory with Chinook Database files downloaded
+* 시스템에 Docker와 Docker Compose 설치
+* SQL 기본 지식
+* 명령줄 터미널 사용 환경
+* 컨테이너 실행에 사용 가능한 8GB 이상의 RAM
+* Chinook 데이터베이스 파일을 내려받은 SQL 디렉터리
 
-## Before Starting
+## 시작하기 전에 {#before-starting}
 
-This tutorial uses prepared files to streamline deployment. Make sure you have downloaded the required files:
+이 튜토리얼은 배포를 간소화하기 위해 미리 준비된 파일을 사용합니다. 다음 필수 파일을 내려받았는지 확인하세요.
 
-* docker-compose.yml (file not available in docs)
-* sql archive (file not available in docs)
+* docker-compose.yml (문서에서 제공하지 않음)
+* sql 압축 파일 (문서에서 제공하지 않음)
 
-Unpack the archive into a new folder, and place it and the docker compose file in the same directory where you will be running the Docker CLI commands. The tutorial expects these SQL files to be available and mounted to the container.
+압축을 새 폴더에 풀고, 이 폴더와 docker compose 파일을 Docker CLI 명령을 실행할 디렉터리에 함께 배치하세요. 이 튜토리얼은 이 SQL 파일이 준비되어 컨테이너에 마운트되어 있다고 가정합니다.
 
 :::caution
-Without these files, you will be unable to load the sample data needed for the exercises.
+이 파일이 없으면 실습에 필요한 샘플 데이터를 불러올 수 없습니다.
 :::
 
-## Setting Up an Apache Ignite 3 Cluster
+## Apache Ignite 3 클러스터 설정 {#setting-up-an-apache-ignite-3-cluster}
 
-Before we can start using SQL, we need to set up an Apache Ignite cluster. We will use Docker Compose to create a three-node cluster.
+SQL을 사용하기 전에 먼저 Apache Ignite 클러스터를 구성해야 합니다. Docker Compose로 3개 노드로 구성된 클러스터를 생성합니다.
 
-### Starting the Cluster
+### 클러스터 시작 {#starting-the-cluster}
 
-Open a terminal in the directory containing the docker compose file `docker-compose.yml` file and start the cluster with Docker:
+`docker-compose.yml` 파일이 있는 디렉터리에서 터미널을 열고 Docker로 클러스터를 시작하세요.
 
 ```bash
 docker compose up -d
 ```
 
-This command starts the cluster in detached mode. You should see startup messages from all three nodes. When they are ready, you will see messages indicating that the servers have started successfully.
+이 명령은 분리(detached) 모드로 클러스터를 시작합니다. 세 노드 모두에서 시작 메시지가 출력됩니다. 노드가 준비되면 서버가 정상적으로 시작되었다는 메시지가 표시됩니다.
 
 ```bash
 docker compose up -d
@@ -51,52 +51,52 @@ docker compose up -d
  ✔ Container ignite3-node1-1  Started
 ```
 
-You can check that all containers are running with the following command:
+다음 명령으로 모든 컨테이너가 실행 중인지 확인할 수 있습니다.
 
 ```bash
 docker compose ps
 ```
 
-You should see all three nodes with a "running" status.
+세 노드 모두 상태가 "running"으로 표시되어야 합니다.
 
 :::tip
-Verify that all three nodes are "running" before continuing.
+계속하기 전에 세 노드 모두 상태가 "running"인지 확인하세요.
 :::
 
-## Connecting to the Cluster Using Ignite CLI
+## Ignite CLI로 클러스터에 연결 {#connecting-to-the-cluster-using-ignite-cli}
 
-Now we will connect to our running cluster using Ignite command-line interface (CLI).
+이제 Ignite 명령줄 인터페이스(CLI)로 실행 중인 클러스터에 연결합니다.
 
-### Starting the CLI
+### CLI 시작 {#starting-the-cli}
 
-In your terminal, run:
+터미널에서 다음을 실행하세요.
 
 ```bash
 docker run --rm -it --network=host -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 -v ./sql/:/opt/ignite/downloads/ apacheignite/ignite:3.0.0 cli
 ```
 
-This starts an interactive CLI container connected to the same Docker network as our cluster and mounts a volume containing the sql files for the Chinook Database. When prompted, connect to the default node. If you refused the connection, you can do it manually with the following command:
+이 명령은 클러스터와 같은 Docker 네트워크에 연결된 대화형 CLI 컨테이너를 시작하고, Chinook 데이터베이스의 SQL 파일이 담긴 볼륨을 마운트합니다. 연결 여부를 묻는 메시지가 나오면 기본 노드에 연결하세요. 연결을 거부했다면 다음 명령으로 수동으로 연결할 수 있습니다.
 
 ```bash
 connect http://localhost:10300
 ```
 
-You should see a message that you're connected to `http://localhost:10300` and a note that the cluster is not initialized.
+`http://localhost:10300`에 연결되었다는 메시지와 클러스터가 아직 초기화되지 않았다는 안내가 표시됩니다.
 
 :::note
-The CLI container runs separately from the cluster nodes, but connects to them over the Docker network.
+CLI 컨테이너는 클러스터 노드와 별도로 실행되지만, Docker 네트워크를 통해 노드에 연결됩니다.
 :::
 
-### Initializing the Cluster
+### 클러스터 초기화 {#initializing-the-cluster}
 
-Before we can use the cluster, we need to initialize it:
+클러스터를 사용하려면 먼저 초기화해야 합니다.
 
 ```bash
 cluster init --name=ignite3 --metastorage-group=node1,node2,node3
 ```
 
 :::note
-If the license is not available, make sure the license file was mounted correctly.
+라이선스를 사용할 수 없다면 라이선스 파일이 올바르게 마운트되었는지 확인하세요.
 :::
 
 ```text
@@ -124,42 +124,42 @@ Cluster was initialized successfully
 [node1]>
 ```
 
-## Creating the Chinook Database Schema
+## Chinook 데이터베이스 스키마 생성 {#creating-the-chinook-database-schema}
 
-Now that our cluster is running and initialized, we can start using SQL to create and work with data in Ignite. The Chinook database is a digital music store dataset, with tables for artists, albums, tracks, customers, and sales.
+클러스터가 실행 중이고 초기화되었으니, 이제 SQL로 Ignite에서 데이터를 생성하고 다룰 수 있습니다. Chinook 데이터베이스는 디지털 음악 스토어 데이터셋으로, 아티스트·앨범·트랙·고객·판매를 위한 테이블로 구성됩니다.
 
-### Entering SQL Mode
+### SQL 모드 진입 {#entering-sql-mode}
 
-To start working with SQL, enter SQL mode in the CLI:
+SQL 작업을 시작하려면 CLI에서 SQL 모드로 진입하세요.
 
 ```text
 sql
 ```
 
-Your prompt should change to `sql-cli>` indicating you're now in SQL mode.
+프롬프트가 `sql-cli>`로 바뀌면 SQL 모드로 진입한 것입니다.
 
 ```text
 [node1]> sql
 sql-cli>
 ```
 
-### Creating Distribution Zones
+### 분산 영역 생성 {#creating-distribution-zones}
 
-Before we create tables, let's set up distribution zones to control how our data is distributed and replicated across the cluster:
+테이블을 생성하기 전에, 클러스터 전체에서 데이터가 분산되고 복제되는 방식을 제어하는 분산 영역(distribution zone)을 설정합니다.
 
 ```sql
 CREATE ZONE IF NOT EXISTS Chinook WITH replicas=2, storage_profiles='default';
 CREATE ZONE IF NOT EXISTS ChinookReplicated WITH replicas=3, partitions=25, storage_profiles='default';
 ```
 
-These commands create two zones:
+이 명령은 두 개의 영역을 생성합니다.
 
-* `Chinook` - Standard zone with 2 replicas for most tables
-* `ChinookReplicated` - Zone with 3 replicas for frequently accessed reference data
+* `Chinook` - 대부분의 테이블에 사용하는 복제본 2개짜리 표준 영역
+* `ChinookReplicated` - 자주 조회되는 참조 데이터용으로 복제본 3개를 사용하는 영역
 
-### Database Entity Relationship
+### 데이터베이스 엔티티 관계 {#database-entity-relationship}
 
-Here's the entity relationship diagram for our Chinook database:
+다음은 Chinook 데이터베이스의 엔티티 관계 다이어그램입니다.
 
 <Mermaid chart={`
 erDiagram
@@ -175,12 +175,12 @@ erDiagram
     TRACK ||--o{ PLAYLISTTRACK : appears-in
 `}/>
 
-### Creating Core Tables
+### 핵심 테이블 생성 {#creating-core-tables}
 
-Now let's create the main tables for the Chinook database. We will start with the Artist and Album tables.
+이제 Chinook 데이터베이스의 주요 테이블을 생성합니다. Artist 테이블과 Album 테이블부터 시작합니다.
 
 :::note
-Copy and paste the following SQL blocks at the `sql-cli>` prompt then hit enter.
+다음 SQL 블록을 `sql-cli>` 프롬프트에 복사해 붙여넣고 Enter 키를 누르세요.
 :::
 
 ```sql
@@ -199,9 +199,9 @@ CREATE TABLE Album (
 ) COLOCATE BY (ArtistId) ZONE Chinook;
 ```
 
-The `COLOCATE BY` clause in the **Album** table ensures that albums by the same artist are stored on the same nodes. This optimizes joins between Artist and Album tables by eliminating the need for network transfers during queries.
+**Album** 테이블의 `COLOCATE BY` 절은 같은 아티스트의 앨범이 같은 노드에 저장되도록 보장합니다. 이렇게 하면 쿼리 실행 중 네트워크 전송이 필요 없어져 Artist 테이블과 Album 테이블 간의 조인이 최적화됩니다.
 
-Next, let's create the Genre and MediaType reference tables:
+다음으로 Genre와 MediaType 참조 테이블을 생성합니다.
 
 ```sql
 CREATE TABLE Genre (
@@ -217,9 +217,9 @@ CREATE TABLE MediaType (
 ) ZONE ChinookReplicated;
 ```
 
-These reference tables are placed in the `ChinookReplicated` zone with 3 replicas because they contain static data that is frequently joined with other tables. Having a copy on each node improves read performance.
+이 참조 테이블은 정적 데이터를 담고 있고 다른 테이블과 자주 조인되므로 복제본 3개를 사용하는 `ChinookReplicated` 영역에 배치합니다. 각 노드에 사본을 두면 읽기 성능이 향상됩니다.
 
-Now, let's create the Track table, which references the Album, Genre, and MediaType tables:
+이제 Album, Genre, MediaType 테이블을 참조하는 Track 테이블을 생성합니다.
 
 ```sql
 CREATE TABLE Track (
@@ -236,9 +236,9 @@ CREATE TABLE Track (
 ) COLOCATE BY (AlbumId) ZONE Chinook;
 ```
 
-Tracks are colocated by AlbumId, not by TrackId, because most queries join tracks with their albums. This colocation optimizes these common join patterns.
+대부분의 쿼리가 트랙을 앨범과 조인하므로, Track은 TrackId가 아니라 AlbumId를 기준으로 콜로케이션(colocation)됩니다. 이 콜로케이션은 이런 일반적인 조인 패턴을 최적화합니다.
 
-Let's also create tables to manage customers, employees, and sales:
+이제 고객, 직원, 판매를 관리할 테이블도 생성합니다.
 
 ```sql
 CREATE TABLE Employee (
@@ -300,9 +300,9 @@ CREATE TABLE InvoiceLine (
 ) COLOCATE BY (TrackId) ZONE Chinook;
 ```
 
-Invoices are colocated by CustomerId and InvoiceLines are colocated by InvoiceId. This creates an efficient chain of locality: Customer → Invoice → InvoiceLine, optimizing queries that analyze customer purchase history.
+Invoice는 CustomerId를 기준으로, InvoiceLine은 InvoiceId를 기준으로 콜로케이션됩니다. 이렇게 하면 Customer → Invoice → InvoiceLine으로 이어지는 효율적인 지역성 체인이 만들어져, 고객 구매 이력을 분석하는 쿼리가 최적화됩니다.
 
-Finally, let's create the playlist-related tables:
+마지막으로 플레이리스트 관련 테이블을 생성합니다.
 
 ```sql
 CREATE TABLE Playlist (
@@ -318,17 +318,17 @@ CREATE TABLE PlaylistTrack (
 ) ZONE Chinook;
 ```
 
-Note that PlaylistTrack is not colocated with Track. This is a design decision that prioritizes playlist operations over joining with track details. In a real-world scenario, you might make a different colocation choice depending on your most common query patterns.
+PlaylistTrack은 Track과 콜로케이션되지 않는다는 점에 유의하세요. 이는 트랙 세부 정보와의 조인보다 플레이리스트 작업을 우선하는 설계 결정입니다. 실제 환경에서는 가장 자주 실행하는 쿼리 패턴에 따라 다른 콜로케이션 선택을 할 수도 있습니다.
 
-### Verifying Table Creation
+### 테이블 생성 확인 {#verifying-table-creation}
 
-Let's confirm that all our tables were created successfully:
+모든 테이블이 정상적으로 생성되었는지 확인합니다.
 
 ```sql
 SELECT * FROM system.tables WHERE schema = 'PUBLIC';
 ```
 
-This query checks the system tables to verify that our tables exist. You should see a list of all the tables we've created.
+이 쿼리는 시스템 테이블을 조회해 생성한 테이블이 존재하는지 확인합니다. 생성한 모든 테이블의 목록이 표시됩니다.
 
 ```bash
 sql-cli> SELECT * FROM system.tables WHERE schema = 'PUBLIC';
@@ -360,19 +360,19 @@ sql-cli> SELECT * FROM system.tables WHERE schema = 'PUBLIC';
 ```
 
 :::tip Checkpoint
-Verify that all tables appear in the `system.tables` output with their proper zones and colocation settings before proceeding to the next section.
+다음 섹션으로 넘어가기 전에, `system.tables` 출력에 모든 테이블이 올바른 영역과 콜로케이션 설정으로 표시되는지 확인하세요.
 :::
 
-## Inserting Sample Data
+## 샘플 데이터 삽입 {#inserting-sample-data}
 
-Now that we have our tables set up, let's populate them with sample data.
+테이블 설정을 마쳤으니, 이제 샘플 데이터로 채웁니다.
 
-### Adding Artists and Albums
+### 아티스트와 앨범 추가 {#adding-artists-and-albums}
 
-Let's start by adding some artists.
+먼저 아티스트 데이터를 추가합니다.
 
-* Exit the interactive sql mode by typing `exit;`.
-* Then, load the current store catalog from the sql data file.
+* `exit;`를 입력해 대화형 SQL 모드를 종료하세요.
+* 그런 다음 SQL 데이터 파일에서 현재 스토어 카탈로그를 불러오세요.
 
 ```bash
 sql --file=/opt/ignite/downloads/current_catalog.sql
@@ -385,9 +385,9 @@ Updated 275 rows.
 Updated 347 rows.
 ```
 
-### Adding Genres and Media Types
+### 장르와 미디어 타입 추가 {#adding-genres-and-media-types}
 
-Let's populate our reference tables the same way:
+같은 방식으로 참조 테이블을 채웁니다.
 
 ```bash
 sql --file=/opt/ignite/downloads/media_and_genre.sql
@@ -399,9 +399,9 @@ Updated 25 rows.
 Updated 5 rows.
 ```
 
-### Adding Tracks
+### 트랙 추가 {#adding-tracks}
 
-Now let's add some tracks to our albums:
+이제 앨범에 트랙을 추가합니다.
 
 ```bash
 sql --file=/opt/ignite/downloads/tracks.sql
@@ -415,9 +415,9 @@ Updated 1000 rows.
 Updated 503 rows.
 ```
 
-### Adding Employees and Customers
+### 직원과 고객 추가 {#adding-employees-and-customers}
 
-Let's add some employee and customer data:
+직원과 고객 데이터를 추가합니다.
 
 ```bash
 sql --file=/opt/ignite/downloads/ee_and_cust.sql
@@ -429,9 +429,9 @@ Updated 8 rows.
 Updated 59 rows.
 ```
 
-### Adding Invoices and Invoice Lines
+### 인보이스와 인보이스 라인 추가 {#adding-invoices-and-invoice-lines}
 
-Finally, let's add some sales data:
+마지막으로 판매 데이터를 추가합니다.
 
 ```bash
 sql --file=/opt/ignite/downloads/invoices.sql
@@ -456,16 +456,16 @@ Updated 715 rows.
 ```
 
 :::tip Checkpoint
-Verify that all the data has been loaded successfully by checking that the "Updated X rows" messages match the expected row counts for each file.
+각 파일에 대해 "Updated X rows" 메시지가 예상 행 수와 일치하는지 확인해, 모든 데이터가 정상적으로 로드되었는지 검증하세요.
 :::
 
-## Querying Data in Ignite SQL
+## Ignite SQL에서 데이터 조회 {#querying-data-in-ignite-sql}
 
-Now that we have data in our tables, let's run some SQL queries to explore the Chinook database.
+테이블에 데이터가 준비되었으니, SQL 쿼리를 실행해 Chinook 데이터베이스를 살펴봅니다.
 
-### Basic Queries
+### 기본 쿼리 {#basic-queries}
 
-Let's return to the `sql-cli>` and start with some simple SELECT queries:
+`sql-cli>`로 돌아가 간단한 SELECT 쿼리부터 시작합니다.
 
 ```bash
 sql
@@ -482,9 +482,9 @@ SELECT * FROM Album WHERE ArtistId = 3;
 SELECT * FROM Track WHERE AlbumId = 133;
 ```
 
-### Joins
+### 조인 {#joins}
 
-Now let's try some more complex queries with joins:
+이번에는 조인을 사용하는 더 복잡한 쿼리를 살펴봅니다.
 
 ```sql
 -- Get all tracks with artist and album information
@@ -499,13 +499,13 @@ FROM
 LIMIT 10;
 ```
 
-## Data Manipulation in Ignite SQL
+## Ignite SQL에서 데이터 조작 {#data-manipulation-in-ignite-sql}
 
-Let's explore how to modify data using SQL in Ignite.
+Ignite에서 SQL로 데이터를 수정하는 방법을 살펴봅니다.
 
-### Understanding Distributed Updates
+### 분산 업데이트 이해하기 {#understanding-distributed-updates}
 
-When you update data in a distributed database, the changes need to be coordinated across multiple nodes:
+분산 데이터베이스에서 데이터를 업데이트하면, 변경 사항을 여러 노드에 걸쳐 조정해야 합니다.
 
 <Mermaid chart={`
 sequenceDiagram
@@ -520,9 +520,9 @@ sequenceDiagram
     Node1-->>Client: Confirm update completed
 `}/>
 
-### Inserting New Data
+### 새 데이터 삽입 {#inserting-new-data}
 
-Let's add a new artist and album:
+새 아티스트와 앨범을 추가합니다.
 
 ```sql
 -- Insert a new artist
@@ -538,9 +538,9 @@ SELECT * FROM Artist WHERE ArtistId = 276;
 SELECT * FROM Album WHERE AlbumId = 348;
 ```
 
-### Updating Existing Data
+### 기존 데이터 업데이트 {#updating-existing-data}
 
-Now let's update some of our existing data:
+기존 데이터 일부를 업데이트합니다.
 
 ```sql
 -- Update the album release year
@@ -558,11 +558,11 @@ SELECT * FROM Artist WHERE ArtistId = 276;
 SELECT * FROM Album WHERE AlbumId = 348;
 ```
 
-In a distributed database like Ignite, these updates are automatically propagated to all replicas. The primary copy is updated first, then the changes are sent to the backup copies on other nodes.
+Ignite와 같은 분산 데이터베이스에서는 이러한 업데이트가 모든 복제본에 자동으로 전파됩니다. 프라이머리 사본이 먼저 업데이트된 다음, 변경 사항이 다른 노드의 백업 사본으로 전송됩니다.
 
-### Deleting Data
+### 데이터 삭제 {#deleting-data}
 
-Finally, let's clean up by deleting the data we added:
+마지막으로 추가했던 데이터를 삭제해 정리합니다.
 
 ```sql
 -- Delete the album
@@ -576,13 +576,13 @@ SELECT * FROM Artist WHERE ArtistId = 276;
 SELECT * FROM Album WHERE AlbumId = 348;
 ```
 
-## Advanced SQL Features
+## 고급 SQL 기능 {#advanced-sql-features}
 
-Let's explore some of Ignite's more advanced SQL features.
+Ignite의 고급 SQL 기능 몇 가지를 살펴봅니다.
 
-### Querying System Views
+### 시스템 뷰 조회 {#querying-system-views}
 
-Ignite provides system views that let you inspect cluster metadata:
+Ignite는 클러스터 메타데이터를 조사할 수 있는 시스템 뷰를 제공합니다.
 
 ```sql
 -- View all tables in the cluster
@@ -595,11 +595,11 @@ SELECT * FROM system.zones;
 SELECT * FROM system.table_columns WHERE TABLE_NAME = 'TRACK';
 ```
 
-System views provide important metadata about your cluster configuration. They are essential for monitoring and troubleshooting in production environments.
+시스템 뷰는 클러스터 구성에 관한 중요한 메타데이터를 제공하며, 프로덕션 환경에서 모니터링과 문제 해결에 필수적입니다.
 
-### Creating Indexes for Better Performance
+### 성능 개선을 위한 인덱스 생성 {#creating-indexes-for-better-performance}
 
-Let's add some indexes to improve query performance:
+쿼리 성능을 개선할 인덱스를 몇 개 추가합니다.
 
 ```sql
 -- Create an index on the Name column of the Track table
@@ -626,13 +626,13 @@ CREATE INDEX idx_customer_email ON Customer USING HASH (Email);
 SELECT * FROM system.indexes;
 ```
 
-Indexes improve query performance, but come with maintenance costs. Each write operation must also update all indexes. Choose indexes that support your most common query patterns rather than indexing everything.
+인덱스는 쿼리 성능을 개선하지만 유지 관리 비용이 따릅니다. 쓰기 작업이 발생할 때마다 모든 인덱스를 함께 업데이트해야 합니다. 모든 컬럼에 인덱스를 만들기보다는, 가장 자주 실행하는 쿼리 패턴을 지원하는 인덱스를 선택하세요.
 
-## Creating a Dashboard Using SQL
+## SQL로 대시보드 만들기 {#creating-a-dashboard-using-sql}
 
-Let's create SQL queries that could be used for a music store dashboard. These queries could be saved and run periodically to generate reports.
+음악 스토어 대시보드에 사용할 수 있는 SQL 쿼리를 작성합니다. 이 쿼리는 저장해 두었다가 주기적으로 실행해 보고서를 생성할 수 있습니다.
 
-### Monthly Sales Summary
+### 월별 매출 요약 {#monthly-sales-summary}
 
 ```sql
 -- Monthly sales summary for the last 12 months
@@ -655,9 +655,9 @@ ORDER BY
     YearMonth DESC;
 ```
 
-This query formats the year and month into a sortable string (YYYY-MM) while calculating several key business metrics.
+이 쿼리는 연도와 월을 정렬 가능한 문자열(YYYY-MM)로 만들면서 주요 비즈니스 메트릭 몇 가지를 함께 계산합니다.
 
-### Top Selling Genres
+### 최다 판매 장르 {#top-selling-genres}
 
 ```sql
 -- Top selling genres by revenue
@@ -674,7 +674,7 @@ ORDER BY
     Revenue DESC;
 ```
 
-### Sales Performance by Employee
+### 직원별 판매 실적 {#sales-performance-by-employee}
 
 ```sql
 -- Sales performance by employee
@@ -694,7 +694,7 @@ ORDER BY
     TotalSales DESC;
 ```
 
-### Top 20 Longest Tracks with Genres
+### 장르별 최장 트랙 20곡 {#top-20-longest-tracks-with-genres}
 
 ```sql
 -- Top 20 longest tracks with genre information
@@ -714,7 +714,7 @@ LIMIT
     20;
 ```
 
-### Customer Purchase Patterns by Month
+### 월별 고객 구매 패턴 {#customer-purchase-patterns-by-month}
 
 ```sql
 -- Customer purchase patterns by month
@@ -740,13 +740,13 @@ ORDER BY
     c.CustomerId, YearMonth;
 ```
 
-## Performance Tuning with Colocated Tables
+## 콜로케이션된 테이블로 성능 튜닝하기 {#performance-tuning-with-colocated-tables}
 
-One of the key advantages of Ignite is its ability to optimize joins through data colocation. Let's explore this with our existing colocated tables.
+Ignite의 핵심 장점 중 하나는 데이터 콜로케이션으로 조인을 최적화하는 능력입니다. 기존에 콜로케이션된 테이블로 이를 살펴봅니다.
 
-### Colocated Queries
+### 콜로케이션된 쿼리 {#colocated-queries}
 
-Let's start by looking at a query where there is a mismatch in the colocation strategy.
+먼저 콜로케이션 전략이 어긋난 쿼리를 살펴봅니다.
 
 ```sql
 --This is an example of a poorly created table.
@@ -760,13 +760,13 @@ CREATE TABLE InvoiceLine (
 ) COLOCATE BY (InvoiceId) ZONE Chinook;
 ```
 
-If we create the `InvoiceLine` table to be colocated by InvoiceId, we end up with a mismatch for our query.
+`InvoiceLine` 테이블을 InvoiceId 기준으로 콜로케이션하면, 쿼리에 불일치가 발생합니다.
 
-* Album is colocated by ArtistId
-* Track is colocated by AlbumId
-* InvoiceLine is colocated by InvoiceId
+* Album은 ArtistId를 기준으로 콜로케이션됩니다
+* Track은 AlbumId를 기준으로 콜로케이션됩니다
+* InvoiceLine은 InvoiceId를 기준으로 콜로케이션됩니다
 
-This means that when you run a query joining InvoiceLine, Track, and Album, the data might be spread across different nodes because they're colocated on different keys. Our query is looking for invoice ID 1, then joining with Track and Album, but these tables are colocated on different keys.
+즉, InvoiceLine·Track·Album을 조인하는 쿼리를 실행하면, 각 테이블이 서로 다른 키로 콜로케이션되어 있어 데이터가 여러 노드에 흩어져 있을 수 있습니다. 이 쿼리는 invoice ID 1을 조회한 다음 Track, Album과 조인하지만, 이 테이블은 서로 다른 키로 콜로케이션되어 있습니다.
 
 ```sql
 EXPLAIN PLAN FOR
@@ -805,31 +805,31 @@ GROUP BY
 ╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
 ```
 
-#### Key Observations in the Execution Plan
+#### 실행 계획의 주요 관찰 사항 {#key-observations-in-the-execution-plan}
 
-**ColocatedHashAggregate Operation**: The plan uses a `ColocatedHashAggregate` operation, which indicates Ignite recognizes that portions of the aggregation can happen on colocated data before results are combined. This reduces network transfer during the `GROUP BY` operation.
+**ColocatedHashAggregate 연산**: 이 실행 계획은 `ColocatedHashAggregate` 연산을 사용합니다. 이는 결과를 합치기 전에 콜로케이션된 데이터에서 집계 일부를 수행할 수 있음을 Ignite가 인식했다는 뜻입니다. 이렇게 하면 `GROUP BY` 연산 중 네트워크 전송이 줄어듭니다.
 
-**Exchange Operations**: Several `Exchange(distribution=[single])` operations appear in the plan, indicating data movement between nodes is still necessary. These operations are applied to the Album table, Track table, and InvoiceLine filtered results.
+**Exchange 연산**: 실행 계획에 `Exchange(distribution=[single])` 연산이 여러 번 나타나는데, 이는 노드 간 데이터 이동이 여전히 필요하다는 뜻입니다. 이 연산은 Album 테이블, Track 테이블, 그리고 필터링된 InvoiceLine 결과에 적용됩니다.
 
-**Join Implementation**: The plan shows a combination of `HashJoin` and `MergeJoin` operations rather than nested loop joins. The optimizer has determined these join types are more efficient for the data volumes involved:
+**조인 구현**: 실행 계획은 중첩 루프 조인 대신 `HashJoin`과 `MergeJoin` 연산을 조합해 사용합니다. 옵티마이저는 해당 데이터 양에서 이 조인 방식이 더 효율적이라고 판단했습니다.
 
-* HashJoin for joining Track with Album
-* MergeJoin for joining the above result with InvoiceLine
+* Track과 Album을 조인할 때는 HashJoin
+* 위 결과를 InvoiceLine과 조인할 때는 MergeJoin
 
-**Efficient Data Access**: The query uses an `IndexScan` with the `IDX_INVOICELINE_INVOICE_TRACK` index rather than a full table scan on InvoiceLine. This provides:
+**효율적인 데이터 접근**: 이 쿼리는 InvoiceLine에 대해 전체 테이블 스캔 대신 `IDX_INVOICELINE_INVOICE_TRACK` 인덱스를 사용하는 `IndexScan`을 활용합니다. 이 방식은 다음과 같은 이점을 제공합니다.
 
-* Efficient filtering with `searchBounds: [ExactBounds [bound=1], null]` for InvoiceId = 1
-* Pre-sorted results with `collation: [INVOICEID ASC, TRACKID ASC]`
+* InvoiceId = 1에 대해 `searchBounds: [ExactBounds [bound=1], null]`을 사용한 효율적인 필터링
+* `collation: [INVOICEID ASC, TRACKID ASC]`로 미리 정렬된 결과
 
-**Row Count Estimation**: There appears to be a significant increase in estimated row counts after joins:
+**행 수 추정**: 조인 이후 예상 행 수가 크게 증가하는 것으로 나타납니다.
 
-* Initial InvoiceLine filtered rows: 746
-* After HashJoin with Album: 182,331
-* After MergeJoin with Track: 20,400,668
+* 필터링된 초기 InvoiceLine 행 수: 746
+* Album과 HashJoin 후: 182,331
+* Track과 MergeJoin 후: 20,400,668
 
-### Improved Cololocation Strategy
+### 개선된 콜로케이션 전략 {#improved-cololocation-strategy}
 
-However, if we create the `InvoiceLine` table to be colocated by `TrackId`, we dramaticly optimize our query.
+하지만 `InvoiceLine` 테이블을 `TrackId` 기준으로 콜로케이션하면 쿼리가 크게 최적화됩니다.
 
 ```sql
 --This table was already created on an earlier step.
@@ -843,7 +843,7 @@ CREATE TABLE InvoiceLine (
 ) COLOCATE BY (TrackId) ZONE Chinook;
 ```
 
-And run `EXPLAIN PLAN FOR` again...
+그리고 `EXPLAIN PLAN FOR`를 다시 실행합니다...
 
 ```sql
 EXPLAIN PLAN FOR
@@ -882,94 +882,94 @@ GROUP BY
 ╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
 ```
 
-#### Key Observations in the Execution Plan
+#### 실행 계획의 주요 관찰 사항 {#key-observations-in-the-execution-plan-1}
 
-**ColocatedHashAggregate Operation**: The plan uses a `ColocatedHashAggregate` operation, which indicates Ignite recognizes that portions of the aggregation can happen on colocated data before results are combined. This reduces network transfer during the `GROUP BY` operation.
+**ColocatedHashAggregate 연산**: 이 실행 계획은 `ColocatedHashAggregate` 연산을 사용합니다. 이는 결과를 합치기 전에 콜로케이션된 데이터에서 집계 일부를 수행할 수 있음을 Ignite가 인식했다는 뜻입니다. 이렇게 하면 `GROUP BY` 연산 중 네트워크 전송이 줄어듭니다.
 
-**Improved Row Count Estimates**: Notice the dramatic improvement in row count estimates, which now show just 1 row at each step. This indicates the optimizer has much better statistics and understanding of the actual data distribution compared to the original plan that estimated millions of rows.
+**개선된 행 수 추정치**: 행 수 추정치가 크게 개선되어, 이제 각 단계에서 1행만 표시되는 점에 주목하세요. 이는 수백만 행을 추정했던 기존 실행 계획보다 옵티마이저가 실제 데이터 분포에 대한 통계와 이해가 훨씬 정확해졌음을 보여줍니다.
 
-**Join Implementation**: The plan shows a combination of `HashJoin` and `MergeJoin` operations:
+**조인 구현**: 실행 계획은 `HashJoin`과 `MergeJoin` 연산의 조합을 보여줍니다.
 
-* HashJoin for joining Track with InvoiceLine
-* MergeJoin for joining the above result with Album
+* Track과 InvoiceLine을 조인할 때는 HashJoin
+* 위 결과를 Album과 조인할 때는 MergeJoin
 
-**Efficient Index Usage**: The query now uses the composite index `IDX_TRACK_ALBUMID_NAME` on the Track table, providing:
+**효율적인 인덱스 사용**: 이 쿼리는 이제 Track 테이블의 복합 인덱스 `IDX_TRACK_ALBUMID_NAME`을 사용하며, 다음과 같은 이점을 제공합니다.
 
-* Efficient sorted access by AlbumId and Name
-* Direct access to the fields needed for the join and select operations
+* AlbumId와 Name 기준의 효율적인 정렬 접근
+* 조인과 SELECT 연산에 필요한 필드에 대한 직접 접근
 
-**Exchange Operations**: While Exchange operations still appear in the plan, the estimated row counts are now minimal (just 1 row per exchange). This suggests much less data movement between nodes compared to the original plan where millions of rows were estimated to be transferred.
+**Exchange 연산**: Exchange 연산은 실행 계획에 여전히 나타나지만, 예상 행 수는 이제 최소 수준(교환당 1행)입니다. 이는 수백만 행이 전송될 것으로 추정됐던 기존 계획보다 노드 간 데이터 이동이 훨씬 적다는 것을 시사합니다.
 
-#### Colocation Impact
+#### 콜로케이션 영향 {#colocation-impact}
 
-The substantial improvement in this execution plan demonstrates the power of proper data colocation in Ignite. By:
+이 실행 계획에서 나타난 큰 개선은 Ignite에서 적절한 데이터 콜로케이션이 얼마나 효과적인지 보여줍니다. 방법은 다음과 같습니다.
 
-1. Structuring the query to join the tables in the optimal order (Track → Album → InvoiceLine)
-2. Creating appropriate supporting indexes
-3. Ensuring proper colocation between related tables
+1. 테이블을 최적의 순서(Track → Album → InvoiceLine)로 조인하도록 쿼리를 구성
+2. 적절한 보조 인덱스를 생성
+3. 관련 테이블 간 올바른 콜로케이션을 보장
 
-We've achieved a dramatic reduction in estimated row counts and data movement. The execution plan now shows streamlined operations with minimal row estimates at each step, indicating an efficient execution path that takes advantage of data locality.
+이를 통해 예상 행 수와 데이터 이동이 크게 줄었습니다. 실행 계획은 이제 각 단계에서 최소한의 행 추정치로 간소화된 연산을 보여주며, 이는 데이터 지역성을 활용하는 효율적인 실행 경로임을 나타냅니다.
 
-This optimization approach highlights three key principles for optimal performance in distributed SQL databases:
+이러한 최적화 접근 방식은 분산 SQL 데이터베이스에서 최적의 성능을 내기 위한 세 가지 핵심 원칙을 보여줍니다.
 
-* Proper colocation of related data
-* Supporting indexes aligned with join patterns
-* Query structure that follows the colocation model
+* 관련 데이터의 올바른 콜로케이션
+* 조인 패턴에 맞춘 보조 인덱스
+* 콜로케이션 모델을 따르는 쿼리 구조
 
-## Cleaning Up
+## 정리하기 {#cleaning-up}
 
-When you are finished with the Ignite SQL CLI, you can exit by typing:
+Ignite SQL CLI 사용을 마쳤다면, 다음을 입력해 종료할 수 있습니다.
 
 ```sql
 exit;
 ```
 
-This will return you to the Ignite CLI. To exit the Ignite CLI, type:
+이렇게 하면 Ignite CLI로 돌아갑니다. Ignite CLI를 종료하려면 다음을 입력하세요.
 
 ```bash
 exit
 ```
 
-To stop the Ignite cluster, run the following command in your terminal:
+Ignite 클러스터를 중지하려면 터미널에서 다음 명령을 실행하세요.
 
 ```bash
 docker compose down
 ```
 
-This will stop and remove the Docker containers for your Ignite cluster.
+이 명령은 Ignite 클러스터의 Docker 컨테이너를 중지하고 제거합니다.
 
-## Best Practices for Ignite SQL
+## Ignite SQL 모범 사례 {#best-practices-for-ignite-sql}
 
-To get the most out of Ignite SQL, follow these best practices:
+Ignite SQL을 최대한 활용하려면 다음 모범 사례를 따르세요.
 
-### Schema Design
+### 스키마 설계 {#schema-design}
 
-* Use appropriate colocation for tables that are frequently joined
-* Choose primary keys that distribute data evenly across the cluster
-* Design with query patterns in mind, especially for large-scale deployments
+* 자주 조인되는 테이블에는 적절한 콜로케이션을 사용하세요
+* 클러스터 전체에 데이터를 고르게 분산하는 기본 키를 선택하세요
+* 특히 대규모 배포에서는 쿼리 패턴을 염두에 두고 설계하세요
 
-### Query Optimization
+### 쿼리 최적화 {#query-optimization}
 
-* Create indexes for columns used in `WHERE`, `JOIN`, and `ORDER BY` clauses
-* Use the `EXPLAIN` statement to analyze and optimize your queries
-* Avoid cartesian products and inefficient join conditions
+* `WHERE`, `JOIN`, `ORDER BY` 절에서 사용하는 컬럼에는 인덱스를 생성하세요
+* `EXPLAIN` 문으로 쿼리를 분석하고 최적화하세요
+* 카티션 곱과 비효율적인 조인 조건을 피하세요
 
-### Transaction Management
+### 트랜잭션 관리 {#transaction-management}
 
-* Keep transactions as short as possible
-* Do not hold transactions open during user think time
-* Group related operations into a single transaction for atomicity
+* 트랜잭션은 가능한 한 짧게 유지하세요
+* 사용자 입력을 기다리는 동안 트랜잭션을 열어 두지 마세요
+* 원자성을 위해 관련 작업을 하나의 트랜잭션으로 묶으세요
 
-### Resource Management
+### 리소스 관리 {#resource-management}
 
-* Monitor query performance in production
-* Consider partitioning strategies for very large tables
-* Use appropriate data types to minimize storage requirements
+* 프로덕션 환경에서 쿼리 성능을 모니터링하세요
+* 매우 큰 테이블에는 파티셔닝 전략을 고려하세요
+* 저장 공간 요구량을 최소화하려면 적절한 데이터 타입을 사용하세요
 
-## What's Next
+## 다음 단계 {#whats-next}
 
-Ignite's SQL capabilities make it a powerful platform for building distributed applications that require high throughput, low latency, and strong consistency. By following the patterns and practices in this guide, you can leverage Ignite SQL to build scalable, resilient systems.
+Ignite의 SQL 기능은 고처리량, 낮은 지연, 강한 일관성을 요구하는 분산 애플리케이션을 구축하기 위한 플랫폼입니다. 이 가이드의 패턴과 방식을 따르면 Ignite SQL로 확장 가능하고 복원력 있는 시스템을 구축할 수 있습니다.
 
-Remember that Ignite is not just a SQL database. It's a distributed computing platform with capabilities beyond what we've covered here. As you become more comfortable with Ignite SQL, you may want to explore other features such as compute grid, machine learning, and stream processing.
+Ignite는 단순한 SQL 데이터베이스가 아니라는 점을 기억하세요. 여기서 다룬 것 이상의 기능을 갖춘 분산 컴퓨팅 플랫폼입니다. Ignite SQL에 익숙해지면, 컴퓨트 그리드, 머신러닝, 스트림 처리 같은 다른 기능도 살펴보고 싶어질 것입니다.
 
-Happy querying!
+즐거운 쿼리 작업 되세요!

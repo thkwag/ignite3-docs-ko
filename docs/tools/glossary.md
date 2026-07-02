@@ -1,91 +1,91 @@
 ---
 id: glossary
-title: Glossary
+title: 용어집
 sidebar_position: 3
 ---
 
-# Glossary
+# 용어집
 
 ## C
 
-**Cache**
-: Caches are in-memory temporary storage designed for rapid response and reducing latency when working with databases.
+**캐시(Cache)**
+: 캐시는 데이터베이스 작업 시 빠르게 응답하고 지연 시간을 줄이도록 설계된 인메모리 임시 저장소입니다.
 
-**Cluster management group**
-: A subset of Ignite nodes in a RAFT group. Cluster group leader is responsible for managing nodes that enter or leave an Ignite cluster.
+**클러스터 관리 그룹(Cluster management group)**
+: RAFT 그룹에 속한 Ignite 노드의 부분집합입니다. 클러스터 그룹 리더는 Ignite 클러스터에 참여하거나 이탈하는 노드를 관리하는 역할을 맡습니다.
 
-**Cluster node**
-: A cluster node is the base computational and data storage unit in Ignite.
+**클러스터 노드(Cluster node)**
+: 클러스터 노드는 Ignite에서 연산과 데이터 저장의 기본 단위입니다.
 
-**Columnar storage**
-: A mechanism that is optimized for quick access to columns of data. It can be used to drastically improve performance when reading a specific column's values from a large number of rows.
+**컬럼형 스토리지(Columnar storage)**
+: 데이터 컬럼에 빠르게 접근하도록 최적화된 방식입니다. 많은 행 중에서 특정 컬럼의 값만 읽을 때 성능을 크게 높일 수 있습니다.
 
-**Coordinator node**
-: The node that received the distributed computing job, manages its execution, and reports the results to the client.
+**코디네이터 노드(Coordinator node)**
+: 분산 컴퓨트 작업을 받아 실행을 관리하고, 그 결과를 클라이언트에 보고하는 노드입니다.
 
 ## D
 
-**Data colocation**
-: When data is colocated, it means that data items that are relevant to each other are placed on the same node in the cluster.
+**데이터 콜로케이션(Data colocation)**
+: 데이터를 콜로케이션한다는 것은 서로 연관된 데이터 항목을 클러스터의 동일한 노드에 배치한다는 의미입니다.
 
-**Data region**
-: Used to control the amount of memory available for storage. Depending on the type of storage a data region is assigned to, the data may be loaded into RAM or stored on disk.
+**데이터 영역(Data region)**
+: 스토리지에 사용할 수 있는 메모리 양을 제어하는 데 사용합니다. 데이터 영역에 할당된 스토리지 유형에 따라 데이터가 RAM에 적재되거나 디스크에 저장될 수 있습니다.
 
-**Data rebalance**
-: The process of redistributing partitions equally across all nodes in a cluster.
+**데이터 리밸런싱(Data rebalance)**
+: 클러스터의 모든 노드에 파티션을 균등하게 재분배하는 과정입니다.
 
-**Distribution zone**
-: Distribution zone controls how data is placed into partitions, and how partitions are distributed on nodes on the cluster. Distribution zones are part of cluster configuration, and can be modified with [SQL commands](/sql/reference/language-definition/distribution-zones).
+**분산 영역(Distribution zone)**
+: 분산 영역은 데이터가 파티션에 배치되는 방식과 파티션이 클러스터의 노드에 분산되는 방식을 제어합니다. 분산 영역은 클러스터 구성의 일부이며 [SQL 명령어](/sql/reference/language-definition/distribution-zones)로 변경할 수 있습니다.
 
 ## L
 
-**Logical Topology**
-: A set of nodes connected into a Raft group is called a logical topology. These nodes follow the Raft leader and form an Ignite cluster.
+**논리 토폴로지(Logical Topology)**
+: RAFT 그룹으로 연결된 노드 집합을 논리 토폴로지라고 합니다. 이 노드는 RAFT 리더를 따르며 Ignite 클러스터를 구성합니다.
 
 ## M
 
-**Metastore**
-: Metastore holds additional information about Ignite cluster that is required for its operation, for example the number and type of data regions configured.
+**메타스토리지(Metastore)**
+: 메타스토리지는 Ignite 클러스터 운영에 필요한 추가 정보(예: 구성된 데이터 영역의 수와 유형)를 보관합니다.
 
 ## P
 
-**Persistent Storage**
-: Persistent storage is the type of memory storage that is preserved regardless of cluster state. Some portion of data will be loaded into RAM to improve performance.
+**영속 스토리지(Persistent Storage)**
+: 영속 스토리지는 클러스터 상태와 무관하게 유지되는 메모리 저장소 유형입니다. 성능 향상을 위해 데이터 일부는 RAM에 적재됩니다.
 
-**Physical topology**
-: When nodes are started, they find each other and form a cluster on a physical topology. All nodes on a physical topology can form a Ignite cluster, but are not necessarily part of it.
+**물리 토폴로지(Physical topology)**
+: 노드가 시작되면 서로를 찾아 물리 토폴로지 위에 클러스터를 구성합니다. 물리 토폴로지에 있는 모든 노드가 Ignite 클러스터를 구성할 수 있지만, 반드시 그 클러스터에 속하는 것은 아닙니다.
 
-**Primary Storage**
-: Primary storage is the database to which data is written and from which it is usually read.
+**기본 스토리지(Primary Storage)**
+: 기본 스토리지는 데이터가 기록되고 보통 그 데이터를 읽어 오는 대상이 되는 데이터베이스입니다.
 
 ## R
 
 **RAFT**
-: Raft is a consensus algorithm that is used by Ignite to manage Ignite cluster. It provides a high degree of stability and data consistency by using elections to guarantee that there is always only one cluster leader that had an authoritative log of all transactions performed on the cluster.
+: RAFT는 Ignite가 클러스터를 관리할 때 사용하는 합의(consensus) 알고리즘으로, 선출을 통해 클러스터에서 수행된 모든 트랜잭션의 신뢰할 수 있는 로그를 보유한 리더가 항상 하나만 존재하도록 보장하여 높은 수준의 안정성과 데이터 일관성을 제공합니다.
 
-**RAFT Log**
-: Raft log is an append only collection of all operations performed on the cluster. Leader log is the sole authority in the cluster, and overwrites any contradicting logs on follower nodes.
+**RAFT 로그(RAFT Log)**
+: RAFT 로그는 클러스터에서 수행된 모든 작업을 기록하는 추가 전용(append-only) 모음입니다. 리더의 로그가 클러스터에서 유일한 권위를 가지며, 팔로워 노드의 로그와 내용이 다르면 이를 덮어씁니다.
 
-**Rebalance**
-: The process of relocation partitions between nodes to guarantee consistent data distribution after cluster topology changes.
+**리밸런싱(Rebalance)**
+: 클러스터 토폴로지가 변경된 후 데이터가 일관되게 분포하도록 노드 간에 파티션을 재배치하는 과정입니다.
 
-**Replica storage**
-: Provides a dynamically expanded copy of the primary storage, which can be set up to use a different storage type for better performance.
+**복제본 스토리지(Replica storage)**
+: 기본 스토리지를 동적으로 확장한 사본을 제공하며, 성능을 높이기 위해 다른 스토리지 유형을 사용하도록 구성할 수 있습니다.
 
-**Rolling upgrade**
-: An update of the Ignite version without cluster-wide downtime.
+**롤링 업그레이드(Rolling upgrade)**
+: 클러스터 전체 다운타임 없이 Ignite 버전을 업데이트하는 방식입니다.
 
 ## S
 
-**Snapshot**
-: A backup of data in an Ignite cluster. A snapshot taken on one cluster can be applied to another cluster.
+**스냅샷(Snapshot)**
+: Ignite 클러스터 데이터의 백업입니다. 한 클러스터에서 생성한 스냅샷을 다른 클러스터에 적용할 수 있습니다.
 
 ## U
 
-**Update buffer**
-: Buffer that stores transactions to the primary storage before committing them to a replica storage. This reduces the number of transactions added to the latter.
+**업데이트 버퍼(Update buffer)**
+: 기본 스토리지에 대한 트랜잭션을 복제본 스토리지에 커밋하기 전에 저장하는 버퍼입니다. 이렇게 하면 복제본 스토리지에 추가되는 트랜잭션 수를 줄일 수 있습니다.
 
 ## V
 
-**Volatile storage**
-: Memory storage that is only preserved while the cluster is active. Loss of power or unexpected cluster shutdown will lead to loss of data.
+**휘발성 스토리지(Volatile storage)**
+: 클러스터가 활성 상태인 동안에만 유지되는 메모리 스토리지입니다. 전원이 끊기거나 클러스터가 예기치 않게 종료되면 데이터가 손실됩니다.

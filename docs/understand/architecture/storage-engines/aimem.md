@@ -1,14 +1,14 @@
 ---
 id: aimem
-title: AIMemory Storage Engine
+title: AIMemory 스토리지 엔진
 sidebar_position: 3
 ---
 
-# AIMemory Storage Engine
+# AIMemory 스토리지 엔진
 
-The AIMemory engine (`aimem`) stores all data in off-heap memory using B+ tree structures. Data is volatile and lost on node shutdown. Use this engine for caching, temporary tables, or workloads where persistence is unnecessary.
+AIMemory 엔진(`aimem`)은 B+ 트리 구조를 사용해 모든 데이터를 오프힙 메모리에 저장합니다. 데이터는 휘발성이며 노드가 종료되면 사라집니다. 캐싱, 임시 테이블, 또는 영속성이 필요 없는 워크로드에 이 엔진을 사용하세요.
 
-## Memory Architecture
+## 메모리 아키텍처 {#memory-architecture}
 
 ```mermaid
 flowchart TB
@@ -39,35 +39,35 @@ flowchart TB
     FL --> S1 & S2 & S3
 ```
 
-Key characteristics:
+주요 특징:
 
-- Memory allocated in segments, starting with `initSizeBytes` and expanding on demand
-- Up to 16 segments per data region, minimum 256 MB per segment expansion
-- Default page size: 16 KB (configurable from 1 KB to 16 KB, must be power of 2)
-- 32-byte overhead per page for header and locking structures
+- 메모리는 세그먼트 단위로 할당되며, `initSizeBytes`로 시작해 필요에 따라 확장됩니다
+- 데이터 영역당 세그먼트는 최대 16개이며, 세그먼트 확장 단위는 최소 256 MB입니다
+- 기본 페이지 크기는 16 KB이며, 1 KB~16 KB 범위에서 2의 거듭제곱 값으로 구성할 수 있습니다
+- 페이지당 헤더와 락 구조에 32바이트의 오버헤드가 발생합니다
 
-## Profile Configuration
+## 프로파일 구성 {#profile-configuration}
 
-| Property | Default | Description |
+| 속성 | 기본값 | 설명 |
 |----------|---------|-------------|
-| `engine` | - | Must be `"aimem"` |
-| `initSizeBytes` | Dynamic | Initial memory allocation. Defaults to `maxSizeBytes` value |
-| `maxSizeBytes` | Dynamic | Maximum memory. Defaults to `max(256 MB, 20% of physical RAM)` |
+| `engine` | - | `"aimem"`이어야 합니다 |
+| `initSizeBytes` | 동적 | 초기 메모리 할당량. 기본값은 `maxSizeBytes` 값입니다 |
+| `maxSizeBytes` | 동적 | 최대 메모리. 기본값은 `max(256 MB, 20% of physical RAM)`입니다 |
 
-## Engine Configuration
+## 엔진 구성 {#engine-configuration}
 
-Page size is configured at the engine level and applies to all aimem profiles:
+페이지 크기는 엔진 수준에서 구성되며 모든 aimem 프로파일에 적용됩니다.
 
-| Property | Default | Description |
+| 속성 | 기본값 | 설명 |
 |----------|---------|-------------|
-| `pageSizeBytes` | 16384 | Page size in bytes (1024 to 16384, power of 2) |
+| `pageSizeBytes` | 16384 | 페이지 크기(바이트 단위, 1024~16384, 2의 거듭제곱) |
 
 ```bash
 # Configure engine-level page size
 node config update ignite.storage.engines.aimem.pageSizeBytes=8192
 ```
 
-## Configuration Example
+## 구성 예시 {#configuration-example}
 
 ```json
 {
@@ -91,7 +91,7 @@ node config update ignite.storage.engines.aimem.pageSizeBytes=8192
 node config update "ignite.storage.profiles:{cache_profile{engine:aimem,maxSizeBytes:1073741824}}"
 ```
 
-## Usage
+## 사용법 {#usage}
 
 ```sql
 -- Create a zone using the volatile profile

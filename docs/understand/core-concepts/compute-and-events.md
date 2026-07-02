@@ -1,12 +1,12 @@
 ---
 id: compute-and-events
-title: Compute and Events
+title: 컴퓨트와 이벤트
 sidebar_position: 5
 ---
 
-Ignite 3 provides distributed compute for executing jobs across cluster nodes and an event system for monitoring cluster activity. The compute API uses an asynchronous, priority-based execution model built on `CompletableFuture`.
+Ignite 3는 클러스터 노드 전체에서 작업을 실행하는 분산 컴퓨트와 클러스터 활동을 모니터링하는 이벤트 시스템을 제공합니다. 컴퓨트 API는 `CompletableFuture`를 기반으로 하는 비동기 우선순위 기반 실행 모델을 사용합니다.
 
-## Distributed Compute Architecture
+## 분산 컴퓨트 아키텍처 {#distributed-compute-architecture}
 
 ```mermaid
 flowchart TB
@@ -36,19 +36,19 @@ flowchart TB
     Bcast --> N1 & N2 & N3
 ```
 
-Key characteristics:
+주요 특징:
 
-- Asynchronous execution returning `CompletableFuture<R>`
-- Job placement based on target type (any node, colocated, broadcast)
-- Priority-based queue with configurable thread pool
-- Automatic failover on node departure
-- Map-reduce support for split/aggregate patterns
+- `CompletableFuture<R>`를 반환하는 비동기 실행
+- 대상 유형(모든 노드, 콜로케이션, 브로드캐스트)에 따른 작업 배치
+- 구성 가능한 스레드 풀을 사용하는 우선순위 기반 큐
+- 노드 이탈 시 자동 장애 조치
+- 분할/집계 패턴을 위한 맵리듀스 지원
 
-## Job Execution Model
+## 작업 실행 모델 {#job-execution-model}
 
-### ComputeJob Interface
+### ComputeJob 인터페이스 {#computejob-interface}
 
-Jobs implement the `ComputeJob<T, R>` interface:
+작업은 `ComputeJob<T, R>` 인터페이스를 구현합니다:
 
 ```java
 public interface ComputeJob<T, R> {
@@ -59,15 +59,15 @@ public interface ComputeJob<T, R> {
 }
 ```
 
-The `JobExecutionContext` provides:
+`JobExecutionContext`는 다음을 제공합니다.
 
-| Property | Description |
+| 속성 | 설명 |
 |----------|-------------|
-| `ignite()` | Ignite instance for cluster operations |
-| `isCancelled()` | Check if cancellation requested |
-| `partition()` | Partition info for colocated jobs |
+| `ignite()` | 클러스터 연산을 위한 Ignite 인스턴스 |
+| `isCancelled()` | 취소 요청 여부 확인 |
+| `partition()` | 콜로케이션 작업의 파티션 정보 |
 
-Example job implementation:
+작업 구현 예시:
 
 ```java
 public class AccountBalanceJob implements ComputeJob<Long, Double> {
@@ -89,9 +89,9 @@ public class AccountBalanceJob implements ComputeJob<Long, Double> {
 }
 ```
 
-### Job Targets
+### 작업 대상 {#job-targets}
 
-Job targets determine where jobs execute:
+작업 대상은 작업이 실행될 위치를 결정합니다.
 
 ```mermaid
 flowchart LR
@@ -102,15 +102,15 @@ flowchart LR
     end
 ```
 
-| Target | Use Case | Return Type |
+| 대상 | 사용 사례 | 반환 타입 |
 |--------|----------|-------------|
-| **AnyNode** | Stateless computation | `JobExecution<R>` |
-| **Colocated** | Data-local processing | `JobExecution<R>` |
-| **Broadcast** | Cluster-wide operations | `BroadcastExecution<R>` |
+| **모든 노드** | 상태 비저장 연산 | `JobExecution<R>` |
+| **콜로케이션** | 데이터 근접 처리 | `JobExecution<R>` |
+| **브로드캐스트** | 클러스터 전역 작업 | `BroadcastExecution<R>` |
 
-#### Any Node Execution
+#### 모든 노드 실행 {#any-node-execution}
 
-Execute on any available node:
+사용 가능한 노드 중 하나에서 실행합니다.
 
 ```java
 JobDescriptor<Long, Double> descriptor = JobDescriptor
@@ -123,9 +123,9 @@ JobExecution<Double> execution = client.compute()
 Double balance = execution.resultAsync().join();
 ```
 
-#### Colocated Execution
+#### 콜로케이션 실행 {#colocated-execution}
 
-Execute on the node holding specific data:
+특정 데이터를 보유한 노드에서 실행합니다.
 
 ```java
 // Execute where account 42's data lives
@@ -136,11 +136,11 @@ JobExecution<Double> execution = client.compute().submit(
 );
 ```
 
-This eliminates network transfer for data-intensive operations.
+데이터 집약적 작업에서 네트워크 전송을 없앱니다.
 
-#### Broadcast Execution
+#### 브로드캐스트 실행 {#broadcast-execution}
 
-Execute on all specified nodes:
+지정한 모든 노드에서 실행합니다.
 
 ```java
 BroadcastExecution<String> execution = client.compute().submitBroadcast(
@@ -153,9 +153,9 @@ BroadcastExecution<String> execution = client.compute().submitBroadcast(
 Map<ClusterNode, String> results = execution.resultsAsync().join();
 ```
 
-## Job Scheduling
+## 작업 스케줄링 {#job-scheduling}
 
-Jobs execute through a priority-based queue system:
+작업은 우선순위 기반 큐 시스템을 통해 실행됩니다.
 
 ```mermaid
 flowchart TB
@@ -177,17 +177,17 @@ flowchart TB
     P2 --> TN
 ```
 
-Configuration options:
+구성 옵션:
 
-| Setting | Default | Description |
+| 설정 | 기본값 | 설명 |
 |---------|---------|-------------|
-| `threadPoolSize` | max(CPU cores, 8) | Worker thread count |
-| `queueMaxSize` | Integer.MAX_VALUE | Maximum queued jobs |
-| `statesLifetimeMillis` | 60,000 | Job state retention |
+| `threadPoolSize` | max(CPU cores, 8) | 워커 스레드 수 |
+| `queueMaxSize` | Integer.MAX_VALUE | 큐에 담을 수 있는 최대 작업 수 |
+| `statesLifetimeMillis` | 60,000 | 작업 상태 보존 기간 |
 
-### Job Priority
+### 작업 우선순위 {#job-priority}
 
-Set priority when submitting:
+제출 시 우선순위를 설정합니다.
 
 ```java
 JobDescriptor<String, String> descriptor = JobDescriptor
@@ -196,18 +196,18 @@ JobDescriptor<String, String> descriptor = JobDescriptor
     .build();
 ```
 
-Change priority during execution:
+실행 중에 우선순위를 변경합니다.
 
 ```java
 JobExecution<String> execution = client.compute().submit(target, descriptor, arg);
 execution.changePriorityAsync(1);  // Move to higher priority
 ```
 
-Jobs with the same priority execute in FIFO order.
+우선순위가 같은 작업은 FIFO 순서로 실행됩니다.
 
-## Job Failover
+## 작업 장애 조치 {#job-failover}
 
-Ignite automatically handles node failures during job execution:
+Ignite는 작업 실행 중 발생하는 노드 장애를 자동으로 처리합니다.
 
 ```mermaid
 sequenceDiagram
@@ -223,14 +223,14 @@ sequenceDiagram
     N2-->>C: Result
 ```
 
-Failover behavior:
+장애 조치 동작:
 
-- Triggered only on node departure (not job exceptions)
-- Selects next worker from remaining candidates
-- Continues until candidates exhausted
-- Application exceptions propagate to caller without retry
+- 노드 이탈 시에만 실행됨(작업 예외로는 실행되지 않음)
+- 남은 후보 중에서 다음 워커를 선택
+- 후보가 모두 소진될 때까지 계속
+- 애플리케이션 예외는 재시도 없이 호출자에게 전파됨
 
-For application-level retries:
+애플리케이션 수준 재시도를 사용하려면:
 
 ```java
 JobDescriptor<String, String> descriptor = JobDescriptor
@@ -239,9 +239,9 @@ JobDescriptor<String, String> descriptor = JobDescriptor
     .build();
 ```
 
-## Job State Management
+## 작업 상태 관리 {#job-state-management}
 
-Track job execution through states:
+작업 실행 상태를 추적합니다.
 
 ```mermaid
 stateDiagram-v2
@@ -254,7 +254,7 @@ stateDiagram-v2
     CANCELING --> CANCELED: acknowledged
 ```
 
-Query job state:
+작업 상태를 조회합니다.
 
 ```java
 JobExecution<String> execution = client.compute().submit(target, descriptor, arg);
@@ -265,18 +265,18 @@ System.out.println("Created: " + state.createTime());
 System.out.println("Started: " + state.startTime());
 ```
 
-| State | Description |
+| 상태 | 설명 |
 |-------|-------------|
-| QUEUED | Waiting in priority queue |
-| EXECUTING | Running on worker thread |
-| COMPLETED | Finished successfully |
-| FAILED | Terminated with exception |
-| CANCELING | Cancellation in progress |
-| CANCELED | Cancelled by request |
+| QUEUED | 우선순위 큐에서 대기 중 |
+| EXECUTING | 워커 스레드에서 실행 중 |
+| COMPLETED | 성공적으로 완료됨 |
+| FAILED | 예외로 종료됨 |
+| CANCELING | 취소 진행 중 |
+| CANCELED | 요청으로 취소됨 |
 
-## Map-Reduce Tasks
+## 맵리듀스 태스크 {#map-reduce-tasks}
 
-For split/aggregate computation patterns, use `MapReduceTask`:
+분할/집계 연산 패턴에는 `MapReduceTask`를 사용합니다.
 
 ```mermaid
 flowchart TB
@@ -306,7 +306,7 @@ flowchart TB
     Agg --> Output
 ```
 
-Implement the task interface:
+태스크 인터페이스를 구현합니다:
 
 ```java
 public class WordCountTask implements MapReduceTask<String, String, Map<String, Long>, Map<String, Long>> {
@@ -343,7 +343,7 @@ public class WordCountTask implements MapReduceTask<String, String, Map<String, 
 }
 ```
 
-Submit the task:
+태스크를 제출합니다:
 
 ```java
 TaskDescriptor<String, Map<String, Long>> descriptor = TaskDescriptor
@@ -356,11 +356,11 @@ TaskExecution<Map<String, Long>> execution = client.compute()
 Map<String, Long> wordCounts = execution.resultAsync().join();
 ```
 
-## Event System
+## 이벤트 시스템 {#event-system}
 
-Ignite provides an event system for monitoring cluster and compute activity.
+Ignite는 클러스터와 컴퓨트 활동을 모니터링하는 이벤트 시스템을 제공합니다.
 
-### Event Architecture
+### 이벤트 아키텍처 {#event-architecture}
 
 ```mermaid
 flowchart LR
@@ -386,20 +386,20 @@ flowchart LR
     Listeners --> L1 & L2 & L3
 ```
 
-### Compute Events
+### 컴퓨트 이벤트 {#compute-events}
 
-| Event | Trigger |
+| 이벤트 | 트리거 |
 |-------|---------|
-| COMPUTE_JOB_QUEUED | Job added to queue |
-| COMPUTE_JOB_EXECUTING | Job started execution |
-| COMPUTE_JOB_COMPLETED | Job finished successfully |
-| COMPUTE_JOB_FAILED | Job terminated with error |
-| COMPUTE_JOB_CANCELING | Cancellation requested |
-| COMPUTE_JOB_CANCELED | Job cancelled |
+| COMPUTE_JOB_QUEUED | 작업이 큐에 추가됨 |
+| COMPUTE_JOB_EXECUTING | 작업이 실행을 시작함 |
+| COMPUTE_JOB_COMPLETED | 작업이 성공적으로 완료됨 |
+| COMPUTE_JOB_FAILED | 작업이 오류로 종료됨 |
+| COMPUTE_JOB_CANCELING | 취소가 요청됨 |
+| COMPUTE_JOB_CANCELED | 작업이 취소됨 |
 
-### Event Listeners
+### 이벤트 리스너 {#event-listeners}
 
-Register listeners for specific events:
+특정 이벤트에 리스너를 등록합니다.
 
 ```java
 EventListener<ComputeEventParameters> listener = params -> {
@@ -410,14 +410,14 @@ EventListener<ComputeEventParameters> listener = params -> {
 client.compute().listen(IgniteEventType.COMPUTE_JOB_COMPLETED, listener);
 ```
 
-Listener return values:
+리스너 반환값:
 
-| Return | Behavior |
+| 반환값 | 동작 |
 |--------|----------|
-| `false` | Keep listener active |
-| `true` | Remove listener after this event |
+| `false` | 리스너를 계속 활성 상태로 유지 |
+| `true` | 이 이벤트 처리 후 리스너 제거 |
 
-For synchronous handlers:
+동기 핸들러를 사용하려면:
 
 ```java
 EventListener<ComputeEventParameters> listener = EventListener.fromConsumer(params -> {
@@ -425,9 +425,9 @@ EventListener<ComputeEventParameters> listener = EventListener.fromConsumer(para
 });
 ```
 
-## Code Deployment
+## 코드 배포 {#code-deployment}
 
-Jobs require their classes to be available on executing nodes. Deploy code using deployment units:
+작업을 실행하려면 해당 클래스가 실행 노드에서 사용 가능해야 합니다. 배포 단위를 사용해 코드를 배포합니다.
 
 ```java
 // Create deployment unit from JAR
@@ -447,22 +447,22 @@ JobDescriptor<String, String> descriptor = JobDescriptor
     .build();
 ```
 
-## Design Constraints
+## 설계 제약 {#design-constraints}
 
-1. **Stateless jobs**: Jobs should not maintain state between executions. Store state in tables if needed.
+1. **상태 비저장 작업**: 작업은 실행 간 상태를 유지해서는 안 됩니다. 필요하다면 테이블에 상태를 저장하세요.
 
-2. **Serializable arguments**: Job arguments and results must be serializable for network transfer.
+2. **직렬화 가능한 인수**: 작업 인수와 결과는 네트워크 전송을 위해 직렬화할 수 있어야 합니다.
 
-3. **Failover scope**: Automatic failover handles infrastructure failures only. Application exceptions propagate without retry unless `maxRetries` is configured.
+3. **장애 조치 범위**: 자동 장애 조치는 인프라 장애만 처리합니다. `maxRetries`를 구성하지 않으면 애플리케이션 예외는 재시도 없이 전파됩니다.
 
-4. **Event ordering**: Listeners execute in registration order per event, but no global ordering across nodes.
+4. **이벤트 순서**: 리스너는 이벤트별로 등록 순서대로 실행되지만, 노드 간 전역 순서는 보장되지 않습니다.
 
-5. **One-shot listeners**: Return `true` to auto-unsubscribe. Useful for waiting on specific events.
+5. **일회성 리스너**: `true`를 반환하면 자동으로 구독이 해제됩니다. 특정 이벤트를 기다릴 때 유용합니다.
 
-6. **Thread pool bounds**: The executor thread pool is bounded. Long-running jobs can block other jobs.
+6. **스레드 풀 제한**: 실행기 스레드 풀은 크기가 제한되어 있습니다. 오래 실행되는 작업이 다른 작업을 막을 수 있습니다.
 
-## Related Topics
+## 관련 주제 {#related-topics}
 
-- [Compute API](/develop/work-with-data/compute) for detailed API usage
-- [Code Deployment](/develop/work-with-data/code-deployment) for deployment patterns
-- [Events](/develop/work-with-data/events) for event handling details
+- 자세한 API 사용법은 [Compute API](/develop/work-with-data/compute)를 참고하세요
+- 배포 패턴은 [코드 배포](/develop/work-with-data/code-deployment)를 참고하세요
+- 이벤트 처리 세부 사항은 [이벤트](/develop/work-with-data/events)를 참고하세요

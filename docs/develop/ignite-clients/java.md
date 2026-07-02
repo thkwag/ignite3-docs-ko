@@ -1,25 +1,25 @@
 ---
 id: java-client
-title: Java Client
+title: Java 클라이언트
 sidebar_position: 1
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Ignite 3 clients connect to the cluster via a standard socket connection. Unlike Ignite 2.x, there are no separate Thin and Thick clients in Ignite 3. All clients are 'thin'.
+Ignite 3 클라이언트는 표준 소켓 연결로 클러스터에 연결합니다. Ignite 2.x와 달리 Ignite 3에는 씬 클라이언트(thin client)와 씩 클라이언트(thick client)의 구분이 없으며, 모든 클라이언트가 씬 클라이언트입니다.
 
-Clients do not become a part of the cluster topology, never hold any data, and are not used as a destination for compute calculations.
+클라이언트는 클러스터 토폴로지에 합류하지 않고, 데이터를 전혀 보유하지 않으며, 컴퓨트 연산의 대상으로도 사용되지 않습니다.
 
-## Getting Started
+## 시작하기 {#getting-started}
 
-### Prerequisites
+### 사전 요구 사항 {#prerequisites}
 
-To use Java thin client, Java 11 or newer is required.
+Java 씬 클라이언트를 사용하려면 Java 11 이상이 필요합니다.
 
-### Installation
+### 설치 {#installation}
 
-Java client can be added to your project by using maven:
+Java 클라이언트는 Maven으로 프로젝트에 추가합니다:
 
 ```xml
 <dependency>
@@ -29,9 +29,9 @@ Java client can be added to your project by using maven:
 </dependency>
 ```
 
-## Connecting to Cluster
+## 클러스터에 연결 {#connecting-to-cluster}
 
-To initialize a client, use the `IgniteClient` class, and provide it with the configuration:
+클라이언트를 초기화하려면 `IgniteClient` 클래스를 사용하고 구성 정보를 전달합니다:
 
 <Tabs groupId="languages">
 <TabItem value="java" label="Java">
@@ -48,9 +48,9 @@ try (IgniteClient client = IgniteClient.builder()
 </TabItem>
 </Tabs>
 
-## Authentication
+## 인증 {#authentication}
 
-To pass [authentication](/configure-and-operate/configuration/config-authentication) information, use the `IgniteClientAuthenticator` class and pass it to `IgniteClient` builder:
+[인증](/configure-and-operate/configuration/config-authentication) 정보를 전달하려면 `IgniteClientAuthenticator` 클래스를 사용하고 `IgniteClient` 빌더에 전달합니다:
 
 <Tabs groupId="languages">
 <TabItem value="java" label="Java">
@@ -66,9 +66,9 @@ IgniteClient.builder()
 </TabItem>
 </Tabs>
 
-## Logging
+## 로깅 {#logging}
 
-To configure client logging, add `loggerFactory`:
+클라이언트 로깅을 구성하려면 `loggerFactory`를 추가합니다:
 
 ```java
 IgniteClient client = IgniteClient.builder()
@@ -77,15 +77,15 @@ IgniteClient client = IgniteClient.builder()
     .build();
 ```
 
-The client logs connection errors, reconnects, and retries. By default, logging routes to `java.util.logging` (JUL) at INFO level.
+클라이언트는 연결 오류, 재연결, 재시도를 기록합니다. 기본적으로 로깅은 INFO 레벨로 `java.util.logging`(JUL)에 전달됩니다.
 
-For detailed configuration with Logback, Log4j2, or JUL, see [Java Client Logging](../work-with-data/java-client-logging).
+Logback, Log4j2, JUL을 사용한 세부 구성은 [Java 클라이언트 로깅](../work-with-data/java-client-logging)을 참고하세요.
 
-## Client Metrics
+## 클라이언트 메트릭 {#client-metrics}
 
-### Java
+### Java {#java}
 
-When running Java client, you need to enable metrics in the client builder:
+Java 클라이언트를 실행할 때는 클라이언트 빌더에서 메트릭을 활성화해야 합니다:
 
 ```java
 IgniteClient client = IgniteClient.builder()
@@ -94,33 +94,33 @@ IgniteClient client = IgniteClient.builder()
   .build();
 ```
 
-After that, client metrics will be available to any Java monitoring tool, for example [JDK Mission Control](https://www.oracle.com/java/technologies/jdk-mission-control.html).
+활성화 후에는 [JDK Mission Control](https://www.oracle.com/java/technologies/jdk-mission-control.html)과 같은 모든 Java 모니터링 도구에서 클라이언트 메트릭을 사용할 수 있습니다.
 
-#### Available Java Metrics
+#### 사용 가능한 Java 메트릭 {#available-java-metrics}
 
-| Metric name | Description |
+| 메트릭 이름 | 설명 |
 |-------------|-------------|
-| ConnectionsActive | The number of currently active connections. |
-| ConnectionsEstablished | The number of established connections. |
-| ConnectionsLost | The number of connections lost. |
-| ConnectionsLostTimeout | The number of connections lost due to a timeout. |
-| HandshakesFailed | The number of failed handshakes. |
-| HandshakesFailedTimeout | The number of handshakes that failed due to a timeout. |
-| RequestsActive | The number of currently active requests. |
-| RequestsSent | The number of requests sent. |
-| RequestsCompleted | The number of completed requests. Requests are completed once a response is received. |
-| RequestsRetried | The number of request retries. |
-| RequestsFailed | The number of failed requests. |
-| BytesSent | The amount of bytes sent. |
-| BytesReceived | The amount of bytes received. |
-| StreamerBatchesSent | The number of data streamer batches sent. |
-| StreamerItemsSent | The number of data streamer items sent. |
-| StreamerBatchesActive | The number of in-flight data streamer batches. |
-| StreamerItemsQueued | The number of queued data streamer items. |
+| ConnectionsActive | 현재 활성 연결 수. |
+| ConnectionsEstablished | 수립된 연결 수. |
+| ConnectionsLost | 끊어진 연결 수. |
+| ConnectionsLostTimeout | 타임아웃으로 끊어진 연결 수. |
+| HandshakesFailed | 실패한 핸드셰이크 수. |
+| HandshakesFailedTimeout | 타임아웃으로 실패한 핸드셰이크 수. |
+| RequestsActive | 현재 활성 요청 수. |
+| RequestsSent | 전송된 요청 수. |
+| RequestsCompleted | 완료된 요청 수. 요청은 응답을 받으면 완료됩니다. |
+| RequestsRetried | 요청 재시도 수. |
+| RequestsFailed | 실패한 요청 수. |
+| BytesSent | 전송된 바이트 수. |
+| BytesReceived | 수신된 바이트 수. |
+| StreamerBatchesSent | 전송된 데이터 스트리머 배치 수. |
+| StreamerItemsSent | 전송된 데이터 스트리머 항목 수. |
+| StreamerBatchesActive | 전송 중인 데이터 스트리머 배치 수. |
+| StreamerItemsQueued | 대기 중인 데이터 스트리머 항목 수. |
 
-## Client Connection Configuration
+## 클라이언트 연결 구성 {#client-connection-configuration}
 
-There is a number of configuration properties managing the connection between the client and Ignite cluster:
+클라이언트와 Ignite 클러스터 간 연결을 관리하는 구성 속성은 여러 가지가 있습니다:
 
 ```java
 IgniteClient client = IgniteClient.builder()
@@ -134,11 +134,11 @@ IgniteClient client = IgniteClient.builder()
   .build();
 ```
 
-| Configuration name | Description |
+| 구성 이름 | 설명 |
 |--------------------|-------------|
-| connectTimeout | Client connection timeout, in milliseconds. |
-| heartbeatInterval | Heartbeat message interval, in milliseconds. |
-| heartbeatTimeout | Heartbeat message timeout, in milliseconds. |
-| operationTimeout | Operation timeout, in milliseconds. |
-| backgroundReconnectInterval | Background reconnect interval, in milliseconds. |
-| retryPolicy | Retry policy. By default, all read operations are retried up to 16 times, and write operations are not retried. |
+| connectTimeout | 클라이언트 연결 타임아웃(밀리초). |
+| heartbeatInterval | 하트비트 메시지 간격(밀리초). |
+| heartbeatTimeout | 하트비트 메시지 타임아웃(밀리초). |
+| operationTimeout | 작업 타임아웃(밀리초). |
+| backgroundReconnectInterval | 백그라운드 재연결 간격(밀리초). |
+| retryPolicy | 재시도 정책. 기본적으로 모든 읽기 작업은 최대 16회까지 재시도되고, 쓰기 작업은 재시도되지 않습니다. |

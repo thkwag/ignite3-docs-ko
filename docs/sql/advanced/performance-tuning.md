@@ -1,37 +1,35 @@
 ---
-title: Performance Tuning
+title: 성능 튜닝
 sidebar_position: 3
 ---
 
-# SQL Performance Tuning
+# SQL 성능 튜닝
 
-## Optimizer Hints
+## 옵티마이저 힌트 {#optimizer-hints}
 
-The query optimizer tries to execute the fastest execution plan. However, you can know about the data design, application design or data distribution in your cluster better. SQL hints can help the optimizer to make optimizations more rationally or build execution plan faster.
+쿼리 옵티마이저(query optimizer)는 가장 빠르게 실행되는 계획을 찾으려 합니다. 하지만 데이터 설계, 애플리케이션 설계, 클러스터의 데이터 분포는 사용자가 더 잘 아는 경우가 많습니다. SQL 힌트를 사용하면 옵티마이저가 더 합리적으로 최적화하거나 실행 계획을 더 빠르게 세우도록 도울 수 있습니다.
 
 :::note
-SQL hints are optional to apply and might be skipped in some cases.
+SQL 힌트 적용은 선택 사항이며, 경우에 따라 무시될 수 있습니다.
 :::
 
-### Hints format
+### 힌트 형식 {#hints-format}
 
-SQL hints are defined by a special comment `/*+ HINT */`, referred to as a _hint block_. Spaces before and after the
-hint name are required. The hint block must be placed right after the operator. Several hints for one relation operator are not supported.
+SQL 힌트는 `/*+ HINT */` 형태의 특수 주석으로 정의하며, 이를 _힌트 블록_이라고 부릅니다. 힌트 이름 앞뒤에는 공백이 반드시 있어야 합니다. 힌트 블록은 연산자 바로 뒤에 위치해야 합니다. 하나의 관계 연산자에 여러 힌트를 지정하는 것은 지원되지 않습니다.
 
-Example:
+예시:
 
 ```sql
 SELECT /*+ NO_INDEX */ T1.* FROM TBL1 where T1.V1=? and T1.V2=?
 ```
 
-#### Hint parameters
+#### 힌트 매개변수 {#hint-parameters}
 
-Hint parameters, if required, are placed in brackets after the hint name and separated by commas.
+힌트 매개변수가 필요한 경우, 힌트 이름 뒤 괄호 안에 쉼표로 구분해 지정합니다.
 
-The hint parameter can be quoted. Quoted parameter is case-sensitive. The quoted and unquoted parameters cannot be
-defined for the same hint.
+힌트 매개변수는 따옴표로 묶을 수 있습니다. 따옴표로 묶은 매개변수는 대소문자를 구분합니다. 같은 힌트에 따옴표로 묶은 매개변수와 묶지 않은 매개변수를 함께 지정할 수는 없습니다.
 
-Example:
+예시:
 
 ```sql
 SELECT /*+ FORCE_INDEX(TBL1_IDX2,TBL2_IDX1) */ T1.V1, T2.V1 FROM TBL1 T1, TBL2 T2 WHERE T1.V1 = T2.V1 AND T1.V2 > ? AND T2.V2 > ?;
@@ -39,35 +37,35 @@ SELECT /*+ FORCE_INDEX(TBL1_IDX2,TBL2_IDX1) */ T1.V1, T2.V1 FROM TBL1 T1, TBL2 T
 SELECT /*+ FORCE_INDEX('TBL2_idx1') */ T1.V1, T2.V1 FROM TBL1 T1, TBL2 T2 WHERE T1.V1 = T2.V1 AND T1.V2 > ? AND T2.V2 > ?;
 ```
 
-### Hints errors
+### 힌트 오류 {#hints-errors}
 
-The optimizer tries to apply every hint and its parameters, if possible. But it skips the hint or hint parameter if:
+옵티마이저는 가능하면 모든 힌트와 그 매개변수를 적용하려 합니다. 다만 다음의 경우에는 힌트 또는 힌트 매개변수를 건너뜁니다.
 
-* The hint is not supported.
-* Required hint parameters are not passed.
-* The hint parameters have been passed, but the hint does not support any parameter.
-* The hint parameter is incorrect or refers to a nonexistent object, such as a nonexistent index or table.
-* The current hints or current parameters are incompatible with the previous ones, such as forcing the use and disabling of the same index.
+* 힌트가 지원되지 않는 경우.
+* 필수 힌트 매개변수가 전달되지 않은 경우.
+* 힌트 매개변수를 전달했지만 해당 힌트가 매개변수를 지원하지 않는 경우.
+* 힌트 매개변수가 잘못되었거나, 존재하지 않는 인덱스나 테이블 같은 객체를 가리키는 경우.
+* 동일한 인덱스를 강제로 사용하면서 동시에 비활성화하는 경우처럼, 현재 힌트나 매개변수가 이전 힌트나 매개변수와 호환되지 않는 경우.
 
-If a `FORCE_INDEX` hint references an index that does not exist, the following error will be thrown:
+`FORCE_INDEX` 힌트가 존재하지 않는 인덱스를 참조하면 다음 오류가 발생합니다.
 
 ```java
 Hints mentioned indexes "IDX_NOT_FOUND1", "IDX_NOT_FOUND2" were not found.
 ```
 
-### Supported hints
+### 지원되는 힌트 {#supported-hints}
 
 #### FORCE_INDEX / NO_INDEX
 
-Forces or disables index scan.
+인덱스 스캔을 강제하거나 비활성화합니다.
 
-##### Parameters:
+##### 매개변수: {#parameters}
 
-* Empty. To force an index scan for every underlying table. Optimizer will choose any available index. Or to disable all indexes.
-* Single index name to use or skip exactly this index.
-* Several index names. They can relate to different tables. The optimizer will choose indexes for scanning or skip them all.
+* 비워 두면 대상 테이블마다 인덱스 스캔을 강제합니다. 옵티마이저가 사용 가능한 인덱스 중 하나를 선택합니다. 또는 모든 인덱스를 비활성화합니다.
+* 단일 인덱스 이름을 지정하면 정확히 그 인덱스만 사용하거나 건너뜁니다.
+* 여러 인덱스 이름을 지정할 수 있으며, 서로 다른 테이블에 속한 인덱스도 포함됩니다. 옵티마이저는 스캔에 사용할 인덱스를 선택하거나 모두 건너뜁니다.
 
-##### Examples:
+##### 예시: {#examples}
 
 ```sql
 SELECT /*+ FORCE_INDEX */ T1.* FROM TBL1 T1 WHERE T1.V1 = T2.V1 AND T1.V2 > ?;
@@ -80,22 +78,22 @@ SELECT /*+ NO_INDEX(TBL1_IDX2, TBL2_IDX1) */ T1.V1, T2.V1 FROM TBL1 T1, TBL2 T2 
 ```
 
 :::note
-The query cannot have both `FORCE_INDEX` and `NO_INDEX` hints at the same time.
+하나의 쿼리에 `FORCE_INDEX`와 `NO_INDEX` 힌트를 동시에 지정할 수 없습니다.
 :::
 
-## Using EXPLAIN Statement
+## EXPLAIN 문 사용 {#using-explain-statement}
 
-### EXPLAIN PLAN FOR Statement
+### EXPLAIN PLAN FOR 문 {#explain-plan-for-statement}
 
-Apache Ignite supports the [`EXPLAIN PLAN FOR`](/sql/reference/data-types-and-functions/operational-commands) statement that can be used to read the execution plan of a query.
+Apache Ignite는 쿼리의 실행 계획을 확인할 수 있는 [`EXPLAIN PLAN FOR`](/sql/reference/data-types-and-functions/operational-commands) 문을 지원합니다.
 
-Use this command to analyse your queries for possible optimization, for example:
+이 명령을 사용해 쿼리를 분석하고 최적화 가능성이 있는지 확인하세요. 예시:
 
 ```sql
 EXPLAIN PLAN FOR SELECT name FROM Person WHERE age = 26;
 ```
 
-Here is how the results of the explanation may look like:
+결과는 다음과 같은 형태로 나타납니다.
 
 ```text
 ╔═══════════════════════════════╗
@@ -113,17 +111,17 @@ Here is how the results of the explanation may look like:
 ╚═══════════════════════════════╝
 ```
 
-### EXPLAIN MAPPING FOR Statement
+### EXPLAIN MAPPING FOR 문 {#explain-mapping-for-statement}
 
-Apache Ignite supports the [`EXPLAIN MAPPING FOR`](/sql/reference/data-types-and-functions/operational-commands) statement that can be used to track how the query is split and what nodes the subqueries are executed on.
+Apache Ignite는 쿼리가 어떻게 분할되고 각 서브쿼리가 어느 노드에서 실행되는지 추적할 수 있는 [`EXPLAIN MAPPING FOR`](/sql/reference/data-types-and-functions/operational-commands) 문을 지원합니다.
 
-Use this command if you need an insight into how the query is broken down and executed across multiple nodes in the distributed cluster.
+분산 클러스터에서 쿼리가 어떻게 나뉘어 여러 노드에 걸쳐 실행되는지 확인하려면 이 명령을 사용하세요.
 
 ```sql
 EXPLAIN MAPPING FOR SELECT name FROM Person WHERE age = 26;
 ```
 
-Here is how the results of the query may look like:
+결과는 다음과 같이 나타납니다.
 
 ```text
 ╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
@@ -147,27 +145,27 @@ Here is how the results of the query may look like:
 ╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
 ```
 
-## Query Batching
+## 쿼리 일괄 처리 {#query-batching}
 
-Apache Ignite handles batched requests faster than individual requests, so we recommend using multi-statement execution when possible.
+Apache Ignite는 일괄 처리된 요청을 개별 요청보다 빠르게 처리하므로, 가능하면 다중 문 실행을 사용하는 것이 좋습니다.
 
-When executing multiple queries in a single call, similar requests are automatically batched together. When writing large scripts that perform multiple different kinds of operations, we recommend the following order:
+한 번의 호출로 여러 쿼리를 실행하면 유사한 요청은 자동으로 일괄 처리됩니다. 여러 종류의 작업을 수행하는 대규모 스크립트를 작성할 때는 다음 순서를 따르는 것이 좋습니다.
 
-- All required [DDL operations](/sql/reference/language-definition/ddl);
-- Assigning [access permissions](/sql/reference/data-types-and-functions/operational-commands);
-- Loading data into the tables.
+- 필요한 모든 [DDL 작업](/sql/reference/language-definition/ddl)
+- [접근 권한](/sql/reference/data-types-and-functions/operational-commands) 할당
+- 테이블에 데이터 적재
 
-As execution of each statement is considered complete when the first page is ready to be returned, when working with large data sets, `SELECT` statements may be affected by later statements in the same script.
+각 SQL 문의 실행은 첫 페이지를 반환할 준비가 되면 완료된 것으로 간주하므로, 대용량 데이터를 다룰 때는 `SELECT` 문이 같은 스크립트 안의 이후 문에 영향을 받을 수 있습니다.
 
-## Performance Consideration For Correlated Subqueries
+## 상관 서브쿼리의 성능 고려 사항 {#performance-consideration-for-correlated-subqueries}
 
-Apache Ignite supports correlated subqueries, but the performance of certain complex correlated subqueries may be insufficient, especially when used in high-volume transactional or analytical workloads.
+Apache Ignite는 상관 서브쿼리(correlated subquery)를 지원하지만, 일부 복잡한 상관 서브쿼리는 성능이 충분하지 않을 수 있으며, 처리량이 많은 트랜잭션 워크로드나 분석 워크로드에서 특히 그렇습니다.
 
-### What Are Correlated Subqueries
+### 상관 서브쿼리란 {#what-are-correlated-subqueries}
 
-A correlated subquery is a subquery that depends on values from the outer query for execution. It is evaluated once for every row of the outer query.
+상관 서브쿼리는 실행 시 외부 쿼리의 값에 의존하는 서브쿼리입니다. 외부 쿼리의 각 행마다 한 번씩 평가됩니다.
 
-For example, for a schema that is defined in the following way:
+예를 들어 다음과 같이 스키마가 정의되어 있다고 가정합니다.
 
 ```sql
 CREATE TABLE projects (id INT PRIMARY KEY, name VARCHAR);
@@ -176,7 +174,7 @@ CREATE TABLE departments (id INT PRIMARY KEY, name VARCHAR);
 CREATE TABLE assignments (project_id INT, employee_id INT, PRIMARY KEY (project_id, employee_id));
 ```
 
-The correlated subquery may look like this:
+상관 서브쿼리는 다음과 같은 형태입니다.
 
 ```sql
 SELECT e.name,
@@ -187,19 +185,19 @@ SELECT e.name,
 FROM employees e;
 ```
 
-Here, the subquery references `e.id` from the outer query, meaning it's re-evaluated for every employee row, leading to N separate subquery executions for N employees.
+여기서 서브쿼리는 외부 쿼리의 `e.id`를 참조하므로 직원 행마다 다시 평가되며, 결과적으로 직원이 N명이면 서브쿼리가 N번 실행됩니다.
 
-### Performance Impact
+### 성능 영향 {#performance-impact}
 
-In Apache Ignite 3, repeated subquery executions are not automatically optimized. As a result:
+Apache Ignite 3는 반복되는 서브쿼리 실행을 자동으로 최적화하지 않습니다. 그 결과:
 
-- Scalar subqueries may become bottlenecks.
-- Even small tables can cause high CPU and memory consumption when repeatedly queried.
-- Certain queries may perform slower than expected.
+- 스칼라 서브쿼리가 병목이 될 수 있습니다.
+- 작은 테이블이라도 반복 조회하면 CPU와 메모리 사용량이 크게 늘어납니다.
+- 일부 쿼리는 예상보다 느리게 동작할 수 있습니다.
 
-### Improving Performance
+### 성능 개선 {#improving-performance}
 
-In general, highly-selective outer queries with cheap scalar subqueries (like single-row index lookup) will perform just fine. Here is an example:
+일반적으로 선택도가 높은 외부 쿼리에 비용이 적은 스칼라 서브쿼리(예: 단일 행 인덱스 조회)를 사용하면 성능에 문제가 없습니다. 예시입니다.
 
 ```sql
 -- This query returns an employee along with the name of the department they belong to.
@@ -220,9 +218,9 @@ SELECT e.*,
  WHERE e.id = ?;
 ```
 
-Similar query but without predicate may result in lower performance. If the query with predicate finishes in `0.007s`, similar query without predicate could take up to `2.4s`.
+조건자가 없는 유사한 쿼리는 성능이 낮아질 수 있습니다. 조건자가 있는 쿼리는 `0.007s`에 끝나지만, 조건자가 없는 유사한 쿼리는 `2.4s`까지 걸립니다.
 
-Here is another example:
+다른 예시입니다.
 
 ```sql
 -- This query returns all employees along with the name of the department they
@@ -235,7 +233,7 @@ SELECT e.*,
   FROM employees e;
 ```
 
-Query like the one above may easily be rewritten with regular `JOIN`:
+위와 같은 쿼리는 일반적인 `JOIN`으로 쉽게 다시 작성할 수 있습니다.
 
 ```sql
 -- Equivalent query to the previous example, but uses a `LEFT JOIN` instead of a
@@ -258,11 +256,11 @@ SELECT e.*,
   LEFT JOIN departments d ON d.id = e.department_id;
 ```
 
-Rewritten query on the same environment finishes significantly faster.
+동일한 환경에서 다시 작성한 쿼리는 훨씬 빠르게 끝납니다.
 
-### Examples of Improved Queries
+### 개선된 쿼리 예시 {#examples-of-improved-queries}
 
-The first example shows how you can correctly query the database without evaluating each row:
+첫 번째 예시는 각 행을 평가하지 않고도 데이터베이스를 올바르게 조회하는 방법을 보여줍니다.
 
 ```sql
 -- This query returns all employees without assigned projects.
@@ -318,7 +316,7 @@ SELECT e.id, e.name
 HAVING COUNT(a.employee_id) > 0;
 ```
 
-This example demonstrates drastic performance improvement you can gain by improving your queries:
+이 예시는 쿼리를 개선함으로써 얻을 수 있는 극적인 성능 향상을 보여줍니다.
 
 ```sql
 -- This query returns all employees whose salary is the minimum within their department.
@@ -355,15 +353,15 @@ SELECT e.*
    AND e.salary = min_salaries_by_department.min_salary;
 ```
 
-## Dropping Cached Plans
+## 캐시된 실행 계획 삭제 {#dropping-cached-plans}
 
 :::warning
-This is an experimental API.
+실험적 API입니다.
 :::
 
-As optimizing the query plan is a resource-intensive operation, Apache Ignite caches the plan and reuses it for subsequent related queries. As data is updated, the plan may be outdated and require recalculation. By default, the plans expire after the period specified in the  `ignite.planner.planCacheExpiresAfterSeconds` parameter (1800 seconds by default).
+쿼리 계획을 최적화하는 작업은 리소스를 많이 소모하므로, Apache Ignite는 계획을 캐시해 이후 관련 쿼리에 재사용합니다. 데이터가 갱신되면 캐시된 계획이 오래되어 다시 계산해야 할 수 있습니다. 기본적으로 캐시된 계획은 `ignite.planner.planCacheExpiresAfterSeconds` 매개변수에 지정된 기간(기본값 1800초)이 지나면 만료됩니다.
 
-To force the update earlier, you can use the `sql planner invalidate-cache` CLI tool command.
+더 일찍 갱신하려면 `sql planner invalidate-cache` CLI 도구 명령을 사용하세요.
 
 ```text
 sql planner invalidate-cache --tables=PUBLIC.Person

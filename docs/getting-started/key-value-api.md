@@ -1,18 +1,18 @@
 ---
-title: Using Java API
+title: Java API 사용하기
 ---
 
-This guide walks you through creating a Java application that connects to an Ignite 3 cluster, demonstrating key patterns for working with data using Ignite Java API.
+이 가이드는 Ignite 3 클러스터에 연결하는 Java 애플리케이션을 만드는 과정을 다루며, Ignite Java API로 데이터를 다루는 주요 패턴을 보여줍니다.
 
-## Prerequisites
+## 사전 요구 사항 {#prerequisites}
 
-* JDK 17 or later
+* JDK 17 이상
 * Maven
-* Up-to-date versions of Docker and Docker Compose
+* 최신 버전의 Docker와 Docker Compose
 
-## Setting Up Ignite 3 Cluster
+## Ignite 3 클러스터 설정 {#setting-up-ignite-3-cluster}
 
-Create a Docker Compose file to run a three-node Ignite cluster:
+3개 노드로 구성된 Ignite 클러스터를 실행하는 Docker Compose 파일을 생성합니다:
 
 ```yaml
 # docker-compose.yml
@@ -58,52 +58,52 @@ configs:
       }
 ```
 
-### Starting and Initializing the Cluster
+### 클러스터 시작 및 초기화 {#starting-and-initializing-the-cluster}
 
-1. Start the cluster:
+1. 클러스터를 시작합니다:
 
 ```bash
 docker compose up -d
 ```
 
-2. Run the Ignite CLI and initialize the cluster:
+2. Ignite CLI를 실행하고 클러스터를 초기화합니다:
 
 ```bash
 docker run --rm -it --network=host -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 apacheignite/ignite:3.0.0 cli
 ```
 
-3. Inside the CLI, confirm the connection to the default node.
-4. Initialize the cluster:
+3. CLI에서 기본 노드에 연결됐는지 확인합니다.
+4. 클러스터를 초기화합니다:
 
 ```bash
 cluster init --name=ignite3 --metastorage-group=node1,node2,node3
 ```
 
-5. Enter the SQL mode:
+5. SQL 모드로 진입합니다:
 
 ```bash
 sql
 ```
 
-6. Create a sample table and insert data:
+6. 샘플 테이블을 생성하고 데이터를 삽입합니다:
 
 ```bash
 CREATE TABLE Person (id INT PRIMARY KEY, name VARCHAR);
 INSERT INTO Person (id, name) VALUES (1, 'John');
 ```
 
-7. Exit the SQL mode and CLI tool:
+7. SQL 모드와 CLI 도구를 종료합니다:
 
 ```bash
 exit;
 exit
 ```
 
-## Setting Up Your Java Project
+## Java 프로젝트 설정 {#setting-up-your-java-project}
 
-### Create a Maven Project
+### Maven 프로젝트 생성 {#create-a-maven-project}
 
-First, create a simple Maven project. Below is the example of the project we will be using:
+먼저 간단한 Maven 프로젝트를 생성합니다. 아래는 이번에 사용할 프로젝트 예시입니다.
 
 ```
 ignite3-java-demo/
@@ -116,9 +116,9 @@ ignite3-java-demo/
                     └── Main.java
 ```
 
-### Configure Maven Dependencies
+### Maven 의존성 구성 {#configure-maven-dependencies}
 
-Include the Ignite client dependency in your `pom.xml` file:
+`pom.xml` 파일에 Ignite 클라이언트 의존성을 추가합니다:
 
 ```xml
 <dependencies>
@@ -131,16 +131,16 @@ Include the Ignite client dependency in your `pom.xml` file:
 </dependencies>
 ```
 
-## Building Your Java Application
+## Java 애플리케이션 작성 {#building-your-java-application}
 
-Now, let's create a Java application that connects to our Ignite cluster and performs various data operations.
+이제 Ignite 클러스터에 연결해 다양한 데이터 작업을 수행하는 Java 애플리케이션을 만들어 보겠습니다.
 
-### Main Application Class
+### 메인 애플리케이션 클래스 {#main-application-class}
 
-Create a `Main.java` file with the following code:
+다음 코드로 `Main.java` 파일을 생성합니다:
 
 :::tip
-See the structure example above for the expected file location. This example contains the full class file.
+파일 위치는 위의 구조 예시를 참고하세요. 이 예시에는 전체 클래스 파일이 담겨 있습니다.
 :::
 
 ```java
@@ -267,20 +267,20 @@ public class Main {
 }
 ```
 
-## Running the Application
+## 애플리케이션 실행 {#running-the-application}
 
-To run your application:
+애플리케이션을 실행하려면 다음과 같이 하세요:
 
-1. Make sure your Ignite cluster is up and running
-2. Compile and run your Java application:
+1. Ignite 클러스터가 실행 중인지 확인합니다
+2. Java 애플리케이션을 컴파일하고 실행합니다:
 
 ```bash
 mvn compile exec:java -Dexec.mainClass="com.example.Main"
 ```
 
-## Expected Output
+## 예상 출력 {#expected-output}
 
-You should see output similar to this:
+다음과 비슷한 출력이 나타납니다:
 
 ```text
 Connected to the cluster: Connections{active=1, total=1}
@@ -303,13 +303,13 @@ Person2: Jill
 Person2: Joe
 ```
 
-## Understanding Table Views in Ignite 3
+## Ignite 3의 테이블 뷰 이해하기 {#understanding-table-views-in-ignite-3}
 
-Ignite 3 provides multiple view patterns for interacting with tables on top of providing a robust SQL API. Examples below showcase how you can work with Ignite tables from your project without SQL. For examples of working with SQL, see the [Getting Started with SQL](/getting-started/work-with-sql) tutorial.
+Ignite 3는 탄탄한 SQL API에 더해 테이블과 상호작용하는 다양한 뷰 패턴을 제공합니다. 아래 예시는 SQL 없이 프로젝트에서 Ignite 테이블을 다루는 방법을 보여줍니다. SQL로 작업하는 예시는 [SQL 다루기](/getting-started/work-with-sql) 튜토리얼을 참고하세요.
 
-### RecordView Pattern
+### RecordView 패턴 {#recordview-pattern}
 
-RecordView treats tables as a collection of records, perfect for operations that work with entire rows:
+RecordView는 테이블을 레코드 모음으로 다루므로 행 전체를 대상으로 한 작업에 적합합니다:
 
 ```java
 // Get RecordView for Tuple objects (schema-less)
@@ -321,9 +321,9 @@ RecordView<Person> pojoView = table.recordView(Person.class);
 pojoView.upsert(null, new Person(3, "Jack"));
 ```
 
-### KeyValueView Pattern
+### KeyValueView 패턴 {#keyvalueview-pattern}
 
-KeyValueView treats tables as a key-value store, ideal for simple lookups:
+KeyValueView는 테이블을 키-값 저장소로 다루며, 단순 조회에 적합합니다:
 
 ```java
 // Get KeyValueView for Tuple objects
@@ -335,27 +335,27 @@ KeyValueView<Integer, String> keyValuePojoView = table.keyValueView(Integer.clas
 keyValuePojoView.put(null, 5, "Joe");
 ```
 
-## Cleaning Up
+## 정리 {#cleaning-up}
 
-To stop your cluster when you are done:
+작업이 끝나면 다음 명령으로 클러스터를 중지합니다:
 
 ```bash
 docker compose down
 ```
 
-## Troubleshooting
+## 문제 해결 {#troubleshooting}
 
-If you encounter connection issues:
+연결 문제가 발생하면 다음을 확인하세요:
 
-* Verify your Docker containers are running with `docker compose ps` command
-* Check if the exposed ports match those in your client configuration
-* Ensure that the `localhost` interface can access the Docker container network
+* `docker compose ps` 명령으로 Docker 컨테이너가 실행 중인지 확인하세요
+* 노출된 포트가 클라이언트 구성의 포트와 일치하는지 확인하세요
+* `localhost` 인터페이스가 Docker 컨테이너 네트워크에 접근할 수 있는지 확인하세요
 
-## Next Steps
+## 다음 단계 {#next-steps}
 
-Now that you've explored the basics of connecting to Ignite and interacting with data:
+Ignite에 연결하고 데이터를 다루는 기본을 살펴봤다면 다음을 진행해 보세요:
 
-* Try implementing transactions
-* Experiment with more complex schemas and data types
-* Explore data partitioning strategies
-* Investigate distributed computing capabilities
+* 트랜잭션 구현해 보기
+* 더 복잡한 스키마와 데이터 타입 실험해 보기
+* 데이터 파티셔닝 전략 살펴보기
+* 분산 컴퓨팅 기능 알아보기
