@@ -53,6 +53,37 @@ node scripts/mark-translated.mjs <docs 이하 상대 경로>
 마지막 갱신: 2026-07-02 03:32 UTC
 <!-- TRANSLATION_PROGRESS:END -->
 
+## 번역 도구
+
+용어와 문체를 문서 전체에서 일관되게 유지하기 위한 도구입니다.
+
+### 용어사전 ([`GLOSSARY.md`](./GLOSSARY.md))
+
+번역 용어·표기의 단일 기준입니다. 번역 작업은 이 파일을 먼저 읽고 진행합니다.
+
+- **용어 대역표**: 도메인 용어의 표준 한국어 번역과 흔한 오표기(금지 표기)
+- **원문 유지 용어**: 제품명·언어명·약어처럼 번역하지 않고 원문 그대로 두는 용어
+- **금지 표현**: 번역투·음차 패턴과 대체 표현(오류는 즉시 위반, 경고는 검토 대상이며 일부는 발생 횟수 임계값 이상일 때만 보고)
+
+### 용어사전 감사 (`scripts/check-glossary.mjs`)
+
+`GLOSSARY.md`를 파싱해 번역 완료 문서가 그 기준을 지키는지 검사합니다. 코드 블록, 인라인 코드, 링크 경로, MDX 컴포넌트(RailroadDiagram 등)와 라이선스 주석은 검사 대상에서 제외합니다.
+
+```bash
+npm run check:glossary                     # 번역 완료 문서 전체 검사
+node scripts/check-glossary.mjs <path>     # 특정 파일 검사
+node scripts/check-glossary.mjs --all      # docs/ 전체(미번역 포함) 검사
+node scripts/check-glossary.mjs --list-rules   # 파싱된 규칙 목록 확인
+```
+
+### 진행 상태 자동 갱신 (`scripts/update-progress.mjs`)
+
+위 "번역 진행 상태" 표를 `sync-manifest.json`에서 생성합니다. `mark-translated.mjs` 실행 시 자동으로 호출되므로 별도 조작이 필요 없으며, `npm run update:progress`로 수동 실행할 수도 있습니다.
+
+### 번역 스킬 (`.claude/skills/translating-docs/`)
+
+[Claude Code](https://claude.com/claude-code)로 문서를 번역할 때 사용하는 스킬입니다. 용어사전을 먼저 읽고, 새로 나온 용어를 등재하고, 감사를 통과시키고, 매니페스트를 갱신하는 절차를 강제합니다. 번역투·문체 규칙은 [`references/korean-style.md`](./.claude/skills/translating-docs/references/korean-style.md)에 정리되어 있습니다.
+
 ## 로컬 개발
 
 ```bash
